@@ -1,4 +1,4 @@
-name := "LifeFitness"
+name := "CoffeeApp"
 
 version := "1.0"
 

@@ -14,8 +14,6 @@ dist
 /RUNNING_PID
 /.settings
 test
-
-conf/application.conf
 testThumbnails
 
     
