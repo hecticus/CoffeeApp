@@ -58,6 +58,14 @@ public class Response{
         return ok(buildExtendResponse("Successful deleted"));
     }
 
+    public static Result messageExist(String msg){
+        return ok(buildExtendResponse("registered ["+msg+"]"));
+    }
+
+    public static Result messageExistDeleted(String msg){
+        return ok(buildExtendResponse("registered and no active ["+msg+"]"));
+    }
+
     public static Result message(String msg){
         return ok(buildExtendResponse(msg));
     }

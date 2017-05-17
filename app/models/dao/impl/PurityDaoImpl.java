@@ -11,4 +11,16 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
     public PurityDaoImpl() {
         super(Purity.class);
     }
+
+    public int getExist(String name_purity)
+    {
+        if(find.where().eq("name_purity",name_purity).eq("status_delete",0).findUnique()!=null) return 0;
+        else
+        {
+            if(find.where().eq("name_purity",name_purity).eq("status_delete",1).findUnique()!=null)  return 1;
+            else return 2;
+
+        }
+
+    }
 }

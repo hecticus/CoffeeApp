@@ -5,4 +5,6 @@ package models.dao;
  */
 import models.domain.Unit;
 public interface UnitDao  extends AbstractDao<Long, Unit>{
+
+    int getExist(String name);
 }

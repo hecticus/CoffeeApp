@@ -35,6 +35,10 @@ public class StoreManagerImpl implements StoreManager {
             if (Name == null)
                 return Response.requiredParameter("name");
 
+            int registered = storeDao.getExist(Name.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("name");
+            if(registered==1) return  Response.messageExistDeleted("name");
+
             JsonNode status = json.get("status");
             if (status == null)
                 return Response.requiredParameter("status");
@@ -67,6 +71,16 @@ public class StoreManagerImpl implements StoreManager {
                 return Response.requiredParameter("id");
 
             Store store =  Json.fromJson(json, Store.class);
+
+            JsonNode Name = json.get("name");
+            if (Name != null)
+            {
+                int registered = storeDao.getExist(Name.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("name");
+                if(registered==1) return  Response.messageExistDeleted("name");
+
+                store.setName(Name.asText().toUpperCase());
+            }
 
 
             store = storeDao.update(store);

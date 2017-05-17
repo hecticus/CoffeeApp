@@ -1,13 +1,16 @@
 package models.manager.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.InvoiceDetailDao;
 import models.dao.ItemTypeDao;
 import models.dao.ProviderTypeDao;
+import models.dao.impl.InvoiceDetailDaoImpl;
 import models.dao.impl.ItemTypeDaoImpl;
 import models.dao.UnitDao;
 import models.dao.impl.ProviderTypeDaoImpl;
 import models.dao.impl.UnitDaoImpl;
 import models.domain.ItemType;
+import models.domain.InvoiceDetail;
 import models.manager.ItemTypeManager;
 import models.manager.responseUtils.Response;
 import models.manager.responseUtils.responseObject.ItemTypeResponse;
@@ -30,6 +33,7 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
     private static ItemTypeDao itemTypeDao = new ItemTypeDaoImpl();
     private static UnitDao unitDao = new UnitDaoImpl();
     private static ProviderTypeDao providerTypeDao = new ProviderTypeDaoImpl();
+    private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
 
     @Override
     public Result create() {
@@ -39,11 +43,13 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
             if(json == null)
                 return Response.requiredJson();
 
-
             JsonNode Name = json.get("name");
             if (Name == null)
                 return Response.requiredParameter("name");
 
+            int registered = itemTypeDao.getExist(Name.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("name");
+            if(registered==1) return  Response.messageExistDeleted("name");
 
             JsonNode cost = json.get("cost");
             if (cost == null)
@@ -63,6 +69,8 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
 
             // mapping object-json
             ItemType itemType = Json.fromJson(json, ItemType.class);
+
+            itemType.setName(Name.asText().toUpperCase());
 
             itemType.setUnit(unitDao.findById(id_unit.asLong()));
             itemType.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
@@ -89,6 +97,16 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
 
             ItemType itemType =  Json.fromJson(json, ItemType.class);
 
+            JsonNode Name = json.get("name");
+            if (Name != null)
+            {
+                int registered = itemTypeDao.getExist(Name.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("name");
+                if(registered==1) return  Response.messageExistDeleted("name");
+
+                itemType.setName(Name.asText().toUpperCase());
+            }
+
             JsonNode id_unit = json.get("id_unit");
             if (id_unit != null)
                 itemType.setUnit(unitDao.findById(id_unit.asLong()));
@@ -109,14 +127,18 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
     public Result delete(Long id) {
         try{
             ItemType itemType = itemTypeDao.findById(id);
-            if(itemType != null) {
+            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByItemTypeId(id);
+            if(itemType != null  && invoiceDetails.size()==0) {
 
                 itemType.setStatusDelete(1);
                 itemType = itemTypeDao.update(itemType);
 
                 return Response.deletedEntity();
             } else {
-                return  Response.message("Successful no existe el registro a eliminar");
+
+                    if(itemType == null)  return  Response.message("Successful no existe el registro a eliminar");
+                    else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
+
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);

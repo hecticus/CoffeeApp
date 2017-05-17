@@ -1,8 +1,11 @@
 package models.manager.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.ItemTypeDao;
 import models.dao.UnitDao;
+import models.dao.impl.ItemTypeDaoImpl;
 import models.dao.impl.UnitDaoImpl;
+import models.domain.ItemType;
 import models.domain.Unit;
 import models.manager.UnitManager;
 import models.manager.responseUtils.Response;
@@ -23,6 +26,7 @@ public class UnitManagerImpl   implements UnitManager {
 
 
     private static UnitDao unitDao = new UnitDaoImpl();
+    private static ItemTypeDao itemTypeDao = new ItemTypeDaoImpl();
 
     @Override
     public Result create() {
@@ -36,6 +40,10 @@ public class UnitManagerImpl   implements UnitManager {
             JsonNode Name = json.get("name");
             if (Name == null)
                 return Response.requiredParameter("name");
+
+            int registered = unitDao.getExist(Name.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("name");
+            if(registered==1) return  Response.messageExistDeleted("name");
 
             JsonNode status = json.get("status");
             if (status == null)
@@ -69,6 +77,17 @@ public class UnitManagerImpl   implements UnitManager {
                 return Response.requiredParameter("id");
 
             Unit unit =  Json.fromJson(json, Unit.class);
+
+            JsonNode Name = json.get("name");
+            if (Name != null)
+            {
+                int registered = unitDao.getExist(Name.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("name");
+                if(registered==1) return  Response.messageExistDeleted("name");
+
+                unit.setName(Name.asText().toUpperCase());
+            }
+
             unit = unitDao.update(unit);
             return Response.updatedEntity(Json.toJson(unit));
 
@@ -81,14 +100,18 @@ public class UnitManagerImpl   implements UnitManager {
     public Result delete(Long id) {
         try{
             Unit unit = unitDao.findById(id);
-            if(unit != null) {
+            List<ItemType> itemTypes = itemTypeDao.getOpenByUnitId(id);
+            if(unit != null  && itemTypes.size()==0) {
 
                 unit.setStatusDelete(1);
                 unit = unitDao.update(unit);
 
                 return Response.deletedEntity();
             } else {
-                return  Response.message("Successful no existe el registro a eliminar");
+
+                if(unit == null)  return  Response.message("Successful no existe el registro a eliminar");
+                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
+
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);

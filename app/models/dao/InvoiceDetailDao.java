@@ -12,5 +12,11 @@ public interface InvoiceDetailDao extends AbstractDao<Long, InvoiceDetail>{
 
     List<InvoiceDetail>  findAllByIdInvoice( Long IdInvoice);
 
+    List<InvoiceDetail>  getOpenByItemTypeId( Long idItemType);
+
+    List<InvoiceDetail>  getOpenByLotId( Long idLot);
+
+    List<InvoiceDetail>  getOpenByStoreId( Long idStore);
+
 }
 

@@ -1,8 +1,11 @@
 package models.manager.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.InvoiceDetailDao;
 import models.dao.LotDao;
+import models.dao.impl.InvoiceDetailDaoImpl;
 import models.dao.impl.LotDaoImpl;
+import models.domain.InvoiceDetail;
 import models.domain.Lot;
 import models.manager.LotManager;
 import models.manager.responseUtils.Response;
@@ -23,6 +26,7 @@ public class LotManagerImpl implements LotManager {
 
 
     private static LotDao lotDao = new LotDaoImpl();
+    private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
 
     @Override
     public Result create() {
@@ -41,6 +45,10 @@ public class LotManagerImpl implements LotManager {
             if (Name == null)
                 return Response.requiredParameter("name");
 
+            int registered = lotDao.getExist(Name.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("name");
+            if(registered==1) return  Response.messageExistDeleted("name");
+
             JsonNode farm = json.get("farm");
             if (farm == null)
                 return Response.requiredParameter("farm");
@@ -55,7 +63,7 @@ public class LotManagerImpl implements LotManager {
             // mapping object-json
             Lot lot = Json.fromJson(json, Lot.class);
 
-
+            lot.setName(Name.asText().toUpperCase());
             lot = lotDao.create(lot);
             return Response.createdEntity(Json.toJson(lot));
 
@@ -78,6 +86,15 @@ public class LotManagerImpl implements LotManager {
 
             Lot lot =  Json.fromJson(json, Lot.class);
 
+            JsonNode Name = json.get("name");
+            if (Name != null)
+            {
+                int registered = lotDao.getExist(Name.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("name");
+                if(registered==1) return  Response.messageExistDeleted("name");
+
+                lot.setName(Name.asText().toUpperCase());
+            }
 
             lot = lotDao.update(lot);
             return Response.updatedEntity(Json.toJson(lot));
@@ -91,14 +108,18 @@ public class LotManagerImpl implements LotManager {
     public Result delete(Long id) {
         try{
             Lot lot = lotDao.findById(id);
-            if(lot != null) {
+
+            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+            if(lot != null  && invoiceDetails.size()==0) {
 
                 lot.setStatusDelete(1);
                 lot = lotDao.update(lot);
 
                 return Response.deletedEntity();
             } else {
-                return  Response.message("Successful no existe el registro a eliminar");
+
+                if(lot == null)  return  Response.message("Successful no existe el registro a eliminar");
+                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);

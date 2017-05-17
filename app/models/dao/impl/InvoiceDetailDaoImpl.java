@@ -23,5 +23,20 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
                 .findList();
 
     }
+
+    public    List<InvoiceDetail> getOpenByItemTypeId( Long idItemType)
+    {
+        return find.where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
+    }
+
+    public    List<InvoiceDetail> getOpenByLotId( Long idLot)
+    {
+        return find.where().eq("id_lot",idLot).eq("status_delete",0).findList();
+    }
+
+    public    List<InvoiceDetail> getOpenByStoreId( Long idStore)
+    {
+        return find.where().eq("id_store",idStore).eq("status_delete",0).findList();
+    }
 }
 

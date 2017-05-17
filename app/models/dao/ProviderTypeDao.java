@@ -10,5 +10,7 @@ import java.util.List;
 public interface ProviderTypeDao extends AbstractDao<Long, ProviderType>
 {
     List<ProviderType> getProviderTypesByName(String name, String order);
+
+    int getExist(String name);
 }
 

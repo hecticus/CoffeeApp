@@ -126,4 +126,16 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
         return providers;
     }
 
+    public int getExist(String identification_doc_provider)
+    {
+        if(find.where().eq("identification_doc_provider",identification_doc_provider).eq("status_delete",0).findUnique()!=null) return 0;
+        else
+        {
+            if(find.where().eq("identification_doc_provider",identification_doc_provider).eq("status_delete",1).findUnique()!=null)  return 1;
+            else return 2;
+
+        }
+
+    }
+
 }

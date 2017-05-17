@@ -17,6 +17,8 @@ public interface ProviderDao extends AbstractDao<Long, Provider>{
     //nameDoc: busca por nombre o por documento, es un solo parametro pero peude traer un valor para buscar por name o por iddoc
     List<Provider> getByNameDocByTypeProvider(String nameDoc,Long typeProvider, String order);
 
+    int getExist(String IdentificationDoc);
+
 
 
 }

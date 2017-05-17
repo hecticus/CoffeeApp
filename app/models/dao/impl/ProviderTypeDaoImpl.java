@@ -59,5 +59,15 @@ public class ProviderTypeDaoImpl extends AbstractDaoImpl<Long, ProviderType> imp
         return providerTypes;
     }
 
+    public int getExist(String name_provider_type)
+    {
+        if(find.where().eq("name_provider_type",name_provider_type).eq("status_delete",0).findUnique()!=null) return 0;
+        else
+        {
+            if(find.where().eq("name_provider_type",name_provider_type).eq("status_delete",1).findUnique()!=null)  return 1;
+            else return 2;
 
+        }
+
+    }
 }

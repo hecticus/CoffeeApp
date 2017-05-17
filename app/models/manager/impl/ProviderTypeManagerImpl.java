@@ -1,8 +1,11 @@
 package models.manager.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.ItemTypeDao;
 import models.dao.ProviderTypeDao;
+import models.dao.impl.ItemTypeDaoImpl;
 import models.dao.impl.ProviderTypeDaoImpl;
+import models.domain.ItemType;
 import models.domain.ProviderType;
 import models.manager.ProviderTypeManager;
 import models.manager.responseUtils.Response;
@@ -23,6 +26,7 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
 
 
     private static ProviderTypeDao providerTypeDao = new ProviderTypeDaoImpl();
+    private static ItemTypeDao itemTypeDao = new ItemTypeDaoImpl();
 
     @Override
     public Result create() {
@@ -36,6 +40,10 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
             JsonNode Name = json.get("name");
             if (Name == null)
                 return Response.requiredParameter("name");
+
+            int registered = providerTypeDao.getExist(Name.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("name");
+            if(registered==1) return  Response.messageExistDeleted("name");
 
 
             // mapping object-json
@@ -64,6 +72,16 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
 
             ProviderType providerType =  Json.fromJson(json, ProviderType.class);
 
+            JsonNode Name = json.get("name");
+            if (Name != null)
+            {
+                int registered = providerTypeDao.getExist(Name.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("name");
+                if(registered==1) return  Response.messageExistDeleted("name");
+
+                providerType.setName(Name.asText().toUpperCase());
+            }
+
 
             providerType = providerTypeDao.update(providerType);
             return Response.updatedEntity(Json.toJson(providerType));
@@ -77,14 +95,17 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
     public Result delete(Long id) {
         try{
             ProviderType providerType = providerTypeDao.findById(id);
-            if(providerType != null) {
+            List<ItemType> itemTypes = itemTypeDao.getOpenByProviderTypeId(id);
+            if(providerType != null  && itemTypes.size()==0) {
 
                 providerType.setStatusDelete(1);
                 providerType = providerTypeDao.update(providerType);
 
                 return Response.deletedEntity();
             } else {
-                return  Response.message("Successful no existe el registro a eliminar");
+
+                if(providerType == null)  return  Response.message("Successful no existe el registro a eliminar");
+                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);

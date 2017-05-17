@@ -1,8 +1,11 @@
 package models.manager.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.InvoiceDetailDao;
 import models.dao.PurityDao;
+import models.dao.impl.InvoiceDetailDaoImpl;
 import models.dao.impl.PurityDaoImpl;
+import models.domain.InvoiceDetail;
 import models.domain.Purity;
 import models.manager.PurityManager;
 import models.manager.responseUtils.Response;
@@ -23,6 +26,7 @@ public class PurityManagerImpl    implements PurityManager {
 
 
     private static PurityDao purityDao = new PurityDaoImpl();
+    private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
 
     @Override
     public Result create() {
@@ -36,6 +40,10 @@ public class PurityManagerImpl    implements PurityManager {
             JsonNode Name = json.get("name");
             if (Name == null)
                 return Response.requiredParameter("name");
+
+            int registered = purityDao.getExist(Name.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("name");
+            if(registered==1) return  Response.messageExistDeleted("name");
 
 
             JsonNode DiscountRate = json.get("discountRate");
@@ -75,6 +83,16 @@ public class PurityManagerImpl    implements PurityManager {
 
             Purity purity =  Json.fromJson(json, Purity.class);
 
+            JsonNode Name = json.get("name");
+            if (Name != null)
+            {
+                int registered = purityDao.getExist(Name.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("name");
+                if(registered==1) return  Response.messageExistDeleted("name");
+
+                purity.setName(Name.asText().toUpperCase());
+            }
+
 
             purity = purityDao.update(purity);
             return Response.updatedEntity(Json.toJson(purity));
@@ -88,14 +106,16 @@ public class PurityManagerImpl    implements PurityManager {
     public Result delete(Long id) {
         try{
             Purity purity = purityDao.findById(id);
-            if(purity != null) {
+            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+            if(purity != null  && invoiceDetails.size()==0) {
 
                 purity.setStatusDelete(1);
                 purity = purityDao.update(purity);
 
                 return Response.deletedEntity();
             } else {
-                return  Response.message("Successful no existe el registro a eliminar");
+                if(purity == null)  return  Response.message("Successful no existe el registro a eliminar");
+                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);

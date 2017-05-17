@@ -44,6 +44,10 @@ public class ProviderManagerImpl implements ProviderManager
             if (identificationDoc == null)
                 return Response.requiredParameter("identificationDoc");
 
+            int registered = providerDao.getExist(identificationDoc.asText().toUpperCase());
+            if(registered==0) return  Response.messageExist("identificationDoc");
+            if(registered==1) return  Response.messageExistDeleted("identificationDoc");
+
             JsonNode fullName = json.get("fullName");
             if (fullName == null)
                 return Response.requiredParameter("fullName");
@@ -91,6 +95,16 @@ public class ProviderManagerImpl implements ProviderManager
                 return Response.requiredParameter("id");
 
             Provider provider =  Json.fromJson(json, Provider.class);
+
+            JsonNode identificationDoc = json.get("identificationDoc");
+            if (identificationDoc != null)
+            {
+                int registered = providerDao.getExist(identificationDoc.asText().toUpperCase());
+                if(registered==0) return  Response.messageExist("identificationDoc");
+                if(registered==1) return  Response.messageExistDeleted("identificationDoc");
+
+                provider.setIdentificationDoc(identificationDoc.asText().toUpperCase());
+            }
 
             JsonNode typeProvider = json.get("id_ProviderType");
             if (typeProvider != null)
