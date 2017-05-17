@@ -21,4 +21,5 @@ public interface InvoiceManager {
     public Result getByDateByTypeProvider(String date, Integer typeProvider);
 
     public Result getByDateByProviderId(String date, Long providerId);
+    public Result  getOpenByProviderId(Long providerId);
 }

@@ -7,6 +7,8 @@ package models.manager.impl;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.InvoiceDao;
+import models.dao.impl.InvoiceDaoImpl;
 import play.libs.Json;
 import play.mvc.Result;
 import models.manager.ProviderManager;
@@ -16,6 +18,7 @@ import models.dao.impl.ProviderDaoImpl;
 import models.dao.ProviderTypeDao;
 import models.dao.impl.ProviderTypeDaoImpl;
 import models.domain.Provider;
+import models.domain.Invoice;
 import static play.mvc.Controller.request;
 import models.manager.responseUtils.responseObject.ProviderResponse;
 import models.manager.responseUtils.responseObject.providerExtendResponse;
@@ -27,6 +30,7 @@ public class ProviderManagerImpl implements ProviderManager
 
     private static ProviderDao providerDao = new ProviderDaoImpl();
     private static ProviderTypeDao providerTypeDao = new ProviderTypeDaoImpl();
+    private static InvoiceDao invoiceDao = new InvoiceDaoImpl();
 
     @Override
     public Result create() {
@@ -104,14 +108,17 @@ public class ProviderManagerImpl implements ProviderManager
     public Result delete(Long id) {
         try{
             Provider provider = providerDao.findById(id);
-            if(provider != null) {
+            List<Invoice> invoices = invoiceDao.getOpenByProviderId(id);
+            if(provider != null && invoices.size()==0) {
 
                 provider.setStatusDelete(1);
+
                 provider = providerDao.update(provider);
 
                 return Response.deletedEntity();
             } else {
-                return  Response.message("Successful no existe el registro a eliminar");
+                if(provider == null)  return  Response.message("Successful no existe el registro a eliminar");
+                else  return  Response.message("Successful el proveedor tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -149,6 +156,78 @@ public class ProviderManagerImpl implements ProviderManager
         }
     }
 
+    @Override
+    public Result  getByIdentificationDoc(String IdentificationDoc)
+    {
+        try {
+            Provider provider = providerDao.getByIdentificationDoc(IdentificationDoc);
+            return Response.foundEntity(Json.toJson(provider));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
 
+    public Result  getProvidersByName(String name, String order)
+    {
+
+
+        String strOrder = "ASC";
+        try {
+
+            if (name.equals("-1")) name = "";
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+            List<Provider> providers = providerDao.getProvidersByName(name,strOrder);
+            return Response.foundEntity(Json.toJson(providers));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result  getByTypeProvider(Long id_providertype, String order)
+    {
+              String strOrder = "ASC";
+            try {
+
+                  if(!order.equals("-1")) strOrder = order;
+
+                if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                    return Response.requiredParameter("order (ASC o DESC)");
+
+
+            List<Provider> providers = providerDao.getByTypeProvider(id_providertype,strOrder);
+            return Response.foundEntity(Json.toJson(providers));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order)
+    {
+        List<Provider> providers;
+        String strOrder = "ASC";
+        try
+        {
+
+
+            if (providerTypeDao.findById(id_providertype)==null) return Response.notFoundEntity("providerType");
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC")) return Response.requiredParameter("order (ASC o DESC)");
+
+
+            if(!nameDoc.equals("-1"))  providers = providerDao.getByNameDocByTypeProvider(nameDoc,id_providertype,strOrder);
+            else   providers = providerDao.getByTypeProvider(id_providertype,strOrder);
+
+
+                return Response.foundEntity(Json.toJson(providers));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
 
 }

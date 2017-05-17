@@ -17,5 +17,7 @@ public interface ProviderTypeManager {
 
     public Result findAll(Integer index, Integer size);
 
+    public Result  getProviderTypesByName(String name, String order);
+
 
 }

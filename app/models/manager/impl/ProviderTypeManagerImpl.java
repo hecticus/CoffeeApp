@@ -121,4 +121,24 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
             return Response.internalServerErrorLF();
         }
     }
+
+    public Result  getProviderTypesByName( String name, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if (name.equals("-1")) name = "";
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+
+            List<ProviderType> providerTypes = providerTypeDao.getProviderTypesByName(name,strOrder);
+            return Response.foundEntity(Json.toJson(providerTypes));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
 }

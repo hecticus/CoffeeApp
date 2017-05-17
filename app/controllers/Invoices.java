@@ -34,4 +34,6 @@ public class Invoices
     public Result getByDateByTypeProvider(String date, Integer typeProvider){return invoiceManager.getByDateByTypeProvider(date,typeProvider);}
 
     public Result  getByDateByProviderId(String date, Long providerId){return invoiceManager.getByDateByProviderId(date,providerId);}
+
+    public Result getOpenByProviderId(Long providerId){return invoiceManager.getOpenByProviderId(providerId);}
 }

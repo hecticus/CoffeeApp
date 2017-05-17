@@ -16,10 +16,16 @@ GET     /assets/*file                                                           
 
 GET     /providerType/:id                      controllers.ProviderTypes.findById(id : Long)
 GET     /providerType/findAll/:index/:size     controllers.ProviderTypes.findAll(index: Integer, size: Integer)
+GET    /providerType/getProviderTypesByName/:name/:order  controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 
 
 GET     /provider/:id                      controllers.Providers.findById(id : Long)
 GET     /provider/findAll/:index/:size     controllers.Providers.findAll(index: Integer, size: Integer)
+GET     /provider/getByIdentificationDoc/:IdentificationDoc   controllers.Providers.getByIdentificationDoc(IdentificationDoc: String)
+GET     /provider/getProvidersByName/:name/:order  controllers.Providers.getProvidersByName(name:String,order:String)
+GET     /provider/getByTypeProvider/:id_providertype/:order  controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)
+GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order  controllers.Providers.getByNameDocByTypeProvider(nameDoc: String, id_providertype: Long,order: String)
+
 POST    /provider                          controllers.Providers.create()
 PUT     /provider                          controllers.Providers.update()
 DELETE  /provider/:id                      controllers.Providers.delete(id : Long)
@@ -30,6 +36,8 @@ GET     /invoice/:id                      controllers.Invoices.findById(id : Lon
 GET     /invoice/findAll/:index/:size     controllers.Invoices.findAll(index: Integer, size: Integer)
 GET     /invoice/getByDateByTypeProvider/:date/:typeProvider  controllers.Invoices.getByDateByTypeProvider(date: String, typeProvider: Integer)
 GET     /invoice/getByDateByProviderId/:date/:ProviderId  controllers.Invoices.getByDateByProviderId(date: String, ProviderId: Long)
+GET     /invoice/getOpenByProviderId/:ProviderId          controllers.Invoices.getOpenByProviderId(ProviderId : Long)
+
 POST    /invoice                          controllers.Invoices.create()
 PUT     /invoice                          controllers.Invoices.update()
 DELETE  /invoice/:id                      controllers.Invoices.delete(id : Long)

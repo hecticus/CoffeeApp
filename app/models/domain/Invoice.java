@@ -30,13 +30,14 @@ public class Invoice extends AbstractEntity
     @Column(nullable = false)
     private Integer statusInvoice=1;
 
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     @Column(columnDefinition = "date", nullable = false)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime startDateInvoice;
 
 
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+
     @Column(columnDefinition = "date", nullable = false)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime closedDateInvoice;
 
 
@@ -64,6 +65,7 @@ public class Invoice extends AbstractEntity
         this.totalInvoice = total;
     }
 
+    @JsonIgnore
     public DateTime getClosedDate() {
         return closedDateInvoice;
     }
@@ -72,6 +74,7 @@ public class Invoice extends AbstractEntity
         this.closedDateInvoice = closedDate;
     }
 
+    @JsonIgnore
     public DateTime getStartDate() {
         return startDateInvoice;
     }

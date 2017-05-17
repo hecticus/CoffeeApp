@@ -29,4 +29,8 @@ public class ProviderTypes {
     public Result findAll(Integer index, Integer size) {
         return providerTypeManager.findAll(index, size);
     }
+
+    public Result  getProviderTypesByName(String name, String order) {
+        return providerTypeManager.getProviderTypesByName(name,order);
+    }
 }

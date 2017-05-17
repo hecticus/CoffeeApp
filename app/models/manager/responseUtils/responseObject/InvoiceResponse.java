@@ -16,20 +16,19 @@ public class InvoiceResponse extends AbstractEntityResponse
     public static class Provider
     {
         public Long idProvider;
-        public String fullName;
-        public String address;
-        public String phoneNumber;
-        public String email;
-        public String typeProvider;
-        public String contactName;
+        public String fullNameProvider;
+        public String addressProvider;
+        public String phoneNumberProvider;
+        public String emailProvider;
+        public String contactNameProvider;
     }
 
     public Long idInvoice;
     public Provider provider;
-    public Integer status;
+    public Integer statusInvoice;
     @JsonSerialize(using = CustomDateTimeSerializer.class)
-    public DateTime startDate;
+    public DateTime startDateInvoice;
     @JsonSerialize(using = CustomDateTimeSerializer.class)
-    public DateTime closedDate;
-    public Double total;
+    public DateTime closedDateInvoice;
+    public Double totalInvoice;
 }

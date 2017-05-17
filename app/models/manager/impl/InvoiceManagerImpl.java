@@ -154,7 +154,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
     public Result findById(Long id) {
         try {
             Invoice invoice = invoiceDao.findById(id);
-            return Response.foundEntity(Response.toJson(invoice, InvoiceResponse.class));
+            return Response.foundEntity(Json.toJson((invoice)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -164,7 +164,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
     public Result findAll(Integer index, Integer size) {
         try {
             List<Invoice> invoices = invoiceDao.findAll(index, size);
-            return Response.foundEntity(Response.toJson(invoices, InvoiceResponse.class));
+            return Response.foundEntity(Json.toJson((invoices)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -175,7 +175,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
     {
         try {
             List<Invoice> invoices = invoiceDao.getByDateByTypeProvider(date,typeProvider);
-            return Response.foundEntity(Response.toJson(invoices, InvoiceResponse.class));
+            return Response.foundEntity(Json.toJson((invoices)));
         }catch(Exception e) {
             e.printStackTrace();
             return Response.internalServerErrorLF();
@@ -187,13 +187,24 @@ public class InvoiceManagerImpl  implements InvoiceManager
     public Result getByDateByProviderId(String date, Long providerId)
     {
         try {
-            List<Invoice> providers = invoiceDao.getByDateByProviderId(date,providerId);
-            return Response.foundEntity(Response.toJson(providers, InvoiceResponse.class));
+            List<Invoice> invoices = invoiceDao.getByDateByProviderId(date,providerId);
+            return Response.foundEntity(Json.toJson((invoices)));
         }catch(Exception e) {
             e.printStackTrace();
             return Response.internalServerErrorLF();
         }
 
+    }
+
+    public Result getOpenByProviderId(Long providerId)
+    {
+        try {
+            List<Invoice> invoices = invoiceDao.getOpenByProviderId(providerId);
+            return Response.foundEntity(Json.toJson(invoices));
+        }catch(Exception e) {
+            e.printStackTrace();
+            return Response.internalServerErrorLF();
+        }
     }
 
 }

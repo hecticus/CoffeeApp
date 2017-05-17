@@ -31,6 +31,20 @@ public class Providers
         return providerManager.findAll(index, size);
     }
 
+    public Result  getByIdentificationDoc(String IdentificationDoc) {
+        return providerManager.getByIdentificationDoc(IdentificationDoc);
+    }
 
+    public Result  getProvidersByName(String name, String order) {
+        return providerManager.getProvidersByName(name,order);
+    }
+
+    public Result  getByTypeProvider(Long id_providertype, String order) {
+        return providerManager.getByTypeProvider(id_providertype,order);
+    }
+
+    public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order) {
+        return providerManager.getByNameDocByTypeProvider(nameDoc, id_providertype, order);
+    }
 
 }

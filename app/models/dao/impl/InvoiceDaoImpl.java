@@ -77,6 +77,11 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
        }
     }
 
+    public    List<Invoice> getOpenByProviderId(Long providerId)
+    {
+        return find.where().eq("id_provider",providerId).eq("status_delete",0).findList();
+    }
+
     public List<Invoice> toInvoices(List<SqlRow>  sqlRows)
     {
         List<Invoice> invoices = new ArrayList<>();
