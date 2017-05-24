@@ -9,7 +9,6 @@ import models.domain.ItemType;
 import models.domain.ProviderType;
 import models.manager.ProviderTypeManager;
 import models.manager.responseUtils.Response;
-import models.manager.responseUtils.responseObject.ProviderTypeResponse;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -127,7 +126,7 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
     public Result findById(Long id) {
         try {
             ProviderType providerType = providerTypeDao.findById(id);
-            return Response.foundEntity(Response.toJson(providerType, ProviderTypeResponse.class));
+            return Response.foundEntity(Response.toJson(providerType, ProviderType.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

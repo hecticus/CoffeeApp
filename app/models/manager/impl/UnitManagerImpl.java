@@ -9,7 +9,6 @@ import models.domain.ItemType;
 import models.domain.Unit;
 import models.manager.UnitManager;
 import models.manager.responseUtils.Response;
-import models.manager.responseUtils.responseObject.UnitResponse;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -133,7 +132,7 @@ public class UnitManagerImpl   implements UnitManager {
     public Result findById(Long id) {
         try {
             Unit unit = unitDao.findById(id);
-            return Response.foundEntity(Response.toJson(unit, UnitResponse.class));
+            return Response.foundEntity(Response.toJson(unit, Unit.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

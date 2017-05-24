@@ -10,7 +10,6 @@ import models.dao.impl.PurityDaoImpl;
 import models.domain.InvoiceDetailPurity;
 import models.manager.InvoiceDetailPurityManager;
 import models.manager.responseUtils.Response;
-import models.manager.responseUtils.responseObject.InvoiceDetailPurityResponse;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -136,7 +135,7 @@ public class InvoiceDetailPurityManagerImpl  implements InvoiceDetailPurityManag
     public Result findById(Long id) {
         try {
             InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.findById(id);
-            return Response.foundEntity(Response.toJson(invoiceDetailPurity, InvoiceDetailPurityResponse.class));
+            return Response.foundEntity(Response.toJson(invoiceDetailPurity, InvoiceDetailPurity.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

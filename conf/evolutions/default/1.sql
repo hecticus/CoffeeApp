@@ -32,7 +32,7 @@ create table invoices_details (
   id_lot                        bigint,
   id_store                      bigint,
   cost_item_type                decimal(10,2) not null,
-  start_date_invoice_detail     datetime not null,
+  start_date_invoice_detail     date not null,
   amount_invoice_detail         integer,
   freight_invoice_detail        tinyint(1) default 0,
   note_invoice_detail           varchar(255),

@@ -7,8 +7,6 @@ import models.domain.InvoiceDetail;
 import models.manager.InvoiceDetailManager;
 import models.manager.requestUtils.Request;
 import models.manager.responseUtils.Response;
-import models.manager.responseUtils.responseObject.InvoiceDetailResponse;
-import models.manager.responseUtils.responseObject.InvoiceDetailShortResponse;
 import org.joda.time.DateTime;
 import play.libs.Json;
 import play.mvc.Result;
@@ -97,7 +95,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
             invoiceDetail.setStartDate(startDatetime);
 
             invoiceDetail = invoiceDetailDao.create(invoiceDetail);
-            return Response.createdEntity(Response.toJson(invoiceDetail, InvoiceDetailResponse.class));
+            return Response.createdEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
 
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
@@ -143,7 +141,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
                 invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
 
             invoiceDetail = invoiceDetailDao.update(invoiceDetail);
-            return Response.updatedEntity(Response.toJson(invoiceDetail, InvoiceDetailShortResponse.class));
+            return Response.updatedEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
 
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);
@@ -183,7 +181,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
     public Result findById(Long id) {
         try {
             InvoiceDetail invoiceDetail = invoiceDetailDao.findById(id);
-            return Response.foundEntity(Response.toJson(invoiceDetail, InvoiceDetailShortResponse.class));
+            return Response.foundEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -193,7 +191,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
     public Result findAll(Integer index, Integer size) {
         try {
             List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAll(index, size);
-            return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetailShortResponse.class));
+            return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetail.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -204,7 +202,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
     public Result findAllByIdInvoice(Long IdInvoice) {
         try {
             List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAllByIdInvoice(IdInvoice);
-            return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetailShortResponse.class));
+            return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetail.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

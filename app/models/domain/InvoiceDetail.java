@@ -47,8 +47,8 @@ public class InvoiceDetail  extends AbstractEntity
     @Column(nullable = false, columnDefinition = "Decimal(10,2)")
     private Float costItemType;
 
+    @Column(columnDefinition = "date", nullable = false)
     @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @Column(columnDefinition = "datetime", nullable = false)
     private DateTime startDateInvoiceDetail;
 
     @Constraints.Required

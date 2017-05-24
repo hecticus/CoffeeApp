@@ -1,5 +1,6 @@
 package models.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -33,10 +34,11 @@ public class InvoiceDetailPurity  extends AbstractEntity
     @JoinColumn(name = "id_invoiceDetail")
     private InvoiceDetail invoiceDetail;
 
-
+    @JsonIgnore
     public Purity getPurity() {
         return purity;
     }
+
 
     public void setPurity(Purity purity) {
         this.purity = purity;
@@ -58,6 +60,7 @@ public class InvoiceDetailPurity  extends AbstractEntity
         this.valueRateInvoiceDetailPurity = valueRateInvoiceDetailPurity;
     }
 
+    @JsonIgnore
     public InvoiceDetail getInvoiceDetail() {
         return invoiceDetail;
     }

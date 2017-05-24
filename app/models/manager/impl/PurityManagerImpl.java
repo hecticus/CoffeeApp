@@ -9,7 +9,6 @@ import models.domain.InvoiceDetail;
 import models.domain.Purity;
 import models.manager.PurityManager;
 import models.manager.responseUtils.Response;
-import models.manager.responseUtils.responseObject.PurityResponse;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -137,7 +136,7 @@ public class PurityManagerImpl    implements PurityManager {
     public Result findById(Long id) {
         try {
             Purity purity = purityDao.findById(id);
-            return Response.foundEntity(Response.toJson(purity, PurityResponse.class));
+            return Response.foundEntity(Response.toJson(purity, Purity.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
