@@ -31,4 +31,12 @@ public class Lots {
     public Result findAll(Integer index, Integer size) {
         return lotManager.findAll(index, size);
     }
+
+    public Result getByNameLot(String NameLot, String order) {
+        return lotManager.getByNameLot(NameLot, order);
+    }
+
+    public Result getByStatusLot(String StatusLot, String order) {
+        return lotManager.getByStatusLot(StatusLot, order);
+    }
 }

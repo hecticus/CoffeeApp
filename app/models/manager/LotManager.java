@@ -16,4 +16,8 @@ public interface LotManager {
     public Result findById(Long id);
 
     public Result findAll(Integer index, Integer size);
+
+    public Result getByNameLot(String NameLot, String order);
+
+    public Result getByStatusLot(String StatusLot, String order);
 }

@@ -141,7 +141,7 @@ public class LotManagerImpl implements LotManager {
     public Result findById(Long id) {
         try {
             Lot lot = lotDao.findById(id);
-            return Response.foundEntity(Response.toJson(lot, LotResponse.class));
+            return Response.foundEntity(Response.toJson(lot, Lot.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -152,6 +152,48 @@ public class LotManagerImpl implements LotManager {
         try {
             List<Lot> lots = lotDao.findAll(index, size);
             return Response.foundEntity(Json.toJson(lots));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result getByNameLot(String NameLot, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if (NameLot.equals("-1")) NameLot = "";
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+            if(NameLot.equals(""))
+                return Response.message("Falta el atributo [name]");
+
+            List<Lot> itemTypes = lotDao.getByNameLot(NameLot,strOrder);
+            return Response.foundEntity(Json.toJson(itemTypes));
+
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result getByStatusLot(String StatusLot, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+
+            List<Lot> itemTypes = lotDao.getByStatusLot(StatusLot,strOrder);
+            return Response.foundEntity(Json.toJson(itemTypes));
+
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

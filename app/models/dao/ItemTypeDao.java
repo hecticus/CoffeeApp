@@ -14,4 +14,6 @@ public interface ItemTypeDao extends AbstractDao<Long, ItemType>{
 
     List<ItemType> getOpenByUnitId(Long idUnit);
     List<ItemType> getOpenByProviderTypeId(Long idProviderType);
+    List<ItemType> getByProviderTypeId(Long id_ProviderType, Integer status);
+    List<ItemType> getByNameItemType(String NameItemType, String order);
 }

@@ -160,7 +160,7 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
     public Result findById(Long id) {
         try {
             ItemType itemType = itemTypeDao.findById(id);
-            return Response.foundEntity(Response.toJson(itemType, ItemTypeResponse.class));
+            return Response.foundEntity(Response.toJson(itemType, ItemType.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -171,6 +171,44 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
         try {
             List<ItemType> itemTypes = itemTypeDao.findAll(index, size);
             return Response.foundEntity(Json.toJson(itemTypes));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result getByProviderTypeId(Long id_ProviderType, Integer status)
+    {
+        try {
+
+            if(providerTypeDao.findById(id_ProviderType)==null)
+                return Response.message("No existe registro para el campo: [id_ProviderType]");
+
+            List<ItemType> itemTypes = itemTypeDao.getByProviderTypeId(id_ProviderType,status);
+                return Response.foundEntity(Json.toJson(itemTypes));
+
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result getByNameItemType(String NameItemType, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if (NameItemType.equals("-1")) NameItemType = "";
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+            if(NameItemType.equals(""))
+                return Response.message("Falta el atributo [name]");
+
+            List<ItemType> itemTypes = itemTypeDao.getByNameItemType(NameItemType,strOrder);
+            return Response.foundEntity(Json.toJson(itemTypes));
+
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

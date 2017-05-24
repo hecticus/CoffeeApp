@@ -50,12 +50,18 @@ DELETE  /unit/:id                      controllers.Units.delete(id : Long)
 
 GET     /itemType/:id                      controllers.ItemTypes.findById(id : Long)
 GET     /itemType/findAll/:index/:size     controllers.ItemTypes.findAll(index: Integer, size: Integer)
+GET     /itemType/getByProviderTypeId/:id_ProviderType/:status controllers.ItemTypes.getByProviderTypeId(id_ProviderType: Long, status:Integer )
+GET     /itemType/getByNameItemType/:NameItemType/:order controllers.ItemTypes.getByNameItemType(NameItemType: String, order:String )
+
+
 POST    /itemType                          controllers.ItemTypes.create()
 PUT     /itemType                          controllers.ItemTypes.update()
 DELETE  /itemType/:id                      controllers.ItemTypes.delete(id : Long)
 
 GET     /lot/:id                      controllers.Lots.findById(id : Long)
 GET     /lot/findAll/:index/:size     controllers.Lots.findAll(index: Integer, size: Integer)
+GET     /lot/getByNameLot/:NameLot/:order controllers.Lots.getByNameLot(NameLot: String, order:String )
+GET     /lot/getByStatusLot/:StatusLot/:order controllers.Lots.getByStatusLot(StatusLot: String, order:String )
 POST    /lot                          controllers.Lots.create()
 PUT     /lot                          controllers.Lots.update()
 DELETE  /lot/:id                      controllers.Lots.delete(id : Long)
