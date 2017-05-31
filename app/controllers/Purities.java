@@ -30,4 +30,12 @@ public class Purities {
     public Result findAll(Integer index, Integer size) {
         return purityManager.findAll(index, size);
     }
+
+    public Result getByNamePurity(String NamePurity, String order) {
+        return purityManager.getByNamePurity(NamePurity, order);
+    }
+
+    public Result getByStatusPurity(String StatusPurity, String order) {
+        return purityManager.getByStatusPurity(StatusPurity, order);
+    }
 }

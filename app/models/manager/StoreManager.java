@@ -17,4 +17,6 @@ public interface StoreManager {
     public Result findById(Long id);
 
     public Result findAll(Integer index, Integer size);
+
+    public Result getByStatusStore(String StatusPurity, String order);
 }

@@ -16,4 +16,8 @@ public interface PurityManager {
     public Result findById(Long id);
 
     public Result findAll(Integer index, Integer size);
+
+    public Result getByNamePurity(String NamePurity, String order);
+
+    public Result getByStatusPurity(String StatusPurity, String order);
 }

@@ -152,5 +152,47 @@ public class PurityManagerImpl    implements PurityManager {
         }
     }
 
+    public Result getByNamePurity(String NamePurity, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if (NamePurity.equals("-1")) NamePurity = "";
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+            if(NamePurity.equals(""))
+                return Response.message("Falta el atributo [name]");
+
+            List<Purity> purities = purityDao.getByNamePurity(NamePurity,strOrder);
+            return Response.foundEntity(Json.toJson(purities));
+
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    public Result getByStatusPurity(String StatusPurity, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+
+            List<Purity> purities = purityDao. getByStatusPurity(StatusPurity,strOrder);
+            return Response.foundEntity(Json.toJson(purities));
+
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
 }
 

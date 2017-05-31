@@ -124,7 +124,7 @@ public class StoreManagerImpl implements StoreManager {
     public Result findById(Long id) {
         try {
             Store store = storeDao.findById(id);
-            return Response.foundEntity(Response.toJson(store, StoreResponse.class));
+            return Response.foundEntity(Response.toJson(store, Store.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -140,5 +140,23 @@ public class StoreManagerImpl implements StoreManager {
         }
     }
 
+    public Result getByStatusStore(String statusStore, String order)
+    {
+        String strOrder = "ASC";
+        try {
+
+            if(!order.equals("-1")) strOrder = order;
+
+            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+                return Response.requiredParameter("order (ASC o DESC)");
+
+
+            List<Store> stores = storeDao. getByStatusStore(statusStore,strOrder);
+            return Response.foundEntity(Json.toJson(stores));
+
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
 
 }

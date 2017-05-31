@@ -68,6 +68,8 @@ DELETE  /lot/:id                      controllers.Lots.delete(id : Long)
 
 GET     /purity/:id                      controllers.Purities.findById(id : Long)
 GET     /purity/findAll/:index/:size     controllers.Purities.findAll(index: Integer, size: Integer)
+GET     /purity/getByNamePurity/:NamePurity/:order controllers.Purities.getByNamePurity(NamePurity: String, order:String )
+GET     /purity/getByStatusPurity/:StatusPurity/:order controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
 POST    /purity                          controllers.Purities.create()
 PUT     /purity                          controllers.Purities.update()
 DELETE  /purity/:id                      controllers.Purities.delete(id : Long)
@@ -84,4 +86,12 @@ GET     /invoiceDetail/findAllByIdInvoice/:invoiceId                      contro
 POST    /invoiceDetail                         controllers.InvoiceDetails.create()
 PUT     /invoiceDetail                          controllers.InvoiceDetails.update()
 DELETE  /invoiceDetail/:id                      controllers.InvoiceDetails.delete(id : Long)
+
+
+GET     /store/:id                      controllers.Stores.findById(id : Long)
+GET     /store/findAll/:index/:size     controllers.Stores.findAll(index: Integer, size: Integer)
+GET     /store/getByStatusStore/:StatusStore/:order controllers.Stores.getByStatusStore(StatusStore: String, order:String )
+POST    /store                          controllers.Stores.create()
+PUT     /store                          controllers.Stores.update()
+DELETE  /store/:id                      controllers.Stores.delete(id : Long)
 

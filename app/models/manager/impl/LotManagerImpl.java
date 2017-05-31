@@ -172,8 +172,8 @@ public class LotManagerImpl implements LotManager {
             if(NameLot.equals(""))
                 return Response.message("Falta el atributo [name]");
 
-            List<Lot> itemTypes = lotDao.getByNameLot(NameLot,strOrder);
-            return Response.foundEntity(Json.toJson(itemTypes));
+            List<Lot> lots = lotDao.getByNameLot(NameLot,strOrder);
+            return Response.foundEntity(Json.toJson(lots));
 
         }catch(Exception e){
             return Response.internalServerErrorLF();
@@ -191,8 +191,8 @@ public class LotManagerImpl implements LotManager {
                 return Response.requiredParameter("order (ASC o DESC)");
 
 
-            List<Lot> itemTypes = lotDao.getByStatusLot(StatusLot,strOrder);
-            return Response.foundEntity(Json.toJson(itemTypes));
+            List<Lot> lots = lotDao.getByStatusLot(StatusLot,strOrder);
+            return Response.foundEntity(Json.toJson(lots));
 
         }catch(Exception e){
             return Response.internalServerErrorLF();
