@@ -15,62 +15,31 @@ import java.util.List;
 public class Lot extends AbstractEntity
 {
     @Id
+    @Column(name = "id_lot")
     private Long idLot;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name_lot")
     private String NameLot;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "area_lot")
     private String areaLot;
 
-
     @Constraints.Required
-    @Column(nullable = false)
-    private String farmLot;
-
-    @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "heigh_lot")
     private Double heighLot;
 
+    @Constraints.Required
+    @Column(nullable = false, name = "status_lot")
+    private Integer statusLot=1;
+
+    @ManyToOne
+    @JoinColumn(name = "id_farm", nullable = false)
+    private Farm farm;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
-
-    public String getName() {
-        return NameLot;
-    }
-
-    public void setName(String name) {
-        NameLot = name;
-    }
-
-
-
-    public Double getHeigh() {
-        return heighLot;
-    }
-
-    public void setHeigh(Double heigh) {
-        this.heighLot = heigh;
-    }
-
-    public String getFarm() {
-        return farmLot;
-    }
-
-    public void setFarm(String farm) {
-        this.farmLot = farm;
-    }
-
-    public String getArea() {
-        return areaLot;
-    }
-
-    public void setArea(String area) {
-        this.areaLot = area;
-    }
 
     @JsonIgnore
     public List<InvoiceDetail> getInvoiceDetails() {
@@ -81,11 +50,51 @@ public class Lot extends AbstractEntity
         this.invoiceDetails = invoiceDetails;
     }
 
-    public Long getId() {
+    public Farm getFarm() {
+        return farm;
+    }
+
+    public void setFarm(Farm farm) {
+        this.farm = farm;
+    }
+
+    public Long getIdLot() {
         return idLot;
     }
 
-    public void setId(Long idLot) {
+    public void setIdLot(Long idLot) {
         this.idLot = idLot;
+    }
+
+    public String getNameLot() {
+        return NameLot;
+    }
+
+    public void setNameLot(String nameLot) {
+        NameLot = nameLot;
+    }
+
+    public String getAreaLot() {
+        return areaLot;
+    }
+
+    public void setAreaLot(String areaLot) {
+        this.areaLot = areaLot;
+    }
+
+    public Double getHeighLot() {
+        return heighLot;
+    }
+
+    public void setHeighLot(Double heighLot) {
+        this.heighLot = heighLot;
+    }
+
+    public Integer getStatusLot() {
+        return statusLot;
+    }
+
+    public void setStatusLot(Integer statusLot) {
+        this.statusLot = statusLot;
     }
 }

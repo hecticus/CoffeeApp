@@ -78,7 +78,7 @@ public class ProviderTypeManagerImpl    implements ProviderTypeManager {
                 if(registered==0) return  Response.messageExist("name");
                 if(registered==1) return  Response.messageExistDeleted("name");
 
-                providerType.setName(Name.asText().toUpperCase());
+                providerType.setNameProviderType(Name.asText().toUpperCase());
             }
 
 

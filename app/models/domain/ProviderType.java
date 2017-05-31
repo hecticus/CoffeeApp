@@ -11,37 +11,51 @@ import java.util.List;
  * Created by drocha on 12/05/17.
  */
 @Entity
-@Table(name="provider_types")
-public class ProviderType  extends AbstractEntity
-{
+@Table(name="provider_Type")
+public class ProviderType  extends AbstractEntity {
     @Id
+    @Column(name = "id_ProviderType")
     private Long idProviderType;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name_ProviderType")
     private String nameProviderType;
 
-    @OneToMany(mappedBy = "providerType", cascade= CascadeType.ALL)
+
+    @Constraints.Required
+    @Column(nullable = false, name = "status_ProviderType")
+    private Integer statusProviderType = 1;
+
+    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
     private List<Provider> providers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "providerType", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
     private List<ItemType> itemTypes = new ArrayList<>();
 
-    public Long getId() {
+    public Long getIdProviderType() {
         return idProviderType;
     }
 
-    public void setId(Long idProviderType) {
+    public void setIdProviderType(Long idProviderType) {
         this.idProviderType = idProviderType;
     }
 
-    public String getName() {
+    public String getNameProviderType() {
         return nameProviderType;
     }
 
-    public void setName(String name) {
-        this.nameProviderType = name;
+    public void setNameProviderType(String nameProviderType) {
+        this.nameProviderType = nameProviderType;
     }
+
+    public Integer getStatusProviderType() {
+        return statusProviderType;
+    }
+
+    public void setStatusProviderType(Integer statusProviderType) {
+        this.statusProviderType = statusProviderType;
+    }
+
     @JsonIgnore
     public List<Provider> getProviders() {
         return providers;
@@ -50,7 +64,7 @@ public class ProviderType  extends AbstractEntity
     public void setProviders(List<Provider> providers) {
         this.providers = providers;
     }
-    @JsonIgnore
+
     public List<ItemType> getItemTypes() {
         return itemTypes;
     }

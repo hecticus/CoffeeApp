@@ -24,23 +24,23 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
     public Provider getByIdentificationDoc(String IdentificationDoc)
     {
-        return find.where().eq("identification_doc_provider",IdentificationDoc).findUnique();
+        return find.where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
     }
 
-    public List<Provider> getProvidersByName(String full_name_provider, String order)
+    public List<Provider> getProvidersByName(String fullname_provider, String order)
     {
-      String sql = "select t0.id_provider prov_id, t0.identification_doc_provider identification_doc," +
-              " t0.full_name_provider full_name, " +
-              "t0.address_provider address, t0.phone_number_provider phone_number, t0.email_provider email," +
+      String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
+              " t0.fullname_provider full_name, " +
+              "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
               " t0.photo_provider photo," +
-              " t0.contact_name_provider contact_name, t0.id_providerType providerType" +
+              " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
               " from providers t0" +
               " where  t0.status_delete=0"
               + " ";
 
-        if(!full_name_provider.equals(""))     sql += " and  full_name_provider like '%"+full_name_provider+"%'  ";
+        if(!fullname_provider.equals(""))     sql += " and  fullname_provider like '%"+fullname_provider+"%'  ";
 
-        sql += "  order by full_name_provider "+order+"";
+        sql += "  order by fullname_provider "+order+"";
 
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
@@ -54,17 +54,17 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
     public List<Provider> getByTypeProvider(Long id_providertype, String order)
     {
-        String sql = "select t0.id_provider prov_id, t0.identification_doc_provider identification_doc," +
-                " t0.full_name_provider full_name, " +
-                "t0.address_provider address, t0.phone_number_provider phone_number, t0.email_provider email," +
+        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
+                " t0.fullname_provider full_name, " +
+                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
                 " t0.photo_provider photo," +
-                " t0.contact_name_provider contact_name, t0.id_providerType providerType" +
+                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
                 " from providers t0" +
                 " where t0.status_delete=0 ";
 
         if(id_providertype!=-1) sql += "and id_providertype = :id_providertype ";
 
-        sql +=  "  order by full_name_provider  "+order+"";
+        sql +=  "  order by fullname_provider  "+order+"";
 
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
@@ -79,16 +79,16 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
     public  List<Provider> getByNameDocByTypeProvider(String nameDoc,Long id_providertype, String order)
     {
-        String sql = "select t0.id_provider prov_id, t0.identification_doc_provider identification_doc," +
-                " t0.full_name_provider full_name, " +
-                "t0.address_provider address, t0.phone_number_provider phone_number, t0.email_provider email," +
+        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
+                " t0.fullname_provider full_name, " +
+                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
                 " t0.photo_provider photo," +
-                " t0.contact_name_provider contact_name, t0.id_providerType providerType" +
+                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
                 " from providers t0" +
                 " where id_providertype = :id_providertype and t0.status_delete=0 " +
-                "and (identification_doc_provider like '%"+nameDoc+"%' or full_name_provider like '%"+nameDoc+"%')"
+                "and (identificationdoc_provider like '%"+nameDoc+"%' or fullname_provider like '%"+nameDoc+"%')"
 
-                + "  order by full_name_provider  "+order+"";
+                + "  order by fullname_provider  "+order+"";
 
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
@@ -110,14 +110,14 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
         {
             provider = new Provider();
 
-            provider.setContactName(sqlRows.get(i).getString("contact_name"));
-            provider.setFullName(sqlRows.get(i).getString("full_name"));
-            provider.setPhoneNumber(sqlRows.get(i).getString("phone_number"));
-            provider.setIdentificationDoc(sqlRows.get(i).getString("identification_doc"));
-            provider.setAddress(sqlRows.get(i).getString("address"));
-            provider.setId(sqlRows.get(i).getLong("prov_id"));
-            provider.setEmail(sqlRows.get(i).getString("email"));
-            provider.setPhoto(sqlRows.get(i).getString("photo"));
+            provider.setContactNameProvider(sqlRows.get(i).getString("contact_name"));
+            provider.setFullNameProvider(sqlRows.get(i).getString("full_name"));
+            provider.setPhoneNumberProvider(sqlRows.get(i).getString("phone_number"));
+            provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
+            provider.setAddressProvider(sqlRows.get(i).getString("address"));
+            provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
+            provider.setEmailProvider(sqlRows.get(i).getString("email"));
+            provider.setPhotoProvider(sqlRows.get(i).getString("photo"));
             provider.setProviderType(providerTypeDao.findById(sqlRows.get(i).getLong("providerType")));
 
             providers.add(provider);
@@ -126,12 +126,12 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
         return providers;
     }
 
-    public int getExist(String identification_doc_provider)
+    public int getExist(String identificationdoc_provider)
     {
-        if(find.where().eq("identification_doc_provider",identification_doc_provider).eq("status_delete",0).findUnique()!=null) return 0;
+        if(find.where().eq("identificationdoc_provider",identificationdoc_provider).eq("status_delete",0).findUnique()!=null) return 0;
         else
         {
-            if(find.where().eq("identification_doc_provider",identification_doc_provider).eq("status_delete",1).findUnique()!=null)  return 1;
+            if(find.where().eq("identificationdoc_provider",identificationdoc_provider).eq("status_delete",1).findUnique()!=null)  return 1;
             else return 2;
 
         }

@@ -16,40 +16,42 @@ public class Unit extends AbstractEntity
 {
 
     @Id
+    @Column(name = "id_unit")
     private Long idUnit;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name_unit")
     private String NameUnit;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "status_unit")
     private Integer statusUnit=1;
 
     @OneToMany(mappedBy = "unit", cascade= CascadeType.ALL)
     private List<ItemType> itemTypes = new ArrayList<>();
 
+    public Long getIdUnit() {
+        return idUnit;
+    }
 
+    public void setIdUnit(Long idUnit) {
+        this.idUnit = idUnit;
+    }
 
-
-    public String getName() {
+    public String getNameUnit() {
         return NameUnit;
     }
 
-    public void setFullName(String fullName) {
-        this.NameUnit = fullName;
+    public void setNameUnit(String nameUnit) {
+        NameUnit = nameUnit;
     }
 
-    public void setName(String name) {
-        NameUnit = name;
-    }
-
-    public Integer getStatus() {
+    public Integer getStatusUnit() {
         return statusUnit;
     }
 
-    public void setStatus(Integer status) {
-        this.statusUnit = status;
+    public void setStatusUnit(Integer statusUnit) {
+        this.statusUnit = statusUnit;
     }
 
     @JsonIgnore
@@ -60,13 +62,4 @@ public class Unit extends AbstractEntity
     public void setItemTypes(List<ItemType> itemTypes) {
         this.itemTypes = itemTypes;
     }
-
-    public Long getId() {
-        return idUnit;
-    }
-
-    public void setId(Long idUnit) {
-        this.idUnit = idUnit;
-    }
-
 }

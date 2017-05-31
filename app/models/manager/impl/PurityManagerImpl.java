@@ -89,7 +89,7 @@ public class PurityManagerImpl    implements PurityManager {
                 if(registered==0) return  Response.messageExist("name");
                 if(registered==1) return  Response.messageExistDeleted("name");
 
-                purity.setName(Name.asText().toUpperCase());
+                purity.setNamePurity(Name.asText().toUpperCase());
             }
 
 

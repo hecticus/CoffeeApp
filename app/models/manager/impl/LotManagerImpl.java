@@ -1,15 +1,17 @@
 package models.manager.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.FarmDao;
 import models.dao.InvoiceDetailDao;
 import models.dao.LotDao;
+import models.dao.impl.FarmDaoImpl;
 import models.dao.impl.InvoiceDetailDaoImpl;
 import models.dao.impl.LotDaoImpl;
 import models.domain.InvoiceDetail;
 import models.domain.Lot;
 import models.manager.LotManager;
 import models.manager.responseUtils.Response;
-import models.manager.responseUtils.responseObject.LotResponse;
+import models.manager.requestUtils.Request;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -26,6 +28,7 @@ public class LotManagerImpl implements LotManager {
 
 
     private static LotDao lotDao = new LotDaoImpl();
+    private static FarmDao farmDao = new FarmDaoImpl();
     private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
 
     @Override
@@ -53,17 +56,19 @@ public class LotManagerImpl implements LotManager {
             if (farm == null)
                 return Response.requiredParameter("farm");
 
+            farm = Request.removeParameter(json, "farm");
+
             JsonNode status = json.get("status");
             if (status == null)
                 return Response.requiredParameter("status");
 
 
-
-
             // mapping object-json
             Lot lot = Json.fromJson(json, Lot.class);
 
-            lot.setName(Name.asText().toUpperCase());
+            lot.setFarm(farmDao.findById(farm.asLong()));
+
+            lot.setNameLot(Name.asText().toUpperCase());
             lot = lotDao.create(lot);
             return Response.createdEntity(Json.toJson(lot));
 
@@ -84,6 +89,10 @@ public class LotManagerImpl implements LotManager {
             if (id == null)
                 return Response.requiredParameter("id");
 
+            JsonNode farm = json.get("farm");
+            if (farm != null)
+                     farm = Request.removeParameter(json, "farm");
+
             Lot lot =  Json.fromJson(json, Lot.class);
 
             JsonNode Name = json.get("name");
@@ -93,8 +102,10 @@ public class LotManagerImpl implements LotManager {
                 if(registered==0) return  Response.messageExist("name");
                 if(registered==1) return  Response.messageExistDeleted("name");
 
-                lot.setName(Name.asText().toUpperCase());
+                lot.setNameLot(Name.asText().toUpperCase());
             }
+
+            if(farm != null) lot.setFarm(farmDao.findById(farm.asLong()));
 
             lot = lotDao.update(lot);
             return Response.updatedEntity(Json.toJson(lot));

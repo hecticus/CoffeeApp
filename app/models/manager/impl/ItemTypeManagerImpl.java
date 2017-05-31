@@ -70,7 +70,7 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
             // mapping object-json
             ItemType itemType = Json.fromJson(json, ItemType.class);
 
-            itemType.setName(Name.asText().toUpperCase());
+            itemType.setNameItemType(Name.asText().toUpperCase());
 
             itemType.setUnit(unitDao.findById(id_unit.asLong()));
             itemType.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
@@ -104,7 +104,7 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
                 if(registered==0) return  Response.messageExist("name");
                 if(registered==1) return  Response.messageExistDeleted("name");
 
-                itemType.setName(Name.asText().toUpperCase());
+                itemType.setNameItemType(Name.asText().toUpperCase());
             }
 
             JsonNode id_unit = json.get("id_unit");

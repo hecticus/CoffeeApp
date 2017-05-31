@@ -65,8 +65,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
             Invoice invoice = Json.fromJson(json, Invoice.class);
 
             invoice.setProvider(providerDao.findById(id_provider.asLong()));
-            invoice.setStartDate(startDatetime);
-            invoice.setClosedDate(closedDatetime);
+            invoice.setStartDateInvoice(startDatetime);
+            invoice.setClosedDateInvoice(closedDatetime);
 
             invoice = invoiceDao.create(invoice);
             return Response.createdEntity(Response.toJson(invoice, InvoiceResponse.class));
@@ -100,13 +100,13 @@ public class InvoiceManagerImpl  implements InvoiceManager
             JsonNode status = json.get("status");
             if (status != null)
             {
-                invoice.setStatus(status.asInt());
+                invoice.setStatusInvoice(status.asInt());
                 JsonNode closedDate =  Request.removeParameter(json, "closedDate");
                 if (closedDate == null)
                 {
                     return Response.requiredParameter("closedDate");
                 }
-                invoice.setClosedDate(Request.dateFormatter.parseDateTime(closedDate.asText()));
+                invoice.setClosedDateInvoice(Request.dateFormatter.parseDateTime(closedDate.asText()));
             }
 
             invoice = invoiceDao.update(invoice);
@@ -124,7 +124,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
             if(invoice != null) {
 
    //             invoice.setStatusDelete(1);
-                invoice.setStatus(3);
+                invoice.setStatusInvoice(3);
                 invoice = invoiceDao.update(invoice);
 
                 if(invoiceDao.deletedInvoice(id))

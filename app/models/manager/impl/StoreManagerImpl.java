@@ -79,7 +79,7 @@ public class StoreManagerImpl implements StoreManager {
                 if(registered==0) return  Response.messageExist("name");
                 if(registered==1) return  Response.messageExistDeleted("name");
 
-                store.setName(Name.asText().toUpperCase());
+                store.setNameStore(Name.asText().toUpperCase());
             }
 
 

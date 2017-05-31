@@ -17,39 +17,41 @@ public class Store extends AbstractEntity
 
 
     @Id
+    @Column(name = "id_store")
     private Long idStore;
+
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name_store")
     private String NameStore;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "status_store")
     private Integer statusStore=1;
 
     @OneToMany(mappedBy = "store", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
-    public Long getId() {
+    public Long getIdStore() {
         return idStore;
     }
 
-    public void setId(Long idStore) {
+    public void setIdStore(Long idStore) {
         this.idStore = idStore;
     }
 
-    public String getName() {
+    public String getNameStore() {
         return NameStore;
     }
 
-    public void setName(String nameStore) {
+    public void setNameStore(String nameStore) {
         NameStore = nameStore;
     }
 
-    public Integer getStatus() {
+    public Integer getStatusStore() {
         return statusStore;
     }
 
-    public void setStatus(Integer statusStore) {
+    public void setStatusStore(Integer statusStore) {
         this.statusStore = statusStore;
     }
 

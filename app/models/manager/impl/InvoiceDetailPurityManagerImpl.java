@@ -22,9 +22,6 @@ import static play.mvc.Controller.request;
  */
 public class InvoiceDetailPurityManagerImpl  implements InvoiceDetailPurityManager {
 
-
-
-
     private static InvoiceDetailPurityDao invoiceDetailPurityDao = new InvoiceDetailPurityDaoImpl();
     private static PurityDao purityDao = new PurityDaoImpl();
     private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
@@ -61,7 +58,7 @@ public class InvoiceDetailPurityManagerImpl  implements InvoiceDetailPurityManag
             InvoiceDetailPurity invoiceDetailPurity = Json.fromJson(json, InvoiceDetailPurity.class);
 
             invoiceDetailPurity.setPurity(purityDao.findById(id_purity.asLong()));
-            invoiceDetailPurity.setInvoiceDetails(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
+            invoiceDetailPurity.setInvoiceDetail(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
 
             invoiceDetailPurity = invoiceDetailPurityDao.create(invoiceDetailPurity);
             return Response.createdEntity(Json.toJson(invoiceDetailPurity));
@@ -92,7 +89,7 @@ public class InvoiceDetailPurityManagerImpl  implements InvoiceDetailPurityManag
 
             JsonNode id_invoiceDetail = json.get("id_invoiceDetail");
             if (id_invoiceDetail != null)
-                invoiceDetailPurity.setInvoiceDetails(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
+                invoiceDetailPurity.setInvoiceDetail(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
 
             invoiceDetailPurity = invoiceDetailPurityDao.update(invoiceDetailPurity);
             return Response.updatedEntity(Json.toJson(invoiceDetailPurity));

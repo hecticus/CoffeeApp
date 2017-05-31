@@ -103,7 +103,7 @@ public class ProviderManagerImpl implements ProviderManager
                 if(registered==0) return  Response.messageExist("identificationDoc");
                 if(registered==1) return  Response.messageExistDeleted("identificationDoc");
 
-                provider.setIdentificationDoc(identificationDoc.asText().toUpperCase());
+                provider.setIdentificationDocProvider(identificationDoc.asText().toUpperCase());
             }
 
             JsonNode typeProvider = json.get("id_ProviderType");

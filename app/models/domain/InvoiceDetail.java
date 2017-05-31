@@ -14,22 +14,21 @@ import java.util.List;
  * Created by drocha on 26/04/17.
  */
 @Entity
-@Table(name="invoices_details")
+@Table(name="invoice_details")
 public class InvoiceDetail  extends AbstractEntity
 {
 
 
     @Id
+    @Column(name = "id_invoiceDetail")
     private Long idInvoiceDetail;
 
     @ManyToOne
-    @JoinColumn(name = "id_invoice")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_invoice", nullable = false)
     private Invoice invoice;
 
     @ManyToOne
-    @JoinColumn(name = "id_itemType")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_itemType", nullable = false)
     private ItemType itemType;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
@@ -44,34 +43,46 @@ public class InvoiceDetail  extends AbstractEntity
     private Store store;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)")
+    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "cost_itemType")
     private Float costItemType;
 
-    @Column(columnDefinition = "date", nullable = false)
+    @Column(columnDefinition = "date", nullable = false, name = "dueDate_invoiceDetail")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime startDateInvoiceDetail;
 
     @Constraints.Required
+    @Column(name = "amount_invoiceDetail")
     private Integer amountInvoiceDetail;
 
+    @Column(name = "isFreight_invoiceDetail")
     private boolean freightInvoiceDetail=false;
 
+    @Column(name = "note_invoiceDetail")
     private String noteInvoiceDetail;
 
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "nameReceived_invoiceDetail")
     private String nameReceivedInvoiceDetail;
 
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "nameDelivered_invoiceDetail")
     private String nameDeliveredInvoiceDetail;
 
 
+    @Constraints.Required
+    @Column(nullable = false, name = "status_invoiceDetail")
+    private Integer statusInvoiceDetail=1;
 
+    public Long getIdInvoiceDetail() {
+        return idInvoiceDetail;
+    }
 
-    @JsonIgnore
+    public void setIdInvoiceDetail(Long idInvoiceDetail) {
+        this.idInvoiceDetail = idInvoiceDetail;
+    }
+
     public Invoice getInvoice() {
         return invoice;
     }
@@ -80,70 +91,12 @@ public class InvoiceDetail  extends AbstractEntity
         this.invoice = invoice;
     }
 
-
-
-    public String getNameDelivered() {
-        return nameDeliveredInvoiceDetail;
+    public ItemType getItemType() {
+        return itemType;
     }
 
-    public void setNameDelivered(String nameDelivered) {
-        this.nameDeliveredInvoiceDetail = nameDelivered;
-    }
-
-    public String getNameReceived() {
-        return nameReceivedInvoiceDetail;
-    }
-
-    public void setNameReceived(String nameReceived) {
-        this.nameReceivedInvoiceDetail = nameReceived;
-    }
-
-    public String getNote() {
-        return noteInvoiceDetail;
-    }
-
-    public void setNote(String note) {
-        this.noteInvoiceDetail = note;
-    }
-
-    public boolean isFreight() {
-        return freightInvoiceDetail;
-    }
-
-    public void setFreight(boolean freight) {
-        this.freightInvoiceDetail = freight;
-    }
-
-    public Integer getAmount() {
-        return amountInvoiceDetail;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amountInvoiceDetail = amount;
-    }
-
-    public DateTime getStartDate() {
-        return startDateInvoiceDetail;
-    }
-
-    public void setStartDate(DateTime startDate) {
-        this.startDateInvoiceDetail = startDate;
-    }
-
-    public Float getCost() {
-        return costItemType;
-    }
-
-    public void setCost(Float cost) {
-        this.costItemType = cost;
-    }
-
-    public Lot getLot() {
-        return lot;
-    }
-
-    public void setLot(Lot lot) {
-        this.lot = lot;
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
     }
 
     @JsonIgnore
@@ -155,20 +108,12 @@ public class InvoiceDetail  extends AbstractEntity
         this.invoiceDetailPurity = invoiceDetailPurity;
     }
 
-    public ItemType getItemType() {
-        return itemType;
+    public Lot getLot() {
+        return lot;
     }
 
-    public void setItemType(ItemType itemType) {
-        this.itemType = itemType;
-    }
-
-    public Long getId() {
-        return idInvoiceDetail;
-    }
-
-    public void setId(Long idInvoiceDetail) {
-        this.idInvoiceDetail = idInvoiceDetail;
+    public void setLot(Lot lot) {
+        this.lot = lot;
     }
 
     public Store getStore() {
@@ -177,5 +122,70 @@ public class InvoiceDetail  extends AbstractEntity
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public Float getCostItemType() {
+        return costItemType;
+    }
+
+    public void setCostItemType(Float costItemType) {
+        this.costItemType = costItemType;
+    }
+
+    @JsonIgnore
+    public DateTime getStartDateInvoiceDetail() {
+        return startDateInvoiceDetail;
+    }
+
+    public void setStartDateInvoiceDetail(DateTime startDateInvoiceDetail) {
+        this.startDateInvoiceDetail = startDateInvoiceDetail;
+    }
+
+    public Integer getAmountInvoiceDetail() {
+        return amountInvoiceDetail;
+    }
+
+    public void setAmountInvoiceDetail(Integer amountInvoiceDetail) {
+        this.amountInvoiceDetail = amountInvoiceDetail;
+    }
+
+    public boolean isFreightInvoiceDetail() {
+        return freightInvoiceDetail;
+    }
+
+    public void setFreightInvoiceDetail(boolean freightInvoiceDetail) {
+        this.freightInvoiceDetail = freightInvoiceDetail;
+    }
+
+    public String getNoteInvoiceDetail() {
+        return noteInvoiceDetail;
+    }
+
+    public void setNoteInvoiceDetail(String noteInvoiceDetail) {
+        this.noteInvoiceDetail = noteInvoiceDetail;
+    }
+
+    public String getNameReceivedInvoiceDetail() {
+        return nameReceivedInvoiceDetail;
+    }
+
+    public void setNameReceivedInvoiceDetail(String nameReceivedInvoiceDetail) {
+        this.nameReceivedInvoiceDetail = nameReceivedInvoiceDetail;
+    }
+
+    public String getNameDeliveredInvoiceDetail() {
+        return nameDeliveredInvoiceDetail;
+    }
+
+    public void setNameDeliveredInvoiceDetail(String nameDeliveredInvoiceDetail) {
+        this.nameDeliveredInvoiceDetail = nameDeliveredInvoiceDetail;
+    }
+
+    public Integer getStatusInvoiceDetail() {
+        return statusInvoiceDetail;
+    }
+
+    public void setStatusInvoiceDetail(Integer statusInvoiceDetail) {
+        this.statusInvoiceDetail = statusInvoiceDetail;
     }
 }

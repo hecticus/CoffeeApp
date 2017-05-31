@@ -16,49 +16,62 @@ public class ItemType extends AbstractEntity
 {
 
     @Id
+    @Column(name = "id_itemType")
     private Long idItemType;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name_itemType")
     private String nameItemType;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)")
+    @Column(nullable = false, columnDefinition = "Decimal(10,2)",name = "cost_itemType")
     private Float costItemType;
 
     @Constraints.Required
-    @Column(nullable = false)
-    private Integer statusItemType;
+    @Column(nullable = false, name = "status_itemType")
+    private Integer statusItemType=1;
 
     @ManyToOne
-    @JoinColumn(name = "id_providerType")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_providerType", nullable = false)
     private ProviderType providerType;
 
     @ManyToOne
-    @JoinColumn(name = "id_unit")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_unit", nullable = false)
     private Unit unit;
-
-
 
     @OneToMany(mappedBy = "itemType", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
-    public String getName() {
+    public Long getIdItemType() {
+        return idItemType;
+    }
+
+    public void setIdItemType(Long idItemType) {
+        this.idItemType = idItemType;
+    }
+
+    public String getNameItemType() {
         return nameItemType;
     }
 
-    public void setName(String name) {
-        this.nameItemType = name;
+    public void setNameItemType(String nameItemType) {
+        this.nameItemType = nameItemType;
     }
 
-    public Unit getUnit() {
-        return unit;
+    public Float getCostItemType() {
+        return costItemType;
     }
 
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public void setCostItemType(Float costItemType) {
+        this.costItemType = costItemType;
+    }
+
+    public Integer getStatusItemType() {
+        return statusItemType;
+    }
+
+    public void setStatusItemType(Integer statusItemType) {
+        this.statusItemType = statusItemType;
     }
 
     public ProviderType getProviderType() {
@@ -69,20 +82,12 @@ public class ItemType extends AbstractEntity
         this.providerType = providerType;
     }
 
-    public Integer getStatus() {
-        return statusItemType;
+    public Unit getUnit() {
+        return unit;
     }
 
-    public void setStatus(Integer status) {
-        this.statusItemType = status;
-    }
-
-    public Float getCost() {
-        return costItemType;
-    }
-
-    public void setCost(Float cost) {
-        this.costItemType = cost;
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 
     @JsonIgnore
@@ -92,13 +97,5 @@ public class ItemType extends AbstractEntity
 
     public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
         this.invoiceDetails = invoiceDetails;
-    }
-
-    public Long getId() {
-        return idItemType;
-    }
-
-    public void setId(Long idItemType) {
-        this.idItemType = idItemType;
     }
 }
