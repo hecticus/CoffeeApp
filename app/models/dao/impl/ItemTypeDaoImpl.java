@@ -22,12 +22,12 @@ public class ItemTypeDaoImpl extends AbstractDaoImpl<Long, ItemType> implements 
     }
     private static UnitDao unitDao = new UnitDaoImpl();
 
-    public int getExist(String name_item_type)
+    public int getExist(String name_itemtype)
     {
-       if(find.where().eq("name_item_type",name_item_type).eq("status_delete",0).findUnique()!=null) return 0;
+       if(find.where().eq("name_itemtype",name_itemtype).eq("status_delete",0).findUnique()!=null) return 0;
        else
        {
-           if(find.where().eq("name_item_type",name_item_type).eq("status_delete",1).findUnique()!=null)  return 1;
+           if(find.where().eq("name_itemtype",name_itemtype).eq("status_delete",1).findUnique()!=null)  return 1;
            else return 2;
 
        }
@@ -46,11 +46,11 @@ public class ItemTypeDaoImpl extends AbstractDaoImpl<Long, ItemType> implements 
 
     public List<ItemType> getByProviderTypeId(Long id_ProviderType, Integer status)
     {
-        String sql="SELECT item.id_item_type c0, item.status_delete c1, item.name_item_type c2, " +
-                " item.cost_item_type c3, item.status_item_type c4, item.created_at c5, " +
+        String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
+                " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
                 " item.updated_at c6, item.id_providerType c7, item.id_unit c8  " +
                 " FROM item_types item "+
-                " inner join provider_types protype on protype.id_provider_type=item.id_providertype " +
+                " inner join provider_type protype on protype.id_provider_type=item.id_providertype " +
                 " where item.status_delete=0  and item.id_providerType= :idProviderType ";
 
         if(status!=-1) sql+= " and protype.status_delete=:status ";
@@ -66,12 +66,12 @@ return toItemTypes(results);
 
     public List<ItemType> getByNameItemType(String NameItemType, String order)
     {
-        String sql="SELECT item.id_item_type c0, item.status_delete c1, item.name_item_type c2, " +
-                " item.cost_item_type c3, item.status_item_type c4, item.created_at c5, " +
+        String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
+                " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
                 " item.updated_at c6, item.id_providerType c7, item.id_unit c8  " +
                 " FROM item_types item "+
-                " where item.status_delete=0  and item.name_item_type like '%"+NameItemType+"%' "+
-                " order by item.name_item_type "+order;
+                " where item.status_delete=0  and item.name_itemtype like '%"+NameItemType+"%' "+
+                " order by item.id_itemtype   "+order;
 
         SqlQuery query = Ebean.createSqlQuery(sql);
 
@@ -89,11 +89,11 @@ return toItemTypes(results);
         {
             itemType = new ItemType();
 
-            itemType.setId(sqlRows.get(i).getLong("c0"));
-            itemType.setName(sqlRows.get(i).getString("c2"));
-            itemType.setCost(sqlRows.get(i).getFloat("c3"));
+            itemType.setIdItemType(sqlRows.get(i).getLong("c0"));
+            itemType.setNameItemType(sqlRows.get(i).getString("c2"));
+            itemType.setCostItemType(sqlRows.get(i).getFloat("c3"));
             itemType.setUnit(unitDao.findById(sqlRows.get(i).getLong("c8")));
-            itemType.setStatus(sqlRows.get(i).getInteger("c4"));
+            itemType.setStatusItemType(sqlRows.get(i).getInteger("c4"));
             itemTypes.add(itemType);
         }
 

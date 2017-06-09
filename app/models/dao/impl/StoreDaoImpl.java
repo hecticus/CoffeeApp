@@ -33,12 +33,12 @@ public class StoreDaoImpl  extends AbstractDaoImpl<Long,Store> implements StoreD
 
     public List<Store> getByStatusStore(String StatusStore, String order)
     {
-        String sql="select t0.id_store c0, t0.status_delete c1, t0.name_store c2, t0.status_Store c3, " +
+        String sql="select t0.id_store c0, t0.status_delete c1, t0.name_store c2, t0.status_store c3, " +
                 " t0.created_at c5, t0.updated_at c6 " +
                 " from stores t0 "+
                 " where t0.status_delete=0 ";
 
-        if(!StatusStore.equals("-1"))  sql+=" and t0.status_Store= "+StatusStore;
+        if(!StatusStore.equals("-1"))  sql+=" and t0.status_store= "+StatusStore;
 
         sql+=" order by t0.name_Store "+order;
 
@@ -58,10 +58,10 @@ public class StoreDaoImpl  extends AbstractDaoImpl<Long,Store> implements StoreD
         {
             Store = new Store();
 
-            Store.setId(sqlRows.get(i).getLong("c0"));
+            Store.setIdStore(sqlRows.get(i).getLong("c0"));
             Store.setStatusDelete(sqlRows.get(i).getInteger("c1"));
-            Store.setName(sqlRows.get(i).getString("c2"));
-            Store.setStatus(sqlRows.get(i).getInteger("c3"));
+            Store.setNameStore(sqlRows.get(i).getString("c2"));
+            Store.setStatusStore(sqlRows.get(i).getInteger("c3"));
 
             stores.add(Store);
         }

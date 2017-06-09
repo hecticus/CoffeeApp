@@ -16,56 +16,103 @@ public class Provider extends AbstractEntity
 {
 
     @Id
+    @Column(name = "id_Provider")
     private Long idProvider;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "identificationDoc_Provider")
     private String identificationDocProvider;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "fullName_Provider")
     private String fullNameProvider;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "address_Provider")
     private String addressProvider;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "phoneNumber_Provider")
     private String phoneNumberProvider;
 
+    @Column(name = "email_Provider")
     private String emailProvider;
+
+    @Column(name = "photo_Provider")
     private String photoProvider;
 
 
 
     @ManyToOne
-    @JoinColumn(name = "id_providerType")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_providerType", nullable = false)
     private ProviderType providerType;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "contactName_Provider")
     private String contactNameProvider;
+
+    @Constraints.Required
+    @Column(nullable = false, name = "status_Provider")
+    private Integer statusProvider = 1;
 
 
     @OneToMany(mappedBy = "provider", cascade= CascadeType.ALL)
     private List<Invoice> invoices = new ArrayList<>();
 
-    public String getIdentificationDoc() {
+    public Long getIdProvider() {
+        return idProvider;
+    }
+
+    public void setIdProvider(Long idProvider) {
+        this.idProvider = idProvider;
+    }
+
+    public String getIdentificationDocProvider() {
         return identificationDocProvider;
     }
 
-    public void setIdentificationDoc(String identificationDoc) {
-        this.identificationDocProvider = identificationDoc;
+    public void setIdentificationDocProvider(String identificationDocProvider) {
+        this.identificationDocProvider = identificationDocProvider;
     }
 
-    public String getContactName() {
-        return contactNameProvider;
+    public String getFullNameProvider() {
+        return fullNameProvider;
     }
 
-    public void setContactName(String contactName) {
-        this.contactNameProvider = contactName;
+    public void setFullNameProvider(String fullNameProvider) {
+        this.fullNameProvider = fullNameProvider;
+    }
+
+    public String getAddressProvider() {
+        return addressProvider;
+    }
+
+    public void setAddressProvider(String addressProvider) {
+        this.addressProvider = addressProvider;
+    }
+
+    public String getPhoneNumberProvider() {
+        return phoneNumberProvider;
+    }
+
+    public void setPhoneNumberProvider(String phoneNumberProvider) {
+        this.phoneNumberProvider = phoneNumberProvider;
+    }
+
+    public String getEmailProvider() {
+        return emailProvider;
+    }
+
+    public void setEmailProvider(String emailProvider) {
+        this.emailProvider = emailProvider;
+    }
+
+    public String getPhotoProvider() {
+        return photoProvider;
+    }
+
+    public void setPhotoProvider(String photoProvider) {
+        this.photoProvider = photoProvider;
     }
 
     public ProviderType getProviderType() {
@@ -76,44 +123,20 @@ public class Provider extends AbstractEntity
         this.providerType = providerType;
     }
 
-    public String getPhoto() {
-        return photoProvider;
+    public String getContactNameProvider() {
+        return contactNameProvider;
     }
 
-    public void setPhoto(String photo) {
-        this.photoProvider = photo;
+    public void setContactNameProvider(String contactNameProvider) {
+        this.contactNameProvider = contactNameProvider;
     }
 
-    public String getEmail() {
-        return emailProvider;
+    public Integer getStatusProvider() {
+        return statusProvider;
     }
 
-    public void setEmail(String email) {
-        this.emailProvider = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumberProvider;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumberProvider = phoneNumber;
-    }
-
-    public String getAddress() {
-        return addressProvider;
-    }
-
-    public void setAddress(String address) {
-        this.addressProvider = address;
-    }
-
-    public String getFullName() {
-        return fullNameProvider;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullNameProvider = fullName;
+    public void setStatusProvider(Integer statusProvider) {
+        this.statusProvider = statusProvider;
     }
 
     @JsonIgnore
@@ -124,14 +147,4 @@ public class Provider extends AbstractEntity
     public void setInvoices(List<Invoice> invoices) {
         this.invoices = invoices;
     }
-
-    public Long getId() {
-        return idProvider;
-    }
-
-    public void setId(Long idProvider) {
-        this.idProvider = idProvider;
-    }
-
-
 }

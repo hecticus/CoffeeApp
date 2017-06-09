@@ -92,7 +92,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
             DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
 
 
-            invoiceDetail.setStartDate(startDatetime);
+            invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
             invoiceDetail = invoiceDetailDao.create(invoiceDetail);
             return Response.createdEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
@@ -122,7 +122,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
             if (startDate != null)
             {
                 DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
-                invoiceDetail.setStartDate(startDatetime);
+                invoiceDetail.setStartDateInvoiceDetail(startDatetime);
             }
             JsonNode id_invoice = json.get("id_invoice");
             if (id_invoice != null)

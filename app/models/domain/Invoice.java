@@ -19,24 +19,24 @@ public class Invoice extends AbstractEntity
 {
 
     @Id
+    @Column(name = "id_invoice")
     private Long idInvoice;
 
     @ManyToOne
-    @JoinColumn(name = "id_provider")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_provider", nullable = false)
     private Provider provider;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "status_invoice")
     private Integer statusInvoice=1;
 
-    @Column(columnDefinition = "date", nullable = false)
+    @Column(columnDefinition = "date", nullable = false, name = "dueDate_invoice")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime startDateInvoice;
 
 
 
-    @Column(columnDefinition = "date", nullable = false)
+    @Column(columnDefinition = "date", nullable = false,name = "closedDate_invoice")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime closedDateInvoice;
 
@@ -44,10 +44,16 @@ public class Invoice extends AbstractEntity
     @OneToMany(mappedBy = "invoice", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
+    @Column(name = "total_invoice")
     private Double totalInvoice=0.00;
 
+    public Long getIdInvoice() {
+        return idInvoice;
+    }
 
-
+    public void setIdInvoice(Long idInvoice) {
+        this.idInvoice = idInvoice;
+    }
 
     public Provider getProvider() {
         return provider;
@@ -57,38 +63,30 @@ public class Invoice extends AbstractEntity
         this.provider = provider;
     }
 
-    public Double getTotal() {
-        return totalInvoice;
-    }
-
-    public void setTotal(Double total) {
-        this.totalInvoice = total;
-    }
-
-    @JsonIgnore
-    public DateTime getClosedDate() {
-        return closedDateInvoice;
-    }
-
-    public void setClosedDate(DateTime closedDate) {
-        this.closedDateInvoice = closedDate;
-    }
-
-    @JsonIgnore
-    public DateTime getStartDate() {
-        return startDateInvoice;
-    }
-
-    public void setStartDate(DateTime startDate) {
-        this.startDateInvoice = startDate;
-    }
-
-    public Integer getStatus() {
+    public Integer getStatusInvoice() {
         return statusInvoice;
     }
 
-    public void setStatus(Integer status) {
-        this.statusInvoice = status;
+    public void setStatusInvoice(Integer statusInvoice) {
+        this.statusInvoice = statusInvoice;
+    }
+
+    @JsonIgnore
+    public DateTime getStartDateInvoice() {
+        return startDateInvoice;
+    }
+
+    public void setStartDateInvoice(DateTime startDateInvoice) {
+        this.startDateInvoice = startDateInvoice;
+    }
+
+    @JsonIgnore
+    public DateTime getClosedDateInvoice() {
+        return closedDateInvoice;
+    }
+
+    public void setClosedDateInvoice(DateTime closedDateInvoice) {
+        this.closedDateInvoice = closedDateInvoice;
     }
 
     @JsonIgnore
@@ -100,11 +98,11 @@ public class Invoice extends AbstractEntity
         this.invoiceDetails = invoiceDetails;
     }
 
-    public Long getId() {
-        return idInvoice;
+    public Double getTotalInvoice() {
+        return totalInvoice;
     }
 
-    public void setId(Long IdInvoice) {
-        this.idInvoice = IdInvoice;
+    public void setTotalInvoice(Double totalInvoice) {
+        this.totalInvoice = totalInvoice;
     }
 }

@@ -14,42 +14,49 @@ import javax.persistence.*;
 public class InvoiceDetailPurity  extends AbstractEntity
 {
     @Id
+    @Column(name = "id_invoiceDetail_purity")
     private Long idInvoiceDetailPurity;
 
     @ManyToOne
-    @JoinColumn(name = "id_purity")
-    @Column(nullable = false)
+    @JoinColumn(name = "id_purity", nullable = false)
     private Purity purity;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "valueRate_invoiceDetail_purity")
     private Integer valueRateInvoiceDetailPurity=0;
 
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(nullable = false, name = "totalDiscount_purity")
     private Integer totalDiscountPurity=0;
+
+    @Constraints.Required
+    @Column(nullable = false, name = "discountRate_purity")
+    private Integer discountRatePurity=0;
 
 
     @ManyToOne
     @JoinColumn(name = "id_invoiceDetail")
     private InvoiceDetail invoiceDetail;
 
-    @JsonIgnore
+
+    @Constraints.Required
+    @Column(nullable = false, name = "status__invoiceDetail_purity")
+    private Integer statusInvoiceDetailPurity=1;
+
+    public Long getIdInvoiceDetailPurity() {
+        return idInvoiceDetailPurity;
+    }
+
+    public void setIdInvoiceDetailPurity(Long idInvoiceDetailPurity) {
+        this.idInvoiceDetailPurity = idInvoiceDetailPurity;
+    }
+
     public Purity getPurity() {
         return purity;
     }
 
-
     public void setPurity(Purity purity) {
         this.purity = purity;
-    }
-
-    public Integer getTotalDiscountPurity() {
-        return totalDiscountPurity;
-    }
-
-    public void setTotalDiscountPurity(Integer totalDiscountPurity) {
-        this.totalDiscountPurity = totalDiscountPurity;
     }
 
     public Integer getValueRateInvoiceDetailPurity() {
@@ -60,20 +67,35 @@ public class InvoiceDetailPurity  extends AbstractEntity
         this.valueRateInvoiceDetailPurity = valueRateInvoiceDetailPurity;
     }
 
-    @JsonIgnore
+    public Integer getTotalDiscountPurity() {
+        return totalDiscountPurity;
+    }
+
+    public void setTotalDiscountPurity(Integer totalDiscountPurity) {
+        this.totalDiscountPurity = totalDiscountPurity;
+    }
+
+    public Integer getDiscountRatePurity() {
+        return discountRatePurity;
+    }
+
+    public void setDiscountRatePurity(Integer discountRatePurity) {
+        this.discountRatePurity = discountRatePurity;
+    }
+
     public InvoiceDetail getInvoiceDetail() {
         return invoiceDetail;
     }
 
-    public void setInvoiceDetails(InvoiceDetail invoiceDetail) {
+    public void setInvoiceDetail(InvoiceDetail invoiceDetail) {
         this.invoiceDetail = invoiceDetail;
     }
 
-    public Long getId() {
-        return idInvoiceDetailPurity;
+    public Integer getStatusInvoiceDetailPurity() {
+        return statusInvoiceDetailPurity;
     }
 
-    public void setId(Long idInvoiceDetailPurity) {
-        this.idInvoiceDetailPurity = idInvoiceDetailPurity;
+    public void setStatusInvoiceDetailPurity(Integer statusInvoiceDetailPurity) {
+        this.statusInvoiceDetailPurity = statusInvoiceDetailPurity;
     }
 }

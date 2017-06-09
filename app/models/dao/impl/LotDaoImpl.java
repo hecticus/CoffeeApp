@@ -3,6 +3,7 @@ package models.dao.impl;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import models.dao.FarmDao;
 import models.dao.LotDao;
 import models.domain.Lot;
 
@@ -17,6 +18,7 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     public LotDaoImpl() {
         super(Lot.class);
     }
+    private static FarmDao farmDao = new FarmDaoImpl();
 
     public int getExist(String name_item_type)
     {
@@ -33,7 +35,7 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     public List<Lot> getByNameLot(String NameLot, String order)
     {
         String sql="select t0.id_lot c0, t0.status_delete c1, t0.name_lot c2," +
-                " t0.area_lot c3, t0.farm_lot c4, t0.heigh_lot c5, t0.created_at c6, " +
+                " t0.area_lot c3, t0.id_farm c4, t0.heigh_lot c5, t0.created_at c6, " +
                 "t0.updated_at c7 from lots t0 " +
                 "where t0.status_delete= 0 and t0.name_lot like '%"+NameLot+"%' "+
                 " order by t0.name_lot "+order;
@@ -48,7 +50,7 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     public List<Lot> getByStatusLot(String StatusLot, String order)
     {
         String sql="select t0.id_lot c0, t0.status_delete c1, t0.name_lot c2," +
-                " t0.area_lot c3, t0.farm_lot c4, t0.heigh_lot c5, t0.created_at c6, " +
+                " t0.area_lot c3, t0.id_farm c4, t0.heigh_lot c5, t0.created_at c6, " +
                 "t0.updated_at c7 from lots t0 ";
 
         if(!StatusLot.equals("-1"))  sql+="where t0.status_delete= "+StatusLot;
@@ -71,12 +73,12 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
         {
             lot = new Lot();
 
-            lot.setId(sqlRows.get(i).getLong("c0"));
+            lot.setIdLot(sqlRows.get(i).getLong("c0"));
             lot.setStatusDelete(sqlRows.get(i).getInteger("c1"));
-            lot.setName(sqlRows.get(i).getString("c2"));
-            lot.setArea(sqlRows.get(i).getString("c3"));
-            lot.setFarm(sqlRows.get(i).getString("c4"));
-            lot.setHeigh(sqlRows.get(i).getDouble("c5"));
+            lot.setNameLot(sqlRows.get(i).getString("c2"));
+            lot.setAreaLot(sqlRows.get(i).getString("c3"));
+            lot.setFarm(farmDao.findById(sqlRows.get(i).getLong("c4")));
+            lot.setHeighLot(sqlRows.get(i).getDouble("c5"));
             lots.add(lot);
         }
 

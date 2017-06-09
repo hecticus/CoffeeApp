@@ -11,61 +11,74 @@ create table config (
   constraint pk_config primary key (id_config)
 );
 
+create table farms (
+  id_farm                       bigint auto_increment not null,
+  status_delete                 integer not null,
+  name_farm                     varchar(255) not null,
+  status_farm                   integer not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  constraint pk_farms primary key (id_farm)
+);
+
 create table invoices (
   id_invoice                    bigint auto_increment not null,
   status_delete                 integer not null,
-  id_provider                   bigint,
+  id_provider                   bigint not null,
   status_invoice                integer not null,
-  start_date_invoice            date not null,
-  closed_date_invoice           date not null,
+  duedate_invoice               date not null,
+  closeddate_invoice            date not null,
   total_invoice                 double,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
   constraint pk_invoices primary key (id_invoice)
 );
 
-create table invoices_details (
-  id_invoice_detail             bigint auto_increment not null,
+create table invoice_details (
+  id_invoicedetail              bigint auto_increment not null,
   status_delete                 integer not null,
-  id_invoice                    bigint,
-  id_itemtype                   bigint,
+  id_invoice                    bigint not null,
+  id_itemtype                   bigint not null,
   id_lot                        bigint,
   id_store                      bigint,
-  cost_item_type                decimal(10,2) not null,
-  start_date_invoice_detail     date not null,
-  amount_invoice_detail         integer,
-  freight_invoice_detail        tinyint(1) default 0,
-  note_invoice_detail           varchar(255),
-  name_received_invoice_detail  varchar(255) not null,
-  name_delivered_invoice_detail varchar(255) not null,
+  cost_itemtype                 decimal(10,2) not null,
+  duedate_invoicedetail         date not null,
+  amount_invoicedetail          integer,
+  isfreight_invoicedetail       tinyint(1) default 0,
+  note_invoicedetail            varchar(255),
+  namereceived_invoicedetail    varchar(255) not null,
+  namedelivered_invoicedetail   varchar(255) not null,
+  status_invoicedetail          integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
-  constraint pk_invoices_details primary key (id_invoice_detail)
+  constraint pk_invoice_details primary key (id_invoicedetail)
 );
 
 create table invoicesdetails_purities (
-  id_invoice_detail_purity      bigint auto_increment not null,
+  id_invoicedetail_purity       bigint auto_increment not null,
   status_delete                 integer not null,
-  id_purity                     bigint,
-  value_rate_invoice_detail_purity integer not null,
-  total_discount_purity         integer not null,
+  id_purity                     bigint not null,
+  valuerate_invoicedetail_purity integer not null,
+  totaldiscount_purity          integer not null,
+  discountrate_purity           integer not null,
   id_invoicedetail              bigint,
+  status__invoicedetail_purity  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
-  constraint pk_invoicesdetails_purities primary key (id_invoice_detail_purity)
+  constraint pk_invoicesdetails_purities primary key (id_invoicedetail_purity)
 );
 
 create table item_types (
-  id_item_type                  bigint auto_increment not null,
+  id_itemtype                   bigint auto_increment not null,
   status_delete                 integer not null,
-  name_item_type                varchar(255) not null,
-  cost_item_type                decimal(10,2) not null,
-  status_item_type              integer not null,
-  id_providertype               bigint,
-  id_unit                       bigint,
+  name_itemtype                 varchar(255) not null,
+  cost_itemtype                 decimal(10,2) not null,
+  status_itemtype               integer not null,
+  id_providertype               bigint not null,
+  id_unit                       bigint not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
-  constraint pk_item_types primary key (id_item_type)
+  constraint pk_item_types primary key (id_itemtype)
 );
 
 create table lots (
@@ -73,8 +86,9 @@ create table lots (
   status_delete                 integer not null,
   name_lot                      varchar(255) not null,
   area_lot                      varchar(255) not null,
-  farm_lot                      varchar(255) not null,
   heigh_lot                     double not null,
+  status_lot                    integer not null,
+  id_farm                       bigint not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
   constraint pk_lots primary key (id_lot)
@@ -83,26 +97,28 @@ create table lots (
 create table providers (
   id_provider                   bigint auto_increment not null,
   status_delete                 integer not null,
-  identification_doc_provider   varchar(255) not null,
-  full_name_provider            varchar(255) not null,
+  identificationdoc_provider    varchar(255) not null,
+  fullname_provider             varchar(255) not null,
   address_provider              varchar(255) not null,
-  phone_number_provider         varchar(255) not null,
+  phonenumber_provider          varchar(255) not null,
   email_provider                varchar(255),
   photo_provider                varchar(255),
-  id_providertype               bigint,
-  contact_name_provider         varchar(255) not null,
+  id_providertype               bigint not null,
+  contactname_provider          varchar(255) not null,
+  status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
   constraint pk_providers primary key (id_provider)
 );
 
-create table provider_types (
-  id_provider_type              bigint auto_increment not null,
+create table provider_type (
+  id_providertype               bigint auto_increment not null,
   status_delete                 integer not null,
-  name_provider_type            varchar(255) not null,
+  name_providertype             varchar(255) not null,
+  status_providertype           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
-  constraint pk_provider_types primary key (id_provider_type)
+  constraint pk_provider_type primary key (id_providertype)
 );
 
 create table purities (
@@ -110,7 +126,7 @@ create table purities (
   status_delete                 integer not null,
   name_purity                   varchar(255) not null,
   status_purity                 integer not null,
-  discount_rate_purity          integer not null,
+  discountrate_purity           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
   constraint pk_purities primary key (id_purity)
@@ -139,31 +155,34 @@ create table units (
 alter table invoices add constraint fk_invoices_id_provider foreign key (id_provider) references providers (id_provider) on delete restrict on update restrict;
 create index ix_invoices_id_provider on invoices (id_provider);
 
-alter table invoices_details add constraint fk_invoices_details_id_invoice foreign key (id_invoice) references invoices (id_invoice) on delete restrict on update restrict;
-create index ix_invoices_details_id_invoice on invoices_details (id_invoice);
+alter table invoice_details add constraint fk_invoice_details_id_invoice foreign key (id_invoice) references invoices (id_invoice) on delete restrict on update restrict;
+create index ix_invoice_details_id_invoice on invoice_details (id_invoice);
 
-alter table invoices_details add constraint fk_invoices_details_id_itemtype foreign key (id_itemtype) references item_types (id_item_type) on delete restrict on update restrict;
-create index ix_invoices_details_id_itemtype on invoices_details (id_itemtype);
+alter table invoice_details add constraint fk_invoice_details_id_itemtype foreign key (id_itemtype) references item_types (id_itemtype) on delete restrict on update restrict;
+create index ix_invoice_details_id_itemtype on invoice_details (id_itemtype);
 
-alter table invoices_details add constraint fk_invoices_details_id_lot foreign key (id_lot) references lots (id_lot) on delete restrict on update restrict;
-create index ix_invoices_details_id_lot on invoices_details (id_lot);
+alter table invoice_details add constraint fk_invoice_details_id_lot foreign key (id_lot) references lots (id_lot) on delete restrict on update restrict;
+create index ix_invoice_details_id_lot on invoice_details (id_lot);
 
-alter table invoices_details add constraint fk_invoices_details_id_store foreign key (id_store) references stores (id_store) on delete restrict on update restrict;
-create index ix_invoices_details_id_store on invoices_details (id_store);
+alter table invoice_details add constraint fk_invoice_details_id_store foreign key (id_store) references stores (id_store) on delete restrict on update restrict;
+create index ix_invoice_details_id_store on invoice_details (id_store);
 
 alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_id_purity foreign key (id_purity) references purities (id_purity) on delete restrict on update restrict;
 create index ix_invoicesdetails_purities_id_purity on invoicesdetails_purities (id_purity);
 
-alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_id_invoicedetail foreign key (id_invoicedetail) references invoices_details (id_invoice_detail) on delete restrict on update restrict;
+alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_id_invoicedetail foreign key (id_invoicedetail) references invoice_details (id_invoicedetail) on delete restrict on update restrict;
 create index ix_invoicesdetails_purities_id_invoicedetail on invoicesdetails_purities (id_invoicedetail);
 
-alter table item_types add constraint fk_item_types_id_providertype foreign key (id_providertype) references provider_types (id_provider_type) on delete restrict on update restrict;
+alter table item_types add constraint fk_item_types_id_providertype foreign key (id_providertype) references provider_type (id_providertype) on delete restrict on update restrict;
 create index ix_item_types_id_providertype on item_types (id_providertype);
 
 alter table item_types add constraint fk_item_types_id_unit foreign key (id_unit) references units (id_unit) on delete restrict on update restrict;
 create index ix_item_types_id_unit on item_types (id_unit);
 
-alter table providers add constraint fk_providers_id_providertype foreign key (id_providertype) references provider_types (id_provider_type) on delete restrict on update restrict;
+alter table lots add constraint fk_lots_id_farm foreign key (id_farm) references farms (id_farm) on delete restrict on update restrict;
+create index ix_lots_id_farm on lots (id_farm);
+
+alter table providers add constraint fk_providers_id_providertype foreign key (id_providertype) references provider_type (id_providertype) on delete restrict on update restrict;
 create index ix_providers_id_providertype on providers (id_providertype);
 
 
@@ -172,17 +191,17 @@ create index ix_providers_id_providertype on providers (id_providertype);
 alter table invoices drop foreign key fk_invoices_id_provider;
 drop index ix_invoices_id_provider on invoices;
 
-alter table invoices_details drop foreign key fk_invoices_details_id_invoice;
-drop index ix_invoices_details_id_invoice on invoices_details;
+alter table invoice_details drop foreign key fk_invoice_details_id_invoice;
+drop index ix_invoice_details_id_invoice on invoice_details;
 
-alter table invoices_details drop foreign key fk_invoices_details_id_itemtype;
-drop index ix_invoices_details_id_itemtype on invoices_details;
+alter table invoice_details drop foreign key fk_invoice_details_id_itemtype;
+drop index ix_invoice_details_id_itemtype on invoice_details;
 
-alter table invoices_details drop foreign key fk_invoices_details_id_lot;
-drop index ix_invoices_details_id_lot on invoices_details;
+alter table invoice_details drop foreign key fk_invoice_details_id_lot;
+drop index ix_invoice_details_id_lot on invoice_details;
 
-alter table invoices_details drop foreign key fk_invoices_details_id_store;
-drop index ix_invoices_details_id_store on invoices_details;
+alter table invoice_details drop foreign key fk_invoice_details_id_store;
+drop index ix_invoice_details_id_store on invoice_details;
 
 alter table invoicesdetails_purities drop foreign key fk_invoicesdetails_purities_id_purity;
 drop index ix_invoicesdetails_purities_id_purity on invoicesdetails_purities;
@@ -196,14 +215,19 @@ drop index ix_item_types_id_providertype on item_types;
 alter table item_types drop foreign key fk_item_types_id_unit;
 drop index ix_item_types_id_unit on item_types;
 
+alter table lots drop foreign key fk_lots_id_farm;
+drop index ix_lots_id_farm on lots;
+
 alter table providers drop foreign key fk_providers_id_providertype;
 drop index ix_providers_id_providertype on providers;
 
 drop table if exists config;
 
+drop table if exists farms;
+
 drop table if exists invoices;
 
-drop table if exists invoices_details;
+drop table if exists invoice_details;
 
 drop table if exists invoicesdetails_purities;
 
@@ -213,7 +237,7 @@ drop table if exists lots;
 
 drop table if exists providers;
 
-drop table if exists provider_types;
+drop table if exists provider_type;
 
 drop table if exists purities;
 

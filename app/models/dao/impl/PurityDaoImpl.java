@@ -33,7 +33,7 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
     public List<Purity> getByNamePurity(String NamePurity, String order)
     {
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3," +
-                " t0.discount_rate_purity c4, t0.created_at c5, t0.updated_at c6 " +
+                " t0.discountrate_purity c4, t0.created_at c5, t0.updated_at c6 " +
                 "from purities t0" +
                 " where name_purity like '%"+NamePurity+"%'  and status_delete = 0"+
                 " order by t0.name_purity "+order;
@@ -48,13 +48,13 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
     public List<Purity> getByStatusPurity(String StatusPurity, String order)
     {
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3, " +
-                " t0.discount_rate_purity c4, t0.created_at c5, t0.updated_at c6 " +
+                " t0.discountrate_purity c4, t0.created_at c5, t0.updated_at c6 " +
                 " from purities t0 "+
                 " where t0.status_delete=0 ";
 
         if(!StatusPurity.equals("-1"))  sql+=" and t0.status_purity= "+StatusPurity;
 
-        sql+=" order by t0.name_Purity "+order;
+        sql+=" order by t0.name_purity "+order;
 
         SqlQuery query = Ebean.createSqlQuery(sql);
 
@@ -72,11 +72,11 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
         {
             purity = new Purity();
 
-            purity.setId(sqlRows.get(i).getLong("c0"));
+            purity.setIdPurity(sqlRows.get(i).getLong("c0"));
             purity.setStatusDelete(sqlRows.get(i).getInteger("c1"));
-            purity.setName(sqlRows.get(i).getString("c2"));
-            purity.setStatus(sqlRows.get(i).getInteger("c3"));
-            purity.setDiscountRate(sqlRows.get(i).getInteger("c4"));
+            purity.setNamePurity(sqlRows.get(i).getString("c2"));
+            purity.setStatusPurity(sqlRows.get(i).getInteger("c3"));
+            purity.setDiscountRatePurity(sqlRows.get(i).getInteger("c4"));
             purities.add(purity);
         }
 

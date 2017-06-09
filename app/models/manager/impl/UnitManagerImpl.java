@@ -84,7 +84,7 @@ public class UnitManagerImpl   implements UnitManager {
                 if(registered==0) return  Response.messageExist("name");
                 if(registered==1) return  Response.messageExistDeleted("name");
 
-                unit.setName(Name.asText().toUpperCase());
+                unit.setNameUnit(Name.asText().toUpperCase());
             }
 
             unit = unitDao.update(unit);
