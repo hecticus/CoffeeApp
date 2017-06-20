@@ -13,7 +13,6 @@ import javax.persistence.*;
  * @since 2016
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user")
 public class User extends AbstractEntity {
 
@@ -80,7 +79,7 @@ public class User extends AbstractEntity {
 
     @Constraints.Required
     @ManyToOne
-    @Column(nullable = false)
+    @Column(nullable = false, name = "id_role")
     private Role role;
 
     public String getName() {

@@ -34,7 +34,7 @@ public class UserManagerImpl implements UserManager {
     private static RoleManager roleDao = new RoleManagerImpl();
 
     private String secret_key = "";
-    private String app_server = "dev.lifefitness.hecticus.com";
+    private String app_server = "localhost"; /*ojo con esto drocha colocal el de coffe*/
 
     private MailerClient mailerClient;
 
@@ -83,7 +83,7 @@ public class UserManagerImpl implements UserManager {
 
             JsonNode pass = request.get("password");
             if (pass == null)
-                return Response.requiredParameter("passsword");
+                return Response.requiredParameter("password");
 
             User USER = userDao.findByEmail(user.textValue());
 
@@ -210,6 +210,12 @@ public class UserManagerImpl implements UserManager {
 
 
         } catch (ExpiredJwtException ex){
+            return badRequest(Response.buildExtendResponse("",null));
+
+        }catch (SignatureException ex){
+            //Aca cae si falla el verify
+            //Logica que quiero si falla
+
             return badRequest(Response.buildExtendResponse("",null));
 
         } catch (Exception e) {

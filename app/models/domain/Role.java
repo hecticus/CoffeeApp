@@ -14,8 +14,8 @@ import java.util.List;
 @Table(name="role")
 public class Role extends AbstractEntity {
 
-        @Id
-        private Long idRole;
+    @Id
+    private Long idRole;
 
     @Constraints.MaxLength(100)
     @Column(length = 100, nullable = false)

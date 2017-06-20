@@ -132,6 +132,60 @@ create table purities (
   constraint pk_purities primary key (id_purity)
 );
 
+create table role (
+  id_role                       bigint auto_increment not null,
+  status_delete                 integer not null,
+  name                          varchar(100) not null,
+  description                   varchar(255) not null,
+  status_role_id_status         bigint,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  constraint pk_role primary key (id_role)
+);
+
+create table route (
+  id_security_route             bigint auto_increment not null,
+  status_delete                 integer not null,
+  name                          varchar(50) not null,
+  description                   varchar(255) not null,
+  route_type                    integer,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  constraint pk_route primary key (id_security_route)
+);
+
+create table route_tag (
+  route_id_security_route       bigint not null,
+  tag_id_security_tag           bigint not null,
+  constraint pk_route_tag primary key (route_id_security_route,tag_id_security_tag)
+);
+
+create table tag (
+  id_security_tag               bigint auto_increment not null,
+  status_delete                 integer not null,
+  name                          varchar(50) not null,
+  description                   varchar(255) not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  constraint pk_tag primary key (id_security_tag)
+);
+
+create table tag_role (
+  tag_id_security_tag           bigint not null,
+  role_id_role                  bigint not null,
+  constraint pk_tag_role primary key (tag_id_security_tag,role_id_role)
+);
+
+create table status (
+  status_type                   varchar(31) not null,
+  id_status                     bigint auto_increment not null,
+  status_delete                 integer not null,
+  name                          varchar(100),
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  constraint pk_status primary key (id_status)
+);
+
 create table stores (
   id_store                      bigint auto_increment not null,
   status_delete                 integer not null,
@@ -150,6 +204,25 @@ create table units (
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT 0 not null,
   constraint pk_units primary key (id_unit)
+);
+
+create table user (
+  id_user                       bigint auto_increment not null,
+  status_delete                 integer not null,
+  name                          varchar(100),
+  password                      varchar(100),
+  first_name                    varchar(100) not null,
+  last_name                     varchar(100) not null,
+  email                         varchar(255) not null,
+  email_validated               smallint,
+  archived                      tinyint default 0 not null,
+  last_login                    datetime,
+  token                         varchar(255),
+  role_id_role                  bigint,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  constraint uq_user_email unique (email),
+  constraint pk_user primary key (id_user)
 );
 
 alter table invoices add constraint fk_invoices_id_provider foreign key (id_provider) references providers (id_provider) on delete restrict on update restrict;
@@ -184,6 +257,24 @@ create index ix_lots_id_farm on lots (id_farm);
 
 alter table providers add constraint fk_providers_id_providertype foreign key (id_providertype) references provider_type (id_providertype) on delete restrict on update restrict;
 create index ix_providers_id_providertype on providers (id_providertype);
+
+alter table role add constraint fk_role_status_role_id_status foreign key (status_role_id_status) references status (id_status) on delete restrict on update restrict;
+create index ix_role_status_role_id_status on role (status_role_id_status);
+
+alter table route_tag add constraint fk_route_tag_route foreign key (route_id_security_route) references route (id_security_route) on delete restrict on update restrict;
+create index ix_route_tag_route on route_tag (route_id_security_route);
+
+alter table route_tag add constraint fk_route_tag_tag foreign key (tag_id_security_tag) references tag (id_security_tag) on delete restrict on update restrict;
+create index ix_route_tag_tag on route_tag (tag_id_security_tag);
+
+alter table tag_role add constraint fk_tag_role_tag foreign key (tag_id_security_tag) references tag (id_security_tag) on delete restrict on update restrict;
+create index ix_tag_role_tag on tag_role (tag_id_security_tag);
+
+alter table tag_role add constraint fk_tag_role_role foreign key (role_id_role) references role (id_role) on delete restrict on update restrict;
+create index ix_tag_role_role on tag_role (role_id_role);
+
+alter table user add constraint fk_user_role_id_role foreign key (role_id_role) references role (id_role) on delete restrict on update restrict;
+create index ix_user_role_id_role on user (role_id_role);
 
 
 # --- !Downs
@@ -221,6 +312,24 @@ drop index ix_lots_id_farm on lots;
 alter table providers drop foreign key fk_providers_id_providertype;
 drop index ix_providers_id_providertype on providers;
 
+alter table role drop foreign key fk_role_status_role_id_status;
+drop index ix_role_status_role_id_status on role;
+
+alter table route_tag drop foreign key fk_route_tag_route;
+drop index ix_route_tag_route on route_tag;
+
+alter table route_tag drop foreign key fk_route_tag_tag;
+drop index ix_route_tag_tag on route_tag;
+
+alter table tag_role drop foreign key fk_tag_role_tag;
+drop index ix_tag_role_tag on tag_role;
+
+alter table tag_role drop foreign key fk_tag_role_role;
+drop index ix_tag_role_role on tag_role;
+
+alter table user drop foreign key fk_user_role_id_role;
+drop index ix_user_role_id_role on user;
+
 drop table if exists config;
 
 drop table if exists farms;
@@ -241,7 +350,21 @@ drop table if exists provider_type;
 
 drop table if exists purities;
 
+drop table if exists role;
+
+drop table if exists route;
+
+drop table if exists route_tag;
+
+drop table if exists tag;
+
+drop table if exists tag_role;
+
+drop table if exists status;
+
 drop table if exists stores;
 
 drop table if exists units;
+
+drop table if exists user;
 

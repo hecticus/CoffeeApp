@@ -27,11 +27,12 @@ public class RoleDaoImpl extends AbstractDaoImpl<Long, Role> implements RoleDao 
         Role rol = user.getRole();
         StringBuilder sql = new StringBuilder();
         sql.append(
-                "SELECT m.id " +
+                "SELECT m.id_security_route " +
                         "FROM route As m "+
-                        "INNER JOIN route_tag mm ON mm.route_id = m.id "+
-                        "INNER JOIN tag mb ON mb.id = mm.tag_id "+
-                        "INNER JOIN tag_role mt ON mt.tag_id = mb.id  WHERE  mt.role_id= :roleId " +
+                        "INNER JOIN route_tag mm ON mm.route_id_security_route  = m.id_security_route "+
+                        "INNER JOIN tag mb ON mb.id_security_tag = mm.tag_id_security_tag "+
+                        "INNER JOIN tag_role mt ON mt.tag_id_security_tag  = mb.id_security_tag " +
+                        " WHERE  mt.role_id_role= :roleId " +
                         "AND m.name LIKE :routeName"
         );
 
