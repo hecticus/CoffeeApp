@@ -16,5 +16,25 @@ dist
 test
 testThumbnails
 BD.png
+/dev-web/CoffeWeb/node_modules
+/dev-server/CoffeeApp/.idea
+/dev-server/CoffeeApplogs
+/dev-server/CoffeeAppproject/project
+/dev-server/CoffeeAppproject/target
+/dev-server/CoffeeApptarget
+/dev-server/CoffeeApptmp
+/dev-server/CoffeeApp.history
+/dev-server/CoffeeAppdist
+/.idea
+/dev-server/CoffeeApp/*.iml
+/dev-server/CoffeeApp/out
+/dev-server/CoffeeApp/.idea_modules
+/dev-server/CoffeeApp/.classpath
+/dev-server/CoffeeApp/.project
+/dev-server/CoffeeApp/RUNNING_PID
+/dev-server/CoffeeApp/.settings
+/dev-server/CoffeeApp/test
+/dev-server/CoffeeApp/testThumbnails
+/dev-server/CoffeeApp/BD.png
 
     
