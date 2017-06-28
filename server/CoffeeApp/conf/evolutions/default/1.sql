@@ -17,7 +17,7 @@ create table farms (
   name_farm                     varchar(255) not null,
   status_farm                   integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_farms primary key (id_farm)
 );
 
@@ -30,7 +30,7 @@ create table invoices (
   closeddate_invoice            date not null,
   total_invoice                 double,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id_invoice)
 );
 
@@ -50,7 +50,7 @@ create table invoice_details (
   namedelivered_invoicedetail   varchar(255) not null,
   status_invoicedetail          integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_invoice_details primary key (id_invoicedetail)
 );
 
@@ -64,7 +64,7 @@ create table invoicesdetails_purities (
   id_invoicedetail              bigint,
   status__invoicedetail_purity  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_invoicesdetails_purities primary key (id_invoicedetail_purity)
 );
 
@@ -77,7 +77,7 @@ create table item_types (
   id_providertype               bigint not null,
   id_unit                       bigint not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_item_types primary key (id_itemtype)
 );
 
@@ -90,7 +90,7 @@ create table lots (
   status_lot                    integer not null,
   id_farm                       bigint not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_lots primary key (id_lot)
 );
 
@@ -107,7 +107,7 @@ create table providers (
   contactname_provider          varchar(255) not null,
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_providers primary key (id_provider)
 );
 
@@ -117,7 +117,7 @@ create table provider_type (
   name_providertype             varchar(255) not null,
   status_providertype           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_provider_type primary key (id_providertype)
 );
 
@@ -128,7 +128,7 @@ create table purities (
   status_purity                 integer not null,
   discountrate_purity           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_purities primary key (id_purity)
 );
 
@@ -139,7 +139,7 @@ create table role (
   description                   varchar(255) not null,
   status_role_id_status         bigint,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_role primary key (id_role)
 );
 
@@ -150,7 +150,7 @@ create table route (
   description                   varchar(255) not null,
   route_type                    integer,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_route primary key (id_security_route)
 );
 
@@ -166,7 +166,7 @@ create table tag (
   name                          varchar(50) not null,
   description                   varchar(255) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_tag primary key (id_security_tag)
 );
 
@@ -182,7 +182,7 @@ create table status (
   status_delete                 integer not null,
   name                          varchar(100),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_status primary key (id_status)
 );
 
@@ -192,7 +192,7 @@ create table stores (
   name_store                    varchar(255) not null,
   status_store                  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_stores primary key (id_store)
 );
 
@@ -202,7 +202,7 @@ create table units (
   name_unit                     varchar(255) not null,
   status_unit                   integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_units primary key (id_unit)
 );
 
@@ -220,7 +220,7 @@ create table user (
   token                         varchar(255),
   role_id_role                  bigint,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT 0 not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint uq_user_email unique (email),
   constraint pk_user primary key (id_user)
 );

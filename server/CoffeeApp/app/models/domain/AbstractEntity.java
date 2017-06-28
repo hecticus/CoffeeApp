@@ -34,7 +34,7 @@ public abstract class AbstractEntity extends Model{
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
     //@Temporal(TemporalType.TIMESTAMP)
-    @Column(columnDefinition = "TIMESTAMP DEFAULT 0")
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
 
     @Constraints.Required
