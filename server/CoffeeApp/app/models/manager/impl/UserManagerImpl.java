@@ -154,6 +154,8 @@ public class UserManagerImpl implements UserManager {
 
                     return ok()
                             .withHeader("Authorization", jwt)
+                            .withHeader("Access-Control-Allow-Origin", "*")
+                            .withHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
                             .withHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Custom-header")
                             .withHeader("Access-Control-Expose-Headers","Authorization");
 
@@ -202,7 +204,9 @@ public class UserManagerImpl implements UserManager {
                     return ok(Response.buildExtendResponse("",null))
                             .withHeader("Authorization", token)
                             .withHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Custom-header")
-                            .withHeader("Access-Control-Expose-Headers","Authorization");
+                            .withHeader("Access-Control-Expose-Headers","Authorization")
+                            .withHeader("Access-Control-Allow-Origin", "*")
+                            .withHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
 
             }else{
                 return badRequest(Response.buildExtendResponse("Token is null",null));
@@ -258,7 +262,9 @@ public class UserManagerImpl implements UserManager {
                return ok(Response.buildExtendResponse("Sent",null))
                             .withHeader("Authorization", jwt)
                             .withHeader("Access-Control-Allow-Headers","Origin, Content-Type, Authorization, X-Custom-header")
-                            .withHeader("Access-Control-Expose-Headers","Authorization");
+                            .withHeader("Access-Control-Expose-Headers","Authorization")
+                            .withHeader("Access-Control-Allow-Origin", "*")
+                            .withHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
 
 
             } else {
