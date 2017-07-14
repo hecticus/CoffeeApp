@@ -4,8 +4,8 @@
 /dist
 /tmp
 
-/anterior
-
+rutas_del_API.txt
+ 
 # dependencies
 /node_modules
 

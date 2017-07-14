@@ -1,0 +1,37 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "baseUrl": "src",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2016",
+      "dom"
+    ]
+  },
+  "files": [
+    "typings/tsd.d.ts",  
+    "src/app.ts",
+    "src/home/index.ts",
+    "src/login/index.ts",
+    "src/signup/index.ts",
+    "src/index.ts",
+    "src/common/headers.ts",
+    "src/common/auth.guard.ts"
+  ],
+    "filesGlob": [
+    "./src/**/*.ts",
+    "!./node_modules/**/*.ts"
+  ],
+  "buildOnSave": false,
+  "atom": { "rewriteTsconfig": true }
+  
+}
