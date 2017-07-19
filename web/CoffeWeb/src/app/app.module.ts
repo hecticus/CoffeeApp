@@ -1,19 +1,57 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { HttpModule, Http, RequestOptions  } from '@angular/http';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { AppComponent } from './app.component';
+import { provideAuth, AuthHttp, AuthConfig  } from 'angular2-jwt';
+import { AuthGuard } from './common/auth.guard';
+import { Home } from './home';
+import { Login } from './login';
+import { Signup } from './signup';
+import { App } from './app';
+import { routes } from './app.routes';
+import { Panel } from './panel';
+import { Farm } from './farm';
+
+
+
+
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp( new AuthConfig({}), http, options);
+}
 
 @NgModule({
+  bootstrap: [App],
   declarations: [
-    AppComponent
+    Home,
+    Panel,
+    Login,
+    Signup,
+    App,
+    Farm
   ],
   imports: [
-    BrowserModule,NgbModule.forRoot()
+    HttpModule, BrowserModule, FormsModule,
+    RouterModule.forRoot(routes, {
+      useHash: true
+    }),
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    AuthGuard,
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [ Http, RequestOptions ]
+    }
+  ]
 })
-export class AppModule { 
-  	title = 'Coffee';
-	content = { }
+
+
+export class AppModule {
+
 }
+
+
+
+
+

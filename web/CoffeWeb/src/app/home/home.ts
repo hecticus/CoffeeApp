@@ -27,8 +27,9 @@ export class Home {
     this.router.navigate(['login']);
   }
 
-  callAnonymousApi() {
-    this._callApi('Anonymous', 'http://localhost:3001/api/random-quote');
+  panelAdmin() {
+              this.router.navigate(['panel']);
+  //  this._callApi('Anonymous', 'http://localhost:3001/api/random-quote');
   }
 
   callSecuredApi() {

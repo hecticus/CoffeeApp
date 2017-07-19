@@ -19,13 +19,15 @@
   },
   "files": [
     "typings/tsd.d.ts",  
-    "src/app.ts",
-    "src/home/index.ts",
-    "src/login/index.ts",
-    "src/signup/index.ts",
+    "src/app/app.ts",
+    "src/app/home/index.ts",
+    "src/app/login/index.ts",
+    "src/app/signup/index.ts",
     "src/index.ts",
-    "src/common/headers.ts",
-    "src/common/auth.guard.ts"
+    "src/app/common/headers.ts",
+    "src/app/common/auth.guard.ts",
+    "src/app/panel/index.ts",
+     "src/app/farm/index.ts"
   ],
     "filesGlob": [
     "./src/**/*.ts",

@@ -3,9 +3,8 @@
 # compiled output
 /dist
 /tmp
+/out-tsc
 
-rutas_del_API.txt
- 
 # dependencies
 /node_modules
 
@@ -16,6 +15,7 @@ rutas_del_API.txt
 .c9/
 *.launch
 .settings/
+*.sublime-workspace
 
 # IDE - VSCode
 .vscode/*
@@ -27,16 +27,15 @@ rutas_del_API.txt
 # misc
 /.sass-cache
 /connect.lock
-/coverage/*
+/coverage
 /libpeerconnection.log
 npm-debug.log
 testem.log
-/typings
 
 # e2e
 /e2e/*.js
 /e2e/*.map
 
-#System Files
+# System Files
 .DS_Store
 Thumbs.db
