@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { contentHeaders } from '../common/headers';
+import { BaseService } from '../common/services/base.service';
 
 const styles   = require('./login.css');
 const template = require('./login.html');
@@ -11,15 +12,17 @@ const template = require('./login.html');
   template: template,
   styles: [ styles ]
 })
-export class Login {
-  constructor(public router: Router, public http: Http) {
+export class Login  extends BaseService {
+      private urlUser: string = this.HOST + '/user'
+  constructor(public router: Router, public http: Http)
+   {
+     super();
   }
 
   login(event, email, password) {
     event.preventDefault();
     let body = JSON.stringify({ email, password });
-    this.http.post('https://dev.api.coffee.hecticus.com/user/login', body, { headers: contentHeaders })
-   //   this.http.post('http://localhost:9000/user/login', body, { headers: contentHeaders })
+      this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
       .subscribe(
         response => {
           if (response.json().result=="null")

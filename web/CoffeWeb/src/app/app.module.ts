@@ -12,6 +12,7 @@ import { App } from './app';
 import { routes } from './app.routes';
 import { Panel } from './panel';
 import { Farm } from './farm';
+import { FarmServicesComponent } from './farm/farm-services/farm-services.component';
 
 
 
@@ -28,7 +29,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     Login,
     Signup,
     App,
-    Farm
+    Farm,
+    FarmServicesComponent
   ],
   imports: [
     HttpModule, BrowserModule, FormsModule,
