@@ -41,7 +41,7 @@ create table invoice_details (
   id_itemtype                   bigint not null,
   id_lot                        bigint,
   id_store                      bigint,
-  cost_itemtype                 decimal(10,2) not null,
+  price_itemtypebylot           decimal(10,2) not null,
   duedate_invoicedetail         date not null,
   amount_invoicedetail          integer,
   isfreight_invoicedetail       tinyint(1) default 0,
@@ -89,6 +89,7 @@ create table lots (
   heigh_lot                     double not null,
   status_lot                    integer not null,
   id_farm                       bigint not null,
+  price_lot                     decimal(10,2) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_lots primary key (id_lot)

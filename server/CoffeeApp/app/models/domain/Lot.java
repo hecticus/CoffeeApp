@@ -38,6 +38,10 @@ public class Lot extends AbstractEntity
     @JoinColumn(name = "id_farm", nullable = false)
     private Farm farm;
 
+    @Constraints.Required
+    @Column(nullable = false, columnDefinition = "Decimal(10,2)",name = "price_lot")
+    private Float priceLot;
+
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
@@ -96,5 +100,13 @@ public class Lot extends AbstractEntity
 
     public void setStatusLot(Integer statusLot) {
         this.statusLot = statusLot;
+    }
+
+    public Float getPrice_lot() {
+        return priceLot;
+    }
+
+    public void setPrice_lot(Float priceLot) {
+        this.priceLot = priceLot;
     }
 }

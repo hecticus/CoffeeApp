@@ -58,6 +58,11 @@ public class LotManagerImpl implements LotManager {
 
             farm = Request.removeParameter(json, "farm");
 
+
+            JsonNode price_lot = json.get("price_lot");
+            if (price_lot == null)
+                return Response.requiredParameter("price_lot");
+
             JsonNode status = json.get("status");
             if (status == null)
                 return Response.requiredParameter("status");
@@ -92,6 +97,10 @@ public class LotManagerImpl implements LotManager {
             JsonNode farm = json.get("farm");
             if (farm != null)
                      farm = Request.removeParameter(json, "farm");
+
+            JsonNode price_lot = json.get("price_lot");
+            if (price_lot == null)
+                return Response.requiredParameter("price_lot");
 
             Lot lot =  Json.fromJson(json, Lot.class);
 

@@ -43,8 +43,8 @@ public class InvoiceDetail  extends AbstractEntity
     private Store store;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "cost_itemType")
-    private Float costItemType;
+    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "price_ItemTypeByLot")
+    private Float priceItemTypeByLot;
 
     @Column(columnDefinition = "date", nullable = false, name = "dueDate_invoiceDetail")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
@@ -124,12 +124,12 @@ public class InvoiceDetail  extends AbstractEntity
         this.store = store;
     }
 
-    public Float getCostItemType() {
-        return costItemType;
+    public Float getPriceItemTypeByLot() {
+        return priceItemTypeByLot;
     }
 
-    public void setCostItemType(Float costItemType) {
-        this.costItemType = costItemType;
+    public void setPriceItemTypeByLot(Float priceItemTypeByLot) {
+        this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
     @JsonIgnore
