@@ -1,21 +1,17 @@
 .red {
   color: red;
 }
-
 .sidenav {
     height: 100%;
-   width: 20%;
+    width: 0;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #DFDFDF;
+    background-color: #111;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
-}
-.home{
-     width: 100%;
 }
 
 .sidenav a {
@@ -31,6 +27,11 @@
     color: #f1f1f1;
 }
 
+h2
+{
+    color: #f1f1f1; 
+}
+
 .sidenav .closebtn {
     position: absolute;
     top: 0;
@@ -43,3 +44,4 @@
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+

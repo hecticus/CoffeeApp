@@ -32,6 +32,26 @@ export class Panel {
    // this._callApi('Anonymous', 'http://localhost:3001/api/random-quote');
   }
 
+   unit() {
+    document.getElementById("unitSidenav").style.width = "250px";
+  }
+  
+  showUnitCreate()
+  {
+     document.getElementById("formUnitCreate").style.width = "500px";
+  } 
+  openNav() {
+    document.getElementById("panelSidenav").style.width = "250px";
+    //document.getElementById("home").style.marginLeft = "250px";
+}
+
+closeNav() {
+    document.getElementById("panelSidenav").style.width = "0";
+    //document.getElementById("home").style.marginLeft= "0";
+}
+
+
+
   callSecuredApi() {
     this._callApi('Secured', 'http://localhost:3001/api/protected/random-quote');
   }

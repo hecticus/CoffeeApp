@@ -12,18 +12,18 @@ const template = require('./login.html');
   template: template,
   styles: [ styles ]
 })
-export class Login  extends BaseService {
-      private urlUser: string = this.HOST + '/user'
-  constructor(public router: Router, public http: Http)
-   {
-     super();
+export class Login extends BaseService{
+
+  private urlUser: string= this.HOST+'/user';
+  constructor(public router: Router, public http: Http) {
+    super();
   }
 
   login(event, email, password) {
     event.preventDefault();
     let body = JSON.stringify({ email, password });
-      this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
-      .subscribe(
+    this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
+       .subscribe(
         response => {
           if (response.json().result=="null")
           {
@@ -40,7 +40,7 @@ export class Login  extends BaseService {
           }
           console.log(error.json().message);
         }
-      );
+       );
   }
 
   signup(event) {

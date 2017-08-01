@@ -27,8 +27,8 @@ export class Farm {
     this.router.navigate(['login']);
   }
 
-  CallFarmApi() {
-    this._callApi('Anonymous', 'farm-services');
+  callAnonymousApi() {
+    this._callApi('Anonymous', 'http://localhost:3001/api/random-quote');
   }
 
   callSecuredApi() {

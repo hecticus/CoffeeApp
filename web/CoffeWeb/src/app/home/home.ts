@@ -20,7 +20,17 @@ export class Home {
   constructor(public router: Router, public http: Http, public authHttp: AuthHttp) {
     this.jwt = localStorage.getItem('token');
   //  this.decodedJwt = this.jwt && window.jwt_decode(this.jwt);
-  }
+}
+
+ openNav() {
+    document.getElementById("menuHome").style.width = "250px";
+    //document.getElementById("home").style.marginLeft = "250px";
+}
+
+closeNav() {
+    document.getElementById("menuHome").style.width = "0";
+    //document.getElementById("home").style.marginLeft= "0";
+}
 
   logout() {
     localStorage.removeItem('token');

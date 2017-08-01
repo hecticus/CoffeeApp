@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 
 
 export class BaseService{ 
-    //public HOST: string = 'http://10.0.3.112:9000';
-    //public HOST: string = 'http://10.0.3.108:9000';
+
     public HOST: string = 'https://dev.api.coffee.hecticus.com';
     //public HOST: string = 'http://localhost:9000';
     public PAGE_SIZE: string = "3";

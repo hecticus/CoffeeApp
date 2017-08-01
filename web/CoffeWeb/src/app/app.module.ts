@@ -12,9 +12,12 @@ import { App } from './app';
 import { routes } from './app.routes';
 import { Panel } from './panel';
 import { Farm } from './farm';
-import { FarmServicesComponent } from './farm/farm-services/farm-services.component';
-
-
+import { MdMenuComponent } from './md-menu/md-menu.component';
+import { UnitComponent } from './unit/unit.component';
+import { UnitPanelComponent } from './servicesUnit/unit-panel/unit-panel.component';
+import { UnitCreateComponent } from './servicesUnit/unit-create/unit-create.component';
+import { UnitUpdateComponent } from './servicesUnit/unit-update/unit-update.component';
+import { UnitAllComponent } from './servicesUnit/unit-all/unit-all.component';
 
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
@@ -30,7 +33,12 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     Signup,
     App,
     Farm,
-    FarmServicesComponent
+    MdMenuComponent,
+    UnitComponent,
+    UnitPanelComponent,
+    UnitCreateComponent,
+    UnitUpdateComponent,
+    UnitAllComponent
   ],
   imports: [
     HttpModule, BrowserModule, FormsModule,
