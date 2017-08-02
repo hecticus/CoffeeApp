@@ -18,6 +18,8 @@ import { UnitPanelComponent } from './servicesUnit/unit-panel/unit-panel.compone
 import { UnitCreateComponent } from './servicesUnit/unit-create/unit-create.component';
 import { UnitUpdateComponent } from './servicesUnit/unit-update/unit-update.component';
 import { UnitAllComponent } from './servicesUnit/unit-all/unit-all.component';
+import { ChangePasswordComponent } from './user/change-password/change-password.component';
+import { EqualValidator } from './common/directives/equal-validator.directive'; 
 
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
@@ -38,7 +40,9 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     UnitPanelComponent,
     UnitCreateComponent,
     UnitUpdateComponent,
-    UnitAllComponent
+    UnitAllComponent,
+    ChangePasswordComponent,
+    EqualValidator 
   ],
   imports: [
     HttpModule, BrowserModule, FormsModule,
