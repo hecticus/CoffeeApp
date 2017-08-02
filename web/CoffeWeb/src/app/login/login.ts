@@ -43,6 +43,28 @@ export class Login extends BaseService{
        );
   }
 
+forgotPassword(event, email,)
+{
+event.preventDefault();
+    this.http.get(this.urlUser+'/reset/'+email, { headers: contentHeaders })
+       .subscribe(
+        response => {
+          if (response.json().message=="Sent")
+          {
+             alert("Le fue enviado un correo");
+            this.router.navigate(['login']);
+          }
+
+        },
+        error => {
+          if(error.status===400)
+          {
+            alert(error.json().message);
+          }
+          console.log(error.json().message);
+        }
+       );
+}
   signup(event) {
     event.preventDefault();
     this.router.navigate(['signup']);
