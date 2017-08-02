@@ -34,7 +34,9 @@ public class UserManagerImpl implements UserManager {
     private static RoleManager roleDao = new RoleManagerImpl();
 
     private String secret_key = "";
-    private String app_server = "localhost"; /*ojo con esto drocha colocal el de coffe*/
+    private String app_server = "http://localhost:4200/#/"; /*ojo con esto drocha colocal el de coffe*/
+
+    // private String app_server = "https://dev.coffee.hecticus.com/#/"; /* para pruebas en dev*/
 
     private MailerClient mailerClient;
 
