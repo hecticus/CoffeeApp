@@ -240,7 +240,7 @@ public class UserManagerImpl implements UserManager {
             this.secret_key = config.getString("play.crypto.secret");
 
             String auth_path = "reset";
-            String href = "http://"+app_server+"/"+auth_path;
+            String href = app_server+"/"+auth_path;
             //String href = "http://localhost:4200/"+auth_path;
 
             User USER = userDao.findByEmail(to_email);
