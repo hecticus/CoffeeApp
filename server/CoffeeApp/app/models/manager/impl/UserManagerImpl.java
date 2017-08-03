@@ -34,9 +34,8 @@ public class UserManagerImpl implements UserManager {
     private static RoleManager roleDao = new RoleManagerImpl();
 
     private String secret_key = "";
-    private String app_server = "http://localhost:4200/#/"; /*ojo con esto drocha colocal el de coffe*/
-
-    // private String app_server = "https://dev.coffee.hecticus.com/#/"; /* para pruebas en dev*/
+   // private String app_server = "http://localhost:4200/#"; /*ojo con esto para pruebas locales*/
+     private String app_server = "https://dev.coffee.hecticus.com/#"; /* para pruebas en dev*/
 
     private MailerClient mailerClient;
 
@@ -259,7 +258,7 @@ public class UserManagerImpl implements UserManager {
 
                Notify notify = new Notify(mailerClient);
 
-               notify.sendEmail("<a href='"+href+"?token="+jwt+"'>Password Recovery Link</a>", to_email, "german.mantilla@hecticus.com", "Password Recovery");
+               notify.sendEmail("<a href='"+href+"'>Password Recovery Link</a>", to_email, "german.mantilla@hecticus.com", "Password Recovery");
 
                return ok(Response.buildExtendResponse("Sent",null))
                             .withHeader("Authorization", jwt)
