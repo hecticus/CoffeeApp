@@ -258,14 +258,9 @@ public class UserManagerImpl implements UserManager {
 
                Notify notify = new Notify(mailerClient);
 
-               notify.sendEmail("<a href='"+href+"'>Password Recovery Link</a>", to_email, "german.mantilla@hecticus.com", "Password Recovery");
+               notify.sendEmail("<a href='"+href+"?to_email="+to_email+"&token="+jwt+"'>Password Recovery Link</a>", to_email, "german.mantilla@hecticus.com", "Password Recovery");
 
-               return ok(Response.buildExtendResponse("Sent",null))
-                            .withHeader("Authorization", jwt)
-                            .withHeader("Access-Control-Allow-Headers","Origin, Content-Type, Authorization, X-Custom-header")
-                            .withHeader("Access-Control-Expose-Headers","Authorization")
-                            .withHeader("Access-Control-Allow-Origin", "*")
-                            .withHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+               return ok(Response.buildExtendResponse("Sent",null));
 
 
             } else {
@@ -300,7 +295,7 @@ public class UserManagerImpl implements UserManager {
 
                     JsonNode pass = request.get("password");
                     if (pass == null)
-                        return Response.requiredParameter("passsword");
+                        return Response.requiredParameter("password");
 
                     User USER = userDao.findByEmail(user.textValue());
 
