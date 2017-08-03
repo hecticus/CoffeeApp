@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Password } from './password.interface';
 import { BaseService } from '../../common/services/base.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Http } from '@angular/http';
 import { contentHeaders } from '../../common/headers';
 
@@ -13,7 +13,10 @@ import { contentHeaders } from '../../common/headers';
 export class ChangePasswordComponent  extends BaseService implements OnInit{
   private passwordvalidator: Password;
   private urlUser: string= this.HOST+'/user';
-  constructor(public router: Router, public http: Http) {
+  private accessToken: string;	
+	private email: string;
+   
+  constructor(public router: Router, public http: Http, private route: ActivatedRoute) {
       super();
   }
 
@@ -21,7 +24,9 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
     this.passwordvalidator = {
             password: '',
             confirmPassword: ''
-    }
+    };
+    this.getFromUrl();
+		if (this.accessToken !== undefined) { }
   }
   save(model: Password, isValid: boolean) {
         // call API to save customer
@@ -31,8 +36,11 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
   changePassword(model: Password, isValid: boolean)
   {
      if(isValid){
+       contentHeaders.append('Authorization',this.accessToken);
         event.preventDefault();
-        let body = JSON.stringify({model});
+        let password = model['password'];
+        let email = this.email;
+        let body = JSON.stringify({password,email});
         this.http.put(this.urlUser+'/reset', body,  { headers: contentHeaders })
           .subscribe(
               response => {
@@ -52,6 +60,18 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
               }
           );
       }
-      else{alert("claves no coinciden");}
+      else{
+        alert("claves no coinciden");
+      }
   }
+
+ 
+	getFromUrl() {
+		this.route.params.subscribe((params: Params) =>  {
+      this.accessToken = params['token'];
+    	this.email = params['to_email'];
+     console.log(this.accessToken);
+     console.log(this.email );
+   });
+	}
 }
