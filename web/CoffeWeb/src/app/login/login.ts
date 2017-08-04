@@ -22,6 +22,7 @@ export class Login extends BaseService{
   login(event, email, password) {
     event.preventDefault();
     let body = JSON.stringify({ email, password });
+    console.log(this.urlUser);
     this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
        .subscribe(
         response => {
