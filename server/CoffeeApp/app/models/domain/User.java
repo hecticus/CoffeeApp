@@ -73,7 +73,7 @@ public class User extends AbstractEntity {
     protected DateTime lastLogin;
 
 
-    @Constraints.MaxLength(100)
+    @Constraints.MaxLength(500)
     @Column(nullable = true)
     protected String token;
 
