@@ -43,10 +43,10 @@ export class Login extends BaseService{
        );
   }
 
-forgotPassword(event, email,)
+forgotPassword(event, emailM)
 {
 event.preventDefault();
-    this.http.get(this.urlUser+'/reset/'+email, { headers: contentHeaders })
+    this.http.get(this.urlUser+'/reset/'+emailM, { headers: contentHeaders })
        .subscribe(
         response => {
           if (response.json().message=="Sent")

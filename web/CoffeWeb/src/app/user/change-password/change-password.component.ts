@@ -4,6 +4,7 @@ import { BaseService } from '../../common/services/base.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Http } from '@angular/http';
 import { contentHeaders } from '../../common/headers';
+import { AuthHttp } from 'angular2-jwt';
 
 @Component({
   selector: 'app-change-password',
@@ -16,7 +17,7 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
   private accessToken: string;	
 	private email: string;
    
-  constructor(public router: Router, public http: Http, private route: ActivatedRoute) {
+  constructor(public router: Router, public http: Http, private route: ActivatedRoute, public authHttp: AuthHttp) {
       super();
   }
 
@@ -25,8 +26,9 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
             password: '',
             confirmPassword: ''
     };
+
     this.getFromUrl();
-		if (this.accessToken !== undefined) { }
+
   }
   save(model: Password, isValid: boolean) {
         // call API to save customer
@@ -36,7 +38,8 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
   changePassword(model: Password, isValid: boolean)
   {
      if(isValid){
-       contentHeaders.append('Authorization',this.accessToken);
+       contentHeaders.append("Authorization",this.accessToken);
+       console.log(contentHeaders);
         event.preventDefault();
         let password = model['password'];
         let email = this.email;
@@ -44,9 +47,9 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
         this.http.put(this.urlUser+'/reset', body,  { headers: contentHeaders })
           .subscribe(
               response => {
-                if (response.json().message=="Sent")
+                if (response.json().message=="Successful updated")
                 {
-                    alert("Le fue enviado un correo");
+                    alert("Cambio &eacutexitoso");
                     this.router.navigate(['login']);
                 }
 
@@ -67,11 +70,11 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
 
  
 	getFromUrl() {
-		this.route.params.subscribe((params: Params) =>  {
-      this.accessToken = params['token'];
-    	this.email = params['to_email'];
+
+     this.accessToken = this.route.snapshot.queryParams["token"];
      console.log(this.accessToken);
-     console.log(this.email );
-   });
+     this.email = this.route.snapshot.queryParams["to_email"];
+     console.log(this.email);
+
 	}
 }

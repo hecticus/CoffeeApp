@@ -1,9 +1,9 @@
 <div class="login jumbotron center-block">
   <h1></h1>
-  <form role="form" (submit)="login($event, Email.value, password.value)">
+  <form role="form" (submit)="login($event, email.value, password.value)">
   <div class="form-group">
-    <label for="Email">Correo</label>
-    <input type="text" #Email class="form-control" id="Email" placeholder="Correo">
+    <label for="email">Correo</label>
+    <input type="text" #email class="form-control" id="email" placeholder="Correo">
   </div>
   <div class="form-group">
     <label for="password">Clave</label>
@@ -25,10 +25,10 @@ Se te olvid&oacute; la clave</a>
         <h4 class="modal-title" id="myModalLabel">Recuperaci&oacute;n de clave</h4>
       </div>
       <div class="modal-body">
-           <form role="form" (submit)="forgotPassword($event, Email.value)">
+           <form role="form" (submit)="forgotPassword($event, emailM.value)">
               <div class="form-group">
-                <label for="Email">Correo</label>
-                <input type="text" #Email class="form-control" id="Email" placeholder="Correo">
+                <label for="emailM">Correo</label>
+                <input type="text" #emailM class="form-control" id="emailM" placeholder="Correo">
               </div>
               <button type="submit" class="btn btn-default">Recuperar</button>
             </form>
