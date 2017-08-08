@@ -10,16 +10,12 @@ import { Login } from './login';
 import { Signup } from './signup';
 import { App } from './app';
 import { routes } from './app.routes';
-import { Panel } from './panel';
-import { Farm } from './farm';
-import { MdMenuComponent } from './md-menu/md-menu.component';
-import { UnitComponent } from './unit/unit.component';
-import { UnitPanelComponent } from './servicesUnit/unit-panel/unit-panel.component';
-import { UnitCreateComponent } from './servicesUnit/unit-create/unit-create.component';
-import { UnitUpdateComponent } from './servicesUnit/unit-update/unit-update.component';
-import { UnitAllComponent } from './servicesUnit/unit-all/unit-all.component';
 import { ChangePasswordComponent } from './user/change-password/change-password.component';
-import { EqualValidator } from './common/directives/equal-validator.directive'; 
+import { EqualValidator } from './common/directives/equal-validator.directive';
+import { MenuComponent } from './common/menu/menu.component';
+import { MenuItemComponent } from './common/menu/menu-item/menu-item.component';
+import { LogoutComponent } from './user/logout/logout.component';
+
 
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
@@ -30,19 +26,14 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   bootstrap: [App],
   declarations: [
     Home,
-    Panel,
     Login,
     Signup,
     App,
-    Farm,
-    MdMenuComponent,
-    UnitComponent,
-    UnitPanelComponent,
-    UnitCreateComponent,
-    UnitUpdateComponent,
-    UnitAllComponent,
     ChangePasswordComponent,
-    EqualValidator 
+    EqualValidator,
+    MenuComponent,
+    MenuItemComponent,
+    LogoutComponent
   ],
   imports: [
     HttpModule, BrowserModule, FormsModule,

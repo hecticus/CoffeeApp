@@ -1,0 +1,23 @@
+<ul>
+	<li 
+		*ngFor="let menuItem of menuItems" 
+		[ngClass]="{
+			'with-sub-menu': menuItem.children!=undefined, 
+			'expanded': menuItem.expanded == true, 
+			'selected': menuItem.selected == true 
+		}">
+		<div *ngIf="!menuItem.children" (click)="onSelectMenuItem(menuItem)" class="row">
+			<!--<div class="icon {{menuItem.icon}}"></div>-->
+			<a (click)="onClicked(menuItem)">{{menuItem.title}}</a>
+		</div>
+		<div *ngIf="menuItem.children" (click)="onToggleSubMenu(menuItem)" class="row">	
+			<!--<div class="icon {{menuItem.icon}}"></div>-->
+			<a>{{menuItem.title}}</a>
+			<b class="icon" [ngClass]="{'angle-up': menuItem.expanded == true, 'angle-down': menuItem.expanded == false}"></b>
+		</div>
+		<side-nav-item 
+			*ngIf="menuItem.children" 
+			[menuItems]=menuItem.children>
+		</side-nav-item>		
+	</li>
+</ul>

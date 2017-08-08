@@ -53,7 +53,7 @@ event.preventDefault();
           if (response.json().message=="Sent")
           {
              alert("Le fue enviado un correo");
-            this.router.navigate(['login']);
+             location.reload();
           }
 
         },

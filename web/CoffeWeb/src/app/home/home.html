@@ -1,18 +1,9 @@
-<div>
-  <div class="col-md-30 col-md-offset-2">
-  <div id="home" class="home jumbotron centered">
-    <h1>Bienvenido al sistema</h1>
-    <p>Por favor, dar click en algunas de las opciones</p>
-   </div>
-  </div>
-  <div class="col-md-5 col-md-offset-2">
-   <div id="menuHome" class="sidenav">
- <!-- <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a> -->
-  <a class="" role="button" (click)="panelAdmin()">Admin</a>
-  <a class="" role="button" (click)="callAnonymousApi()">Operador</a>
-  <a class="" role="button" (click)="callSecuredApi()">Finanzas</a>
-  <a class="" role="button" (click)="logout()">Salir</a>
+<side-nav></side-nav>
+
+<header></header>
+
+<div id="data">	
+	<router-outlet></router-outlet>
 </div>
-</div>
-</div>
-<!-- <p><a class="btn btn-primary btn-lg" role="button" (click)="openNav()">&#9776; Menu</a></p> -->
+
+<footer></footer>
