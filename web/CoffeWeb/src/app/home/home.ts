@@ -43,11 +43,6 @@ closeNav() {
     this.router.navigate(['login']);
   }
 
-  panelAdmin() {
-              this.router.navigate(['panel']);
-  //  this._callApi('Anonymous', 'http://localhost:3001/api/random-quote');
-  }
-
   callSecuredApi() {
     this._callApi('Secured', 'http://localhost:3001/api/protected/random-quote');
   }

@@ -46,8 +46,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       useHash: true
     }),
     SimpleNotificationsModule.forRoot(),
-    NoopAnimationsModule
-   // BrowserAnimationsModule 
+    NoopAnimationsModule,
+    BrowserAnimationsModule 
   ],
   providers: [
     NotificationService,

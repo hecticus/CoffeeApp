@@ -25,9 +25,7 @@
     "src/app/signup/index.ts",
     "src/index.ts",
     "src/app/common/headers.ts",
-    "src/app/common/auth.guard.ts",
-    "src/app/panel/index.ts",
-     "src/app/farm/index.ts"
+    "src/app/common/auth.guard.ts"
   ],
     "filesGlob": [
     "./src/**/*.ts",

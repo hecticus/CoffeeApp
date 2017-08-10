@@ -26,7 +26,8 @@ module.exports = {
       // RxJS
       'rxjs',
       // Other
-      'angular2-jwt'
+      'angular2-jwt',
+      'angular2-notifications'
     ],
     'app': [
       './src/index'
