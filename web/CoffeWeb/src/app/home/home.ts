@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 import { AuthHttp } from 'angular2-jwt';
+import { NotificationService } from '../common/notification/notification.service';
 
 const styles = require('./home.css');
 const template = require('./home.html');
+
 
 @Component({
   selector: 'home',
@@ -17,9 +19,13 @@ export class Home {
   response: string;
   api: string;
 
-  constructor(public router: Router, public http: Http, public authHttp: AuthHttp) {
+  constructor(public router: Router,
+   public http: Http,
+   public authHttp: AuthHttp, 
+   private notificationService: NotificationService) {
     this.jwt = localStorage.getItem('token');
   //  this.decodedJwt = this.jwt && window.jwt_decode(this.jwt);
+   this.notificationService.sucessLogin();
 }
 
  openNav() {

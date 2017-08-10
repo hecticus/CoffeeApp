@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { contentHeaders } from '../common/headers';
 import { BaseService } from '../common/services/base.service';
+import { NotificationService } from '../common/notification/notification.service';
+
 
 const styles   = require('./login.css');
 const template = require('./login.html');
@@ -12,12 +14,21 @@ const template = require('./login.html');
   template: template,
   styles: [ styles ]
 })
-export class Login extends BaseService{
+export class Login extends BaseService implements OnInit {
 
   private urlUser: string= this.HOST+'/user';
-  constructor(public router: Router, public http: Http) {
+  constructor(
+    public router: Router, 
+    public http: Http, 
+    private notificationService: NotificationService
+  ) {
+    
     super();
   }
+  
+  	ngOnInit() {
+
+	}
 
   login(event, email, password) {
         console.log(this.urlUser);
@@ -26,19 +37,18 @@ export class Login extends BaseService{
     this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
        .subscribe(
         response => {
+           this.notificationService.sucessLogin();
           if (response.json().result=="null")
           {
             alert(response.json().message);
             
           }
           localStorage.setItem('token', response.json().result.token);
+          this.notificationService.sucessLogin();
           this.router.navigate(['home']);
         },
         error => {
-          if(error.status===400)
-          {
-            alert(error.json().message);
-          }
+          this.notificationService.error(error.status === 400 ? 'Email o password es incorrecto' : 'Error del servidor');
           console.log(error.json().message);
         }
        );

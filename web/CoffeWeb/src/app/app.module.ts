@@ -15,6 +15,10 @@ import { EqualValidator } from './common/directives/equal-validator.directive';
 import { MenuComponent } from './common/menu/menu.component';
 import { MenuItemComponent } from './common/menu/menu-item/menu-item.component';
 import { LogoutComponent } from './user/logout/logout.component';
+import { NotificationComponent } from './common/notification/notification.component';
+import { SimpleNotificationsModule  , NotificationsService} from 'angular2-notifications';
+import { NotificationService } from './common/notification/notification.service';
+import { BrowserAnimationsModule,NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -33,15 +37,20 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     EqualValidator,
     MenuComponent,
     MenuItemComponent,
-    LogoutComponent
+    LogoutComponent,
+    NotificationComponent
   ],
   imports: [
     HttpModule, BrowserModule, FormsModule,
     RouterModule.forRoot(routes, {
       useHash: true
     }),
+    SimpleNotificationsModule.forRoot(),
+    NoopAnimationsModule
+   // BrowserAnimationsModule 
   ],
   providers: [
+    NotificationService,
     AuthGuard,
     {
       provide: AuthHttp,
