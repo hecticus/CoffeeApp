@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.css']
 })
-@Injectable()
+
 export class LogoutComponent implements OnInit {
 
   constructor(public router: Router, public http: Http, public authHttp: AuthHttp) { }

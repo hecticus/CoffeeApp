@@ -42,8 +42,8 @@ export class MenuComponent {
 			]
 		},{	
 			title: 'salir',
-			routerLink: './user/logout/logout.component',
-			selected: false,
+			routerLink: '../user/logout',
+			selected: false
 		}
 	];
 }

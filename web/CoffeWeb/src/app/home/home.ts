@@ -25,7 +25,6 @@ export class Home {
    private notificationService: NotificationService) {
     this.jwt = localStorage.getItem('token');
   //  this.decodedJwt = this.jwt && window.jwt_decode(this.jwt);
-   this.notificationService.sucessLogin();
 }
 
  openNav() {
