@@ -27,6 +27,9 @@ export class Login extends BaseService implements OnInit {
   }
   
   	ngOnInit() {
+      localStorage.removeItem('token');
+      sessionStorage.clear;
+      localStorage.clear;
 
 	}
 
@@ -37,7 +40,6 @@ export class Login extends BaseService implements OnInit {
     this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
        .subscribe(
         response => {
-           this.notificationService.sucessLogin();
           if (response.json().result=="null")
           {
             alert(response.json().message);
@@ -49,7 +51,6 @@ export class Login extends BaseService implements OnInit {
         },
         error => {
           this.notificationService.error(error.status === 400 ? 'Email o password es incorrecto' : 'Error del servidor');
-          console.log(error.json().message);
         }
        );
   }
@@ -62,19 +63,18 @@ event.preventDefault();
         response => {
           if (response.json().message=="Sent")
           {
-             alert("Le fue enviado un correo");
-             location.reload();
-          }
+            this.notificationService.genericsuccess("operación exitosa", "Le fue enviado un correo");
+         }
 
         },
         error => {
           if(error.status===400)
           {
-            alert(error.json().message);
+            this.notificationService.alert("verifique la direccion de correo");
           }
-          console.log(error.json().message);
         }
        );
+                  
 }
   signup(event) {
     event.preventDefault();

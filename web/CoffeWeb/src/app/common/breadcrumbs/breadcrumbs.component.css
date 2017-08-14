@@ -1,0 +1,199 @@
+/* https://codepen.io/firatcftc/pen/sHlnK */
+ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/*#breadcrumb li:nth-child(even) a {
+	background-color: #2980b9;
+}
+#breadcrumb li:nth-child(even) a:before {
+	border-color: #2980b9;
+	border-left-color: transparent;
+}
+#breadcrumb li:nth-child(even) a:after {
+	border-left-color: #2980b9;
+}*/
+
+#breadcrumb li:nth-child(1) a {
+	background-color: #017ed2;
+}
+#breadcrumb li:nth-child(1) a:before {
+	border-color: #017ed2;
+	border-left-color: transparent;
+}
+#breadcrumb li:nth-child(1) a:after {
+	border-left-color: #017ed2;
+}
+
+#breadcrumb li:nth-child(2) a {
+	background-color: #3498db;
+}
+#breadcrumb li:nth-child(2) a:before {
+	border-color: #3498db;
+	border-left-color: transparent;
+}
+#breadcrumb li:nth-child(2) a:after {
+	border-left-color: #3498db;
+}
+
+#breadcrumb li:nth-child(3) a {
+	background-color: #64abdb;
+}
+#breadcrumb li:nth-child(3) a:before {
+	border-color: #64abdb;
+	border-left-color: transparent;
+}
+#breadcrumb li:nth-child(3) a:after {
+	border-left-color: #64abdb;
+}
+
+#breadcrumb li:nth-child(4) a {
+	background-color: #8bbada;
+}
+#breadcrumb li:nth-child(4) a:before {
+	border-color: #8bbada;
+	border-left-color: transparent;
+}
+#breadcrumb li:nth-child(4) a:after {
+	border-left-color: #8bbada;
+}
+
+#breadcrumb li:nth-child(5) a {
+	background-color: #a5c4d8;
+}
+#breadcrumb li:nth-child(5) a:before {
+	border-color: #a5c4d8;
+	border-left-color: transparent;
+}
+#breadcrumb li:nth-child(5) a:after {
+	border-left-color: #a5c4d8;
+}
+
+#breadcrumb li:last-child a{
+	background-color: #1abc9c;
+}
+#breadcrumb li:last-child a:before{
+	border-color: #1abc9c;
+	border-left-color: transparent;
+}
+#breadcrumb li:last-child a:after {
+	border-left-color: #1abc9c;
+}
+
+
+#breadcrumb {
+	list-style: none;
+	display: inline-block;
+	width: 100%;
+}
+	ul#breadcrumb {
+		background-color: rgba(255, 255, 255, 0.8);
+	}
+		#breadcrumb li {
+			float: left;
+		}
+			#breadcrumb li a {
+				background: #c1ced7;
+				text-decoration: none;
+				position: relative;
+				height: 32px;
+				line-height: 32px;
+				margin-right: 15px;
+				display: flex;
+				flex-direction: row;
+			}
+				#breadcrumb .name{
+					text-align: center;
+					color: #FFF;
+					font-size: 14px;
+					padding: 0 10px 0 5px;
+				}
+			#breadcrumb li:first-child a {
+				padding: 0 0px 0 5px;
+			}
+			#breadcrumb li:first-child a:before {
+				border: none;
+			}
+
+			#breadcrumb li a:before, 
+			#breadcrumb li a:after {
+				content: "";
+				position: absolute;
+				top: 0;
+				border: 0 solid #c1ced7;
+				border-width: 16px 10px;
+				width: 0;
+				height: 0;
+			}
+			#breadcrumb li a:before {
+				left: -16px;
+				border-left-color: transparent;
+			}
+			#breadcrumb li a:after {
+				left: 100%;
+				border-color: transparent;
+				border-left-color: #c1ced7;
+			}
+
+			#breadcrumb li a:hover {
+				background-color: #1abc9c;
+			}
+			#breadcrumb li a:hover:before {
+				border-color: #1abc9c;
+				border-left-color: transparent;
+			}
+			#breadcrumb li a:hover:after {
+				border-left-color: #1abc9c;
+			}
+			#breadcrumb li a:active {
+				background-color: #16a085;
+			}
+			#breadcrumb li a:active:before {
+				border-color: #16a085;
+				border-left-color: transparent;
+			}
+			#breadcrumb li a:active:after {
+				border-left-color: #16a085;
+			}
+
+
+
+
+/* 
+	icon
+*/
+#breadcrumb .icon {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 12px;
+	width: 20px;
+	height: 32px;
+}
+.icon.home{
+	background-image: url("/assets/images/icons/white/home.png");
+}
+.icon.list{
+	background-image: url("/assets/images/icons/white/list2.png");
+	background-size: 11px !important;
+}
+.icon.detail{
+	background-image: url("/assets/images/icons/white/see.png");
+	background-size: 13px !important;
+}
+.icon.create{
+	background-image: url("/assets/images/icons/white/add.png");
+}
+.icon.update{
+	background-image: url("/assets/images/icons/white/update.png");
+}
+.icon.delete{
+	background-image: url("/assets/images/icons/white/delete.png");
+}
+.icon.close{
+	background-image: url("/assets/images/icons/white/close.png");
+}
+.icon.gallery{
+	background-image: url("/assets/images/icons/white/gallery.png");
+}		

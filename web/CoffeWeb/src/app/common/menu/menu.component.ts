@@ -42,7 +42,7 @@ export class MenuComponent {
 			]
 		},{	
 			title: 'salir',
-			routerLink: '../user/logout',
+			routerLink: './user/logout',
 			selected: false
 		}
 	];

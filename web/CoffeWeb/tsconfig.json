@@ -20,7 +20,6 @@
   "files": [
     "typings/tsd.d.ts",  
     "src/app/app.ts",
-    "src/app/home/index.ts",
     "src/app/login/index.ts",
     "src/app/signup/index.ts",
     "src/index.ts",
