@@ -22,13 +22,14 @@
     "@angular/platform-browser-dynamic": "^4.0.3",
     "@angular/router": "^4.0.3",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.28",
+    "angular-crumbs": "^2.0.3",
     "angular2-jwt": "^0.2.2",
+    "angular2-notifications": "~0.7.7",
+    "auth0-lock": "^10.7.3",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4",
-    "auth0-lock":"^10.7.3",
-    "angular2-notifications":"~0.7.7"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular/cli": "1.2.0",

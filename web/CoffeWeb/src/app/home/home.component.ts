@@ -1,8 +1,8 @@
 import { Component, OnInit  } from '@angular/core';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router';
-import { AuthHttp } from 'angular2-jwt';
 import { NotificationService } from '../common/notification/notification.service';
+
 
 const styles = require('./home.component.css');
 const template = require('./home.component.html');
@@ -14,8 +14,11 @@ const template = require('./home.component.html');
   styles: [ styles ]
 })
 export class HomeComponent implements OnInit {
+
       constructor() { }
-      ngOnInit() {}
+      ngOnInit() { }
+   
 }
+
 
 

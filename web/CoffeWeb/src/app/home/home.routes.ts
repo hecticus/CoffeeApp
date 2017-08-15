@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { App } from '../app';
 import { HomeComponent } from './home.component';
+import { AuthGuard } from '../common/auth.guard';
 
 
 export const homeRoutes: Routes = [
     {
-        path: 'admin',
+        path: 'home',
         component: HomeComponent,
+        canActivate: [AuthGuard], 
         children: [
                  ],
         data: {
@@ -17,6 +18,6 @@ export const homeRoutes: Routes = [
     },
 ]; 
 
-export const homeRouting = RouterModule.forRoot(homeRoutes);
+export const homeRouting = RouterModule.forChild(homeRoutes);
 
 

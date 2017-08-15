@@ -1,0 +1,8 @@
+<button
+	[title]="title"
+	[type]="'button'"
+	(click)="onClicked($event)"
+	class="btn-icon">
+	<div *ngIf="!toogle" [ngClass]="['icon', iconOff]"></div>
+	<div *ngIf="toogle" [ngClass]="['icon', iconOn]"></div>
+</button>

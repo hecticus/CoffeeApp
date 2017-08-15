@@ -1,20 +1,23 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
-import { contentHeaders } from '../common/headers';
-import { BaseService } from '../common/services/base.service';
-import { NotificationService } from '../common/notification/notification.service';
+import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 
 
-const styles   = require('./login.css');
-const template = require('./login.html');
+import { contentHeaders } from '../../common/headers';
+import { BaseService } from '../../common/services/base.service';
+import { NotificationService } from '../../common/notification/notification.service';
+
+
+const styles   = require('./login.component.css');
+const template = require('./login.component.html');
 
 @Component({
   selector: 'login',
   template: template,
   styles: [ styles ]
 })
-export class Login extends BaseService implements OnInit {
+export class LoginComponent extends BaseService implements OnInit {
 
   private urlUser: string= this.HOST+'/user';
   constructor(
@@ -30,8 +33,7 @@ export class Login extends BaseService implements OnInit {
       localStorage.removeItem('token');
       sessionStorage.clear;
       localStorage.clear;
-
-	}
+     }
 
   login(event, email, password) {
         console.log(this.urlUser);
@@ -64,6 +66,9 @@ event.preventDefault();
           if (response.json().message=="Sent")
           {
             this.notificationService.genericsuccess("operación exitosa", "Le fue enviado un correo");
+          setInterval(() => {location.reload();},3000);
+            
+           
          }
 
         },
@@ -78,6 +83,6 @@ event.preventDefault();
 }
   signup(event) {
     event.preventDefault();
-    this.router.navigate(['signup']);
+    
   }
 }
