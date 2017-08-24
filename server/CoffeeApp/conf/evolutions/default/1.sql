@@ -218,7 +218,7 @@ create table user (
   email_validated               smallint,
   archived                      tinyint default 0 not null,
   last_login                    datetime,
-  token                         varchar(255),
+  token                         varchar(500),
   role_id_role                  bigint,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
