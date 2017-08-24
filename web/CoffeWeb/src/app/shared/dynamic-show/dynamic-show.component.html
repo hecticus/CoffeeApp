@@ -1,0 +1,41 @@
+<div class="answer">
+	<div class="fieldset" *ngFor="let fielset of answers">
+		<div class="legend">{{fielset.legend}}</div>
+
+	    <div 
+	    	*ngFor="let field of fielset.fields"
+	    	class="wrap-fields row">
+	    	<div 
+	    		*ngFor="let answer of field"
+	            [ngSwitch]="answer.controlType"
+	    		class="field col-{{answer.proportion}}">
+	    		
+	    		<div class="row" *ngSwitchCase="'textbox'">
+		    		<div class="label">{{answer.label}}</div>
+					<div [id]="answer.key" class="output">{{answer.value || '-'}}</div>
+				</div>
+
+				<div class="row" *ngSwitchCase="'textarea'">
+					<div class="label">{{answer.label}}</div>
+					<div [id]="answer.key" class="output">{{answer.value || '-'}}</div>
+				</div>
+
+				<div class="row" *ngSwitchCase="'dropdown'">
+		    		<div class="label">{{answer.label}}</div>
+					<div [id]="answer.key" class="output">{{answer.options[answer.value || '-']}}</div>
+				
+				</div>
+
+				<div class="row" *ngSwitchCase="'datepicker'">
+		    		<div class="label">{{answer.label}}</div>
+					<div [id]="answer.key" class="output"><span>{{answer.value | date:'yyyy-MM-dd' || '-'}}</span></div>
+				</div>
+
+				<textbox-click *ngSwitchCase="'textbox-click'"
+					[answer]="answer"
+					[answers]="answer.answers">
+				</textbox-click>
+	        </div>
+	    </div>
+	</div>
+</div>

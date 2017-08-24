@@ -9,5 +9,6 @@ const template = require('./app.html');
 })
 
 export class App {
-  constructor(public router: Router) {}
+  constructor(public router: Router) {
+  }
 }

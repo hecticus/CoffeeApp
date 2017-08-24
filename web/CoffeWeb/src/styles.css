@@ -130,5 +130,11 @@ ul li{
 }
 
 
-
+#breadcrumbs{
+	position: fixed;
+	top: 64px;
+	left: 250px;
+	z-index: 2;
+	width: 100%;
+}
 

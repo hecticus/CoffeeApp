@@ -1,12 +1,11 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { HomeComponent } from './home/home.component';
-
-import { AuthGuard } from './common/auth.guard';
 
 import { App } from './app';
 import { homeRoutes } from './home/home.routes';
 import { userRoutes } from './user/user.routes';
+
+import { LoginComponent } from './user/login/login.component';
 
 export const routes: Routes = [
   {

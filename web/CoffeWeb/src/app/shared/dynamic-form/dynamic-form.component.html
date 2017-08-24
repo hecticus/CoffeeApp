@@ -1,0 +1,33 @@
+<form (ngSubmit)="onSubmited()">
+
+    <dropdown-multi-ns></dropdown-multi-ns>
+    
+    <fieldset *ngFor="let fielset of questions">
+        <legend>{{fielset.legend}}</legend>
+        <div *ngFor="let field of fielset.fields" class="wrap-fields row">
+            <df-question *ngFor="let question of field"
+    	    	[hidden]="question.hidden"
+                [question]="question"
+                [form]="form"
+                class="field col-{{question.proportion}}">
+            </df-question>
+        </div>
+    </fieldset>
+
+    <!--<button class="btn-icon-text" type="submit" [disabled]="!form.valid">
+        <div class="container-text">
+            <span>save</span>
+        </div>
+    </button>-->
+
+    <div class="options row">
+        <bt-text
+            [title]="'save'"
+            [type]="'submit'"
+            [text]="'save'">
+        </bt-text>
+    </div>
+</form>
+<!--<div *ngIf="payLoad" class="form-row">
+    <strong>Saved the following values</strong><br>{{payLoad}}
+</div>-->

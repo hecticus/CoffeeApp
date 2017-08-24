@@ -1,0 +1,46 @@
+<div class="filter row">
+	<div class="wrap-fields row">
+		<div *ngFor="let question of questionFilters" class="field">
+			<div class="container-label">
+				<label>{{question.label}}</label>
+			</div>
+
+			<div class="container-input" [ngSwitch]="question.controlType">
+				<input *ngSwitchCase="'textbox'"
+					#select 
+					[id]="question.key" 
+					[type]="question.type"
+					[placeholder]="question.placeholder"
+					(change)="onChange(question, select.value)" >
+			</div>
+
+			<div class="container-input" [ngSwitch]="question.controlType">
+				<div *ngSwitchCase="'dropdown'" class="custom-select">
+					<select 
+						#select 
+						[id]="question.key" 
+						(change)="onChange(question, select.value)" 
+						[(ngModel)]="question.value"
+						class="custom-select">
+						<option value="-1" selected>All</option>
+						<option 
+							*ngFor="let opt of question.options" 
+							[value]="opt.id">
+							{{opt[question.optionsKey]}}
+						</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-button-filter">
+	    <bt-icon 
+	        [title]="'search'"
+	        [type]="'button'"
+	        [icon]="'search'"
+	        (clicked)="onSearch($event)"> 
+	    </bt-icon>
+   	</div>
+</div>
+
+<br>

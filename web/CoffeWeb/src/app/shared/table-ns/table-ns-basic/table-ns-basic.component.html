@@ -1,0 +1,46 @@
+<div class="tool-bar row">
+    <div class="container-left">
+        <span>{{title}}</span>
+    </div>
+</div>
+
+<table *ngIf="items?.length > 0" class="table table-basic table-pointer">
+    <thead>
+        <tr class="table-row table-row-head">       
+            <div class="row">
+                <div class="container-data row">
+                    <th *ngFor="let col of cols" class="data col-{{col.proportion}}">
+                        <div class="data-title ellipsis overflow">
+                            {{col.name}}
+                        </div>
+                    </th>
+                </div>
+            </div>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of items" id="{{item.id}}" class="table-row table-row-body">
+            <div class="row">
+                <div class="container-data row" (click)="onRead(item)">
+                    <td *ngFor="let col of cols" class="data col-{{col.proportion}}">
+                        <div class="data-content ellipsis overflow">
+                            {{this.tableService.getItemValue(item, col.key)}}
+                        </div>
+                    </td>
+                </div>
+            </div>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="items == undefined || items.length  === 0" class="table-empty">
+    No se encontraron registros existentes  
+</div>
+
+<pagination *ngIf="pager!=undefined && items != undefined && items.length > 0"
+    #pagerCmp
+    [totalItems]="pager.totalEntities"
+    [initPage]="tableService.pageIndex+1"
+    [pageSize]="pager.pageSize"
+    (paginated)=onList($event)>
+</pagination>

@@ -1,0 +1,23 @@
+<div class="row">
+	<div class="container-label">
+		<span class="label">{{answer.label}}</span>
+	</div>
+	<div class="container-output">
+		<span 
+			[id]="answer.key"
+			class="output textbox-clicked">
+			{{answer.value}}
+		</span>
+	</div>
+	<bt-toogle 
+		#btToogleComp
+		*ngIf="answers!=undefined"
+        [title]="'down'"
+        [toogle]="false"
+        [iconOff]="'down small'"
+        [iconOn]="'up small'"
+        (clicked)="onClicked()">
+    </bt-toogle>
+</div>
+
+<dynamic-show-small [hidden]="hidden" [answers]="answers" class="subLevel"></dynamic-show-small>

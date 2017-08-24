@@ -66,11 +66,8 @@ event.preventDefault();
           if (response.json().message=="Sent")
           {
             this.notificationService.genericsuccess("operación exitosa", "Le fue enviado un correo");
-          setInterval(() => {location.reload();},3000);
-            
-           
-         }
-
+            setInterval(() => {location.reload();},3000);
+          }
         },
         error => {
           if(error.status===400)

@@ -28,8 +28,17 @@
     "auth0-lock": "^10.7.3",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
+    "ng2-breadcrumb": "^0.5.14",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+
+    "angular2-contextmenu": "^0.7.6",
+    "json-typescript-mapper": "^1.0.5",
+    "ng2-pdf-viewer": "^1.2.1",
+    "ngx-progressbar": "^2.0.0",
+    "ts-helpers": "^1.1.1",
+    "ts-md5": "^1.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "@angular/cli": "1.2.0",
@@ -55,6 +64,9 @@
     "typescript": "~2.3.3",
     "url-loader": "^0.5.7",
     "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.4.3"
+    "webpack-dev-server": "^2.4.3",
+
+    "karma-remap-istanbul": "^0.6.0",
+    "webdriver-manager": "12.0.2"
   }
 }

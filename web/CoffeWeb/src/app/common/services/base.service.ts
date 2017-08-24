@@ -1,6 +1,7 @@
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
+import { contentHeaders } from '../headers';
 
 
 export class BaseService{ 
@@ -76,5 +77,10 @@ export class BaseService{
 
     public removeItems(items: any[], ids: number[]){
         ids.map(id => this.removeItem(items, id));
+    }
+
+      public createAuthorizationHeader(): Headers {
+         contentHeaders.append("Authorization", localStorage.getItem('token'));
+        return contentHeaders;
     }
 }

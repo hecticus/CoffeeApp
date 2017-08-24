@@ -1,0 +1,24 @@
+<div class="tool-bar row justify-between">
+    <div class="row">
+        <div *ngFor="let tool of toolsLeft" [ngSwitch]="tool.controlType">
+            <bt-icon-text 
+                [title]="tool.title"
+                [type]="tool.type"
+                [icon]="tool.icon"
+                [text]="tool.text"
+                (clicked)="tool.clicked($event)">   
+            </bt-icon-text>
+        </div>
+    </div>
+    <div class="row">
+        <div *ngFor="let tool of tools" [ngSwitch]="tool.controlType">
+            <bt-icon 
+                *ngSwitchCase="'buttonIcon'" 
+                [title]="tool.title"
+                [type]="tool.type"
+                [icon]="tool.icon"
+                (clicked)="tool.clicked($event)">
+            </bt-icon>
+        </div>
+    </div>
+</div>

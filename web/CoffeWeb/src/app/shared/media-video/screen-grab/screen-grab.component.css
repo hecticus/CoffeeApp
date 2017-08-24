@@ -1,0 +1,38 @@
+.container {
+    position: relative;
+    margin-top: 20px;
+}
+
+.screengrab-ctn {   
+    width: 100%;        
+    display: flex;
+}
+
+.video-ctn {
+    width: 70%
+}
+
+.video-ctn p, .canvas-ctn p {
+    margin-bottom: 10px;
+}
+
+.canvas-ctn {
+    width: 30%;    
+}
+
+#video {
+    max-width: 640px;
+    max-height: 480px;    
+}
+
+#canvas {
+    width: 220px;
+    height: 160px;
+    border: 2px solid #666;
+}
+
+.btn-save bt-text,
+.btn-close bt-icon {
+    display: flex;
+    justify-content: flex-end;
+}

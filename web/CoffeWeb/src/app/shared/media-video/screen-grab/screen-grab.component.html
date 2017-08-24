@@ -1,0 +1,33 @@
+<div class="container">
+	<div class="btn-close">
+		<bt-icon 
+			[title]="'close'"
+			[type]="'button'"
+			[icon]="'close'"
+			(clicked)="closeScreenGrab($event)">
+		</bt-icon>
+	</div>	
+	<div class="screengrab-ctn">		
+		<div class="video-ctn">
+			<p>{{videoTitle}}</p>
+			<video #videoPlay id="video" 
+			  (loadedmetadata)="onMetaData($event, videoPlay)" 
+			  (canplaythrough)="onPlayThrough($event, videoPlay)"			  
+			  controls controlsList="nodownload">
+				<source src="{{video.url}}"> 				
+			</video>
+		</div>
+		<div class="canvas-ctn">
+			<p>{{canvasTitle}}</p>
+			<canvas #canvasCapture id="canvas"></canvas>		
+		</div>	
+	</div>
+	<div class="btn-save">
+		<bt-text
+			[title]="'save'"
+			[type]="'button'"
+			[text]="'Save'"
+			(clicked)="'null'">
+		</bt-text>
+	</div>
+</div>

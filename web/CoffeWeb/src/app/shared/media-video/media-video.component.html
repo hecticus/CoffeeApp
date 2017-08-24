@@ -1,0 +1,29 @@
+<p class="title">{{title}}</p>
+<ul>
+	<li *ngFor="let video of videos" class="video-container">
+		<div class="video-thumb">
+			<img src="{{video.thumbnail}}" alt="{{video.name}}" onerror="this.src='/assets/images/no_image.png'" class="image-thumb"> 
+			<div class="btn-canvas">
+				<bt-icon 
+					[title]="'canvas'"
+					[type]="'button'"
+					[icon]="'canvas'"
+					(clicked)="openCanvas(video)">
+				</bt-icon>
+			</div>          
+			<div class="btn-play">
+				<bt-icon 
+					[title]="'play'"
+					[type]="'button'"
+					[icon]="'play'"
+					(clicked)="openVideo(video)">
+				</bt-icon>
+			</div>
+			<span *ngIf="video.duration" class="video-time">{{video.duration}}</span>
+			<span *ngIf="!video.duration" class="video-time">00:00</span>
+		</div>    
+	</li>
+</ul>
+<screen-grab *ngIf="selectedCanvas" [video]="selectedCanvas" (captured)="onCapture($event)"></screen-grab> 
+<media-single-expanded *ngIf="selectedVideo" [(media)]="selectedVideo"></media-single-expanded>
+<p *ngIf="videos?.length === 0" class="empty">{{notFound}}</p>

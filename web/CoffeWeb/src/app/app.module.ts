@@ -2,8 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule, Http, RequestOptions  } from '@angular/http';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import {FormControl,FormGroup} from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { provideAuth, AuthHttp, AuthConfig  } from 'angular2-jwt';
+
+
 import { AuthGuard } from './common/auth.guard';
 
 import { HomeModule } from './home/home.module';
@@ -21,6 +25,8 @@ import { NotificationService } from './common/notification/notification.service'
 import { BrowserAnimationsModule,NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { homeRoutes } from './home/home.routes';
 
+import { SharedModule } from './shared/shared.module';
+
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
@@ -34,8 +40,11 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     NotificationComponent,
   ],
   imports: [
+    SharedModule,
     UserModule,
     HomeModule,
+
+    ReactiveFormsModule,
     HttpModule,
     BrowserModule,
     FormsModule,
@@ -44,23 +53,22 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     }),
     SimpleNotificationsModule.forRoot(),
     NoopAnimationsModule,
-    BrowserAnimationsModule 
-  ],
+    BrowserAnimationsModule,
+      ],
   providers: [
     NotificationService,
     AuthGuard,
     {
-      provide: AuthHttp,
+      provide: AuthHttp, 
       useFactory: authHttpServiceFactory,
-      deps: [ Http, RequestOptions ]
+      deps: [ Http, RequestOptions ],
+      
     }
   ]
 })
 
 
-export class AppModule {
-
-}
+export class AppModule {}
 
 
 

@@ -1,0 +1,70 @@
+.dialog{
+	width: 450px;
+	z-index: 10;
+	background-color: #fff;
+	position:fixed;
+    left: 50%;
+    top: 50%;
+    -ms-transform: translate(-50%,-50%);
+    -moz-transform:translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+     transform: translate(-50%,-50%);
+}
+	.dialog .tools{
+		padding: 10px;
+		justify-content: flex-end;
+	}
+		.dialog bt-text{
+			margin-right: 10px;
+		}
+		.dialog bt-text:last-child{
+			margin-right: 0;
+		}
+			/* /deep/ --> https://angular.io/docs/ts/latest/guide/component-styles.html#!#special-selectors */
+			/deep/ .dialog bt-text:first-child button{
+				background-color: #fb5f5f;
+				border-color: #fb5f5f;
+			}
+			/deep/ .dialog bt-text:last-child button{
+				margin-right: 0  !important;
+				background-color: #81de47;
+				border-color: #81de47;
+			}
+				/deep/ .dialog bt-text button .text{
+					color: #fff;
+					font-weight: 600;
+				}
+			/deep/ .dialog bt-text button:hover{
+				background-color: #fff;
+				border-color: #3f3f3f;
+			}
+				/deep/ .dialog bt-text button:hover .text{
+					color: #3f3f3f;
+					border-color: #3f3f3f;
+				}
+	.dialog .title{
+		text-align: center;
+		font-size: 20px;
+		font-weight: 600;
+	}
+	.dialog .message{
+		padding: 40px 40px 50px 40px;
+		text-align: center;
+		font-size: 14px;
+	}
+	.dialog .options{
+		padding: 0 10px 40px 10px;
+		justify-content: center;
+	}
+
+.dialog-overlay{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	opacity: 0.8;
+	background-color: #333;
+	z-index: 10;
+	cursor: pointer;
+}
