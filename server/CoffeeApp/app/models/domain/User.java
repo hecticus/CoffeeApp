@@ -74,7 +74,7 @@ public class User extends AbstractEntity {
 
 
     @Constraints.MaxLength(500)
-    @Column(nullable = true)
+    @Column(nullable = true, length = 500)
     protected String token;
 
     @Constraints.Required
