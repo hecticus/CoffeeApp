@@ -246,7 +246,7 @@ public class LotManagerImpl implements LotManager {
     @Override
     public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+                        PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = lotDao.findAllSearch(name, index, size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
