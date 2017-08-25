@@ -30,7 +30,7 @@ export class LotCreateComponent {
 
 create(form: FormGroup) {
 		this.lotService.create(<Lot> this.lotService.builderObject(form.value)).subscribe(lot => {
-			this.notificationService.sucessInsert(lot.serial);
+			this.notificationService.sucessInsert(lot.nameLot);
 			this.location.back();
 		}, err => this.notificationService.error(err));
 	}
