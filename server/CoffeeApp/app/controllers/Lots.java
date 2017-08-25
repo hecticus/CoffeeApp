@@ -4,6 +4,7 @@ import models.Security.HSecurity;
 import models.manager.LotManager;
 import models.manager.impl.LotManagerImpl;
 import play.mvc.Result;
+import models.manager.requestUtils.queryStringBindable.Pager;
 
 /**
  * Created by drocha on 26/04/17.
@@ -33,10 +34,10 @@ public class Lots {
         return lotManager.findById(id);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+   /* @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAll(Integer index, Integer size) {
         return lotManager.findAll(index, size);
-    }
+    }*/
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByNameLot(String NameLot, String order) {
@@ -46,5 +47,15 @@ public class Lots {
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByStatusLot(String StatusLot, String order) {
         return lotManager.getByStatusLot(StatusLot, order);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAll(Pager pager, String sort, String collection) {
+        return lotManager.findAll(pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+        return lotManager.findAllSearch(name, pager.index, pager.size, sort, collection);
     }
 }

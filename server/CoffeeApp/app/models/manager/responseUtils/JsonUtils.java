@@ -1,10 +1,14 @@
 package models.manager.responseUtils;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.modelmapper.ModelMapper;
 import play.libs.Json;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,4 +73,28 @@ public class JsonUtils {
                 numbers.add(objNode.asLong());
         return numbers;
     }
+
+    /*
+   * mapea un objeto a otro y lo convierte en json
+   */
+    public static <T> JsonNode toJson (final T sourceObject, final PathProperties pathProperties){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readTree(Ebean.json().toJson(sourceObject, pathProperties));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <T> JsonNode toJson (final List<T> sourceObjects, final PathProperties pathProperties){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readTree(Ebean.json().toJson(sourceObjects, pathProperties));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -1,8 +1,13 @@
 package models.dao.impl;
 
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
+import com.avaje.ebean.text.PathProperties;
 import models.dao.AbstractDao;
+import models.dao.utils.ListPager;
 import models.domain.AbstractEntity;
+
+import models.dao.utils.ListPagerCollection;
 
 import java.util.List;
 
@@ -62,4 +67,38 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
             entities = find.where().eq("status_delete",0).findList();
         return entities;
     }
+
+
+    @Override
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(find.orderBy(Sort(sort)).findList());
+        return new ListPagerCollection(find.orderBy(Sort(sort)).findPagedList(pageIndex, pageSize).getList(), find.findRowCount(), pageIndex, pageSize);
+    }
+
+    @Override
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = find.where();
+
+        if(pathProperties != null && !pathProperties.isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+    }
+
+
+    static String Sort(String sort){
+        if(sort == null)
+            return "";
+        if(sort.startsWith("-"))
+            return sort.substring(1) + " desc";
+        return sort + " asc";
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package models.manager.impl;
 
+import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.FarmDao;
 import models.dao.InvoiceDetailDao;
@@ -7,11 +8,16 @@ import models.dao.LotDao;
 import models.dao.impl.FarmDaoImpl;
 import models.dao.impl.InvoiceDetailDaoImpl;
 import models.dao.impl.LotDaoImpl;
+import models.dao.utils.ListPager;
+import models.dao.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 import models.domain.Lot;
 import models.manager.LotManager;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.ResponseCollection;
 import models.manager.responseUtils.Response;
 import models.manager.requestUtils.Request;
+import models.manager.responseUtils.PropertiesCollection;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -30,6 +36,12 @@ public class LotManagerImpl implements LotManager {
     private static LotDao lotDao = new LotDaoImpl();
     private static FarmDao farmDao = new FarmDaoImpl();
     private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+
+    public LotManagerImpl(){
+        propertiesCollection.putPropertiesCollection("s", "(id, name)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
 
     @Override
     public Result create() {
@@ -167,7 +179,7 @@ public class LotManagerImpl implements LotManager {
         }
     }
 
-    @Override
+   /* @Override
     public Result findAll(Integer index, Integer size) {
         try {
             List<Lot> lots = lotDao.findAll(index, size);
@@ -175,7 +187,7 @@ public class LotManagerImpl implements LotManager {
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
+    }*/
 
     public Result getByNameLot(String NameLot, String order)
     {
@@ -216,6 +228,30 @@ public class LotManagerImpl implements LotManager {
 
         }catch(Exception e){
             return Response.internalServerErrorLF();
+        }
+    }
+
+    @Override
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = lotDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = lotDao.findAllSearch(name, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
         }
     }
 

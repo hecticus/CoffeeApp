@@ -1,10 +1,13 @@
 package models.dao.impl;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.text.PathProperties;
 import models.dao.FarmDao;
 import models.dao.LotDao;
+import models.dao.utils.ListPagerCollection;
 import models.domain.Lot;
 
 import java.util.ArrayList;
@@ -83,5 +86,23 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
         }
 
         return lots;
+    }
+
+    @Override
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+        ExpressionList expressionList = find.where();
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.icontains("name", name);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
 }

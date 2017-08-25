@@ -1,5 +1,7 @@
 package models.dao;
 
+import com.avaje.ebean.text.PathProperties;
+import models.dao.utils.ListPagerCollection;
 import play.mvc.Result;
 
 import java.util.List;
@@ -22,4 +24,8 @@ public interface AbstractDao <K, E>{
     List<E> findAll();
 
     List<E> findAll(Integer pageIndex, Integer pageSize);
+
+    ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort);
+
+    ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties);
 }
