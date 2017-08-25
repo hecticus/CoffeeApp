@@ -20,7 +20,7 @@ import { DropdownAnswer } from '../shared/dynamic-show/answer/answer-dropdown';
 import { DatePickerAnswer } from '../shared/dynamic-show/answer/answer-datepicker';
 
 export interface Filter {
-    serial?: string;
+    farmId?: number;
 }
 
 @Injectable()
@@ -44,7 +44,7 @@ export class LotService extends BaseService
 
     getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Lot[]> {
         requestOptions.headers = contentHeaders;
-        return this.http.get(this.urlLot, requestOptions)
+        return this.http.get(this.urlLot+'/findAll/-1/-1', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
@@ -68,14 +68,14 @@ export class LotService extends BaseService
             .catch(this.handleError);
     }
 
-    create(Lot: Lot): Observable<Lot> {
+    create(lot: Lot): Observable<Lot> {
         return this.http.post(this.urlLot, Lot, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    update(Lot: Lot): Observable<Lot> {
-        return this.http.put(this.urlLot + '/' + Lot.id, Lot, {headers: contentHeaders})
+    update(lot: Lot): Observable<Lot> {
+        return this.http.put(this.urlLot + '/' + lot.id, lot, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -88,224 +88,57 @@ export class LotService extends BaseService
         return this.http.post(this.urlLot + '/delete', ids, {headers: contentHeaders});
     }
 
-    getQuestions(Lot: Lot) {
-      /*  let dropdownQuestionStore = new DropdownQuestion({
-            key: 'store.id',
-            label: 'store.name',
-            value: Lot.store != undefined? Lot.store.id: '',
+    getQuestions(lot: Lot) {
+        let dropdownQuestionFarm = new DropdownQuestion({
+            key: 'farm.id',
+            label: 'farm.name',
+            value: lot.farm != undefined? lot.farm.id: '',
             optionsKey: 'name',
             required: true,
         });
-        this.storeService.getAll(this.buildRequestOptionsFinder("name", "s")).subscribe(params => { 
-            dropdownQuestionStore.options = params['result'];
-        });
+      /*  this.farmService.getAll(this.buildRequestOptionsFinder("name", "s")).subscribe(params => { 
+            dropdownQuestionFarm.options = params['result'];
+        });*/
 
-        let dropdownQuestionLotModel = new DropdownQuestion({
-            key: 'statusLot.id',
-            label: 'statusLot',
-            value: Lot.statusLot != undefined? Lot.statusLot.id: '',
-            optionsKey: 'name'
-        });
-        this.LotModelService.getAll(this.buildRequestOptionsFinder("name")).subscribe(params => {
-            dropdownQuestionLotModel.options = params['result'];
-        });
-
-        let dropdownQuestionStatusLot = new DropdownQuestion({
-            key: 'statusLot.id',
-            label: 'statusLot',
-            value: Lot.statusLot != undefined? Lot.statusLot.id: '',
-            optionsKey: 'name'
-        });
-        this.statusLotService.getAll(this.buildRequestOptionsFinder("name")).subscribe(params => {
-            dropdownQuestionStatusLot.options = params['result'];
-        });
-
-        let questions: Fieldset[] = [
+          let questions: Fieldset[] = [
             new Fieldset({
-                legend: 'infomación de máquina',
+                legend: 'infomación de Lote',
                 fields: [[
                     new TextboxQuestion({
                         key: 'id',
                         label: 'id',
-                        value: Lot.id,
+                        value: lot.id,
                         type: 'number',
                         hidden: true,
                     }),
-                    dropdownQuestionStore
-                ],[
-                    new TextboxQuestion({
-                        key: 'serial',
-                        label: 'serial',
-                        value: Lot.serial,
-                        type: 'text',
-                        required: true,
-                    }),
-                ],[
-                   dropdownQuestionLotModel
-                ],[
-                    dropdownQuestionStatusLot
-                ],[
-                    new DatePickerQuestion({
-                        key: 'purchaseDate',
-                        label: 'purchaseDate',
-                        value: Lot.purchaseDate
-                    }),
-                    new DatePickerQuestion({
-                        key: 'factoryWarrantyExpiration',
-                        label: 'factoryWarrantyExpiration',
-                        value: Lot.factoryWarrantyExpiration
-                    }),
-                    new NumberboxQuestion({
-                        key: 'localWarrantyDay',
-                        label: 'localWarrantyDay',
-                        value: Lot.localWarrantyTime,
-                    }),
-                ]]
-            }),
-            new Fieldset({
-                legend: 'infomación de uso y mantenimiento',
-                fields: [[
-                    new TextboxQuestion({
-                        key: 'swVersion',
-                        label: 'swVersion',
-                        value: Lot.swVersion,
-                        type: 'text',
-                    }),
-                ],[
-                    new NumberboxQuestion({
-                        key: 'usedTime',
-                        label: 'usedTime',
-                        value: Lot.usedTime,
-                        step: 0.0000001,
-                    }),
-                    new NumberboxQuestion({
-                        key: 'usedDistance',
-                        label: 'usedDistance',
-                        value: Lot.usedDistance,
-                        step: 0.0000001,
-                    }),
-                ],[
-                    new NumberboxQuestion({
-                        key: 'maintenenceFrecuency',
-                        label: 'maintenenceFrecuency',
-                        value: Lot.maintenenceFrecuency,
-                    }),
-                    new NumberboxQuestion({
-                        key: 'maintenencePerDistance',
-                        label: 'maintenencePerDistance',
-                        value: Lot.maintenencePerDistance,
-                    }),
-                    new NumberboxQuestion({
-                        key: 'maintenencePerTime',
-                        label: 'maintenencePerTime',
-                        value: Lot.maintenencePerTime,
-                    }),
+                    dropdownQuestionFarm
                 ]]
             })
-        ];*/
-        let questions: Fieldset[];
+        ];
         return questions;
     }
 
-    getAnswers(Lot: Lot) {
-       /* let answers: FieldsetAnswer[] = [
+    getAnswers(lot: Lot) {
+        let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
-                legend: 'infomación de máquina',
+                legend: 'infomación de Lote',
                 fields: [[
-                    new TextboxClickAnswer({
-                        key: 'store.name',
-                        label: 'store.name',
-                        value: Lot.store.name,
-                        type: 'text',
-                        answers: storeAnswers
-                    }),
-                ],[
                     new TextboxAnswer({
-                        key: 'serial',
-                        label: 'serial',
-                        value: Lot.serial,
+                        key: 'name',
+                        label: 'name',
+                        value: lot.nameLot,
                         type: 'text'
                     }),
                 ],[
                     new TextboxClickAnswer({
-                        key: 'LotModel.comercialName',
-                        label: 'LotModel.comercialName',
-                        value: Lot.LotModel.comercialName,
-                        type: 'text',
-                        answers: LotModelAnswers
-                    }),
-                ],[
-                    new TextboxAnswer({
-                        key: 'statusLot.name',
-                        label: 'statusLot',
-                        value: Lot.statusLot != undefined ? Lot.statusLot.name : '',
+                        key: 'price',
+                        label: 'price',
+                        value: lot.price_lot,
                         type: 'text'
-                    })
-                ],[
-                    new DatePickerAnswer({
-                        key: 'purchaseDate',
-                        label: 'purchaseDate',
-                        value: Lot.purchaseDate,
-                    }),
-                ],[
-                    new TextboxAnswer({
-                        key: 'localWarrantyTime',
-                        label: 'localWarrantyTime',
-                        value: Lot.localWarrantyTime,
-                        type: 'number'
-                    }),
-                    new DatePickerAnswer({
-                        key: 'factoryWarrantyExpiration',
-                        label: 'factoryWarrantyExpiration',
-                        value: Lot.factoryWarrantyExpiration,
                     }),
                 ]]
             }),
-            new FieldsetAnswer({
-                legend: 'infomación de uso y mantenimiento',
-                fields: [[
-                    new TextboxAnswer({
-                        key: 'swVersion',
-                        label: 'swVersion',
-                        value: Lot.swVersion,
-                        type: 'text'
-                    }),
-                ],[
-                    new TextboxAnswer({
-                        key: 'usedDistance',
-                        label: 'usedDistance',
-                        value: Lot.usedDistance,
-                        type: 'number'
-                    }),
-                    new TextboxAnswer({
-                        key: 'usedTime',
-                        label: 'usedTime',
-                        value: Lot.usedTime,
-                        type: 'number'
-                    }),
-                ],[
-                    new TextboxAnswer({
-                        key: 'maintenenceFrecuency',
-                        label: 'maintenenceFrecuency',
-                        value: Lot.maintenenceFrecuency,
-                        type: 'number'
-                    }),
-                    new TextboxAnswer({
-                        key: 'maintenencePerDistance',
-                        label: 'maintenencePerDistance',
-                        value: Lot.maintenencePerDistance,
-                        type: 'number'
-                    }),
-                    new TextboxAnswer({
-                        key: 'maintenencePerTime',
-                        label: 'maintenencePerTime',
-                        value: Lot.maintenencePerTime,
-                        type: 'number'
-                    }),
-                ]]
-            })
-        ];*/
-        let answers: FieldsetAnswer[];
+        ];
         return answers;
     }
 }
