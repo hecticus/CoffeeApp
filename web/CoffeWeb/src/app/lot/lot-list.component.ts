@@ -23,7 +23,7 @@ itle: string = "list lots";
 	@ViewChild('tableCmp') tableCmp;
 	items: Lot[];
 	cols: TableColumn[] = [
-		new TableColumn({key: "nameLot", proportion: 1}),
+		new TableColumn({key: "name_lot", proportion: 1}),
 		new TableColumn({key: "price_lot", proportion: 3}),
 	];
 	actions = [
@@ -70,7 +70,7 @@ filter(){
 			new QuestionFilterTextbox({
                 key: 'name',
                 label: 'name',
-                value: this.filterService.filter['nameLot']!=undefined? this.filterService.filter['nameLot']: '',
+                value: this.filterService.filter['name_lot']!=undefined? this.filterService.filter['nameLot']: '',
             });
 		
 		this.questionFilters = [questionFilterName];

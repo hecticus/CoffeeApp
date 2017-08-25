@@ -44,7 +44,7 @@ export class LotService extends BaseService
 
     getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Lot[]> {
         requestOptions.headers = contentHeaders;
-        return this.http.get(this.urlLot+'/findAll/-1/-1', requestOptions)
+        return this.http.get(this.urlLot+'', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
