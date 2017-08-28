@@ -75,7 +75,8 @@ export class LotService extends BaseService
     }
 
     update(lot: Lot): Observable<Lot> {
-        return this.http.put(this.urlLot + '/' + lot.idLot, lot, {headers: contentHeaders})
+        console.log(lot);
+        return this.http.put(this.urlLot /*+ '/' + lot.id*/, lot, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -89,10 +90,10 @@ export class LotService extends BaseService
     }
 
     getQuestions(lot: Lot) {
-        let dropdownQuestionFarm = new DropdownQuestion({
+      /*  let dropdownQuestionFarm = new DropdownQuestion({
             key: 'farm.id',
             label: 'farm.name',
-            value: lot.farm != undefined? lot.farm.id: '',
+            value: lot.farm["idFarm"] != undefined? lot.farm.id: '',
             optionsKey: 'nameLot',
             required: true,
         });
@@ -105,43 +106,102 @@ export class LotService extends BaseService
                 legend: 'infomación de Lote',
                 fields: [[
                     new TextboxQuestion({
+                        key: 'id',
+                        label: 'id',
+                        value: lot.idLot,
+                        type: 'number',
+                        hidden: true,
+                    })],[
+                    new TextboxQuestion({
+                        key: 'nameLot',
+                        label: 'Nombre del Lote:',
+                        value: lot.nameLot,
+                        type: 'text',
+                        required: true,
+                    })],[
+                    new TextboxQuestion({
+                        key: 'nameFarm',
+                        label: 'Nombre de la Finca:',
+                        value: lot.farm["nameFarm"],
+                        type: 'text',
+                        required: true,
+                    })],[
+                    new TextboxQuestion({
+                        key: 'areaLot',
+                        label: 'Area:',
+                        value: lot.areaLot,
+                        type: 'text',
+                        required: true,
+                    })],[
+                    new TextboxQuestion({
+                        key: 'heighLot',
+                        label: 'Altura:',
+                        value: lot.heighLot,
+                        type: 'text',
+                        required: true,
+                    })],[
+                    new TextboxQuestion({
+                        key: 'price_lot',
+                        label: 'US Precio:',
+                        value: lot.price_lot,
+                        type: 'text',
+                        required: true,
+                    })
+                ]/*,[
+                    new TextboxQuestion({
                         key: 'idLot',
                         label: 'idLot',
-                        value: lot.idLot,
+                        value: lot.farm["idFarm"],
                         type: 'number',
                         hidden: true,
                     }),
                     dropdownQuestionFarm
-                ]]
+                ]*/]
             })
         ];
         return questions;
     }
 
     getAnswers(lot: Lot) {
-        console.log(lot);
+        console.log(lot.farm);
         let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
                 legend: 'infomación de Lote',
                 fields: [[
                     new TextboxAnswer({
                         key: 'nameLot',
-                        label: 'name',
+                        label: 'Nombre del Lote:',
                         value: lot.nameLot,
                         type: 'text'
                     }),
                 ],[
                     new TextboxClickAnswer({
-                        key: 'price',
-                        label: 'price',
-                        value: lot.price_lot,
+                        key: 'nameFarm',
+                        label: 'Nombre de la Finca:',
+                        value: lot.farm["nameFarm"],
                         type: 'text'
                     }),
                 ],
                 [
                     new TextboxClickAnswer({
-                        key: 'price',
-                        label: 'price',
+                        key: 'areaLot',
+                        label: 'Area:',
+                        value: lot.areaLot,
+                        type: 'text'
+                    }),
+                ],
+                [
+                    new TextboxClickAnswer({
+                        key: 'heighLot',
+                        label: 'Altura:',
+                        value: lot.heighLot,
+                        type: 'text'
+                    }),
+                ],
+                [
+                    new TextboxClickAnswer({
+                        key: 'price_lot',
+                        label: 'US Precio:',
                         value: lot.price_lot,
                         type: 'text'
                     }),

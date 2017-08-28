@@ -11,7 +11,7 @@ import { NotificationService } from '../common/notification/notification.service
   	templateUrl: '../common/crud/update/update.component.html'
 })
 export class LotUpdateComponent implements OnInit {
-	title: string = "update lot";
+	title: string = "Lotes/actualizar";
 	questions: any[];
 	private lot: Lot;
   constructor(
@@ -24,7 +24,6 @@ export class LotUpdateComponent implements OnInit {
 
   ngOnInit(){
 		this.activatedRoute.parent.params.subscribe(param => {
-			console.log(param);
 			this.lotService.edit(param['lotId']).subscribe(lot => {
 				this.lot = lot;
 				this.questions = this.lotService.getQuestions(this.lot);

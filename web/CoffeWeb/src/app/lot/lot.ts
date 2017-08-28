@@ -1,5 +1,6 @@
 import { BaseModel } from '../common/models/base.model';
 import { Farm } from '../farm/farm';
+import { CommonModule } from '@angular/common';
 
 
 export class Lot extends BaseModel
@@ -9,4 +10,6 @@ export class Lot extends BaseModel
     price_lot:number;
     nameLot:string;
     statusLot: string;
+    areaLot: number;
+    heighLot: number;
 }

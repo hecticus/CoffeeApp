@@ -14,7 +14,7 @@ import { NotificationService } from '../common/notification/notification.service
 })
 export class LotReadComponent implements OnInit {
 
-	title: string = "show lot";
+	title: string = "Lotes/mostrar";
 	tools: ToolBase<any>[] = [
 		new IconTool({
 	        title: "update",
@@ -57,7 +57,7 @@ export class LotReadComponent implements OnInit {
 	}
 
 	delete(this){
-		this.lotService.delete(this.lot.id)
+		this.lotService.delete(this.lot.lotId)
 			.subscribe(any => {
 				this.notificationService.delete();
 				this.location.back();

@@ -70,7 +70,7 @@ filter(){
 		let questionFilterName =
 			new QuestionFilterTextbox({
                 key: 'nameLot',
-                label: 'nameLot',
+                label: 'Nombre del Lote',
                 value: this.filterService.filter['nameLot']!=undefined? this.filterService.filter['nameLot']: '',
             });
 		
