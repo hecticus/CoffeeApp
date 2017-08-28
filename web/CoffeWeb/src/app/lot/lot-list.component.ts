@@ -90,7 +90,17 @@ filter(){
 			this.tableService.pager.pageIndex = page;
 			this.tableCmp.deselectAll();
 
-			 console.log(params);
+			for(let item of this.items)
+			{
+				if(item.statusLot == "0")
+				{
+					item.statusLot="Activo";
+				}
+				else
+				{
+					item.statusLot="No Activo";
+				}
+			}
 		});
 		
 	}

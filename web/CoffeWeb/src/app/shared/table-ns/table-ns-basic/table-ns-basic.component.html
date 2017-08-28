@@ -24,7 +24,7 @@
                 <div class="container-data row" (click)="onRead(item)">
                     <td *ngFor="let col of cols" class="data col-{{col.proportion}}">
                         <div class="data-content ellipsis overflow">
-                            {{this.tableService.getItemValue(item, col.key)}}
+                              {{this.tableService.getItemValue(item, col.key)}}
                         </div>
                     </td>
                 </div>

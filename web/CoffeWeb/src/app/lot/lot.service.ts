@@ -137,7 +137,16 @@ export class LotService extends BaseService
                         value: lot.price_lot,
                         type: 'text'
                     }),
-                ]]
+                ],
+                [
+                    new TextboxClickAnswer({
+                        key: 'price',
+                        label: 'price',
+                        value: lot.price_lot,
+                        type: 'text'
+                    }),
+                ]
+                ]
             }),
         ];
         return answers;

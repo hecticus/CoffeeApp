@@ -9,5 +9,4 @@ export class Lot extends BaseModel
     price_lot:number;
     nameLot:string;
     statusLot: string;
-
 }

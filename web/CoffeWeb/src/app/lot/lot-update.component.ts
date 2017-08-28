@@ -34,7 +34,7 @@ export class LotUpdateComponent implements OnInit {
 
 	update(form: FormGroup) {
 		this.lotService.update(<Lot> this.lotService.builderObject(form.value)).subscribe(lot => {
-			this.notificationService.sucessUpdate(lot.NameLot);
+			this.notificationService.sucessUpdate(lot.nameLot);
 			this.location.back();
 		}, err => this.notificationService.error(err));
 	}
