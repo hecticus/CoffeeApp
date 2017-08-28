@@ -63,7 +63,7 @@ export class LotService extends BaseService
     }
 
     edit(id: number): Observable<Lot> {
-        return this.http.get(this.urlLot + '/' + id + '/edit', {headers: contentHeaders})
+        return this.http.get(this.urlLot + '/' + id + '', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -75,7 +75,7 @@ export class LotService extends BaseService
     }
 
     update(lot: Lot): Observable<Lot> {
-        return this.http.put(this.urlLot + '/' + lot.id, lot, {headers: contentHeaders})
+        return this.http.put(this.urlLot + '/' + lot.idLot, lot, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -93,7 +93,7 @@ export class LotService extends BaseService
             key: 'farm.id',
             label: 'farm.name',
             value: lot.farm != undefined? lot.farm.id: '',
-            optionsKey: 'name',
+            optionsKey: 'nameLot',
             required: true,
         });
       /*  this.farmService.getAll(this.buildRequestOptionsFinder("name", "s")).subscribe(params => { 
@@ -105,9 +105,9 @@ export class LotService extends BaseService
                 legend: 'infomación de Lote',
                 fields: [[
                     new TextboxQuestion({
-                        key: 'id',
-                        label: 'id',
-                        value: lot.id,
+                        key: 'idLot',
+                        label: 'idLot',
+                        value: lot.idLot,
                         type: 'number',
                         hidden: true,
                     }),
@@ -119,12 +119,13 @@ export class LotService extends BaseService
     }
 
     getAnswers(lot: Lot) {
+        console.log(lot);
         let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
                 legend: 'infomación de Lote',
                 fields: [[
                     new TextboxAnswer({
-                        key: 'name',
+                        key: 'nameLot',
                         label: 'name',
                         value: lot.nameLot,
                         type: 'text'

@@ -23,8 +23,9 @@ itle: string = "list lots";
 	@ViewChild('tableCmp') tableCmp;
 	items: Lot[];
 	cols: TableColumn[] = [
-		new TableColumn({key: "name_lot", proportion: 1}),
-		new TableColumn({key: "price_lot", proportion: 3}),
+		new TableColumn({name:"Nombre", key: "nameLot", proportion: 1}),
+		new TableColumn({name:"Finca", key: "farm.nameFarm", proportion: 2}),
+		new TableColumn({name:"Status", key: "statusLot", proportion: 1})
 	];
 	actions = [
 		{
@@ -68,9 +69,9 @@ itle: string = "list lots";
 filter(){
 		let questionFilterName =
 			new QuestionFilterTextbox({
-                key: 'name',
-                label: 'name',
-                value: this.filterService.filter['name_lot']!=undefined? this.filterService.filter['nameLot']: '',
+                key: 'nameLot',
+                label: 'nameLot',
+                value: this.filterService.filter['nameLot']!=undefined? this.filterService.filter['nameLot']: '',
             });
 		
 		this.questionFilters = [questionFilterName];
@@ -80,7 +81,7 @@ filter(){
 	list(page?: number){
 	this.lotService.getAllSearch(this.lotService.buildRequestOptionsFinder(
 			this.tableService.sort,
-            "m",
+            "",
 			this.filterService.filter,
 			{pageIndex: page, pageSize: this.tableService.pager.pageSize}
 		)).subscribe(params => {
@@ -88,11 +89,15 @@ filter(){
 			this.pager = params['pager'];
 			this.tableService.pager.pageIndex = page;
 			this.tableCmp.deselectAll();
+
+			 console.log(params);
 		});
+		
 	}
 
 	read(item: Lot){
-		this.router.navigate(['./' + item.id], {relativeTo: this.activatedRoute});
+		console.log(item);
+		this.router.navigate(['./' + item.idLot], {relativeTo: this.activatedRoute});
 	}
 
 	create(){
@@ -100,11 +105,11 @@ filter(){
 	}
 
 	update(item: Lot){
-		this.router.navigate(['./' + item.id + '/update'], {relativeTo: this.activatedRoute})
+		this.router.navigate(['./' + item.idLot + '/update'], {relativeTo: this.activatedRoute})
 	}
 
 	delete(this, item: Lot){
-		this.lotService.delete(item.id).subscribe(any =>  {
+		this.lotService.delete(item.idLot).subscribe(any =>  {
 			this.notificationService.delete(item.nameLot);
 			this.tableCmp.remove(item.id);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));

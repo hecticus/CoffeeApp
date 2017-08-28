@@ -24,6 +24,7 @@ export class LotUpdateComponent implements OnInit {
 
   ngOnInit(){
 		this.activatedRoute.parent.params.subscribe(param => {
+			console.log(param);
 			this.lotService.edit(param['lotId']).subscribe(lot => {
 				this.lot = lot;
 				this.questions = this.lotService.getQuestions(this.lot);
@@ -33,7 +34,7 @@ export class LotUpdateComponent implements OnInit {
 
 	update(form: FormGroup) {
 		this.lotService.update(<Lot> this.lotService.builderObject(form.value)).subscribe(lot => {
-			this.notificationService.sucessUpdate(lot.nameLot);
+			this.notificationService.sucessUpdate(lot.NameLot);
 			this.location.back();
 		}, err => this.notificationService.error(err));
 	}
