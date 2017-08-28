@@ -20,7 +20,7 @@ public class Lot extends AbstractEntity
 
     @Constraints.Required
     @Column(nullable = false, name = "name_lot")
-    private String NameLot;
+    private String nameLot;
 
     @Constraints.Required
     @Column(nullable = false, name = "area_lot")
@@ -71,11 +71,11 @@ public class Lot extends AbstractEntity
     }
 
     public String getNameLot() {
-        return NameLot;
+        return nameLot;
     }
 
     public void setNameLot(String nameLot) {
-        NameLot = nameLot;
+        nameLot = nameLot;
     }
 
     public String getAreaLot() {
