@@ -57,7 +57,7 @@ export class LotReadComponent implements OnInit {
 	}
 
 	delete(this){
-		this.lotService.delete(this.lot.lotId)
+		this.lotService.delete(this.lot.idLot)
 			.subscribe(any => {
 				this.notificationService.delete();
 				this.location.back();

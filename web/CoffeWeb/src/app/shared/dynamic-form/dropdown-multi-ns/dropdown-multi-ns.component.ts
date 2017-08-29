@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DropdownMultiComponent implements OnInit {
     active: boolean = false;
-    options: any[] = [{id: 1, name: "a"}, {id: 1, name: "ab"}, {id: 1, name: "abc", }];
+    //options: any[] = [{id: 1, name: "a"}, {id: 1, name: "ab"}, {id: 1, name: "abc", }];
 
     constructor() {  }
 

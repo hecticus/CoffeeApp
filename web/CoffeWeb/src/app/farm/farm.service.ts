@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { BaseService } from '../common/services/base.service';
 import { contentHeaders } from '../common/headers';
 
-import { Lot } from './lot';
+import { Farm } from './farm';
 import { Fieldset } from '../shared/dynamic-form/question/fieldset';
 import { TextboxQuestion } from '../shared/dynamic-form/question/question-textbox';
 import { NumberboxQuestion } from '../shared/dynamic-form/question/question-numberbox';
@@ -19,70 +19,66 @@ import { TextboxClickAnswer } from '../shared/dynamic-show/answer/answer-textbox
 import { DropdownAnswer } from '../shared/dynamic-show/answer/answer-dropdown';
 import { DatePickerAnswer } from '../shared/dynamic-show/answer/answer-datepicker';
 
-//import { Farm } from '../farm/farm';
-//import { FarmService } from '../farm/farm.service';
-
 export interface Filter {
     farmId?: number;
 }
 
 @Injectable()
-export class LotService extends BaseService
+export class FarmService extends BaseService
 {
-	 private urlLot: string= this.HOST+'/lot';
+	 private urlLot: string= this.HOST+'/Farm';
 
 
 	constructor(
-        private http: Http,
-      //  private farmService: FarmService
+        private http: Http
     ){
         super();
         contentHeaders.append("Authorization", localStorage.getItem('token'));
     }
 
-    getById(id: number): Observable<Lot> {
+    getById(id: number): Observable<Farm> {
         return this.http.get(this.urlLot + '/' + id, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Lot[]> {
+    getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Farm[]> {
         requestOptions.headers = contentHeaders;
         return this.http.get(this.urlLot+'', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
 
-    getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Lot[]>{
+    getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Farm[]>{
         requestOptions.headers = contentHeaders;
         return this.http.get(this.urlLot + '/search', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
 
-    new(): Observable<Lot> {
+    new(): Observable<Farm> {
         return this.http.get(this.urlLot + '/new', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    edit(id: number): Observable<Lot> {
+    edit(id: number): Observable<Farm> {
         return this.http.get(this.urlLot + '/' + id + '', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    create(lot: Lot): Observable<Lot> {
-        return this.http.post(this.urlLot, lot, {headers: contentHeaders})
+    create(Farm: Farm): Observable<Farm> {
+        return this.http.post(this.urlLot, Farm, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
 
             
     }
 
-    update(lot: Lot): Observable<Lot> {
+    update(Farm: Farm): Observable<Farm> {
         
-        return this.http.put(this.urlLot /*+ '/' + lot.id*/, lot, {headers: contentHeaders})
+        return this.http.put(this.urlLot /*+ '/' + Farm.id*/, Farm, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -95,17 +91,8 @@ export class LotService extends BaseService
         return this.http.post(this.urlLot + '/delete', ids, {headers: contentHeaders});
     }
 
-    getQuestions(lot: Lot) {
-     /*   let dropdownQuestionFarm = new DropdownQuestion({
-            key: 'farm.id',
-            label: 'farm.name',
-            value: lot.farm["idFarm"] != undefined? lot.farm.id: '',
-            optionsKey: 'nameLot',
-            required: true,
-        });
-        this.farmService.getAll(this.buildRequestOptionsFinder("name", "s")).subscribe(params => { 
-            dropdownQuestionFarm.options = params['result'];
-        });*/
+  /*  getQuestions(Farm: Farm) {
+    
 
           let questions: Fieldset[] = [
             new Fieldset({
@@ -114,7 +101,7 @@ export class LotService extends BaseService
                     new TextboxQuestion({
                         key: 'idLot',
                         label: 'id',
-                        value: lot.idLot,
+                        value: Farm.idLot,
                         type: 'number',
                         hidden: true,
                     })],[
@@ -136,70 +123,60 @@ export class LotService extends BaseService
                     new TextboxQuestion({
                         key: 'name',
                         label: 'Nombre del Lote:',
-                        value: lot.nameLot,
+                        value: Farm.nameLot,
                         type: 'text',
                         required: true,
                     })],[
                     new TextboxQuestion({
                         key: 'nameFarm',
                         label: 'Nombre de la Finca:',
-                        value: lot.farm["nameFarm"],
+                        value: Farm.farm["nameFarm"],
                         type: 'text',
                         required: true,
                     })],[
                     new TextboxQuestion({
                         key: 'areaLot',
                         label: 'Area:',
-                        value: lot.areaLot,
+                        value: Farm.areaLot,
                         type: 'text',
                         required: true,
                     })],[
                     new TextboxQuestion({
                         key: 'heighLot',
                         label: 'Altura:',
-                        value: lot.heighLot,
+                        value: Farm.heighLot,
                         type: 'text',
                         required: true,
                     })],[
                     new TextboxQuestion({
                         key: 'price_lot',
                         label: 'US Precio:',
-                        value: lot.price_lot,
+                        value: Farm.price_lot,
                         type: 'text',
                         required: true,
                     })
-                    ]/*,[
-                    new TextboxQuestion({
-                        key: 'farm',
-                        label: 'id_fama',
-                        value: lot.farm["id"],
-                        type: 'number',
-                       // hidden: true,
-                    }),
-                    dropdownQuestionFarm
-                ]*/]
+                ]]
             })
         ];
         return questions;
     }
 
-    getAnswers(lot: Lot) {
-        ////console.log(lot.farm);
-        let answers: FieldsetAnswer[] = [
+    getAnswers(Farm: Farm) {
+          let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
                 legend: 'infomación de Lote',
                 fields: [[
                     new TextboxAnswer({
                         key: 'nameLot',
                         label: 'Nombre del Lote:',
-                        value: lot.nameLot,
+                        value: Farm.nameLot,
                         type: 'text'
                     }),
                 ],[
                     new TextboxClickAnswer({
                         key: 'nameFarm',
                         label: 'Nombre de la Finca:',
-                        value: lot.farm["nameFarm"],
+                        value: Farm.farm["nameFarm"],
                         type: 'text'
                     }),
                 ],
@@ -207,7 +184,7 @@ export class LotService extends BaseService
                     new TextboxClickAnswer({
                         key: 'areaLot',
                         label: 'Area:',
-                        value: lot.areaLot,
+                        value: Farm.areaLot,
                         type: 'text'
                     }),
                 ],
@@ -215,7 +192,7 @@ export class LotService extends BaseService
                     new TextboxClickAnswer({
                         key: 'heighLot',
                         label: 'Altura:',
-                        value: lot.heighLot,
+                        value: Farm.heighLot,
                         type: 'text'
                     }),
                 ],
@@ -223,7 +200,7 @@ export class LotService extends BaseService
                     new TextboxClickAnswer({
                         key: 'price_lot',
                         label: 'US Precio:',
-                        value: lot.price_lot,
+                        value: Farm.price_lot,
                         type: 'text'
                     }),
                 ]
@@ -231,5 +208,5 @@ export class LotService extends BaseService
             }),
         ];
         return answers;
-    }
+    }*/
 }

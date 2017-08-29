@@ -92,7 +92,7 @@ filter(){
 
 			for(let item of this.items)
 			{
-				if(item.statusLot == "0")
+				if(item.statusLot == '1')
 				{
 					item.statusLot="Activo";
 				}
@@ -106,7 +106,6 @@ filter(){
 	}
 
 	read(item: Lot){
-		console.log(item);
 		this.router.navigate(['./' + item.idLot], {relativeTo: this.activatedRoute});
 	}
 
@@ -119,7 +118,8 @@ filter(){
 	}
 
 	delete(this, item: Lot){
-		this.lotService.delete(item.idLot).subscribe(any =>  {
+
+		this.lotService.delete(item.id).subscribe(any =>  {
 			this.notificationService.delete(item.nameLot);
 			this.tableCmp.remove(item.id);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));

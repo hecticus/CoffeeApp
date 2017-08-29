@@ -13,7 +13,7 @@ import { NotificationService } from '../common/notification/notification.service
 })
 export class LotCreateComponent {
 
-  title: string = "create Lot";
+  title: string = "Lotes/agregar";
 	questions: any[];
 	private lot: Lot;
 
@@ -26,6 +26,11 @@ export class LotCreateComponent {
 	){}
 
   ngOnInit() {
+
+			this.lotService.new().subscribe(lot => {
+			this.lot = lot;
+			this.questions = this.lotService.getQuestions(this.lot);
+		});
   }
 
 create(form: FormGroup) {
