@@ -58,12 +58,14 @@ POST    /itemType                          controllers.ItemTypes.create()
 PUT     /itemType                          controllers.ItemTypes.update()
 DELETE  /itemType/:id                      controllers.ItemTypes.delete(id : Long)
 
-GET     /lot/search                   controllers.Lots.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /lot                          controllers.Lots.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /lot/search                   controllers.Lots.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /lot/new                      controllers.Lots.preCreate()
 POST    /lot                          controllers.Lots.create()
+GET     /lot/:id                      controllers.Lots.findById(id : Long)
 PUT     /lot                          controllers.Lots.update()
 DELETE  /lot/:id                      controllers.Lots.delete(id : Long)
-GET     /lot/:id                      controllers.Lots.findById(id : Long)
+
 GET     /lot/getByNameLot/:NameLot/:order controllers.Lots.getByNameLot(NameLot: String, order:String )
 GET     /lot/getByStatusLot/:StatusLot/:order controllers.Lots.getByStatusLot(StatusLot: String, order:String )
 

@@ -12,6 +12,7 @@ import models.dao.utils.ListPager;
 import models.dao.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 import models.domain.Lot;
+import models.domain.Farm;
 import models.manager.LotManager;
 import models.manager.responseUtils.ExceptionsUtils;
 import models.manager.responseUtils.ResponseCollection;
@@ -52,9 +53,9 @@ public class LotManagerImpl implements LotManager {
                 return Response.requiredJson();
 
 
-            JsonNode area = json.get("area");
+            JsonNode area = json.get("areaLot");
             if (area == null)
-                return Response.requiredParameter("area");
+                return Response.requiredParameter("areaLot");
 
             JsonNode Name = json.get("name");
             if (Name == null)
@@ -251,6 +252,23 @@ public class LotManagerImpl implements LotManager {
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @Override
+    public Result preCreate() {
+
+
+        try {
+            Farm farm = new Farm();
+            Lot lot = new Lot();
+            lot.setFarm(farm);
+
+            return Response.foundEntity(
+                    Json.toJson(lot));
+        } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
     }

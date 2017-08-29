@@ -24,4 +24,6 @@ public interface LotManager {
     Result findAll(Integer index, Integer size, String sort, String collection);
 
     Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+
+    Result preCreate();
 }

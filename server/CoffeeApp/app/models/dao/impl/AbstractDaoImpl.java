@@ -72,8 +72,8 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
     @Override
     public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
         if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(find.orderBy(Sort(sort)).findList());
-        return new ListPagerCollection(find.orderBy(Sort(sort)).findPagedList(pageIndex, pageSize).getList(), find.findRowCount(), pageIndex, pageSize);
+            return new ListPagerCollection(find.where().eq("status_delete",0).orderBy(Sort(sort)).findList());
+        return new ListPagerCollection(find.where().eq("status_delete",0).orderBy(Sort(sort)).findPagedList(pageIndex, pageSize).getList(), find.findRowCount(), pageIndex, pageSize);
     }
 
     @Override
@@ -87,8 +87,8 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));
 
         if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(expressionList.eq("status_delete",0).findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
 
 
