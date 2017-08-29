@@ -75,7 +75,7 @@ public class Lot extends AbstractEntity
     }
 
     public void setNameLot(String nameLot) {
-        nameLot = nameLot;
+        this.nameLot = nameLot;
     }
 
     public String getAreaLot() {

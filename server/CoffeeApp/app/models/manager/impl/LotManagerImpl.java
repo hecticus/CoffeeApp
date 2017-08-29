@@ -102,9 +102,9 @@ public class LotManagerImpl implements LotManager {
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idLot");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idLot");
 
             JsonNode farm = json.get("farm");
             if (farm != null)
