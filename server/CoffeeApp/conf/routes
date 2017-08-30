@@ -69,6 +69,11 @@ DELETE  /lot/:id                      controllers.Lots.delete(id : Long)
 GET     /lot/getByNameLot/:NameLot/:order controllers.Lots.getByNameLot(NameLot: String, order:String )
 GET     /lot/getByStatusLot/:StatusLot/:order controllers.Lots.getByStatusLot(StatusLot: String, order:String )
 
+GET     /farm                          controllers.Farms.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm/search                   controllers.Farms.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm/:id                      controllers.Farms.findById(id : Long)
+
+
 
 GET     /purity/:id                      controllers.Purities.findById(id : Long)
 GET     /purity/findAll/:index/:size     controllers.Purities.findAll(index: Integer, size: Integer)
