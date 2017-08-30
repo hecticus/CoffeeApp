@@ -9,6 +9,7 @@ import { LotUpdateComponent } from './lot-update.component';
 import { LotComponent } from './lot.component';
 import { homeRouting } from '../home/home.routes';
 import { LotService } from './lot.service';
+import { FarmService } from '../farm/farm.service';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { LotService } from './lot.service';
   
     ],
 	providers: [
-		LotService
+		LotService,
+    FarmService
 	],
 })
 export class LotModule { }

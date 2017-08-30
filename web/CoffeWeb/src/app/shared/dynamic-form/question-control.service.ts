@@ -22,7 +22,7 @@ export class QuestionControlService {
 		    /*if(question.required)
 		    	validators.push(Validators.required);
 		    if(question.pattern != undefined){
-		    	console.log(question.pattern);
+		    	//console.log(question.pattern);
 		    	validators.push(Validators.pattern(question.pattern));
 		    }
 		                          		

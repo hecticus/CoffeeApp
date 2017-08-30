@@ -36,7 +36,7 @@ export class LoginComponent extends BaseService implements OnInit {
      }
 
   login(event, email, password) {
-        console.log(this.urlUser);
+        //console.log(this.urlUser);
     event.preventDefault();
     let body = JSON.stringify({ email, password });
     this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })

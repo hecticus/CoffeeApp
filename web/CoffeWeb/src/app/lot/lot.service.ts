@@ -19,8 +19,8 @@ import { TextboxClickAnswer } from '../shared/dynamic-show/answer/answer-textbox
 import { DropdownAnswer } from '../shared/dynamic-show/answer/answer-dropdown';
 import { DatePickerAnswer } from '../shared/dynamic-show/answer/answer-datepicker';
 
-//import { Farm } from '../farm/farm';
-//import { FarmService } from '../farm/farm.service';
+import { Farm } from '../farm/farm';
+import { FarmService } from '../farm/farm.service';
 
 export interface Filter {
     farmId?: number;
@@ -34,7 +34,7 @@ export class LotService extends BaseService
 
 	constructor(
         private http: Http,
-      //  private farmService: FarmService
+        private farmService: FarmService
     ){
         super();
         contentHeaders.append("Authorization", localStorage.getItem('token'));
@@ -96,16 +96,17 @@ export class LotService extends BaseService
     }
 
     getQuestions(lot: Lot) {
-     /*   let dropdownQuestionFarm = new DropdownQuestion({
-            key: 'farm.id',
-            label: 'farm.name',
-            value: lot.farm["idFarm"] != undefined? lot.farm.id: '',
-            optionsKey: 'nameLot',
+        let dropdownQuestionFarm = new DropdownQuestion({
+            key: 'farm',
+            label: 'Nombre de la Finca:',
+            value: 'idFarm',//lot.farm["idFarm"] != undefined? lot.farm.id: '',
+            optionsKey: 'idFarm',
+            optionsValue: 'NameFarm',
             required: true,
         });
-        this.farmService.getAll(this.buildRequestOptionsFinder("name", "s")).subscribe(params => { 
-            dropdownQuestionFarm.options = params['result'];
-        });*/
+        this.farmService.getAll(this.buildRequestOptionsFinder("name_farm", "s")).subscribe(params => { 
+                  dropdownQuestionFarm.options = params['result'];
+     });
 
           let questions: Fieldset[] = [
             new Fieldset({
@@ -117,14 +118,14 @@ export class LotService extends BaseService
                         value: lot.idLot,
                         type: 'number',
                         hidden: true,
-                    })],[
+                    })],/*[
                     new TextboxQuestion({
                         key: 'farm',
                         label: 'id_farm',
                         value: 1,
                         type: 'number',
                         hidden: true,
-                    })],[
+                    })]*/,[
                     new TextboxQuestion({
                         key: 'status',
                         label: 'status',
@@ -140,51 +141,43 @@ export class LotService extends BaseService
                         type: 'text',
                         required: true,
                     })],[
+                    dropdownQuestionFarm
+                ],/*[
                     new TextboxQuestion({
                         key: 'nameFarm',
                         label: 'Nombre de la Finca:',
                         value: lot.farm["nameFarm"],
                         type: 'text',
                         required: true,
-                    })],[
+                    })],*/[
                     new TextboxQuestion({
                         key: 'areaLot',
                         label: 'Area:',
                         value: lot.areaLot,
-                        type: 'text',
+                        type: 'number',
                         required: true,
                     })],[
                     new TextboxQuestion({
                         key: 'heighLot',
                         label: 'Altura:',
                         value: lot.heighLot,
-                        type: 'text',
+                        type: 'number',
                         required: true,
                     })],[
                     new TextboxQuestion({
                         key: 'price_lot',
                         label: 'US Precio:',
                         value: lot.price_lot,
-                        type: 'text',
+                        type: 'number',
                         required: true,
                     })
-                    ]/*,[
-                    new TextboxQuestion({
-                        key: 'farm',
-                        label: 'id_fama',
-                        value: lot.farm["id"],
-                        type: 'number',
-                       // hidden: true,
-                    }),
-                    dropdownQuestionFarm
-                ]*/]
+                    ]]
             })
         ];
         return questions;
     }
 
     getAnswers(lot: Lot) {
-        ////console.log(lot.farm);
         let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
                 legend: 'infomación de Lote',

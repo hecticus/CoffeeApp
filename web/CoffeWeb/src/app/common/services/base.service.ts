@@ -14,7 +14,7 @@ export class BaseService{
 
     public extractData(res: Response) {
         let body = res.json();
-        console.log(body);
+        //console.log(body);
         return body.result || { };
     }
 
@@ -45,7 +45,7 @@ export class BaseService{
         } else {
             errMsg = error.message ? error.message : error.toString();
         }
-        console.error(errMsg);
+        //console.error(errMsg);
         return Observable.throw(errMsg);
     }
 

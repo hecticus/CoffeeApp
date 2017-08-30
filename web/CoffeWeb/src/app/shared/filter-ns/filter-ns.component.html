@@ -25,8 +25,8 @@
 						<option value="-1" selected>All</option>
 						<option 
 							*ngFor="let opt of question.options" 
-							[value]="opt.id">
-							{{opt[question.optionsKey]}}
+							[value]= opt[question.optionsKey] >
+							{{opt[question.optionsValue]}}
 						</option>
 					</select>
 				</div>

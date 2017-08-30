@@ -18,6 +18,6 @@ export class LogoutComponent implements OnInit {
   constructor(public router: Router, public http: Http, public authHttp: AuthHttp, private notificationService: NotificationService) { }
 
   ngOnInit() {
-       console.log("************");
+       //console.log("************");
   }
 }

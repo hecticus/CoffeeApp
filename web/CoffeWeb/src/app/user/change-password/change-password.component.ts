@@ -32,14 +32,14 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
   }
   save(model: Password, isValid: boolean) {
         // call API to save customer
-        console.log(model, isValid);
+        //console.log(model, isValid);
   }
 
   changePassword(model: Password, isValid: boolean)
   {
      if(isValid){
        contentHeaders.append("Authorization",this.accessToken);
-       console.log(contentHeaders);
+       //console.log(contentHeaders);
         event.preventDefault();
         let password = model['password'];
         let email = this.email;
@@ -59,7 +59,7 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
                 {
                   alert(error.json().message);
                 }
-                console.log(error.json().message);
+                //console.log(error.json().message);
               }
           );
       }
@@ -72,9 +72,9 @@ export class ChangePasswordComponent  extends BaseService implements OnInit{
 	getFromUrl() {
 
      this.accessToken = this.route.snapshot.queryParams["token"];
-     console.log(this.accessToken);
+     //console.log(this.accessToken);
      this.email = this.route.snapshot.queryParams["to_email"];
-     console.log(this.email);
+     //console.log(this.email);
 
 	}
 }

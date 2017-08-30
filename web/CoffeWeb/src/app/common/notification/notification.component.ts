@@ -39,7 +39,7 @@ export class NotificationComponent implements OnInit {
   	}
   }  
 
-  onCreate(event) { /*console.log(event);*/ }
+  onCreate(event) { /*//console.log(event);*/ }
 
-  onDestroy(event) { /*console.log(event);*/ }
+  onDestroy(event) { /*//console.log(event);*/ }
 }

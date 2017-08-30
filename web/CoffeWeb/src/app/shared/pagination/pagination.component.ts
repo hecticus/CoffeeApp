@@ -21,8 +21,8 @@ export class PaginationComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(...args: any[]) {
-        //console.log('onChange fired');
-        //console.log('changing', args);
+        ////console.log('onChange fired');
+        ////console.log('changing', args);
         this.pager = this.pagerService.getPager(this.totalItems, this.initPage, this.pageSize);
     }
 

@@ -26,50 +26,51 @@ export interface Filter {
 @Injectable()
 export class FarmService extends BaseService
 {
-	 private urlLot: string= this.HOST+'/Farm';
+	 private urlFarm: string= this.HOST+'/farm';
 
 
 	constructor(
         private http: Http
     ){
         super();
-        contentHeaders.append("Authorization", localStorage.getItem('token'));
+     //  contentHeaders.append("Authorization", localStorage.getItem('token'));
     }
 
     getById(id: number): Observable<Farm> {
-        return this.http.get(this.urlLot + '/' + id, {headers: contentHeaders})
+        return this.http.get(this.urlFarm + '/' + id, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Farm[]> {
         requestOptions.headers = contentHeaders;
-        return this.http.get(this.urlLot+'', requestOptions)
+        return this.http.get(this.urlFarm+'', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
 
     getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Farm[]>{
         requestOptions.headers = contentHeaders;
-        return this.http.get(this.urlLot + '/search', requestOptions)
+        //console.log(requestOptions);
+        return this.http.get(this.urlFarm + '/search', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
-
+/*
     new(): Observable<Farm> {
-        return this.http.get(this.urlLot + '/new', {headers: contentHeaders})
+        return this.http.get(this.urlFarm + '/new', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     edit(id: number): Observable<Farm> {
-        return this.http.get(this.urlLot + '/' + id + '', {headers: contentHeaders})
+        return this.http.get(this.urlFarm + '/' + id + '', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     create(Farm: Farm): Observable<Farm> {
-        return this.http.post(this.urlLot, Farm, {headers: contentHeaders})
+        return this.http.post(this.urlFarm, Farm, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
 
@@ -78,17 +79,17 @@ export class FarmService extends BaseService
 
     update(Farm: Farm): Observable<Farm> {
         
-        return this.http.put(this.urlLot /*+ '/' + Farm.id*/, Farm, {headers: contentHeaders})
+        return this.http.put(this.urlFarm /*+ '/' + Farm.id* /, Farm, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     delete(id: number): Observable<any> {
-        return this.http.delete(this.urlLot + '/' + id, {headers: contentHeaders});
+        return this.http.delete(this.urlFarm + '/' + id, {headers: contentHeaders});
     }
 
     deletes(ids: {"ids": number[]}): Observable<any> {
-        return this.http.post(this.urlLot + '/delete', ids, {headers: contentHeaders});
+        return this.http.post(this.urlFarm + '/delete', ids, {headers: contentHeaders});
     }
 
   /*  getQuestions(Farm: Farm) {
