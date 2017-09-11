@@ -11,7 +11,7 @@ import java.util.List;
  * Created by drocha on 12/05/17.
  */
 @Entity
-@Table(name="provider_Type")
+@Table(name="provider_type")
 public class ProviderType  extends AbstractEntity {
     @Id
     @Column(name = "id_ProviderType")

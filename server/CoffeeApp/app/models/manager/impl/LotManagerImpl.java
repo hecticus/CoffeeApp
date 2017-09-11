@@ -118,7 +118,8 @@ public class LotManagerImpl implements LotManager {
             Lot lot =  Json.fromJson(json, Lot.class);
 
             JsonNode Name = json.get("name");
-            if (Name != null)
+            JsonNode nameChange = json.get("nameChange");
+            if (Name != null && !nameChange.asText().equals(Name.asText()))
             {
                 int registered = lotDao.getExist(Name.asText().toUpperCase());
                 if(registered==0) return  Response.messageExist("name");

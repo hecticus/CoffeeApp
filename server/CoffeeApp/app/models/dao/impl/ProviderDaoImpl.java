@@ -6,8 +6,11 @@ package models.dao.impl;
 
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.text.PathProperties;
 import models.dao.ProviderTypeDao;
+import models.dao.utils.ListPagerCollection;
 import models.domain.Provider;
 import models.dao.ProviderDao;
 import models.manager.requestUtils.Request;
@@ -136,6 +139,24 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
         }
 
+    }
+
+    @Override
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+        ExpressionList expressionList = find.where().eq("status_delete",0);
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.icontains("name", name);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
 
 }

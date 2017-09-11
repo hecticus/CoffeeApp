@@ -19,8 +19,11 @@ GET     /providerType/findAll/:index/:size     controllers.ProviderTypes.findAll
 GET    /providerType/getProviderTypesByName/:name/:order  controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 
 
+GET     /provider                          controllers.Providers.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /provider/search                   controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /provider/new                      controllers.Providers.preCreate()
 GET     /provider/:id                      controllers.Providers.findById(id : Long)
-GET     /provider/findAll/:index/:size     controllers.Providers.findAll(index: Integer, size: Integer)
+#GET     /provider/findAll/:index/:size     controllers.Providers.findAll(index: Integer, size: Integer)
 GET     /provider/getByIdentificationDoc/:IdentificationDoc   controllers.Providers.getByIdentificationDoc(IdentificationDoc: String)
 GET     /provider/getProvidersByName/:name/:order  controllers.Providers.getProvidersByName(name:String,order:String)
 GET     /provider/getByTypeProvider/:id_providertype/:order  controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)

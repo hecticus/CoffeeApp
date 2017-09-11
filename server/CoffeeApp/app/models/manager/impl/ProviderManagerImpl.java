@@ -6,9 +6,14 @@ package models.manager.impl;
 
 
 
+import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.InvoiceDao;
 import models.dao.impl.InvoiceDaoImpl;
+import models.dao.utils.ListPagerCollection;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.PropertiesCollection;
+import models.manager.responseUtils.ResponseCollection;
 import play.libs.Json;
 import play.mvc.Result;
 import models.manager.ProviderManager;
@@ -31,6 +36,7 @@ public class ProviderManagerImpl implements ProviderManager
     private static ProviderDao providerDao = new ProviderDaoImpl();
     private static ProviderTypeDao providerTypeDao = new ProviderTypeDaoImpl();
     private static InvoiceDao invoiceDao = new InvoiceDaoImpl();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     @Override
     public Result create() {
@@ -160,7 +166,7 @@ public class ProviderManagerImpl implements ProviderManager
         }
     }
 
-    @Override
+  /*  @Override
     public Result findAll(Integer index, Integer size) {
         try {
             List<Provider> providers = providerDao.findAll(index, size);
@@ -169,7 +175,7 @@ public class ProviderManagerImpl implements ProviderManager
             return Response.internalServerErrorLF();
         }
     }
-
+*/
     @Override
     public Result  getByIdentificationDoc(String IdentificationDoc)
     {
@@ -241,6 +247,46 @@ public class ProviderManagerImpl implements ProviderManager
                 return Response.foundEntity(Json.toJson(providers));
         }catch(Exception e){
             return Response.internalServerErrorLF();
+        }
+    }
+
+    @Override
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = providerDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @Override
+    public Result preCreate() {
+
+
+        try {
+            Provider provider = new Provider();
+
+            return Response.foundEntity(
+                    Json.toJson(provider));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
         }
     }
 

@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Security.HSecurity;
+import models.manager.requestUtils.queryStringBindable.Pager;
 import play.mvc.Result;
 import models.manager.ProviderManager;
 import models.manager.impl.ProviderManagerImpl;
@@ -32,11 +33,11 @@ public class Providers
         return providerManager.findById(id);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    /*@HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAll(Integer index, Integer size) {
         return providerManager.findAll(index, size);
     }
-
+*/
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result  getByIdentificationDoc(String IdentificationDoc) {
         return providerManager.getByIdentificationDoc(IdentificationDoc);
@@ -55,6 +56,21 @@ public class Providers
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order) {
         return providerManager.getByNameDocByTypeProvider(nameDoc, id_providertype, order);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAll(Pager pager, String sort, String collection) {
+        return providerManager.findAll(pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+        return providerManager.findAllSearch(name, pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result preCreate() {
+        return providerManager.preCreate();
     }
 
 }

@@ -17,7 +17,7 @@ public interface ProviderManager {
 
     public Result findById(Long id);
 
-    public Result findAll(Integer index, Integer size);
+   // public Result findAll(Integer index, Integer size);
 
     public Result  getByIdentificationDoc(String IdentificationDoc);
 
@@ -26,6 +26,12 @@ public interface ProviderManager {
     public Result  getByTypeProvider(Long id_providertype, String order);
 
     public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order);
+
+    Result findAll(Integer index, Integer size, String sort, String collection);
+
+    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+
+    Result preCreate();
 
 
 }

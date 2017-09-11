@@ -4,6 +4,8 @@ package models.dao;
  * Created by drocha on 25/04/17.
  */
 
+import com.avaje.ebean.text.PathProperties;
+import models.dao.utils.ListPagerCollection;
 import models.domain.Provider;
 
 import java.util.List;
@@ -18,6 +20,8 @@ public interface ProviderDao extends AbstractDao<Long, Provider>{
     List<Provider> getByNameDocByTypeProvider(String nameDoc,Long typeProvider, String order);
 
     int getExist(String IdentificationDoc);
+
+    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties);
 
 
 
