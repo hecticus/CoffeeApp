@@ -4,6 +4,7 @@ import { HomeComponent } from './home.component';
 import { AuthGuard } from '../common/auth.guard';
 import { userRoutes } from '../user/user.routes';
 import { lotRoutes } from '../lot/lot.routes';
+import { providerRoutes } from '../provider/provider.routes';
 
 
 export const homeRoutes: Routes = [
@@ -12,7 +13,8 @@ export const homeRoutes: Routes = [
         component: HomeComponent,
         canActivate: [AuthGuard],
         children: [
-           ...lotRoutes
+           ...lotRoutes,
+           ...providerRoutes
         ]
     }, 
       

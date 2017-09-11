@@ -13,8 +13,11 @@ import { MenuItemComponent } from '../common/menu/menu-item/menu-item.component'
 import { HomeComponent } from './home.component';
 
 import { LotModule } from '../lot/lot.module';
+import { ProviderModule } from '../provider/provider.module';
 
 import { SharedModule } from '../shared/shared.module';
+
+import { contentHeaders } from '../common/headers';
 
 @NgModule({ 
     imports: [
@@ -27,7 +30,8 @@ import { SharedModule } from '../shared/shared.module';
 
         SharedModule,
 
-        LotModule
+        LotModule,
+        ProviderModule
         
         ],
     declarations: [
@@ -36,4 +40,8 @@ import { SharedModule } from '../shared/shared.module';
         HomeComponent      
         ],
     })
-export class HomeModule { }
+export class HomeModule {
+    constructor(){
+      //      contentHeaders.append("Authorization", sessionStorage.getItem('token'));
+        }
+ }

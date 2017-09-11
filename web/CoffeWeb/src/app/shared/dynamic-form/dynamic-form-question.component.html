@@ -29,12 +29,13 @@
 		<div *ngSwitchCase="'dropdown'" class="custom-select">
 			<select
 				[formControlName]="question.key"
-				[id]="question.key">
-				<option value="" selected>{{question.placeholder}}</option>
+				[id]="question.key" [(ngModel)]="question.value">
+				<!-- <option value="">{{question.placeholder}}</option> -->
 				<option
 					*ngFor="let opt of question.options"
-					[value]= opt[question.optionsKey] >
-					{{opt[question.optionsValue]}}
+					[value]= opt[question.optionsKey]
+				>
+				 {{opt[question.optionsValue]}}
 				</option>
 			</select>
 		</div>

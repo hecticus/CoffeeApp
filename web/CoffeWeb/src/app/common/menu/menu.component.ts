@@ -20,7 +20,7 @@ export class MenuComponent {
 	menuItems: menuItem[] = [
 		{
 			title: 'Proveedores',
-			routerLink: './providers/providers',
+			routerLink: './provider',
 			selected: false
 		},{
 			title: 'Lotes',

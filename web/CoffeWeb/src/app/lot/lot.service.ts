@@ -37,7 +37,8 @@ export class LotService extends BaseService
         private farmService: FarmService
     ){
         super();
-        contentHeaders.append("Authorization", localStorage.getItem('token'));
+        console.log(contentHeaders);
+     //   contentHeaders.append("Authorization", sessionStorage.getItem('token'));
     }
 
     getById(id: number): Observable<Lot> {
@@ -96,17 +97,18 @@ export class LotService extends BaseService
     }
 
     getQuestions(lot: Lot) {
+       console.log(lot.farm['idFarm']+"-----1-----"+lot.farm['nameFarm']);
         let dropdownQuestionFarm = new DropdownQuestion({
             key: 'farm',
             label: 'Nombre de la Finca:',
-            value: 'idFarm',//lot.farm["idFarm"] != undefined? lot.farm.id: '',
+            value: lot.farm['idFarm'],
             optionsKey: 'idFarm',
             optionsValue: 'NameFarm',
             required: true,
         });
+         
         this.farmService.getAll(this.buildRequestOptionsFinder("name_farm", "s")).subscribe(params => { 
-                  dropdownQuestionFarm.options = params['result'];
-     });
+                  dropdownQuestionFarm.options = params['result'];    });
 
           let questions: Fieldset[] = [
             new Fieldset({
@@ -118,14 +120,14 @@ export class LotService extends BaseService
                         value: lot.idLot,
                         type: 'number',
                         hidden: true,
-                    })],/*[
+                    })],[
                     new TextboxQuestion({
-                        key: 'farm',
-                        label: 'id_farm',
-                        value: 1,
-                        type: 'number',
+                        key: 'nameChange',
+                        label: 'nameChange',
+                        value: lot.nameLot,
+                        type: 'text',
                         hidden: true,
-                    })]*/,[
+                    })],[
                     new TextboxQuestion({
                         key: 'status',
                         label: 'status',
@@ -142,14 +144,7 @@ export class LotService extends BaseService
                         required: true,
                     })],[
                     dropdownQuestionFarm
-                ],/*[
-                    new TextboxQuestion({
-                        key: 'nameFarm',
-                        label: 'Nombre de la Finca:',
-                        value: lot.farm["nameFarm"],
-                        type: 'text',
-                        required: true,
-                    })],*/[
+                ],[
                     new TextboxQuestion({
                         key: 'areaLot',
                         label: 'Area:',

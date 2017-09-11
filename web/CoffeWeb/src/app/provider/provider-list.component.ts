@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { LotService } from './lot.service';
-import { Lot } from './lot';
+import { ProviderService } from './provider.service';
+import { Provider } from './provider';
 import { TableService } from 'app/shared/table-ns/table-ns.service';
 import { TableColumn } from 'app/shared/table-ns/table-ns-column';
 import { FilterService } from 'app/shared/filter-ns/filter-ns.service';
@@ -17,15 +17,15 @@ import { NotificationService } from '../common/notification/notification.service
 @Component({
   	templateUrl: '../common/crud/list/list.component.html'
 })
-export class LotListComponent implements OnInit {
+export class ProviderListComponent implements OnInit {
 
-title: string = "lista de lotes";
+title: string = "lista Proveerdores";
 	@ViewChild('tableCmp') tableCmp;
-	items: Lot[];
+	items: Provider[];
 	cols: TableColumn[] = [
-		new TableColumn({name:"Nombre", key: "nameLot", proportion: 1}),
-		new TableColumn({name:"Finca", key: "farm.nameFarm", proportion: 2}),
-		new TableColumn({name:"Status", key: "statusLot", proportion: 1})
+		new TableColumn({name:"Nombre", key: "fullNameProvider", proportion: 1}),
+		new TableColumn({name:"Telefono", key: "phoneNumberProvider", proportion: 1}),
+		new TableColumn({name:"Status", key: "statusProvider", proportion: 1})
 	];
 	actions = [
 		{
@@ -55,7 +55,7 @@ title: string = "lista de lotes";
   constructor(	
     private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private lotService: LotService,
+		private providerService: ProviderService,
 		private tableService: TableService,
 		private filterService: FilterService,
 		private notificationService:NotificationService) { }
@@ -69,9 +69,9 @@ title: string = "lista de lotes";
 filter(){
 		let questionFilterName =
 			new QuestionFilterTextbox({
-                key: 'nameLot',
-                label: 'Nombre del Lote',
-                value: this.filterService.filter['nameLot']!=undefined? this.filterService.filter['nameLot']: '',
+                key: 'fullNameProvider',
+                label: 'Nombre del Proveedor',
+                value: this.filterService.filter['fullNameProvider']!=undefined? this.filterService.filter['fullName_Provider']: '',
             });
 		
 		this.questionFilters = [questionFilterName];
@@ -79,7 +79,7 @@ filter(){
 	}
 
 	list(page?: number){
-	this.lotService.getAllSearch(this.lotService.buildRequestOptionsFinder(
+	this.providerService.getAllSearch(this.providerService.buildRequestOptionsFinder(
 			this.tableService.sort,
             "",
 			this.filterService.filter,
@@ -90,44 +90,45 @@ filter(){
 			this.tableService.pager.pageIndex = page;
 			this.tableCmp.deselectAll();
 
+			console.log(this.items);
 			for(let item of this.items)
 			{
-				if(item.statusLot == '1')
+				if(item.statusProvider == '1')
 				{
-					item.statusLot="Activo";
+					item.statusProvider="Activo";
 				}
 				else
 				{
-					item.statusLot="No Activo";
+					item.statusProvider="No Activo";
 				}
-			}
+      }
 		});
 		
 	}
 
-	read(item: Lot){
-		this.router.navigate(['./' + item.idLot], {relativeTo: this.activatedRoute});
+	read(item: Provider){
+		this.router.navigate(['./' + item.idProvider], {relativeTo: this.activatedRoute});
 	}
 
 	create(){
 		this.router.navigate(["./create"], {relativeTo: this.activatedRoute});
 	}
 
-	update(item: Lot){
-		this.router.navigate(['./' + item.idLot + '/update'], {relativeTo: this.activatedRoute})
+	update(item: Provider){
+		this.router.navigate(['./' + item.idProvider + '/update'], {relativeTo: this.activatedRoute})
 	}
 
-	delete(this, item: Lot){
+	delete(this, item: Provider){
 
-		this.lotService.delete(item.id).subscribe(any =>  {
-			this.notificationService.delete(item.nameLot);
-			this.tableCmp.remove(item.id);
+		this.providerService.delete(item.idProvider).subscribe(any =>  {
+			this.notificationService.delete(item.fullNameProvider);
+			this.tableCmp.remove(item.idProvider);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));
 		}, err => this.notificationService.error(err));
 	}
 
 	deletes(this, ids: number[]){
-		this.lotService.deletes({'ids': ids}).subscribe(any =>  {
+		this.providerService.deletes({'ids': ids}).subscribe(any =>  {
 			this.notificationService.deletes();
 			this.tableCmp.removes(ids);
 			this.list(this.tableService.refreshPageIndexAfterRemove(ids.length, this.pager));
@@ -151,4 +152,5 @@ filter(){
 				hiddenClose: false
 			};
 	}
+
 }

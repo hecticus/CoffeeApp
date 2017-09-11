@@ -27,12 +27,12 @@ export class LoginComponent extends BaseService implements OnInit {
   ) {
     
     super();
+
+    sessionStorage.clear;
+    localStorage.clear;
   }
   
   	ngOnInit() {
-      localStorage.removeItem('token');
-      sessionStorage.clear;
-      localStorage.clear;
      }
 
   login(event, email, password) {
@@ -48,6 +48,8 @@ export class LoginComponent extends BaseService implements OnInit {
             
           }
           localStorage.setItem('token', response.json().result.token);
+          sessionStorage.setItem('token', response.json().result.token);
+          contentHeaders.append("Authorization", sessionStorage.getItem('token'));
           this.notificationService.sucessLogin();
           this.router.navigate(['home']);
         },
