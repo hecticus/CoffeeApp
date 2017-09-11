@@ -10,6 +10,7 @@ import { ProviderUpdateComponent } from './provider-update.component';
 import { ProviderReadComponent } from './provider-read.component';
 
 import { ProviderService } from './provider.service';
+import { ProviderTypeService } from '../providerType/providerType.service';
 
 @NgModule({
     imports: [
@@ -25,7 +26,8 @@ import { ProviderService } from './provider.service';
     ProviderReadComponent
     ],
 	providers: [
-		ProviderService
+		ProviderService,
+    ProviderTypeService
 	],
 })
 export class ProviderModule { }

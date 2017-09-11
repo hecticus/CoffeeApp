@@ -14,6 +14,7 @@ export class Provider extends BaseModel
     emailProvider:string;
     contactNameProvider:string;
     providerType: ProviderType;
+    identificationDocProvider: string;
 
 
 }

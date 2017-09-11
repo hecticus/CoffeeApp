@@ -20,6 +20,7 @@ import { DropdownAnswer } from '../shared/dynamic-show/answer/answer-dropdown';
 import { DatePickerAnswer } from '../shared/dynamic-show/answer/answer-datepicker';
 
 import { ProviderType } from '../providerType/providerType';
+import { ProviderTypeService } from '../providerType/providerType.service';
 
 export interface Filter {
   }
@@ -32,6 +33,7 @@ export class ProviderService extends BaseService
 
 	constructor(
         private http: Http,
+        private providerTypeService: ProviderTypeService
     ){
         super();
         console.log(contentHeaders);
@@ -52,6 +54,8 @@ export class ProviderService extends BaseService
     }
 
     getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Provider[]>{
+       
+       console.log("getAllSearch provider");
         requestOptions.headers = contentHeaders;
 
         return this.http.get(this.urlProvider + '/search', requestOptions)
@@ -74,7 +78,10 @@ export class ProviderService extends BaseService
     }
 
     create(provider: Provider): Observable<Provider> {
-        return this.http.post(this.urlProvider, Provider, {headers: contentHeaders})
+        console.log("11111111111111111111111111111111111");
+        console.log(provider);
+        console.log("11111111111111111111111111111111111");
+        return this.http.post(this.urlProvider, provider, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
 
@@ -82,8 +89,8 @@ export class ProviderService extends BaseService
     }
 
     update(provider: Provider): Observable<Provider> {
-        
-        return this.http.put(this.urlProvider /*+ '/' + Provider.id*/, Provider, {headers: contentHeaders})
+        console.log(provider);
+        return this.http.put(this.urlProvider, provider, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -100,12 +107,26 @@ export class ProviderService extends BaseService
         console.log("------------------------------");
         console.log(provider);
         console.log("------------------------------");
+
+            let dropdownQuestionProviderType = new DropdownQuestion({
+            key: 'id_ProviderType',
+            label: 'Tipo del proveedor:',
+            value: provider.providerType['idProviderType'],
+            optionsKey: 'idProviderType',
+            optionsValue: 'nameProviderType',
+            required: true,
+        });
+         
+        this.providerTypeService.getAll(this.buildRequestOptionsFinder("name_provider_type", "s")).subscribe(params => { 
+                  dropdownQuestionProviderType.options = params['result']; });
+
+        console.log(dropdownQuestionProviderType);
         let questions: Fieldset[] = [
             new Fieldset({
                 legend: 'infomación de Proveedor',
                 fields: [[
                   new TextboxQuestion({
-                        key: 'id',
+                        key: 'idProvider',
                         label: 'id',
                         value: provider.idProvider,
                         type: 'number',
@@ -127,20 +148,22 @@ export class ProviderService extends BaseService
                     })],
                     [
                     new TextboxQuestion({
-                        key: 'name',
-                        label: 'Nombre del proveedor:',
-                        value: provider.fullNameProvider,
+                        key: 'identificationDocProvider',
+                        label: 'Numero de identificacion del proveedor:',
+                        value: provider.identificationDocProvider,
                         type: 'text',
                         required: true
                     })],
                     [
                     new TextboxQuestion({
-                        key: 'phoneNumberProvider',
-                        label: 'telefono:',
-                        value: provider.phoneNumberProvider,
-                        type: 'number',
+                        key: 'fullNameProvider',
+                        label: 'Nombre del proveedor:',
+                        value: provider.fullNameProvider,
+                        type: 'text',
                         required: true
-                    })],/*
+                    })],[
+                    dropdownQuestionProviderType
+                ],
                     [
                     new TextboxQuestion({
                         key: 'phoneNumberProvider',
@@ -148,7 +171,7 @@ export class ProviderService extends BaseService
                         value: provider.phoneNumberProvider,
                         type: 'number',
                         required: true
-                    })],*/
+                    })],
                 [
                     new TextboxQuestion({
                         key: 'addressProvider',
@@ -183,9 +206,9 @@ export class ProviderService extends BaseService
     }
 
     getAnswers(provider: Provider) {
-        console.log("------------------------------");
+        console.log("******************************");
         console.log(provider);
-        console.log("------------------------------");
+        console.log("******************************");
         let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
                 legend: 'infomación de Proveedor',

@@ -24,5 +24,18 @@ export class ProviderCreateComponent {
 		private ProviderService: ProviderService,
 		private notificationService: NotificationService,
 	){}
+  ngOnInit() {
 
+			this.ProviderService.new().subscribe(provider => {
+			this.provider = provider;
+			this.questions = this.ProviderService.getQuestions(this.provider);
+		});
+  }
+
+create(form: FormGroup) {
+		this.ProviderService.create(<Provider> this.ProviderService.builderObject(form.value)).subscribe(provider => {
+			this.notificationService.sucessInsert(provider.fullNameProvider);
+			this.location.back();
+		}, err => this.notificationService.error(err));
+	}
 }

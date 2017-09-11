@@ -42,6 +42,5 @@ import { contentHeaders } from '../common/headers';
     })
 export class HomeModule {
     constructor(){
-      //      contentHeaders.append("Authorization", sessionStorage.getItem('token'));
         }
  }
