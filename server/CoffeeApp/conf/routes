@@ -13,10 +13,9 @@ GET     /assets/*file                                                           
 # PUT
 # DELETE
 
-
-GET     /providerType/:id                      controllers.ProviderTypes.findById(id : Long)
+GET     /providerType/getProviderTypesByName/:name/:order  controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 GET     /providerType/findAll/:index/:size     controllers.ProviderTypes.findAll(index: Integer, size: Integer)
-GET    /providerType/getProviderTypesByName/:name/:order  controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
+GET     /providerType/:id                      controllers.ProviderTypes.findById(id : Long)
 
 
 GET     /provider                          controllers.Providers.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)

@@ -28,6 +28,7 @@ import static play.mvc.Controller.request;
 import models.manager.responseUtils.responseObject.ProviderResponse;
 import models.manager.responseUtils.responseObject.providerExtendResponse;
 import java.util.List;
+import models.domain.ProviderType;
 
 public class ProviderManagerImpl implements ProviderManager
 {
@@ -46,33 +47,33 @@ public class ProviderManagerImpl implements ProviderManager
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode identificationDoc = json.get("identificationDoc");
+            JsonNode identificationDoc = json.get("identificationDocProvider");
             if (identificationDoc == null)
-                return Response.requiredParameter("identificationDoc");
+                return Response.requiredParameter("identificationDocProvider");
 
             int registered = providerDao.getExist(identificationDoc.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("identificationDoc");
-            if(registered==1) return  Response.messageExistDeleted("identificationDoc");
+            if(registered==0) return  Response.messageExist("identificationDocProvider");
+            if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
 
-            JsonNode fullName = json.get("fullName");
+            JsonNode fullName = json.get("fullNameProvider");
             if (fullName == null)
-                return Response.requiredParameter("fullName");
+                return Response.requiredParameter("fullNameProvider");
 
-            JsonNode address = json.get("address");
+            JsonNode address = json.get("addressProvider");
             if (address == null)
-                return Response.requiredParameter("address");
+                return Response.requiredParameter("addressProvider");
 
-            JsonNode phoneNumber = json.get("phoneNumber");
+            JsonNode phoneNumber = json.get("phoneNumberProvider");
             if (phoneNumber == null)
-                return Response.requiredParameter("phoneNumber");
+                return Response.requiredParameter("phoneNumberProvider");
 
             JsonNode typeProvider = json.get("id_ProviderType");
             if (typeProvider == null)
                 return Response.requiredParameter("id_ProviderType");
 
-            JsonNode contactName = json.get("contactName");
+            JsonNode contactName = json.get("contactNameProvider");
             if (contactName == null)
-                return Response.requiredParameter("contactName");
+                return Response.requiredParameter("contactNameProvider");
 
 
             // mapping object-json
@@ -96,18 +97,18 @@ public class ProviderManagerImpl implements ProviderManager
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idProvider");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idProvider");
 
             Provider provider =  Json.fromJson(json, Provider.class);
 
-            JsonNode identificationDoc = json.get("identificationDoc");
+            JsonNode identificationDoc = json.get("identificationDocProvider");
             if (identificationDoc != null)
             {
                 int registered = providerDao.getExist(identificationDoc.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("identificationDoc");
-                if(registered==1) return  Response.messageExistDeleted("identificationDoc");
+                if(registered==0) return  Response.messageExist("identificationDocProvider");
+                if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
 
                 provider.setIdentificationDocProvider(identificationDoc.asText().toUpperCase());
             }
@@ -281,8 +282,9 @@ public class ProviderManagerImpl implements ProviderManager
 
 
         try {
+            ProviderType providerType = new ProviderType();
             Provider provider = new Provider();
-
+             provider.setProviderType(providerType);
             return Response.foundEntity(
                     Json.toJson(provider));
         } catch (Exception e) {
