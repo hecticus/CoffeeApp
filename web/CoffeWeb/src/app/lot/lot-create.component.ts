@@ -37,6 +37,13 @@ create(form: FormGroup) {
 		this.lotService.create(<Lot> this.lotService.builderObject(form.value)).subscribe(lot => {
 			this.notificationService.sucessInsert(lot.nameLot);
 			this.location.back();
-		}, err => this.notificationService.error(err));
+		}, err => {
+			switch(err.body.error)
+			{
+				case 409: this.notificationService.alert("Nombre de Lote, ya registrado"); break;
+				case 412: this.notificationService.alert(err.body.errorDescription); break;
+				default: this.notificationService.error(err);
+			}
+		});
 	}
 }

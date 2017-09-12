@@ -35,6 +35,13 @@ export class LotUpdateComponent implements OnInit {
 		this.lotService.update(<Lot> this.lotService.builderObject(form.value)).subscribe(lot => {
 			this.notificationService.sucessUpdate(lot.nameLot);
 			this.location.back();
-		}, err => this.notificationService.error(err));
+		}, err => {
+			switch(err.body.error)
+			{
+				case 409: this.notificationService.alert("Nombre de Lote, ya registrado"); break;
+				case 412: this.notificationService.alert(err.body.errorDescription); break;
+				default: this.notificationService.error(err);
+			}
+		});
 	}
 }

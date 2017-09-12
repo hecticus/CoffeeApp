@@ -12,6 +12,5 @@ export class DropdownQuestion extends QuestionBase<string> {
 		this.optionsValue = options['optionsValue'];
 		this.options = options['options'] || [];
 
-		console.log(this.optionsKey+"------2-----"+this.optionsValue);
-	}
+    }
 }

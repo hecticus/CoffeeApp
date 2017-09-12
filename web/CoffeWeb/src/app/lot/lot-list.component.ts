@@ -69,9 +69,9 @@ title: string = "lista de lotes";
 filter(){
 		let questionFilterName =
 			new QuestionFilterTextbox({
-                key: 'nameLot',
+                key: 'name',
                 label: 'Nombre del Lote',
-                value: this.filterService.filter['nameLot']!=undefined? this.filterService.filter['nameLot']: '',
+                value: this.filterService.filter['name']!=undefined? this.filterService.filter['name']: '',
             });
 		
 		this.questionFilters = [questionFilterName];
@@ -119,9 +119,9 @@ filter(){
 
 	delete(this, item: Lot){
 
-		this.lotService.delete(item.id).subscribe(any =>  {
+		this.lotService.delete(item.idLot).subscribe(any =>  {
 			this.notificationService.delete(item.nameLot);
-			this.tableCmp.remove(item.id);
+			this.tableCmp.remove(item.idLot);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));
 		}, err => this.notificationService.error(err));
 	}

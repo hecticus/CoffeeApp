@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 
 export class BaseService{ 
 
-     public HOST: string = 'https://dev.api.coffee.hecticus.com/';
+   public HOST: string = 'https://dev.api.coffee.hecticus.com';
  //  public HOST: string = 'http://localhost:9000';
     public PAGE_SIZE: string = "3";
 
