@@ -23,16 +23,17 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     }
     private static FarmDao farmDao = new FarmDaoImpl();
 
-    public int getExist(String name_item_type)
+    public List<Integer> getExist(String name_lot, int id_farm)
     {
-        if(find.where().eq("name_lot",name_item_type).eq("status_delete",0).findUnique()!=null) return 0;
+        List<Integer> aux = new ArrayList<Integer>();
+        Lot lot = find.where().eq("name_lot",name_lot).eq("id_farm",id_farm).findUnique();
+        if(lot==null) aux.add(0,-1);
         else
         {
-            if(find.where().eq("name_lot",name_item_type).eq("status_delete",1).findUnique()!=null)  return 1;
-            else return 2;
-
+           aux.add(0,lot.getStatusDelete());
+           aux.add(1,Integer.parseInt(lot.getIdLot().toString()));
         }
-
+        return aux;
     }
 
     public List<Lot> getByNameLot(String NameLot, String order)
@@ -96,7 +97,7 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.icontains("name", name);
+            expressionList.icontains("name_lot", name);
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));

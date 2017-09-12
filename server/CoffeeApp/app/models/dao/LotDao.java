@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface LotDao extends AbstractDao<Long, Lot>{
 
-    int getExist(String name);
+    List<Integer> getExist(String name_lot, int id_farm);
     List<Lot> getByNameLot(String NameLot, String order);
     List<Lot> getByStatusLot(String StatusLot, String order);
     ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties);

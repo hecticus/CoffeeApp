@@ -53,31 +53,34 @@ public class LotManagerImpl implements LotManager {
                 return Response.requiredJson();
 
 
-            JsonNode area = json.get("areaLot");
-            if (area == null)
-                return Response.requiredParameter("areaLot");
-
             JsonNode Name = json.get("name");
-            if (Name == null)
-                return Response.requiredParameter("name");
-
-            int registered = lotDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("name");
-            if(registered==1) return  Response.messageExistDeleted("name");
+            if (Name == null || Name.asText().equals("null") || Name.asText().equals(""))
+                return Response.requiredParameter("name","nombre del lote");
 
             JsonNode farm = json.get("farm");
-            if (farm == null)
-                return Response.requiredParameter("farm");
+            if (farm == null || farm.asText().equals("null") || farm.asText().equals(""))
+                return Response.requiredParameter("farm", "nombre de la finca");
 
             farm = Request.removeParameter(json, "farm");
 
+            List<Integer> registered = lotDao.getExist(Name.asText().toUpperCase(), farm.asInt());
+            if(registered.get(0)==0) return  Response.messageExist("name");
+          //  if(registered==1) return  Response.messageExistDeleted("name");
+
+            JsonNode area = json.get("areaLot");
+            if (area == null || area.asText().equals("null") || area.asText().equals(""))
+                return Response.requiredParameter("areaLot", "area");
+
+            JsonNode heigh = json.get("heighLot");
+            if (heigh == null || heigh.asText().equals("null") || heigh.asText().equals(""))
+                return Response.requiredParameter("heighLot", "altura");
 
             JsonNode price_lot = json.get("price_lot");
-            if (price_lot == null)
-                return Response.requiredParameter("price_lot");
+            if (price_lot == null || price_lot.asText().equals("null") || price_lot.asText().equals(""))
+                return Response.requiredParameter("price_lot", "US precio");
 
             JsonNode status = json.get("status");
-            if (status == null)
+            if (status == null || status.asText().equals("null") || status.asText().equals(""))
                 return Response.requiredParameter("status");
 
 
@@ -87,7 +90,14 @@ public class LotManagerImpl implements LotManager {
             lot.setFarm(farmDao.findById(farm.asLong()));
 
             lot.setNameLot(Name.asText().toUpperCase());
-            lot = lotDao.create(lot);
+
+            if(registered.get(0)==1)
+            {   lot.setStatusDelete(0);
+                lot.setIdLot(registered.get(1).longValue());
+                lot = lotDao.update(lot);
+            }
+            else lot = lotDao.create(lot);
+
             return Response.createdEntity(Json.toJson(lot));
 
         }catch(Exception e){
@@ -111,19 +121,34 @@ public class LotManagerImpl implements LotManager {
             if (farm != null)
                      farm = Request.removeParameter(json, "farm");
 
+            if (farm == null || farm.asText().equals("null") || farm.asText().equals(""))
+                return Response.requiredParameter("farm", "nombre de la finca");
+
+            JsonNode area = json.get("areaLot");
+            if (area == null || area.asText().equals("null") || area.asText().equals(""))
+                return Response.requiredParameter("areaLot", "area");
+
+            JsonNode heigh = json.get("heighLot");
+            if (heigh == null || heigh.asText().equals("null") || heigh.asText().equals(""))
+                return Response.requiredParameter("heighLot", "altura");
+
+
             JsonNode price_lot = json.get("price_lot");
-            if (price_lot == null)
-                return Response.requiredParameter("price_lot");
+            if (price_lot == null || price_lot.asText().equals("null") || price_lot.asText().equals(""))
+                return Response.requiredParameter("price_lot", "US precio");
 
             Lot lot =  Json.fromJson(json, Lot.class);
 
             JsonNode Name = json.get("name");
+            if (Name == null || Name.asText().equals("null") || Name.asText().equals(""))
+                return Response.requiredParameter("name","nombre del lote");
+
             JsonNode nameChange = json.get("nameChange");
             if (Name != null && !nameChange.asText().equals(Name.asText()))
             {
-                int registered = lotDao.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("name");
-                if(registered==1) return  Response.messageExistDeleted("name");
+                List<Integer> registered = lotDao.getExist(Name.asText().toUpperCase(),farm.asInt());
+                if(registered.get(0)==0) return  Response.messageExist("name");
+            //    if(registered==1) return  Response.messageExistDeleted("name");
 
                 lot.setNameLot(Name.asText().toUpperCase());
             }

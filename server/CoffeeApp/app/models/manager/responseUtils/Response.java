@@ -19,6 +19,7 @@ import static play.mvc.Results.*;
 import org.modelmapper.ModelMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by yenny on 9/7/16.
@@ -112,9 +113,21 @@ public class Response {
         return ok(buildExtendResponse("ACCESS GRANTED"));
     }
 
-
     public static Result requiredParameter(String parameter){
-        return badRequest(buildExtendResponse("Missing parameter [" + parameter + "]"));
+
+        ObjectNode response = Json.newObject();
+        response.put("message", "Missing parameter [" + parameter + "]");
+        response.put("error", 412);
+        return badRequest (response);
+    }
+
+    public static Result requiredParameter(String parameter,String description){
+
+        ObjectNode response = Json.newObject();
+        response.put("message", "Missing parameter [" + parameter + "]");
+        response.put("error", 412);
+        response.put("errorDescription","el parametro: "+description+", es obligatorio");
+        return badRequest (response);
     }
 
     public static Result invalidParameter(String parameter){
@@ -186,11 +199,18 @@ public class Response {
     }
 
     public static Result messageExist(String msg){
-        return ok(buildExtendResponse("registered ["+msg+"]"));
+        ObjectNode response = Json.newObject();
+        response.put("message", "registered ["+msg+"]");
+        response.put("error", 409);
+         return badRequest (response);
     }
 
     public static Result messageExistDeleted(String msg){
-        return ok(buildExtendResponse("registered and no active ["+msg+"]"));
+
+        ObjectNode response = Json.newObject();
+        response.put("message", "registered and no active ["+msg+"]");
+        response.put("error", 409);
+        return badRequest (response);
     }
 
     public static Result message(String msg){
