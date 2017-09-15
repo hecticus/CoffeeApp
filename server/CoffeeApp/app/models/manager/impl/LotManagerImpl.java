@@ -148,7 +148,7 @@ public class LotManagerImpl implements LotManager {
             {
                 List<Integer> registered = lotDao.getExist(Name.asText().toUpperCase(),farm.asInt());
                 if(registered.get(0)==0) return  Response.messageExist("name");
-            //    if(registered==1) return  Response.messageExistDeleted("name");
+             //   if(registered.get(0)==1) return  Response.messageExistDeleted("name");
 
                 lot.setNameLot(Name.asText().toUpperCase());
             }

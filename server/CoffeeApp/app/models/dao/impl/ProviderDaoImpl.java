@@ -129,16 +129,18 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
         return providers;
     }
 
-    public int getExist(String identificationdoc_provider)
+
+    public List<Integer> getExist(String identificationdoc_provider)
     {
-        if(find.where().eq("identificationdoc_provider",identificationdoc_provider).eq("status_delete",0).findUnique()!=null) return 0;
+        List<Integer> aux = new ArrayList<Integer>();
+        Provider provider = find.where().eq("identificationdoc_provider",identificationdoc_provider).findUnique();
+        if(provider==null) aux.add(0,-1);
         else
         {
-            if(find.where().eq("identificationdoc_provider",identificationdoc_provider).eq("status_delete",1).findUnique()!=null)  return 1;
-            else return 2;
-
+            aux.add(0,provider.getStatusDelete());
+            aux.add(1,Integer.parseInt(provider.getIdProvider().toString()));
         }
-
+        return aux;
     }
 
     @Override
@@ -149,7 +151,7 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.icontains("name", name);
+            expressionList.icontains("fullName_Provider", name);
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));

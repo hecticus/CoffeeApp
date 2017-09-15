@@ -39,6 +39,12 @@ public class ProviderManagerImpl implements ProviderManager
     private static InvoiceDao invoiceDao = new InvoiceDaoImpl();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
+    public ProviderManagerImpl(){
+
+        propertiesCollection.putPropertiesCollection("s", "(idProvider, fullName_Provider)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
+
     @Override
     public Result create() {
         try
@@ -48,32 +54,32 @@ public class ProviderManagerImpl implements ProviderManager
                 return Response.requiredJson();
 
             JsonNode identificationDoc = json.get("identificationDocProvider");
-            if (identificationDoc == null)
-                return Response.requiredParameter("identificationDocProvider");
+            if (identificationDoc == null || identificationDoc.asText().equals("null") || identificationDoc.asText().equals(""))
+                return Response.requiredParameter("identificationDocProvider","numero de identificacion");
 
-            int registered = providerDao.getExist(identificationDoc.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("identificationDocProvider");
-            if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
+            List<Integer> registered =  providerDao.getExist(identificationDoc.asText().toUpperCase());
+            if(registered.get(0)==0)  return  Response.messageExist("identificationDocProvider");
+          //  if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
 
             JsonNode fullName = json.get("fullNameProvider");
-            if (fullName == null)
-                return Response.requiredParameter("fullNameProvider");
-
-            JsonNode address = json.get("addressProvider");
-            if (address == null)
-                return Response.requiredParameter("addressProvider");
-
-            JsonNode phoneNumber = json.get("phoneNumberProvider");
-            if (phoneNumber == null)
-                return Response.requiredParameter("phoneNumberProvider");
+            if (fullName == null || fullName.asText().equals("null") || fullName.asText().equals(""))
+                return Response.requiredParameter("fullNameProvider", "nombre de proveedor");
 
             JsonNode typeProvider = json.get("id_ProviderType");
-            if (typeProvider == null)
-                return Response.requiredParameter("id_ProviderType");
+            if (typeProvider == null || typeProvider.asText().equals("null") || typeProvider.asText().equals(""))
+            return Response.requiredParameter("id_ProviderType", "tipo de proveedor");
+
+            JsonNode phoneNumber = json.get("phoneNumberProvider");
+            if (phoneNumber == null || phoneNumber.asText().equals("null") || phoneNumber.asText().equals(""))
+            return Response.requiredParameter("phoneNumberProvider","numero de telefono");
+
+            JsonNode address = json.get("addressProvider");
+            if (address == null || address.asText().equals("null") || address.asText().equals(""))
+                return Response.requiredParameter("addressProvider","direccion");
 
             JsonNode contactName = json.get("contactNameProvider");
-            if (contactName == null)
-                return Response.requiredParameter("contactNameProvider");
+            if (contactName == null || contactName.asText().equals("null") || contactName.asText().equals(""))
+                return Response.requiredParameter("contactNameProvider","contacto");
 
 
             // mapping object-json
@@ -81,7 +87,12 @@ public class ProviderManagerImpl implements ProviderManager
 
             provider.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
 
-            provider = providerDao.create(provider);
+            if(registered.get(0)==1)
+            {   provider.setStatusDelete(0);
+                provider.setIdProvider(registered.get(1).longValue());
+                provider = providerDao.update(provider);
+            }
+            else provider = providerDao.create(provider);
             return Response.createdEntity(Json.toJson(provider));
 
         }catch(Exception e){
@@ -104,18 +115,42 @@ public class ProviderManagerImpl implements ProviderManager
             Provider provider =  Json.fromJson(json, Provider.class);
 
             JsonNode identificationDoc = json.get("identificationDocProvider");
-            if (identificationDoc != null)
+            JsonNode identificationDocChange = json.get("identificationDocProviderChange");
+
+            if (identificationDoc == null || identificationDoc.asText().equals("null") || identificationDoc.asText().equals(""))
+                return Response.requiredParameter("identificationDocProvider","numero de identificacion");
+
+            if (!identificationDoc.asText().equals(identificationDocChange.asText()))
             {
-                int registered = providerDao.getExist(identificationDoc.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("identificationDocProvider");
-                if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
+                List<Integer> registered =  providerDao.getExist(identificationDoc.asText().toUpperCase());
+                if(registered.get(0)==0)  return  Response.messageExist("identificationDocProvider");
+             //   if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
 
                 provider.setIdentificationDocProvider(identificationDoc.asText().toUpperCase());
             }
 
+            JsonNode fullName = json.get("fullNameProvider");
+            if (fullName == null || fullName.asText().equals("null") || fullName.asText().equals(""))
+                return Response.requiredParameter("fullNameProvider", "nombre de proveedor");
+
             JsonNode typeProvider = json.get("id_ProviderType");
+            if (typeProvider == null || typeProvider.asText().equals("null") || typeProvider.asText().equals(""))
+                return Response.requiredParameter("id_ProviderType", "tipo de proveedor");
+
             if (typeProvider != null)
                 provider.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
+
+            JsonNode phoneNumber = json.get("phoneNumberProvider");
+            if (phoneNumber == null || phoneNumber.asText().equals("null") || phoneNumber.asText().equals(""))
+                return Response.requiredParameter("phoneNumberProvider","numero de telefono");
+
+            JsonNode address = json.get("addressProvider");
+            if (address == null || address.asText().equals("null") || address.asText().equals(""))
+                return Response.requiredParameter("addressProvider","direccion");
+
+            JsonNode contactName = json.get("contactNameProvider");
+            if (contactName == null || contactName.asText().equals("null") || contactName.asText().equals(""))
+                return Response.requiredParameter("contactNameProvider","contacto");
 
             provider = providerDao.update(provider);
             return Response.updatedEntity(Json.toJson(provider));
