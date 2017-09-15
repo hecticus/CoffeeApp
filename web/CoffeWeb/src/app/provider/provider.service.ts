@@ -156,6 +156,13 @@ export class ProviderService extends BaseService
                     })],
                     [
                     new TextboxQuestion({
+                        key: 'identificationDocProviderChange',
+                        value: provider.identificationDocProvider,
+                        type: 'text',
+                        hidden: true
+                    })],
+                    [
+                    new TextboxQuestion({
                         key: 'fullNameProvider',
                         label: 'Nombre del proveedor:',
                         value: provider.fullNameProvider,
@@ -186,8 +193,7 @@ export class ProviderService extends BaseService
                         key: 'emailProvider',
                         label: 'Correo:',
                         value: provider.emailProvider,
-                        type: 'text',
-                        required: true
+                        type: 'text'
                     }),
                 ],
                 [

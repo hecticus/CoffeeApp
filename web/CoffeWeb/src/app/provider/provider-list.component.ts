@@ -69,9 +69,9 @@ title: string = "lista Proveerdores";
 filter(){
 		let questionFilterName =
 			new QuestionFilterTextbox({
-                key: 'fullNameProvider',
+                key: 'name',
                 label: 'Nombre del Proveedor',
-                value: this.filterService.filter['fullNameProvider']!=undefined? this.filterService.filter['fullName_Provider']: '',
+                value: this.filterService.filter['fullNameProvider']!=undefined? this.filterService.filter['fullNameProvider']: '',
             });
 		
 		this.questionFilters = [questionFilterName];

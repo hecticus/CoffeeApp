@@ -74,6 +74,7 @@ export class LotService extends BaseService
     }
 
     create(lot: Lot): Observable<Lot> {
+        console.log(lot);
         return this.http.post(this.urlLot, lot, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
@@ -82,8 +83,8 @@ export class LotService extends BaseService
     }
 
     update(lot: Lot): Observable<Lot> {
-        
-        return this.http.put(this.urlLot /*+ '/' + lot.id*/, lot, {headers: contentHeaders})
+         console.log(lot);
+        return this.http.put(this.urlLot, lot, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }

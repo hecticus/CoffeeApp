@@ -15,7 +15,6 @@ export class TableBasicComponent {
 	@Output() read = new EventEmitter();
 	@Output() list = new EventEmitter();
 	@ViewChild('pagerCmp') pagerCmp;
-
 	constructor(
 		private tableService: TableService
 	){}

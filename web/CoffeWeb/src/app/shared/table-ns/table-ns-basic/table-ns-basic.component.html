@@ -19,7 +19,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of items" id="{{item.id}}" class="table-row table-row-body">
+        <tr *ngFor="let item of items;" id="{{item.id}}" class="table-row table-row-body">
             <div class="row">
                 <div class="container-data row" (click)="onRead(item)">
                     <td *ngFor="let col of cols" class="data col-{{col.proportion}}">

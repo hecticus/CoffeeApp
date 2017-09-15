@@ -58,7 +58,7 @@ export class ProviderReadComponent implements OnInit {
 	}
 
 	delete(this){
-		this.providerService.delete(this.provider.idLot)
+		this.providerService.delete(this.provider.idProvider)
 			.subscribe(any => {
 				this.notificationService.delete();
 				this.location.back();

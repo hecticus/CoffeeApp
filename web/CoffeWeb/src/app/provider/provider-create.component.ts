@@ -36,6 +36,13 @@ create(form: FormGroup) {
 		this.ProviderService.create(<Provider> this.ProviderService.builderObject(form.value)).subscribe(provider => {
 			this.notificationService.sucessInsert(provider.fullNameProvider);
 			this.location.back();
-		}, err => this.notificationService.error(err));
+		}, err => {
+			switch(err.body.error)
+			{
+				case 409: this.notificationService.alert("Identificador del Proveedor, ya registrado"); break;
+				case 412: this.notificationService.alert(err.body.errorDescription); break;
+				default: this.notificationService.error(err);
+			}
+		});
 	}
 }
