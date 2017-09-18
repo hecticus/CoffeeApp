@@ -3,6 +3,7 @@ package controllers;
 import models.Security.HSecurity;
 import models.manager.ItemTypeManager;
 import models.manager.impl.ItemTypeManagerImpl;
+import models.manager.requestUtils.queryStringBindable.Pager;
 import play.mvc.Result;
 
 /**
@@ -33,10 +34,10 @@ public class ItemTypes {
         return itemTypeManager.findById(id);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+   /* @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAll(Integer index, Integer size) {
         return itemTypeManager.findAll(index, size);
-    }
+    }*/
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByProviderTypeId(Long id_ProviderType, Integer status){return itemTypeManager.getByProviderTypeId(id_ProviderType,status);}
@@ -44,4 +45,19 @@ public class ItemTypes {
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByNameItemType(String NameItemType, String order)
     { return itemTypeManager.getByNameItemType( NameItemType,order);}
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAll(Pager pager, String sort, String collection) {
+        return itemTypeManager.findAll(pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+        return itemTypeManager.findAllSearch(name, pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result preCreate() {
+        return itemTypeManager.preCreate();
+    }
 }

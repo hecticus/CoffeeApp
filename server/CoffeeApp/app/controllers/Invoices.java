@@ -3,6 +3,7 @@ package controllers;
 import models.Security.HSecurity;
 import models.manager.InvoiceManager;
 import models.manager.impl.InvoiceManagerImpl;
+import models.manager.requestUtils.queryStringBindable.Pager;
 import play.mvc.Result;
 
 /**
@@ -32,10 +33,10 @@ public class Invoices
         return invoiceManager.findById(id);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+   /* @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAll(Integer index, Integer size) {
         return invoiceManager.findAll(index, size);
-    }
+    }*/
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByDateByTypeProvider(String date, Integer typeProvider){return invoiceManager.getByDateByTypeProvider(date,typeProvider);}
@@ -45,4 +46,19 @@ public class Invoices
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getOpenByProviderId(Long providerId){return invoiceManager.getOpenByProviderId(providerId);}
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAll(Pager pager, String sort, String collection) {
+        return invoiceManager.findAll(pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+        return invoiceManager.findAllSearch(name, pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result preCreate() {
+        return invoiceManager.preCreate();
+    }
 }

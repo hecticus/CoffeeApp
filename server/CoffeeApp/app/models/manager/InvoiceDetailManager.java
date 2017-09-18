@@ -15,6 +15,12 @@ public interface InvoiceDetailManager {
 
     public Result findById(Long id);
 
-    public Result findAll(Integer index, Integer size);
+  // public Result findAll(Integer index, Integer size);
     public Result findAllByIdInvoice(Long IdInvoice);
+
+    Result findAll(Integer index, Integer size, String sort, String collection);
+
+    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+
+    Result preCreate();
 }

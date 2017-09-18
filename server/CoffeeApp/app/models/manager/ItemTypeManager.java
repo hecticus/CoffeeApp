@@ -15,7 +15,14 @@ public interface ItemTypeManager {
 
     public Result findById(Long id);
 
-    public Result findAll(Integer index, Integer size);
+   // public Result findAll(Integer index, Integer size);
     public Result getByProviderTypeId(Long idProviderType, Integer status);
     public Result getByNameItemType(String NameItemType, String order);
+
+
+    Result findAll(Integer index, Integer size, String sort, String collection);
+
+    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+
+    Result preCreate();
 }

@@ -1,5 +1,7 @@
 package models.dao;
 
+import com.avaje.ebean.text.PathProperties;
+import models.dao.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 
 import java.util.ArrayList;
@@ -17,6 +19,6 @@ public interface InvoiceDetailDao extends AbstractDao<Long, InvoiceDetail>{
     List<InvoiceDetail>  getOpenByLotId( Long idLot);
 
     List<InvoiceDetail>  getOpenByStoreId( Long idStore);
-
+    ListPagerCollection findAllSearch(Integer index, Integer size, String sort, PathProperties pathProperties);
 }
 

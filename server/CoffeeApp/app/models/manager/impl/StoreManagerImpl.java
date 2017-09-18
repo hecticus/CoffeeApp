@@ -1,11 +1,17 @@
 package models.manager.impl;
 
+import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.StoreDao;
 import models.dao.impl.StoreDaoImpl;
+import models.dao.utils.ListPagerCollection;
+import models.domain.Purity;
 import models.domain.Store;
 import models.manager.StoreManager;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.PropertiesCollection;
 import models.manager.responseUtils.Response;
+import models.manager.responseUtils.ResponseCollection;
 import models.manager.responseUtils.responseObject.StoreResponse;
 import play.libs.Json;
 import play.mvc.Result;
@@ -21,6 +27,13 @@ public class StoreManagerImpl implements StoreManager {
 
 
     private static StoreDao storeDao = new StoreDaoImpl();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+
+    public StoreManagerImpl(){
+
+        propertiesCollection.putPropertiesCollection("s", "(id, name)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
 
     @Override
     public Result create() {
@@ -31,17 +44,17 @@ public class StoreManagerImpl implements StoreManager {
                 return Response.requiredJson();
 
 
-            JsonNode Name = json.get("name");
+            JsonNode Name = json.get("nameStore");
             if (Name == null)
-                return Response.requiredParameter("name");
+                return Response.requiredParameter("nameStore");
 
             int registered = storeDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("name");
-            if(registered==1) return  Response.messageExistDeleted("name");
+            if(registered==0) return  Response.messageExist("nameStore");
+            if(registered==1) return  Response.messageExistDeleted("nameStore");
 
-            JsonNode status = json.get("status");
+            JsonNode status = json.get("statusStore");
             if (status == null)
-                return Response.requiredParameter("status");
+                return Response.requiredParameter("statusStore");
 
 
 
@@ -66,18 +79,18 @@ public class StoreManagerImpl implements StoreManager {
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idStore");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idStore");
 
             Store store =  Json.fromJson(json, Store.class);
 
-            JsonNode Name = json.get("name");
+            JsonNode Name = json.get("nameStore");
             if (Name != null)
             {
                 int registered = storeDao.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("name");
-                if(registered==1) return  Response.messageExistDeleted("name");
+                if(registered==0) return  Response.messageExist("nameStore");
+                if(registered==1) return  Response.messageExistDeleted("nameStore");
 
                 store.setNameStore(Name.asText().toUpperCase());
             }
@@ -130,7 +143,7 @@ public class StoreManagerImpl implements StoreManager {
         }
     }
 
-    @Override
+ /*   @Override
     public Result findAll(Integer index, Integer size) {
         try {
             List<Store> stores = storeDao.findAll(index, size);
@@ -138,7 +151,7 @@ public class StoreManagerImpl implements StoreManager {
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
+    }*/
 
     public Result getByStatusStore(String statusStore, String order)
     {
@@ -156,6 +169,45 @@ public class StoreManagerImpl implements StoreManager {
 
         }catch(Exception e){
             return Response.internalServerErrorLF();
+        }
+    }
+
+    @Override
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = storeDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = storeDao.findAllSearch(name, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @Override
+    public Result preCreate() {
+
+
+        try {
+            Store store = new Store();
+            return Response.foundEntity(
+                    Json.toJson(store));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
         }
     }
 

@@ -1,5 +1,6 @@
 package models.manager.impl;
 
+import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.InvoiceDetailDao;
 import models.dao.ItemTypeDao;
@@ -9,10 +10,16 @@ import models.dao.impl.ItemTypeDaoImpl;
 import models.dao.UnitDao;
 import models.dao.impl.ProviderTypeDaoImpl;
 import models.dao.impl.UnitDaoImpl;
+import models.dao.utils.ListPagerCollection;
+import models.domain.Invoice;
 import models.domain.ItemType;
 import models.domain.InvoiceDetail;
+import models.domain.Provider;
 import models.manager.ItemTypeManager;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.PropertiesCollection;
 import models.manager.responseUtils.Response;
+import models.manager.responseUtils.ResponseCollection;
 import models.manager.responseUtils.responseObject.ItemTypeResponse;
 import play.libs.Json;
 import play.mvc.Result;
@@ -34,6 +41,12 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
     private static UnitDao unitDao = new UnitDaoImpl();
     private static ProviderTypeDao providerTypeDao = new ProviderTypeDaoImpl();
     private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+
+    public ItemTypeManagerImpl(){
+        propertiesCollection.putPropertiesCollection("s", "(id, name)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
 
     @Override
     public Result create() {
@@ -43,25 +56,25 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode Name = json.get("name");
+            JsonNode Name = json.get("nameItemType");
             if (Name == null)
-                return Response.requiredParameter("name");
+                return Response.requiredParameter("nameItemType");
 
             int registered = itemTypeDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("name");
-            if(registered==1) return  Response.messageExistDeleted("name");
+            if(registered==0) return  Response.messageExist("nameItemType");
+            if(registered==1) return  Response.messageExistDeleted("nameItemType");
 
-            JsonNode cost = json.get("cost");
+            JsonNode cost = json.get("costItemType");
             if (cost == null)
-                return Response.requiredParameter("cost");
+                return Response.requiredParameter("costItemType");
 
             JsonNode id_unit = json.get("id_unit");
             if (id_unit == null)
                 return Response.requiredParameter("id_unit");
 
-            JsonNode status = json.get("status");
+            JsonNode status = json.get("statusItemType");
             if (status == null)
-                return Response.requiredParameter("status");
+                return Response.requiredParameter("statusItemType");
 
             JsonNode typeProvider = json.get("id_ProviderType");
             if (typeProvider == null)
@@ -91,18 +104,18 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idItemType");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idItemType");
 
             ItemType itemType =  Json.fromJson(json, ItemType.class);
 
-            JsonNode Name = json.get("name");
+            JsonNode Name = json.get("nameItemType");
             if (Name != null)
             {
                 int registered = itemTypeDao.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("name");
-                if(registered==1) return  Response.messageExistDeleted("name");
+                if(registered==0) return  Response.messageExist("nameItemType");
+                if(registered==1) return  Response.messageExistDeleted("nameItemType");
 
                 itemType.setNameItemType(Name.asText().toUpperCase());
             }
@@ -166,7 +179,7 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
         }
     }
 
-    @Override
+   /* @Override
     public Result findAll(Integer index, Integer size) {
         try {
             List<ItemType> itemTypes = itemTypeDao.findAll(index, size);
@@ -174,7 +187,7 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
+    }*/
 
     public Result getByProviderTypeId(Long id_ProviderType, Integer status)
     {
@@ -211,6 +224,45 @@ public class ItemTypeManagerImpl implements ItemTypeManager {
 
         }catch(Exception e){
             return Response.internalServerErrorLF();
+        }
+    }
+
+    @Override
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = itemTypeDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = itemTypeDao.findAllSearch(name, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @Override
+    public Result preCreate() {
+
+
+        try {
+            ItemType itemtype = new ItemType();
+
+            return Response.foundEntity(
+                    Json.toJson(itemtype));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
         }
     }
 

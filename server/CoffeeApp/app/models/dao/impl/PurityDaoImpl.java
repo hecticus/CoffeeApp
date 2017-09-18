@@ -1,9 +1,12 @@
 package models.dao.impl;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.text.PathProperties;
 import models.dao.PurityDao;
+import models.dao.utils.ListPagerCollection;
 import models.domain.Purity;
 
 import java.util.ArrayList;
@@ -81,5 +84,23 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
         }
 
         return purities;
+    }
+
+    @Override
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+        ExpressionList expressionList = find.where().eq("status_delete",0);
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.icontains("name_purity", name);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
 }

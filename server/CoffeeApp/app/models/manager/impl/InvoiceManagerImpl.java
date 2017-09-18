@@ -1,6 +1,14 @@
 package models.manager.impl;
 
+import com.avaje.ebean.text.PathProperties;
+import models.dao.utils.ListPagerCollection;
+import models.domain.Farm;
 import models.domain.Invoice;
+import models.domain.Lot;
+import models.domain.Provider;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.PropertiesCollection;
+import models.manager.responseUtils.ResponseCollection;
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.InvoiceDao;
@@ -26,6 +34,12 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
     private static InvoiceDao invoiceDao = new InvoiceDaoImpl();
     private static ProviderDao providerDao = new ProviderDaoImpl();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+
+    public InvoiceManagerImpl(){
+        propertiesCollection.putPropertiesCollection("s", "(id, name)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
 
     @Override
     public Result create() {
@@ -40,21 +54,21 @@ public class InvoiceManagerImpl  implements InvoiceManager
             if (id_provider == null)
                 return Response.requiredParameter("id_provider");
 
-            JsonNode startDate =  Request.removeParameter(json, "startDate");;
+            JsonNode startDate =  Request.removeParameter(json, "startDateInvoice");;
             if (startDate == null)
-                return Response.requiredParameter("startDate");
+                return Response.requiredParameter("startDateInvoice");
 
-            JsonNode closedDate =  Request.removeParameter(json, "closedDate");
+            JsonNode closedDate =  Request.removeParameter(json, "closedDateInvoice");
             if (closedDate == null)
-                return Response.requiredParameter("closedDate");
+                return Response.requiredParameter("closedDateInvoice");
 
-            JsonNode status = json.get("status");
+            JsonNode status = json.get("statusInvoice");
             if (status == null)
-                return Response.requiredParameter("status");
+                return Response.requiredParameter("statusInvoice");
 
-            JsonNode total = json.get("total");
+            JsonNode total = json.get("totalInvoice");
             if (total == null)
-                return Response.requiredParameter("total");
+                return Response.requiredParameter("totalInvoice");
 
             DateTime startDatetime =  Request.dateFormatter.parseDateTime(startDate.asText());
             DateTime closedDatetime =  Request.dateFormatter.parseDateTime(closedDate.asText());
@@ -69,7 +83,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
             invoice.setClosedDateInvoice(closedDatetime);
 
             invoice = invoiceDao.create(invoice);
-            return Response.createdEntity(Response.toJson(invoice, InvoiceResponse.class));
+          //  return Response.createdEntity(Response.toJson(invoice, InvoiceResponse.class));
+            return  Response.createdEntity(Json.toJson(invoice));
 
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
@@ -84,9 +99,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idInvoice");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idInvoice");
 
 
          //   Invoice invoice =  Json.fromJson(json, Invoice.class);
@@ -110,7 +125,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
             }
 
             invoice = invoiceDao.update(invoice);
-            return Response.updatedEntity(Response.toJson(invoice, InvoiceResponse.class));
+          //  return Response.updatedEntity(Response.toJson(invoice, InvoiceResponse.class));
+            return  Response.updatedEntity(Json.toJson(invoice));
 
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);
@@ -160,7 +176,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
         }
     }
 
-    @Override
+  /*  @Override
     public Result findAll(Integer index, Integer size) {
         try {
             List<Invoice> invoices = invoiceDao.findAll(index, size);
@@ -168,7 +184,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
+    }*/
 
     @Override
     public Result getByDateByTypeProvider(String date, Integer typeProvider)
@@ -204,6 +220,47 @@ public class InvoiceManagerImpl  implements InvoiceManager
         }catch(Exception e) {
             e.printStackTrace();
             return Response.internalServerErrorLF();
+        }
+    }
+
+    @Override
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = invoiceDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = invoiceDao.findAllSearch( index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @Override
+    public Result preCreate() {
+
+
+        try {
+            Provider provider = new Provider();
+            Invoice invoice = new Invoice();
+            invoice.setProvider(provider);
+
+            return Response.foundEntity(
+                    Json.toJson(invoice));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
         }
     }
 

@@ -76,9 +76,9 @@ public class InvoiceDetailPurityManagerImpl  implements InvoiceDetailPurityManag
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idInvoiceDetailPurity");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idInvoiceDetailPurity");
 
             InvoiceDetailPurity invoiceDetailPurity =  Json.fromJson(json, InvoiceDetailPurity.class);
 

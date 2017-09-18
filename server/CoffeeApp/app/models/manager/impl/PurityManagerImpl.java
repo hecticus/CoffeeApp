@@ -1,14 +1,21 @@
 package models.manager.impl;
 
+import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.InvoiceDetailDao;
 import models.dao.PurityDao;
 import models.dao.impl.InvoiceDetailDaoImpl;
 import models.dao.impl.PurityDaoImpl;
+import models.dao.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
+import models.domain.Provider;
+import models.domain.ProviderType;
 import models.domain.Purity;
 import models.manager.PurityManager;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.PropertiesCollection;
 import models.manager.responseUtils.Response;
+import models.manager.responseUtils.ResponseCollection;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -26,6 +33,13 @@ public class PurityManagerImpl    implements PurityManager {
 
     private static PurityDao purityDao = new PurityDaoImpl();
     private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+
+    public PurityManagerImpl(){
+
+        propertiesCollection.putPropertiesCollection("s", "(id, name)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
 
     @Override
     public Result create() {
@@ -36,22 +50,22 @@ public class PurityManagerImpl    implements PurityManager {
                 return Response.requiredJson();
 
 
-            JsonNode Name = json.get("name");
+            JsonNode Name = json.get("namePurity");
             if (Name == null)
-                return Response.requiredParameter("name");
+                return Response.requiredParameter("namePurity");
 
             int registered = purityDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("name");
-            if(registered==1) return  Response.messageExistDeleted("name");
+            if(registered==0) return  Response.messageExist("namePurity");
+            if(registered==1) return  Response.messageExistDeleted("namePurity");
 
 
-            JsonNode DiscountRate = json.get("discountRate");
+            JsonNode DiscountRate = json.get("discountRatePurity");
             if (DiscountRate == null)
-                return Response.requiredParameter("discountRate");
+                return Response.requiredParameter("discountRatePurity");
 
-            JsonNode status = json.get("status");
+            JsonNode status = json.get("statusPurity");
             if (status == null)
-                return Response.requiredParameter("status");
+                return Response.requiredParameter("statusPurity");
 
 
 
@@ -76,18 +90,18 @@ public class PurityManagerImpl    implements PurityManager {
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
+            JsonNode id = json.get("idPurity");
             if (id == null)
-                return Response.requiredParameter("id");
+                return Response.requiredParameter("idPurity");
 
             Purity purity =  Json.fromJson(json, Purity.class);
 
-            JsonNode Name = json.get("name");
+            JsonNode Name = json.get("namePurity");
             if (Name != null)
             {
                 int registered = purityDao.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("name");
-                if(registered==1) return  Response.messageExistDeleted("name");
+                if(registered==0) return  Response.messageExist("namePurity");
+                if(registered==1) return  Response.messageExistDeleted("namePurity");
 
                 purity.setNamePurity(Name.asText().toUpperCase());
             }
@@ -142,7 +156,7 @@ public class PurityManagerImpl    implements PurityManager {
         }
     }
 
-    @Override
+ /*   @Override
     public Result findAll(Integer index, Integer size) {
         try {
             List<Purity> puritys = purityDao.findAll(index, size);
@@ -150,7 +164,7 @@ public class PurityManagerImpl    implements PurityManager {
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
+    }*/
 
     public Result getByNamePurity(String NamePurity, String order)
     {
@@ -193,6 +207,46 @@ public class PurityManagerImpl    implements PurityManager {
             return Response.internalServerErrorLF();
         }
     }
+
+    @Override
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = purityDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = purityDao.findAllSearch(name, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @Override
+    public Result preCreate() {
+
+
+        try {
+            Purity purity = new Purity();
+            return Response.foundEntity(
+                    Json.toJson(purity));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
 
 }
 

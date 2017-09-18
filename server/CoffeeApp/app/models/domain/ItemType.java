@@ -78,6 +78,7 @@ public class ItemType extends AbstractEntity
         return providerType;
     }
 
+    @JsonIgnore
     public void setProviderType(ProviderType providerType) {
         this.providerType = providerType;
     }

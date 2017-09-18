@@ -3,6 +3,7 @@ package controllers;
 import models.Security.HSecurity;
 import models.manager.InvoiceDetailManager;
 import models.manager.impl.InvoiceDetailManagerImpl;
+import models.manager.requestUtils.queryStringBindable.Pager;
 import play.mvc.Result;
 
 /**
@@ -31,11 +32,26 @@ public class InvoiceDetails {
         return invoiceDetailManager.findById(id);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAll(Integer index, Integer size) {
+  // @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+  /*  public Result findAll(Integer index, Integer size) {
         return invoiceDetailManager.findAll(index, size);
-    }
+    }*/
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAllByIdInvoice(Long IdInvoice){ return invoiceDetailManager.findAllByIdInvoice(IdInvoice);}
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAll(Pager pager, String sort, String collection) {
+        return invoiceDetailManager.findAll(pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+        return invoiceDetailManager.findAllSearch(name, pager.index, pager.size, sort, collection);
+    }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result preCreate() {
+        return invoiceDetailManager.preCreate();
+    }
 }

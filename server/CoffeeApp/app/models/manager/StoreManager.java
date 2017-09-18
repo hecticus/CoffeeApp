@@ -16,7 +16,13 @@ public interface StoreManager {
 
     public Result findById(Long id);
 
-    public Result findAll(Integer index, Integer size);
+  //  public Result findAll(Integer index, Integer size);
 
     public Result getByStatusStore(String StatusPurity, String order);
+
+    Result findAll(Integer index, Integer size, String sort, String collection);
+
+    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+
+    Result preCreate();
 }

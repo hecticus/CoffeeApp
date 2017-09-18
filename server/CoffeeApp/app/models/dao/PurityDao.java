@@ -1,5 +1,7 @@
 package models.dao;
 
+import com.avaje.ebean.text.PathProperties;
+import models.dao.utils.ListPagerCollection;
 import models.domain.Purity;
 
 import java.util.List;
@@ -12,5 +14,6 @@ public interface PurityDao extends AbstractDao<Long, Purity>{
     int getExist(String name);
     List<Purity> getByNamePurity(String NamePurity, String order);
     List<Purity> getByStatusPurity(String StatusPurity, String order);
+    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties);
 }
 

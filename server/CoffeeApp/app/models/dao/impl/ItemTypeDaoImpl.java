@@ -1,10 +1,13 @@
 package models.dao.impl;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.text.PathProperties;
 import models.dao.ItemTypeDao;
 import models.dao.UnitDao;
+import models.dao.utils.ListPagerCollection;
 import models.domain.ItemType;
 import models.manager.requestUtils.Request;
 
@@ -44,19 +47,19 @@ public class ItemTypeDaoImpl extends AbstractDaoImpl<Long, ItemType> implements 
         return find.where().eq("id_providertype",idProviderType).eq("status_delete",0).findList();
     }
 
-    public List<ItemType> getByProviderTypeId(Long id_ProviderType, Integer status)
+    public List<ItemType> getByProviderTypeId(Long idProviderType, Integer status)
     {
         String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
                 " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
-                " item.updated_at c6, item.id_providerType c7, item.id_unit c8  " +
+                " item.updated_at c6, item.id_providertype c7, item.id_unit c8  " +
                 " FROM item_types item "+
-                " inner join provider_type protype on protype.id_provider_type=item.id_providertype " +
-                " where item.status_delete=0  and item.id_providerType= :idProviderType ";
+                " inner join provider_type protype on protype.id_providertype=item.id_providertype " +
+                " where item.status_delete=0  and item.id_providertype= :idprovidertype ";
 
         if(status!=-1) sql+= " and protype.status_delete=:status ";
 
         SqlQuery query = Ebean.createSqlQuery(sql)
-                .setParameter("idProviderType", id_ProviderType )
+                .setParameter("idprovidertype", idProviderType )
                 .setParameter("status",status);
 
         List<SqlRow>   results = query.findList();
@@ -68,7 +71,7 @@ return toItemTypes(results);
     {
         String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
                 " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
-                " item.updated_at c6, item.id_providerType c7, item.id_unit c8  " +
+                " item.updated_at c6, item.id_providertype c7, item.id_unit c8  " +
                 " FROM item_types item "+
                 " where item.status_delete=0  and item.name_itemtype like '%"+NameItemType+"%' "+
                 " order by item.id_itemtype   "+order;
@@ -98,5 +101,23 @@ return toItemTypes(results);
         }
 
         return itemTypes;
+    }
+
+    @Override
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+        ExpressionList expressionList = find.where().eq("status_delete",0);
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.icontains("name_itemtype", name);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
 }

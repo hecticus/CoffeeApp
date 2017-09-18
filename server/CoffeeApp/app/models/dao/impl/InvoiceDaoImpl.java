@@ -1,6 +1,9 @@
 package models.dao.impl;
 
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.text.PathProperties;
 import models.dao.InvoiceDao;
+import models.dao.utils.ListPagerCollection;
 import models.domain.Invoice;
 import models.domain.Provider;
 import models.manager.requestUtils.Request;
@@ -56,7 +59,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
     @Override
     public List<Invoice> getByDateByProviderId(String date, Long providerId)
     {
-      return find.where().eq("id_provider",providerId).eq("start_date_invoice",date).findList();
+      return find.where().eq("id_provider",providerId).eq("dueDate_invoice",date).findList();
 
     }
 
@@ -109,6 +112,21 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
         }
 
         return invoices;
+    }
+
+    @Override
+    public ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+        ExpressionList expressionList = find.where().eq("status_delete",0);
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
 }
 

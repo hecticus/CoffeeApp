@@ -1,5 +1,7 @@
 package models.dao;
 
+import com.avaje.ebean.text.PathProperties;
+import models.dao.utils.ListPagerCollection;
 import models.domain.ItemType;
 
 import java.util.List;
@@ -16,4 +18,5 @@ public interface ItemTypeDao extends AbstractDao<Long, ItemType>{
     List<ItemType> getOpenByProviderTypeId(Long idProviderType);
     List<ItemType> getByProviderTypeId(Long id_ProviderType, Integer status);
     List<ItemType> getByNameItemType(String NameItemType, String order);
+    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties);
 }

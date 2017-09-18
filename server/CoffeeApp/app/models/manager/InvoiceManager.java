@@ -16,10 +16,17 @@ public interface InvoiceManager {
 
     public Result findById(Long id);
 
-    public Result findAll(Integer index, Integer size);
+  //  public Result findAll(Integer index, Integer size);
 
     public Result getByDateByTypeProvider(String date, Integer typeProvider);
 
     public Result getByDateByProviderId(String date, Long providerId);
     public Result  getOpenByProviderId(Long providerId);
+
+
+    Result findAll(Integer index, Integer size, String sort, String collection);
+
+    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+
+    Result preCreate();
 }
