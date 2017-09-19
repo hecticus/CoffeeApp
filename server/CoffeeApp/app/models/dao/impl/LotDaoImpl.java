@@ -26,7 +26,7 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     public List<Integer> getExist(String name_lot, int id_farm)
     {
         List<Integer> aux = new ArrayList<Integer>();
-        Lot lot = find.where().eq("name_lot",name_lot).eq("id_farm",id_farm).findUnique();
+        Lot lot = find.where().eq("name_lot",name_lot).eq("id_farm",id_farm).setMaxRows(1).findUnique(); //findUnique();
         if(lot==null) aux.add(0,-1);
         else
         {

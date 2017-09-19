@@ -30,8 +30,7 @@ GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order  c
 POST    /provider                          controllers.Providers.create()
 PUT     /provider                          controllers.Providers.update()
 DELETE  /provider/:id                      controllers.Providers.delete(id : Long)
-
-
+POST  /provider/deletes  controllers.Providers.deletes()
 
 GET     /invoice     controllers.Invoices.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /invoice/search                   controllers.Invoices.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
@@ -69,6 +68,7 @@ PUT     /lot                          controllers.Lots.update()
 DELETE  /lot/:id                      controllers.Lots.delete(id : Long)
 GET     /lot/getByNameLot/:NameLot/:order controllers.Lots.getByNameLot(NameLot: String, order:String )
 GET     /lot/getByStatusLot/:StatusLot/:order controllers.Lots.getByStatusLot(StatusLot: String, order:String )
+POST  /lot/deletes  controllers.Lots.deletes()
 
 GET     /farm                          controllers.Farms.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /farm/search                   controllers.Farms.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)

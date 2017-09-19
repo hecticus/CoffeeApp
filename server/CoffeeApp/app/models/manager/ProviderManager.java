@@ -33,5 +33,7 @@ public interface ProviderManager {
 
     Result preCreate();
 
+    Result deletes();
+
 
 }

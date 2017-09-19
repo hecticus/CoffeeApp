@@ -11,13 +11,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.InvoiceDao;
 import models.dao.impl.InvoiceDaoImpl;
 import models.dao.utils.ListPagerCollection;
-import models.manager.responseUtils.ExceptionsUtils;
-import models.manager.responseUtils.PropertiesCollection;
-import models.manager.responseUtils.ResponseCollection;
+import models.manager.responseUtils.*;
 import play.libs.Json;
 import play.mvc.Result;
 import models.manager.ProviderManager;
-import models.manager.responseUtils.Response;
 import models.dao.ProviderDao;
 import models.dao.impl.ProviderDaoImpl;
 import models.dao.ProviderTypeDao;
@@ -27,6 +24,8 @@ import models.domain.Invoice;
 import static play.mvc.Controller.request;
 import models.manager.responseUtils.responseObject.ProviderResponse;
 import models.manager.responseUtils.responseObject.providerExtendResponse;
+
+import java.util.ArrayList;
 import java.util.List;
 import models.domain.ProviderType;
 
@@ -322,6 +321,29 @@ public class ProviderManagerImpl implements ProviderManager
              provider.setProviderType(providerType);
             return Response.foundEntity(
                     Json.toJson(provider));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result deletes() {
+        try
+        {
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
+
+            List<Long> aux = new ArrayList<Long>();
+            aux = JsonUtils.toArrayLong(json, "ids");
+
+            for (Long id : aux)
+            {
+                this.delete(id);
+
+            }
+
+            return Response.message("Successful deletes");
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }

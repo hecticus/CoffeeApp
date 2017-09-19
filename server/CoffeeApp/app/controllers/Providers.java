@@ -73,4 +73,9 @@ public class Providers
         return providerManager.preCreate();
     }
 
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result deletes() {
+        return providerManager.deletes();
+    }
+
 }

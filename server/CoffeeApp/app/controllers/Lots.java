@@ -63,4 +63,9 @@ public class Lots {
     public Result preCreate() {
         return lotManager.preCreate();
     }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result deletes() {
+        return lotManager.deletes();
+    }
 }

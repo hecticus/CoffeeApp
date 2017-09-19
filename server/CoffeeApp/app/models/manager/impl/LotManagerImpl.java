@@ -14,14 +14,12 @@ import models.domain.InvoiceDetail;
 import models.domain.Lot;
 import models.domain.Farm;
 import models.manager.LotManager;
-import models.manager.responseUtils.ExceptionsUtils;
-import models.manager.responseUtils.ResponseCollection;
-import models.manager.responseUtils.Response;
+import models.manager.responseUtils.*;
 import models.manager.requestUtils.Request;
-import models.manager.responseUtils.PropertiesCollection;
 import play.libs.Json;
 import play.mvc.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -139,12 +137,14 @@ public class LotManagerImpl implements LotManager {
 
             Lot lot =  Json.fromJson(json, Lot.class);
 
+            Lot lot_up = lotDao.findById(id.asLong());
+
             JsonNode Name = json.get("name");
             if (Name == null || Name.asText().equals("null") || Name.asText().equals(""))
                 return Response.requiredParameter("name","nombre del lote");
 
             JsonNode nameChange = json.get("nameChange");
-            if (Name != null && !nameChange.asText().equals(Name.asText()))
+            if (Name != null && (!nameChange.asText().equals(Name.asText()) || !farm.asText().equals(lot_up.getFarm().getIdFarm().toString())))
             {
                 List<Integer> registered = lotDao.getExist(Name.asText().toUpperCase(),farm.asInt());
                 if(registered.get(0)==0) return  Response.messageExist("name");
@@ -153,7 +153,8 @@ public class LotManagerImpl implements LotManager {
                 lot.setNameLot(Name.asText().toUpperCase());
             }
 
-            if(farm != null) lot.setFarm(farmDao.findById(farm.asLong()));
+
+            lot.setFarm(farmDao.findById(farm.asLong()));
 
             lot = lotDao.update(lot);
             return Response.updatedEntity(Json.toJson(lot));
@@ -294,6 +295,29 @@ public class LotManagerImpl implements LotManager {
 
             return Response.foundEntity(
                     Json.toJson(lot));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result deletes() {
+        try
+        {
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
+
+            List<Long> aux = new ArrayList<Long>();
+            aux = JsonUtils.toArrayLong(json, "ids");
+
+            for (Long id : aux)
+            {
+                this.delete(id);
+
+            }
+
+            return Response.message("Successful deletes");
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
