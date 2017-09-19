@@ -42,12 +42,20 @@ button.btn-icon-text{
 		width: 24px;
 		background-size: 14px;
 	}
-	
+
+button.btn-text:disabled{
+	background-color: #f2f2f2;
+	border-color: #f2f2f2;
+	cursor: default;
+}
+	button.btn-text:disabled .text{
+		color: #b3b3b3;
+	}
 
 
 .icon{
 	background-repeat: no-repeat;
-	background-position: center; 
+	background-position: center;
 	background-size: 20px;
 }
 .icon.small{
@@ -73,6 +81,9 @@ button.btn-icon-text{
 }
 .icon.menu-context{
 	background-image: url("/assets/images/icons/menu-context.png");
+}
+.icon.menu-context-white {
+	background-image: url("/assets/images/icons/white/menu-context.png");
 }
 .icon.search{
 	background-image: url("/assets/images/icons/search.png");

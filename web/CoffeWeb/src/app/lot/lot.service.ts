@@ -94,14 +94,21 @@ export class LotService extends BaseService
     }
 
     deletes(ids: {"ids": number[]}): Observable<any> {
-        return this.http.post(this.urlLot + '/delete', ids, {headers: contentHeaders});
+       let f = ids.ids;
+       console.log(f);
+        return this.http.post(this.urlLot + '/deletes', ids, {headers: contentHeaders});
+      /* for(let id of f)
+	   {
+           console.log(id);
+         let res = this.http.delete(this.urlLot + '/' + id, {headers: contentHeaders});
+       }
+    return this.http.delete(this.urlLot + '/' + 0, {headers: contentHeaders});*/
     }
 
     getQuestions(lot: Lot) {
-       console.log(lot.farm['idFarm']+"-----1-----"+lot.farm['nameFarm']);
-        let dropdownQuestionFarm = new DropdownQuestion({
+          let dropdownQuestionFarm = new DropdownQuestion({
             key: 'farm',
-            label: 'Nombre de la Finca:',
+            label: 'Nombre de la Granja:',
             value: lot.farm['idFarm'],
             optionsKey: 'idFarm',
             optionsValue: 'NameFarm',
@@ -187,7 +194,7 @@ export class LotService extends BaseService
                 ],[
                     new TextboxClickAnswer({
                         key: 'nameFarm',
-                        label: 'Nombre de la Finca:',
+                        label: 'Nombre de la Granja:',
                         value: lot.farm["nameFarm"],
                         type: 'text'
                     }),

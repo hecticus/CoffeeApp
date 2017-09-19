@@ -78,9 +78,6 @@ export class ProviderService extends BaseService
     }
 
     create(provider: Provider): Observable<Provider> {
-        console.log("11111111111111111111111111111111111");
-        console.log(provider);
-        console.log("11111111111111111111111111111111111");
         return this.http.post(this.urlProvider, provider, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
@@ -100,14 +97,10 @@ export class ProviderService extends BaseService
     }
 
     deletes(ids: {"ids": number[]}): Observable<any> {
-        return this.http.post(this.urlProvider + '/delete', ids, {headers: contentHeaders});
+        return this.http.post(this.urlProvider + '/deletes', ids, {headers: contentHeaders});
     }
 
     getQuestions(provider: Provider) {
-        console.log("------------------------------");
-        console.log(provider);
-        console.log("------------------------------");
-
             let dropdownQuestionProviderType = new DropdownQuestion({
             key: 'id_ProviderType',
             label: 'Tipo del proveedor:',

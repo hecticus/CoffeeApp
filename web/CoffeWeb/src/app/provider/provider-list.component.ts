@@ -19,7 +19,7 @@ import { NotificationService } from '../common/notification/notification.service
 })
 export class ProviderListComponent implements OnInit {
 
-title: string = "lista Proveerdores";
+title: string = "Lista Proveerdores";
 	@ViewChild('tableCmp') tableCmp;
 	items: Provider[];
 	cols: TableColumn[] = [
@@ -93,6 +93,7 @@ filter(){
 			console.log(this.items);
 			for(let item of this.items)
 			{
+				item.id=item.idProvider;
 				if(item.statusProvider == '1')
 				{
 					item.statusProvider="Activo";

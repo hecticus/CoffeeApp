@@ -92,6 +92,7 @@ filter(){
 
 			for(let item of this.items)
 			{
+				item.id=item.idLot;
 				if(item.statusLot == '1')
 				{
 					item.statusLot="Activo";
