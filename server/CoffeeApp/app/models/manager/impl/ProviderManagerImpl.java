@@ -124,7 +124,7 @@ public class ProviderManagerImpl implements ProviderManager
             {
                 List<Integer> registered =  providerDao.getExist(identificationDoc.asText().toUpperCase());
                 if(registered.get(0)==0)  return  Response.messageExist("identificationDocProvider");
-             //   if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
+                if(registered.get(0)==1) return  Response.messageExistDeleted("identificationDocProvider");
 
                 provider.setIdentificationDocProvider(identificationDoc.asText().toUpperCase());
             }
