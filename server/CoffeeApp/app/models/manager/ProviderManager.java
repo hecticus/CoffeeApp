@@ -35,5 +35,7 @@ public interface ProviderManager {
 
     Result deletes();
 
+    Result uploadPhotoProvider();
+
 
 }

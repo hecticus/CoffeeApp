@@ -9,10 +9,14 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.text.PathProperties;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.ProviderTypeDao;
 import models.dao.utils.ListPagerCollection;
 import models.domain.Provider;
 import models.dao.ProviderDao;
+import models.manager.multimediaUtils.Multimedia;
 import models.manager.requestUtils.Request;
 
 import java.util.ArrayList;
@@ -157,6 +161,23 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+    }
+
+    public String uploadPhoto(String base64Photo, String ext) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        //    ArrayNode arrayNode = mapper.createArrayNode();
+        ObjectNode request = mapper.createObjectNode();
+
+        request.put("fileExtension", ext);
+        request.put("photo", base64Photo);
+        Multimedia multimedia = new Multimedia();
+
+
+        JsonNode result = multimedia.uploadPhoto(request);
+
+        return result.get("url").asText();
+
     }
 
 }

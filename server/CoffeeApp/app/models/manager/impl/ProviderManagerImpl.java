@@ -8,6 +8,7 @@ package models.manager.impl;
 
 import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.InvoiceDao;
 import models.dao.impl.InvoiceDaoImpl;
 import models.dao.utils.ListPagerCollection;
@@ -344,6 +345,51 @@ public class ProviderManagerImpl implements ProviderManager
             }
 
             return Response.message("Successful deletes");
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public Result  uploadPhotoProvider()
+    {
+        try
+        {
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
+
+            JsonNode id = json.get("idProvider");
+            if (id == null)
+                return Response.requiredParameter("idProvider");
+
+            JsonNode base64Photo_json = json.get("photoProvider");
+            if (base64Photo_json == null)
+                return Response.requiredParameter("photoProvider");
+
+            String base64Photo = base64Photo_json.asText();
+
+            String url;
+            if(base64Photo.contains("data:image/jpeg;base64,"))
+            {
+                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
+                url = providerDao.uploadPhoto(base64Photo,"jpg");
+            }
+            else {
+                base64Photo = base64Photo.replace("data:image/png;base64,", "");
+                url = providerDao.uploadPhoto(base64Photo,"png");
+            }
+
+            Provider provider = providerDao.findById(id.asLong());
+
+            provider.setPhotoProvider(url);
+
+            provider = providerDao.update(provider);
+
+            ObjectNode response = Json.newObject();
+            response.put("urlPhoto", url);
+            return Response.updatedEntity(response);
+
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }

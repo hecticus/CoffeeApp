@@ -78,4 +78,9 @@ public class Providers
         return providerManager.deletes();
     }
 
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result uploadPhotoProvider() {
+        return providerManager.uploadPhotoProvider();
+    }
+
 }

@@ -23,6 +23,6 @@ public interface ProviderDao extends AbstractDao<Long, Provider>{
 
     ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties);
 
-
+    String uploadPhoto(String base64Photo, String ext);
 
 }

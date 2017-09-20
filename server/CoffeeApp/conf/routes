@@ -31,6 +31,8 @@ POST    /provider                          controllers.Providers.create()
 PUT     /provider                          controllers.Providers.update()
 DELETE  /provider/:id                      controllers.Providers.delete(id : Long)
 POST  /provider/deletes  controllers.Providers.deletes()
+POST /provider/uploadPhotoProvider controllers.Providers.uploadPhotoProvider()
+
 
 GET     /invoice     controllers.Invoices.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /invoice/search                   controllers.Invoices.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
