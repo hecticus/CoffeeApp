@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 
 import { homeRouting} from './home.routes';
 
+import { BreadcrumbsComponent } from '../common/breadcrumbs/breadcrumbs.component';
+
 import { MenuComponent } from '../common/menu/menu.component';
 import { MenuItemComponent } from '../common/menu/menu-item/menu-item.component';
 import { HomeComponent } from './home.component';
@@ -35,9 +37,11 @@ import { contentHeaders } from '../common/headers';
         
         ],
     declarations: [
+        BreadcrumbsComponent,
         MenuComponent,
         MenuItemComponent,        
-        HomeComponent      
+        HomeComponent
+              
         ],
     })
 export class HomeModule {

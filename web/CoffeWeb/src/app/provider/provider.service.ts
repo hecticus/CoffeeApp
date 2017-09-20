@@ -86,7 +86,6 @@ export class ProviderService extends BaseService
     }
 
     update(provider: Provider): Observable<Provider> {
-        console.log(provider);
         return this.http.put(this.urlProvider, provider, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);

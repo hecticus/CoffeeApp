@@ -19,7 +19,7 @@ import { NotificationService } from '../common/notification/notification.service
 })
 export class LotListComponent implements OnInit {
 
-title: string = "lista de lotes";
+title: string = "Lista de Lotes";
 	@ViewChild('tableCmp') tableCmp;
 	items: Lot[];
 	cols: TableColumn[] = [

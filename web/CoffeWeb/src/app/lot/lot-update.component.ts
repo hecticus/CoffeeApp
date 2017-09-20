@@ -36,9 +36,11 @@ export class LotUpdateComponent implements OnInit {
 			this.notificationService.sucessUpdate(lot.nameLot);
 			this.location.back();
 		}, err => {
+			console.log(err.body);
 			switch(err.body.error)
 			{
 				case 409: this.notificationService.alert("Nombre de Lote y granja, ya asociados"); break;
+				case 4091: this.notificationService.alert("Nombre de Lote y granja, ya asociados, aunque no activos"); break;
 				case 412: this.notificationService.alert(err.body.errorDescription); break;
 				default: this.notificationService.error(err);
 			}

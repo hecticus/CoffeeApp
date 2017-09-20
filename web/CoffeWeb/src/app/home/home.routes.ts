@@ -15,12 +15,14 @@ export const homeRoutes: Routes = [
         children: [
            ...lotRoutes,
            ...providerRoutes
-        ]
+        ],
+        data: {
+            breadcrumb: "home",
+            icon: "home"
+        },
     }, 
       
 ]; 
-
-export const appRoutingHome: any[] = [];
 
 export const homeRouting = RouterModule.forChild(homeRoutes);
 
