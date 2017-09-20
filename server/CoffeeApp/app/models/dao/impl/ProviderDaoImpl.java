@@ -98,8 +98,6 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
                 .setParameter("id_providertype",id_providertype)
                 .findList();
 
-
-
         return toProviders(sqlRows);
 
     }

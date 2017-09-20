@@ -39,7 +39,7 @@ public class Invoices
     }*/
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result getByDateByTypeProvider(String date, Integer typeProvider){return invoiceManager.getByDateByTypeProvider(date,typeProvider);}
+    public Result getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){return invoiceManager.getByDateByTypeProvider(date,typeProvider,pageIndex,pagesize);}
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result  getByDateByProviderId(String date, Long providerId){return invoiceManager.getByDateByProviderId(date,providerId);}

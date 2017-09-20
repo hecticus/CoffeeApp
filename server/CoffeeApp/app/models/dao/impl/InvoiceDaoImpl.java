@@ -24,7 +24,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
     }
 
     @Override
-    public List<Invoice> getByDateByTypeProvider(String date, Integer typeProvider)
+    public List<Invoice> getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize)
     {
 
 
@@ -44,10 +44,14 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
         sql+=" and invo.status_delete=0 and prov.status_delete=0 order by prov.fullname_provider ASC ";
 
+        sql += " limit :pageIndex, :pagesize";
+
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
                 .setParameter("typeProvider", typeProvider)
                 .setParameter("date", date)
+                .setParameter("pageIndex",pageIndex)
+                .setParameter("pagesize",pagesize)
                 .findList();
 
 

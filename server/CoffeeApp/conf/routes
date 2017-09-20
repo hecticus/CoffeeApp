@@ -36,7 +36,7 @@ GET     /invoice     controllers.Invoices.findAll(pager: models.manager.requestU
 GET     /invoice/search                   controllers.Invoices.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /invoice/new                      controllers.Invoices.preCreate()
 GET     /invoice/:id                      controllers.Invoices.findById(id : Long)
-GET     /invoice/getByDateByTypeProvider/:date/:typeProvider  controllers.Invoices.getByDateByTypeProvider(date: String, typeProvider: Integer)
+GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize  controllers.Invoices.getByDateByTypeProvider(date: String, typeProvider: Integer,pageindex: Integer, pagesize: Integer)
 GET     /invoice/getByDateByProviderId/:date/:ProviderId  controllers.Invoices.getByDateByProviderId(date: String, ProviderId: Long)
 GET     /invoice/getOpenByProviderId/:ProviderId          controllers.Invoices.getOpenByProviderId(ProviderId : Long)
 POST    /invoice                          controllers.Invoices.create()

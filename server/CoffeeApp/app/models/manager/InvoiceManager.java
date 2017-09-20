@@ -18,7 +18,7 @@ public interface InvoiceManager {
 
   //  public Result findAll(Integer index, Integer size);
 
-    public Result getByDateByTypeProvider(String date, Integer typeProvider);
+    public Result getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize);
 
     public Result getByDateByProviderId(String date, Long providerId);
     public Result  getOpenByProviderId(Long providerId);

@@ -187,10 +187,10 @@ public class InvoiceManagerImpl  implements InvoiceManager
     }*/
 
     @Override
-    public Result getByDateByTypeProvider(String date, Integer typeProvider)
+    public Result getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize)
     {
         try {
-            List<Invoice> invoices = invoiceDao.getByDateByTypeProvider(date,typeProvider);
+            List<Invoice> invoices = invoiceDao.getByDateByTypeProvider(date,typeProvider,pageIndex,pagesize);
             return Response.foundEntity(Json.toJson((invoices)));
         }catch(Exception e) {
             e.printStackTrace();
