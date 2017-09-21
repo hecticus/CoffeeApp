@@ -28,4 +28,6 @@ public interface LotManager {
     Result preCreate();
 
     Result deletes();
+
+    Result getByIdFarm(Long idFarm, Integer index, Integer size, String sort, String collection);
 }

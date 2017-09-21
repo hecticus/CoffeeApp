@@ -68,4 +68,9 @@ public class Lots {
     public Result deletes() {
         return lotManager.deletes();
     }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public  Result getByIdFarm(Long id_farm, Pager pager,  String sort, String collection){
+        return lotManager.getByIdFarm(id_farm, pager.index, pager.size, sort, collection);
+    }
 }

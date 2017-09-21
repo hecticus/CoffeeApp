@@ -9,6 +9,7 @@ import models.dao.FarmDao;
 import models.dao.LotDao;
 import models.dao.utils.ListPagerCollection;
 import models.domain.Lot;
+import models.manager.responseUtils.PropertiesCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,16 @@ import java.util.List;
  */
 public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
 
-    public LotDaoImpl() {
+   private static FarmDao farmDao = new FarmDaoImpl();
+
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+
+    public LotDaoImpl(){
+
         super(Lot.class);
+        propertiesCollection.putPropertiesCollection("s", "(idLot, nameLot)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
     }
-    private static FarmDao farmDao = new FarmDaoImpl();
 
     public List<Integer> getExist(String name_lot, int id_farm)
     {
@@ -98,6 +105,22 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
 
         if(name != null)
             expressionList.icontains("name_lot", name);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+    }
+
+    @Override
+    public  ListPagerCollection  getByIdFarm(Long idFarm, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties)
+    {
+        ExpressionList expressionList =  find.where().eq("status_delete",0).eq("id_farm",idFarm);
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));

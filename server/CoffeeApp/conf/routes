@@ -70,6 +70,7 @@ PUT     /lot                          controllers.Lots.update()
 DELETE  /lot/:id                      controllers.Lots.delete(id : Long)
 GET     /lot/getByNameLot/:NameLot/:order controllers.Lots.getByNameLot(NameLot: String, order:String )
 GET     /lot/getByStatusLot/:StatusLot/:order controllers.Lots.getByStatusLot(StatusLot: String, order:String )
+GET     /lot/getByIdFarm/:idFarm                   controllers.Lots.getByIdFarm(idFarm: Long, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 POST  /lot/deletes  controllers.Lots.deletes()
 
 GET     /farm                          controllers.Farms.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)

@@ -38,7 +38,7 @@ public class LotManagerImpl implements LotManager {
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public LotManagerImpl(){
-        propertiesCollection.putPropertiesCollection("s", "(id, name)");
+        propertiesCollection.putPropertiesCollection("s", "(idLot, nameLot)");
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
@@ -319,6 +319,19 @@ public class LotManagerImpl implements LotManager {
 
             return Response.message("Successful deletes");
         } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @Override
+    public  Result getByIdFarm(Long idFarm, Integer index, Integer size, String sort, String collection)
+    {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = lotDao.getByIdFarm(idFarm, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
     }
