@@ -213,6 +213,15 @@ public class Response {
         return badRequest (response);
     }
 
+    public static Result messageNotDeleted(String msg){
+
+        ObjectNode response = Json.newObject();
+        response.put("message", msg);
+        response.put("error", 409);
+        return badRequest (response);
+    }
+
+
     public static Result message(String msg){
         return ok(buildExtendResponse(msg));
     }

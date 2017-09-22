@@ -1,26 +1,19 @@
 package models.manager.impl;
 
 import com.avaje.ebean.text.PathProperties;
+import models.dao.*;
+import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
-import models.domain.Farm;
-import models.domain.Invoice;
-import models.domain.Lot;
-import models.domain.Provider;
-import models.manager.responseUtils.ExceptionsUtils;
-import models.manager.responseUtils.PropertiesCollection;
-import models.manager.responseUtils.ResponseCollection;
+import models.domain.*;
+import models.manager.responseUtils.*;
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.dao.InvoiceDao;
-import models.dao.impl.InvoiceDaoImpl;
-import models.dao.ProviderDao;
-import models.dao.impl.ProviderDaoImpl;
 import models.manager.InvoiceManager;
-import models.manager.responseUtils.Response;
 import models.manager.responseUtils.responseObject.InvoiceResponse;
 import play.libs.Json;
 import play.mvc.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -33,8 +26,12 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
 
     private static InvoiceDao invoiceDao = new InvoiceDaoImpl();
+    private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
     private static ProviderDao providerDao = new ProviderDaoImpl();
+    private static LotDao lotDao = new LotDaoImpl();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+    private static ItemTypeDao itemTypeDao = new ItemTypeDaoImpl();
+    private static StoreDao storeDao = new StoreDaoImpl();
 
     public InvoiceManagerImpl(){
         propertiesCollection.putPropertiesCollection("s", "(id, name)");
@@ -139,7 +136,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
             Invoice invoice = invoiceDao.findById(id);
             if(invoice != null) {
 
-   //             invoice.setStatusDelete(1);
+                invoice.setStatusDelete(1);
                 invoice.setStatusInvoice(3);
                 invoice = invoiceDao.update(invoice);
 
@@ -263,6 +260,126 @@ public class InvoiceManagerImpl  implements InvoiceManager
             return ExceptionsUtils.find(e);
         }
     }
+
+    @Override
+    public Result buyHarvestsAndCoffe()
+    {
+        float monto;
+        JsonNode json = request().body().asJson();
+        if(json == null)
+            return Response.requiredJson();
+
+        JsonNode idProvider = json.get("idProvider");
+        if (idProvider == null)
+            return Response.requiredParameter("idProvider");
+
+        JsonNode idLot = json.get("idLot");
+        if (idLot == null)
+            return Response.requiredParameter("idLot");
+
+        JsonNode Amount = json.get("Amount");
+        if (Amount == null)
+            return Response.requiredParameter("Amount");
+
+        JsonNode idItemtype = json.get("idItemtype");
+        if (idItemtype == null)
+            return Response.requiredParameter("idItemtype");
+
+        JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
+        if (nameReceived== null)
+            return Response.requiredParameter("nameReceivedInvoiceDetail");
+
+        JsonNode nameDelivered = json.get("nameDeliveredInvoiceDetail");
+        if (nameDelivered==  null)
+            return Response.requiredParameter("nameDeliveredInvoiceDetail");
+
+        JsonNode startDate =  Request.removeParameter(json, "startDateInvoiceDetail");;
+        if (startDate==  null)
+            return Response.requiredParameter("startDateInvoiceDetail");
+
+        JsonNode buyOption = json.get("buyOption");
+        if (buyOption==  null)
+            return Response.requiredParameter("buyOption");
+
+        if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
+            return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
+
+        Lot lot = lotDao.findById(idLot.asLong());
+        ItemType itemType= itemTypeDao.findById(idItemtype.asLong());
+
+        InvoiceDetail invoiceDetail = new InvoiceDetail();
+        invoiceDetail.setItemType(itemType);
+        invoiceDetail.setLot(lot);
+        invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+
+        if(buyOption.asInt()==1)
+        {
+            monto = Amount.asInt()*lot.getPrice_lot();
+        }
+        else
+        {
+            monto = Amount.asInt()*itemType.getCostItemType();
+        }
+
+        invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
+        invoiceDetail.setFreightInvoiceDetail(false);
+        invoiceDetail.setNameDeliveredInvoiceDetail(nameReceived.asText());
+        invoiceDetail.setNameReceivedInvoiceDetail(nameDelivered.asText());
+
+        JsonNode id_store = json.get("id_store");
+        if (id_store != null)
+            invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
+
+        DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
+
+        invoiceDetail.setStartDateInvoiceDetail(startDatetime);
+
+
+
+        List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider.asLong());
+        Invoice openInvoice;
+
+        if(!invoices.isEmpty())
+        {
+            openInvoice = invoices.get(0);
+        }
+        else
+        {
+            openInvoice = new Invoice();
+            openInvoice.setStartDateInvoice(startDatetime);
+            openInvoice.setClosedDateInvoice(startDatetime);
+            openInvoice.setProvider(providerDao.findById(idProvider.asLong()));
+        }
+
+
+        openInvoice.setTotalInvoice(monto+openInvoice.getTotalInvoice());
+
+        List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
+
+        invoiceDetails.add(invoiceDetail);
+        openInvoice.setInvoiceDetails(invoiceDetails);
+
+
+
+        if(!invoices.isEmpty())
+        {
+            openInvoice = invoiceDao.update(openInvoice);
+            invoiceDetail.setInvoice(openInvoice);
+            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+            return  Response.updatedEntity(Json.toJson(openInvoice));
+        }
+        else
+        {
+            openInvoice = invoiceDao.create(openInvoice);
+            invoiceDetail.setInvoice(openInvoice);
+            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+            return  Response.createdEntity(Json.toJson(openInvoice));
+
+        }
+
+
+    }
+
 
 }
 

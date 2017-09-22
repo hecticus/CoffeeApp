@@ -49,46 +49,46 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
         try
         {
             JsonNode json = request().body().asJson();
-            if(json!= null)
+            if(json== null)
                 return Response.requiredJson();
 
 
             JsonNode id_invoice = json.get("id_invoice");
-            if (id_invoice!= null)
+            if (id_invoice==  null)
                 return Response.requiredParameter("id_invoice");
 
 
             JsonNode id_itemType = json.get("id_itemType");
-            if (id_itemType!= null)
+            if (id_itemType== null)
                 return Response.requiredParameter("id_itemType");
 
 
             JsonNode id_lot = json.get("id_lot");
-            if (id_lot!= null)
+            if (id_lot== null)
                 return Response.requiredParameter("id_lot");
 
             JsonNode priceItemTypeByLot = json.get("priceItemTypeByLot");
-            if (priceItemTypeByLot!= null)
+            if (priceItemTypeByLot==  null)
                 return Response.requiredParameter("priceItemTypeByLot");
 
             JsonNode amount = json.get("amountInvoiceDetail");
-            if (amount!= null)
+            if (amount== null)
                 return Response.requiredParameter("amountInvoiceDetail");
 
             JsonNode freight = json.get("freightInvoiceDetail");
-            if (freight!= null)
+            if (freight==  null)
                 return Response.requiredParameter("freightInvoiceDetail");
 
             JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
-            if (nameReceived!= null)
+            if (nameReceived==  null)
                 return Response.requiredParameter("nameReceivedInvoiceDetail");
 
             JsonNode nameDelivered = json.get("nameDeliveredInvoiceDetail");
-            if (nameDelivered!= null)
+            if (nameDelivered==  null)
                 return Response.requiredParameter("nameDeliveredInvoiceDetail");
 
             JsonNode startDate =  Request.removeParameter(json, "startDateInvoiceDetail");;
-            if (startDate!= null)
+            if (startDate==  null)
                 return Response.requiredParameter("startDateInvoiceDetail");
 
 

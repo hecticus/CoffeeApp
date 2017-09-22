@@ -42,6 +42,7 @@ GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesiz
 GET     /invoice/getByDateByProviderId/:date/:ProviderId  controllers.Invoices.getByDateByProviderId(date: String, ProviderId: Long)
 GET     /invoice/getOpenByProviderId/:ProviderId          controllers.Invoices.getOpenByProviderId(ProviderId : Long)
 POST    /invoice                          controllers.Invoices.create()
+POST    /invoice/buyHarvestsAndCoffe    controllers.Invoices.buyHarvestsAndCoffe()
 PUT     /invoice                          controllers.Invoices.update()
 DELETE  /invoice/:id                      controllers.Invoices.delete(id : Long)
 

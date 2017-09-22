@@ -1,5 +1,6 @@
 package models.manager;
 
+import models.domain.Invoice;
 import play.mvc.Result;
 
 /**
@@ -29,4 +30,6 @@ public interface InvoiceManager {
     Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
 
     Result preCreate();
+
+    Result buyHarvestsAndCoffe();
 }

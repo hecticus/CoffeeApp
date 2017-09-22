@@ -86,7 +86,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
     public    List<Invoice> getOpenByProviderId(Long providerId)
     {
-        return find.where().eq("id_provider",providerId).eq("status_delete",0).findList();
+        return find.where().eq("id_provider",providerId).eq("status_delete",0).eq("status_invoice",1).findList();
     }
 
     public List<Invoice> toInvoices(List<SqlRow>  sqlRows)
@@ -132,5 +132,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
             return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
+
+
 }
 

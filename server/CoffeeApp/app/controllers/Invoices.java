@@ -61,4 +61,7 @@ public class Invoices
     public Result preCreate() {
         return invoiceManager.preCreate();
     }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result buyHarvestsAndCoffe(){return invoiceManager.buyHarvestsAndCoffe();}
 }
