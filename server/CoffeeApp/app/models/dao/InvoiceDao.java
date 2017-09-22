@@ -12,7 +12,8 @@ import java.util.List;
 
 public interface InvoiceDao extends AbstractDao<Long, Invoice>
 {
-    List<Invoice> getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize);
+   // List<Invoice>
+    ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize);
     List<Invoice> getByDateByProviderId(String date, Long providerId);
     List<Invoice> getOpenByProviderId(Long providerId);
     Boolean deletedInvoice( Long invoiceId);

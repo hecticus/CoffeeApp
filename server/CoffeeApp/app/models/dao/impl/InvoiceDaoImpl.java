@@ -24,7 +24,8 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
     }
 
     @Override
-    public List<Invoice> getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize)
+   // public  List<Invoice>  getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize)
+    public ListPagerCollection  getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize)
     {
 
 
@@ -54,9 +55,10 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
                 .setParameter("pagesize",pagesize)
                 .findList();
 
+        List<Invoice> invoiceList =toInvoices(sqlRows);
 
-
-        return toInvoices(sqlRows);
+        return new ListPagerCollection(invoiceList, invoiceList.size(), pageIndex, pagesize);
+        //return toInvoices(sqlRows);
     }
 
 
