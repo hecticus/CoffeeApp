@@ -45,7 +45,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
         sql+=" and invo.status_delete=0 and prov.status_delete=0 order by prov.fullname_provider ASC ";
 
-        sql += " limit :pageIndex, :pagesize";
+    //    sql += " limit :pageIndex, :pagesize";
 
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
@@ -57,8 +57,8 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
         List<Invoice> invoiceList =toInvoices(sqlRows);
 
-        return new ListPagerCollection(invoiceList, invoiceList.size(), pageIndex, pagesize);
-        //return toInvoices(sqlRows);
+        return new ListPagerCollection(invoiceList.subList(pageIndex,Math.min(pageIndex+pagesize, invoiceList.size())), invoiceList.size(), pageIndex, pagesize);
+        //return toInvoices(sqlRows)
     }
 
 

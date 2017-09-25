@@ -284,9 +284,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if (Amount == null)
             return Response.requiredParameter("Amount");
 
-        JsonNode idItemtype = json.get("idItemtype");
-        if (idItemtype == null)
-            return Response.requiredParameter("idItemtype");
+        JsonNode idItemtypes = json.get("idItemtypes");
+        if (idItemtypes == null)
+            return Response.requiredParameter("idItemtypes");
 
         JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
         if (nameReceived== null)
@@ -308,79 +308,79 @@ public class InvoiceManagerImpl  implements InvoiceManager
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
 
         Lot lot = lotDao.findById(idLot.asLong());
-        ItemType itemType= itemTypeDao.findById(idItemtype.asLong());
 
-        InvoiceDetail invoiceDetail = new InvoiceDetail();
-        invoiceDetail.setItemType(itemType);
-        invoiceDetail.setLot(lot);
-        invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
 
-        if(buyOption.asInt()==1)
-        {
-            monto = Amount.asInt()*lot.getPrice_lot();
+        List<Long> aux_idItemtypes = new ArrayList<Long>();
+        aux_idItemtypes = JsonUtils.toArrayLong(idItemtypes, "ids");
+
+
+        Invoice openInvoice = null;
+        for (Long idItemtype : aux_idItemtypes) {
+
+            ItemType itemType = itemTypeDao.findById(idItemtype);
+
+            InvoiceDetail invoiceDetail = new InvoiceDetail();
+            invoiceDetail.setItemType(itemType);
+            invoiceDetail.setLot(lot);
+            invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+
+            if (buyOption.asInt() == 1) {
+                monto = Amount.asInt() * lot.getPrice_lot();
+            } else {
+                monto = Amount.asInt() * itemType.getCostItemType();
+            }
+
+            invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
+            invoiceDetail.setFreightInvoiceDetail(false);
+            invoiceDetail.setNameDeliveredInvoiceDetail(nameReceived.asText());
+            invoiceDetail.setNameReceivedInvoiceDetail(nameDelivered.asText());
+
+            JsonNode id_store = json.get("id_store");
+            if (id_store != null)
+                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
+
+            DateTime startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
+
+            invoiceDetail.setStartDateInvoiceDetail(startDatetime);
+
+
+            List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider.asLong());
+
+
+            if (!invoices.isEmpty()) {
+                openInvoice = invoices.get(0);
+            } else {
+                openInvoice = new Invoice();
+                openInvoice.setStartDateInvoice(startDatetime);
+                openInvoice.setClosedDateInvoice(startDatetime);
+                openInvoice.setProvider(providerDao.findById(idProvider.asLong()));
+            }
+
+
+            openInvoice.setTotalInvoice(monto + openInvoice.getTotalInvoice());
+
+            List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
+
+            invoiceDetails.add(invoiceDetail);
+            openInvoice.setInvoiceDetails(invoiceDetails);
+
+
+            if (!invoices.isEmpty()) {
+                openInvoice = invoiceDao.update(openInvoice);
+                invoiceDetail.setInvoice(openInvoice);
+                invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+       //         return Response.updatedEntity(Json.toJson(openInvoice));
+            } else {
+                openInvoice = invoiceDao.create(openInvoice);
+                invoiceDetail.setInvoice(openInvoice);
+                invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+         //       return Response.createdEntity(Json.toJson(openInvoice));
+
+            }
+
         }
-        else
-        {
-            monto = Amount.asInt()*itemType.getCostItemType();
-        }
 
-        invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
-        invoiceDetail.setFreightInvoiceDetail(false);
-        invoiceDetail.setNameDeliveredInvoiceDetail(nameReceived.asText());
-        invoiceDetail.setNameReceivedInvoiceDetail(nameDelivered.asText());
-
-        JsonNode id_store = json.get("id_store");
-        if (id_store != null)
-            invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
-
-        DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
-
-        invoiceDetail.setStartDateInvoiceDetail(startDatetime);
-
-
-
-        List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider.asLong());
-        Invoice openInvoice;
-
-        if(!invoices.isEmpty())
-        {
-            openInvoice = invoices.get(0);
-        }
-        else
-        {
-            openInvoice = new Invoice();
-            openInvoice.setStartDateInvoice(startDatetime);
-            openInvoice.setClosedDateInvoice(startDatetime);
-            openInvoice.setProvider(providerDao.findById(idProvider.asLong()));
-        }
-
-
-        openInvoice.setTotalInvoice(monto+openInvoice.getTotalInvoice());
-
-        List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
-
-        invoiceDetails.add(invoiceDetail);
-        openInvoice.setInvoiceDetails(invoiceDetails);
-
-
-
-        if(!invoices.isEmpty())
-        {
-            openInvoice = invoiceDao.update(openInvoice);
-            invoiceDetail.setInvoice(openInvoice);
-            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
-            return  Response.updatedEntity(Json.toJson(openInvoice));
-        }
-        else
-        {
-            openInvoice = invoiceDao.create(openInvoice);
-            invoiceDetail.setInvoice(openInvoice);
-            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
-            return  Response.createdEntity(Json.toJson(openInvoice));
-
-        }
-
-
+        return Response.createdEntity(Json.toJson(openInvoice));
     }
 
 
