@@ -6,6 +6,7 @@ import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
 import models.domain.*;
 import models.manager.responseUtils.*;
+import models.manager.responseUtils.responseObject.InvoiceDetailPurityResponse;
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.manager.InvoiceManager;
@@ -27,6 +28,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
     private static InvoiceDao invoiceDao = new InvoiceDaoImpl();
     private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
+    private static InvoiceDetailPurityDao invoiceDetailPurityDao = new InvoiceDetailPurityDaoImpl();
+    private static PurityDao purityDao = new PurityDaoImpl();
     private static ProviderDao providerDao = new ProviderDaoImpl();
     private static LotDao lotDao = new LotDaoImpl();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
@@ -280,13 +283,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if (idLot == null)
             return Response.requiredParameter("idLot");
 
-        JsonNode Amount = json.get("Amount");
-        if (Amount == null)
-            return Response.requiredParameter("Amount");
-
-        JsonNode idItemtypes = json.get("idItemtypes");
-        if (idItemtypes == null)
-            return Response.requiredParameter("idItemtypes");
+        JsonNode itemtypes = json.get("itemtypes");
+        if (itemtypes == null)
+            return Response.requiredParameter("itemtypes");
 
         JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
         if (nameReceived== null)
@@ -300,6 +299,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if (startDate==  null)
             return Response.requiredParameter("startDateInvoiceDetail");
 
+        JsonNode note = json.get("note");
+
         JsonNode buyOption = json.get("buyOption");
         if (buyOption==  null)
             return Response.requiredParameter("buyOption");
@@ -307,33 +308,66 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
 
+        if (buyOption.asInt() == 2)
+        {
+            JsonNode impurities = json.get("impurities");
+            if (impurities==  null)
+                return Response.requiredParameter("impurities");
+        }
+
         Lot lot = lotDao.findById(idLot.asLong());
 
+       Invoice openInvoice = null;
 
-        List<Long> aux_idItemtypes = new ArrayList<Long>();
-        aux_idItemtypes = JsonUtils.toArrayLong(idItemtypes, "ids");
+        for (JsonNode itemtype : itemtypes) {
 
+            InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
+            JsonNode Amount = itemtype.get("amount");
+            if (Amount == null)
+                return Response.requiredParameter("amount");
 
-        Invoice openInvoice = null;
-        for (Long idItemtype : aux_idItemtypes) {
+            JsonNode idItemtype = itemtype.get("idItemType");
+            if (idItemtype == null)
+                return Response.requiredParameter("idItemType");
 
-            ItemType itemType = itemTypeDao.findById(idItemtype);
+            ItemType itemType = itemTypeDao.findById(idItemtype.asLong());
 
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             invoiceDetail.setItemType(itemType);
             invoiceDetail.setLot(lot);
             invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
 
-            if (buyOption.asInt() == 1) {
+            if (buyOption.asInt() == 1)
+            {
                 monto = Amount.asInt() * lot.getPrice_lot();
-            } else {
+            } else
+            {
+                JsonNode purity = itemtype.get("purity");
+                if (purity == null)
+                    return Response.requiredParameter("purity");
+
+                JsonNode valueRateInvoiceDetailPurity = itemtype.get("valueRateInvoiceDetailPurity");
+                if (valueRateInvoiceDetailPurity == null)
+                    return Response.requiredParameter("valueRateInvoiceDetailPurity");
+
+                Purity puritys = purityDao.findById(purity.asLong());
+
+                invoiceDetailPurity.setPurity(puritys);
+                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+
                 monto = Amount.asInt() * itemType.getCostItemType();
+
+                int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
+                invoiceDetailPurity.setDiscountRatePurity(Discount);
+
+                monto = monto+Discount;
             }
 
             invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
             invoiceDetail.setFreightInvoiceDetail(false);
             invoiceDetail.setNameDeliveredInvoiceDetail(nameReceived.asText());
             invoiceDetail.setNameReceivedInvoiceDetail(nameDelivered.asText());
+            invoiceDetail.setNoteInvoiceDetail(note.asText());
 
             JsonNode id_store = json.get("id_store");
             if (id_store != null)
@@ -343,9 +377,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
-
             List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider.asLong());
-
 
             if (!invoices.isEmpty()) {
                 openInvoice = invoices.get(0);
@@ -365,17 +397,22 @@ public class InvoiceManagerImpl  implements InvoiceManager
             openInvoice.setInvoiceDetails(invoiceDetails);
 
 
-            if (!invoices.isEmpty()) {
+            if (!invoices.isEmpty())
+            {
                 openInvoice = invoiceDao.update(openInvoice);
-                invoiceDetail.setInvoice(openInvoice);
-                invoiceDetail = invoiceDetailDao.create(invoiceDetail);
-       //         return Response.updatedEntity(Json.toJson(openInvoice));
-            } else {
+            }
+            else
+            {
                 openInvoice = invoiceDao.create(openInvoice);
-                invoiceDetail.setInvoice(openInvoice);
-                invoiceDetail = invoiceDetailDao.create(invoiceDetail);
-         //       return Response.createdEntity(Json.toJson(openInvoice));
+            }
 
+            invoiceDetail.setInvoice(openInvoice);
+            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+
+            if(buyOption.asInt() == 2)
+            {
+                invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
+                invoiceDetailPurityDao.create(invoiceDetailPurity);
             }
 
         }
