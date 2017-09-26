@@ -2,6 +2,7 @@ package models.manager.impl;
 
 import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.*;
 import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
@@ -20,6 +21,7 @@ import org.joda.time.DateTime;
 import play.libs.Json;
 import play.mvc.Result;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -236,8 +238,17 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
     @Override
     public Result findAllByIdInvoice(Long IdInvoice) {
         try {
+            ObjectNode result;
+            JsonNode aux1;
+            List<InvoiceDetail> aux2;
+            result = Json.newObject();
+
             List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAllByIdInvoice(IdInvoice);
-            return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetail.class));
+            result.set("summary",invoiceDetailDao.findAllByIdInvoiceSummary(IdInvoice));
+            result.set("deatils",Json.toJson(invoiceDetails));
+
+            return Response.foundEntity(result);
+
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

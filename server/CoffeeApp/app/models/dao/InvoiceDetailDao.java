@@ -1,6 +1,7 @@
 package models.dao;
 
 import com.avaje.ebean.text.PathProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 
@@ -20,5 +21,7 @@ public interface InvoiceDetailDao extends AbstractDao<Long, InvoiceDetail>{
 
     List<InvoiceDetail>  getOpenByStoreId( Long idStore);
     ListPagerCollection findAllSearch(Integer index, Integer size, String sort, PathProperties pathProperties);
+
+    JsonNode findAllByIdInvoiceSummary(Long idInvoice);
 }
 

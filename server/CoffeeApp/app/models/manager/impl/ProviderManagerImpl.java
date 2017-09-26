@@ -28,6 +28,8 @@ import models.manager.responseUtils.responseObject.providerExtendResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import models.domain.ProviderType;
 
 public class ProviderManagerImpl implements ProviderManager
@@ -173,8 +175,8 @@ public class ProviderManagerImpl implements ProviderManager
 
                 return Response.deletedEntity();
             } else {
-                if(provider == null)  return  Response.message("Successful no existe el registro a eliminar");
-                else  return  Response.message("Successful el proveedor tiene facturas aun no cerradas");
+                if(provider == null)  return  Response.messageNotDeleted("Successful no existe el registro a eliminar");
+                else  return  Response.messageNotDeleted("Successful el proveedor tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -329,8 +331,11 @@ public class ProviderManagerImpl implements ProviderManager
 
     @Override
     public Result deletes() {
+
+        boolean aux_delete = true;
         try
         {
+
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
@@ -340,11 +345,24 @@ public class ProviderManagerImpl implements ProviderManager
 
             for (Long id : aux)
             {
-                this.delete(id);
+                Provider provider = providerDao.findById(id);
+                List<Invoice> invoices = invoiceDao.getOpenByProviderId(id);
+                if(provider != null && invoices.size()==0) {
+
+                    provider.setStatusDelete(1);
+                    provider = providerDao.update(provider);
+
+
+                }
+                else
+                {
+                    aux_delete = false;
+                }
 
             }
 
-            return Response.message("Successful deletes");
+           if(aux_delete) return Response.message("Successful deletes");
+            else return  Response.messageNotDeleted("algunos proveedores tienen facturas aun no cerradas");
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
