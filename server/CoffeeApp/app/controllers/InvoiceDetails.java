@@ -54,4 +54,10 @@ public class InvoiceDetails {
     public Result preCreate() {
         return invoiceDetailManager.preCreate();
     }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date)
+    {
+            return invoiceDetailManager.deleteAllByIdInvoiceAndDate(IdInvoice,date);
+    }
 }

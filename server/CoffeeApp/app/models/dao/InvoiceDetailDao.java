@@ -23,5 +23,7 @@ public interface InvoiceDetailDao extends AbstractDao<Long, InvoiceDetail>{
     ListPagerCollection findAllSearch(Integer index, Integer size, String sort, PathProperties pathProperties);
 
     JsonNode findAllByIdInvoiceSummary(Long idInvoice);
+
+    int  deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date);
 }
 

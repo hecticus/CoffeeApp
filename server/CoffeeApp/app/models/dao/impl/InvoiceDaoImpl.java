@@ -36,7 +36,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
                 " prov.id_provider AS prov_id, prov.fullname_provider as full_name," +
                 " prov.address_provider as address," +
                 " prov.contactname_provider as contact_name, prov.identificationdoc_provider as identification_doc," +
-                " prov.phonenumber_provider as phone_number" +
+                " prov.phonenumber_provider as phone_number, prov.photo_provider as photo_provider" +
                 " FROM invoices invo " +
                 " INNER JOIN  providers prov ON prov.id_provider = invo.id_provider " +
                 " where invo.duedate_invoice= :date ";
@@ -106,6 +106,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
             provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
             provider.setAddressProvider(sqlRows.get(i).getString("address"));
             provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
+            provider.setPhotoProvider(sqlRows.get(i).getString("photo_provider"));
 
             invoice.setProvider(provider);
             invoice.setStatusInvoice(sqlRows.get(i).getInteger("status"));

@@ -255,6 +255,21 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
     }
 
     @Override
+    public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date)
+    {
+        try {
+             List<InvoiceDetail> invoiceDetails;
+
+             int result = invoiceDetailDao.deleteAllByIdInvoiceAndDate(IdInvoice,date);
+
+             return this.findAllByIdInvoice(IdInvoice);
+
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    @Override
     public Result findAll(Integer index, Integer size, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);

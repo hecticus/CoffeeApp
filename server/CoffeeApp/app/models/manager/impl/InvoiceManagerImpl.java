@@ -308,13 +308,6 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
 
-        if (buyOption.asInt() == 2)
-        {
-            JsonNode impurities = json.get("impurities");
-            if (impurities==  null)
-                return Response.requiredParameter("impurities");
-        }
-
         Lot lot = lotDao.findById(idLot.asLong());
 
        Invoice openInvoice = null;
@@ -342,9 +335,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 monto = Amount.asInt() * lot.getPrice_lot();
             } else
             {
-                JsonNode purity = itemtype.get("purity");
+                JsonNode purity = itemtype.get("idPurity");
                 if (purity == null)
-                    return Response.requiredParameter("purity");
+                    return Response.requiredParameter("idPurity");
 
                 JsonNode valueRateInvoiceDetailPurity = itemtype.get("valueRateInvoiceDetailPurity");
                 if (valueRateInvoiceDetailPurity == null)
@@ -465,13 +458,6 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
 
-        if (buyOption.asInt() == 2)
-        {
-            JsonNode impurities = json.get("impurities");
-            if (impurities==  null)
-                return Response.requiredParameter("impurities");
-        }
-
         Lot lot = lotDao.findById(idLot.asLong());
 
         Invoice openInvoice = invoiceDao.findById(idInvoice.asLong());
@@ -506,9 +492,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 monto = Amount.asInt() * lot.getPrice_lot();
             } else
             {
-                JsonNode purity = itemtype.get("purity");
+                JsonNode purity = itemtype.get("idPurity");
                 if (purity == null)
-                    return Response.requiredParameter("purity");
+                    return Response.requiredParameter("idPurity");
 
                 JsonNode valueRateInvoiceDetailPurity = itemtype.get("valueRateInvoiceDetailPurity");
                 if (valueRateInvoiceDetailPurity == null)

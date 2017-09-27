@@ -104,6 +104,7 @@ GET     /invoiceDetail/:id                      controllers.InvoiceDetails.findB
 GET     /invoiceDetail/findAllByIdInvoice/:invoiceId                      controllers.InvoiceDetails.findAllByIdInvoice(invoiceId : Long)
 PUT     /invoiceDetail                          controllers.InvoiceDetails.update()
 DELETE  /invoiceDetail/:id                      controllers.InvoiceDetails.delete(id : Long)
+DELETE  /invoiceDetail/deleteAllByIdInvoiceAndDate/:idInvoice/:date controllers.InvoiceDetails.deleteAllByIdInvoiceAndDate(idInvoice : Long, date: String)
 
 
 GET     /store   controllers.Stores.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)

@@ -18,6 +18,8 @@ public interface InvoiceDetailManager {
   // public Result findAll(Integer index, Integer size);
     public Result findAllByIdInvoice(Long IdInvoice);
 
+    Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String date);
+
     Result findAll(Integer index, Integer size, String sort, String collection);
 
     Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);

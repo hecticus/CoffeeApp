@@ -3,6 +3,7 @@ package models.dao.impl;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlUpdate;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,6 +31,7 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
         return find
                 .where()
                 .eq("id_invoice", IdInvoice)
+                .eq("status_delete",0)
                 .orderBy("duedate_invoicedetail")
                 .findList();
 
@@ -74,6 +76,7 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
         String sql="SELECT duedate_invoicedetail as c0, SUM(amount_invoicedetail) as c1 " +
                 "FROM invoice_details " +
                 "where id_invoice=:idInvoice " +
+                "and status_delete=0 "+
                 "group by duedate_invoicedetail " +
                 "order by duedate_invoicedetail";
 
@@ -97,6 +100,22 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
 
 
         return Json.toJson(result);
+    }
+
+    @Override
+    public int deleteAllByIdInvoiceAndDate(Long idInvoice, String date)
+    {
+
+        date = "'"+date+"'";
+
+        String sql="update invoice_details " +
+                "set status_delete=1 " +
+                "where duedate_invoicedetail= "+date+"  and id_invoice= "+idInvoice+";";
+
+        SqlUpdate query = Ebean.createSqlUpdate(sql);
+
+        return query.execute();
+
     }
 }
 
