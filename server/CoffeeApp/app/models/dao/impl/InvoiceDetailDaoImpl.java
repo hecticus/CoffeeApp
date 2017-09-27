@@ -12,6 +12,7 @@ import models.dao.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 import play.libs.Json;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,7 +69,8 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
     @Override
     public JsonNode findAllByIdInvoiceSummary(Long idInvoice)
     {
-        ObjectNode result, aux;
+        ObjectNode aux;
+        List<ObjectNode> result = new ArrayList<>();
         String sql="SELECT duedate_invoicedetail as c0, SUM(amount_invoicedetail) as c1 " +
                 "FROM invoice_details " +
                 "where id_invoice=:idInvoice " +
@@ -79,7 +81,7 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
 
         List<SqlRow> results = query.findList();
 
-        result = Json.newObject();
+
 
         for(int i=0; i < results.size(); ++i)
         {
@@ -88,11 +90,13 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
             aux.put("startDateInvoiceDetail",results.get(i).getTimestamp("c0").toString());
             aux.put("amountTotal",results.get(i).getString("c1"));
 
-            result.set(i+"",aux);
+            result.add(aux);
 
         }
 
-        return result;
+
+
+        return Json.toJson(result);
     }
 }
 

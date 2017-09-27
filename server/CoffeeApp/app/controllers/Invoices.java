@@ -64,4 +64,9 @@ public class Invoices
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result buyHarvestsAndCoffe(){return invoiceManager.buyHarvestsAndCoffe();}
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result updateBuyHarvestsAndCoffe() {
+        return invoiceManager.updateBuyHarvestsAndCoffe();
+    }
 }

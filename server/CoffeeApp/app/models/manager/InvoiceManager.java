@@ -32,4 +32,6 @@ public interface InvoiceManager {
     Result preCreate();
 
     Result buyHarvestsAndCoffe();
+
+    Result updateBuyHarvestsAndCoffe();
 }
