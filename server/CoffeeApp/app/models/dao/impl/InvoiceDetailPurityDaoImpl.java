@@ -11,5 +11,11 @@ public class InvoiceDetailPurityDaoImpl extends AbstractDaoImpl<Long, InvoiceDet
     public InvoiceDetailPurityDaoImpl() {
         super(InvoiceDetailPurity.class);
     }
+
+    @Override
+    public InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity)
+    {
+        return find.where().eq("id_invoicedetail",IdInvopiceDetail).eq("id_purity",IdPurity).eq("status_delete",0).findUnique();
+    }
 }
 

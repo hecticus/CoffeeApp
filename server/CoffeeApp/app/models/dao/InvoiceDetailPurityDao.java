@@ -7,5 +7,5 @@ import models.domain.InvoiceDetailPurity;
  */
 public interface InvoiceDetailPurityDao extends AbstractDao<Long, InvoiceDetailPurity>{
 
-
+    InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity);
 }
