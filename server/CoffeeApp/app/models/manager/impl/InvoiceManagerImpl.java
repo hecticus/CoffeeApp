@@ -279,10 +279,6 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if (idProvider == null)
             return Response.requiredParameter("idProvider");
 
-        JsonNode idLot = json.get("idLot");
-        if (idLot == null)
-            return Response.requiredParameter("idLot");
-
         JsonNode itemtypes = json.get("itemtypes");
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
@@ -312,7 +308,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
 
-        Lot lot = lotDao.findById(idLot.asLong());
+
 
        Invoice openInvoice = null;
 
@@ -331,17 +327,32 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             invoiceDetail.setItemType(itemType);
-            invoiceDetail.setLot(lot);
-            invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
 
             if (buyOption.asInt() == 1)
             {
+
+                JsonNode idLot = json.get("idLot");
+                if (idLot == null)
+                    return Response.requiredParameter("idLot");
+
+                Lot lot = lotDao.findById(idLot.asLong());
+
+                invoiceDetail.setLot(lot);
+                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
                 monto = Amount.asInt() * lot.getPrice_lot();
             } else
             {
                 JsonNode price = itemtypeAux.get("price");
                 if (price == null)
                     return Response.requiredParameter("price");
+
+                invoiceDetail.setCostItemType(price.asDouble());
+
+                JsonNode id_store = json.get("id_store");
+                if (id_store != null)
+                    return Response.requiredParameter("id_store");
+
+                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
 
                 monto = Amount.asInt() * (float) price.asDouble();
 
@@ -357,13 +368,11 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
             invoiceDetail.setFreightInvoiceDetail(freigh.asBoolean());
-            invoiceDetail.setNameDeliveredInvoiceDetail(nameReceived.asText());
-            invoiceDetail.setNameReceivedInvoiceDetail(nameDelivered.asText());
+            invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
+            invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
             invoiceDetail.setNoteInvoiceDetail(note.asText());
 
-            JsonNode id_store = json.get("id_store");
-            if (id_store != null)
-                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
+
 
             DateTime startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
 
@@ -447,10 +456,6 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if (idProvider == null)
             return Response.requiredParameter("idProvider");
 
-        JsonNode idLot = json.get("idLot");
-        if (idLot == null)
-            return Response.requiredParameter("idLot");
-
         JsonNode itemtypes = json.get("itemtypes");
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
@@ -481,8 +486,6 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
 
-        Lot lot = lotDao.findById(idLot.asLong());
-
         Invoice openInvoice = invoiceDao.findById(idInvoice.asLong());
 
         if(openInvoice.getStatusDelete()==1)
@@ -507,17 +510,33 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             InvoiceDetail invoiceDetail = invoiceDetailDao.findById(idInvoiceDetail.asLong());  //new InvoiceDetail();
             invoiceDetail.setItemType(itemType);
-            invoiceDetail.setLot(lot);
-            invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+
 
             if (buyOption.asInt() == 1)
             {
+                JsonNode idLot = json.get("idLot");
+                if (idLot == null)
+                    return Response.requiredParameter("idLot");
+
+                Lot lot = lotDao.findById(idLot.asLong());
+
+                invoiceDetail.setLot(lot);
+                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+
                 monto = Amount.asInt() * lot.getPrice_lot();
             } else
             {
                 JsonNode price = itemtypeAux.get("price");
                 if (price == null)
                     return Response.requiredParameter("price");
+
+                invoiceDetail.setCostItemType(price.asDouble());
+
+                JsonNode id_store = json.get("id_store");
+                if (id_store != null)
+                    return Response.requiredParameter("id_store");
+
+                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
 
                 monto = Amount.asInt() * (float) price.asDouble();
                 /*
@@ -531,13 +550,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
             invoiceDetail.setFreightInvoiceDetail(freigh.asBoolean());
-            invoiceDetail.setNameDeliveredInvoiceDetail(nameReceived.asText());
-            invoiceDetail.setNameReceivedInvoiceDetail(nameDelivered.asText());
+            invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
+            invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
             invoiceDetail.setNoteInvoiceDetail(note.asText());
-
-            JsonNode id_store = json.get("id_store");
-            if (id_store != null)
-                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
 
             DateTime startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
 

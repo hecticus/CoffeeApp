@@ -42,6 +42,7 @@ create table invoice_details (
   id_lot                        bigint,
   id_store                      bigint,
   price_itemtypebylot           decimal(10,2) not null,
+  cost_itemtype                 decimal(10,2) not null,
   duedate_invoicedetail         date not null,
   amount_invoicedetail          integer,
   isfreight_invoicedetail       tinyint(1) default 0,

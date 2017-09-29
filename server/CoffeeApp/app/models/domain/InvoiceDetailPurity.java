@@ -33,7 +33,6 @@ public class InvoiceDetailPurity  extends AbstractEntity
     @Column(nullable = false, name = "discountRate_purity")
     private Integer discountRatePurity=0;
 
-
     @ManyToOne
     @JoinColumn(name = "id_invoiceDetail")
     private InvoiceDetail invoiceDetail;
@@ -83,6 +82,7 @@ public class InvoiceDetailPurity  extends AbstractEntity
         this.discountRatePurity = discountRatePurity;
     }
 
+    @JsonIgnore
     public InvoiceDetail getInvoiceDetail() {
         return invoiceDetail;
     }
