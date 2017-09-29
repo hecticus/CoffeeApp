@@ -349,7 +349,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 invoiceDetail.setCostItemType(price.asDouble());
 
                 JsonNode id_store = json.get("id_store");
-                if (id_store != null)
+                if (id_store == null)
                     return Response.requiredParameter("id_store");
 
                 invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
@@ -533,7 +533,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 invoiceDetail.setCostItemType(price.asDouble());
 
                 JsonNode id_store = json.get("id_store");
-                if (id_store != null)
+                if (id_store == null)
                     return Response.requiredParameter("id_store");
 
                 invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
