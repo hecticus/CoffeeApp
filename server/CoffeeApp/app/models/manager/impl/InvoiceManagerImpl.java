@@ -6,15 +6,11 @@ import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
 import models.domain.*;
 import models.manager.responseUtils.*;
-import models.manager.responseUtils.responseObject.InvoiceDetailPurityResponse;
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.manager.InvoiceManager;
-import models.manager.responseUtils.responseObject.InvoiceResponse;
 import play.libs.Json;
 import play.mvc.Result;
-
-import java.sql.Date;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -121,7 +117,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 {
                     return Response.requiredParameter("closedDate");
                 }
-                invoice.setClosedDateInvoice(Request.dateFormatter.parseDateTime((closedDate.asText())));
+                invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime((closedDate.asText())));
             }
 
             invoice = invoiceDao.update(invoice);
@@ -373,7 +369,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
             invoiceDetail.setNoteInvoiceDetail(note.asText());
 
             DateTime startDatetime;
-            startDatetime = Request.dateFormatter.parseDateTime(startDate.asText());
+            startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
 
 
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
