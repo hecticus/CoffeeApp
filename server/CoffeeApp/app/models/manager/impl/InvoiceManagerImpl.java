@@ -14,7 +14,7 @@ import models.manager.responseUtils.responseObject.InvoiceResponse;
 import play.libs.Json;
 import play.mvc.Result;
 
-import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -70,8 +70,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
             if (total == null)
                 return Response.requiredParameter("totalInvoice");
 
-            DateTime startDatetime =  Request.dateFormatter.parseDateTime(startDate.asText());
-            DateTime closedDatetime =  Request.dateFormatter.parseDateTime(closedDate.asText());
+            DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime((startDate.asText()));
+            DateTime closedDatetime =  Request.dateTimeFormatter.parseDateTime((closedDate.asText()));
 
 
 
@@ -121,7 +121,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 {
                     return Response.requiredParameter("closedDate");
                 }
-                invoice.setClosedDateInvoice(Request.dateFormatter.parseDateTime(closedDate.asText()));
+                invoice.setClosedDateInvoice(Request.dateFormatter.parseDateTime((closedDate.asText())));
             }
 
             invoice = invoiceDao.update(invoice);
@@ -348,7 +348,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
                 invoiceDetail.setCostItemType(price.asDouble());
 
-                JsonNode id_store = json.get("id_store");
+                JsonNode id_store = itemtypeAux.get("id_store");
                 if (id_store == null)
                     return Response.requiredParameter("id_store");
 
@@ -372,9 +372,9 @@ public class InvoiceManagerImpl  implements InvoiceManager
             invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
             invoiceDetail.setNoteInvoiceDetail(note.asText());
 
+            DateTime startDatetime;
+            startDatetime = Request.dateFormatter.parseDateTime(startDate.asText());
 
-
-            DateTime startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
 
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
@@ -532,7 +532,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
                 invoiceDetail.setCostItemType(price.asDouble());
 
-                JsonNode id_store = json.get("id_store");
+                JsonNode id_store = itemtypeAux.get("id_store");
                 if (id_store == null)
                     return Response.requiredParameter("id_store");
 
@@ -554,8 +554,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
             invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
             invoiceDetail.setNoteInvoiceDetail(note.asText());
 
-            DateTime startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
-
+            DateTime startDatetime;
+            startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
             openInvoice.setStartDateInvoice(startDatetime);

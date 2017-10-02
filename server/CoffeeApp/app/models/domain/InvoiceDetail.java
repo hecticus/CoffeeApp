@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class InvoiceDetail  extends AbstractEntity
     private Double costItemType = 0.0;
 
 
-    @Column(columnDefinition = "date", nullable = false, name = "dueDate_invoiceDetail")
+    @Column( nullable = false, name = "dueDate_invoiceDetail")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime startDateInvoiceDetail;
 

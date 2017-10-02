@@ -10,10 +10,14 @@ import models.manager.requestUtils.Request;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import models.manager.responseUtils.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
 /**
  * Created by drocha on 25/04/17.
  */
@@ -31,7 +35,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
 
 
-        String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date," +
+        String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
                 " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
                 " prov.id_provider AS prov_id, prov.fullname_provider as full_name," +
                 " prov.address_provider as address," +
@@ -96,26 +100,43 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
         List<Invoice> invoices = new ArrayList<>();
         Provider provider;
         Invoice invoice;
-        for(int i=0; i < sqlRows.size(); ++i)
-        {
-            provider = new Provider();
-            invoice = new Invoice();
-            provider.setContactNameProvider(sqlRows.get(i).getString("contact_name"));
-            provider.setFullNameProvider(sqlRows.get(i).getString("full_name"));
-            provider.setPhoneNumberProvider(sqlRows.get(i).getString("phone_number"));
-            provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
-            provider.setAddressProvider(sqlRows.get(i).getString("address"));
-            provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
-            provider.setPhotoProvider(sqlRows.get(i).getString("photo_provider"));
+        try {
+            for (int i = 0; i < sqlRows.size(); ++i) {
+                provider = new Provider();
+                invoice = new Invoice();
+                provider.setContactNameProvider(sqlRows.get(i).getString("contact_name"));
+                provider.setFullNameProvider(sqlRows.get(i).getString("full_name"));
+                provider.setPhoneNumberProvider(sqlRows.get(i).getString("phone_number"));
+                provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
+                provider.setAddressProvider(sqlRows.get(i).getString("address"));
+                provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
+                provider.setPhotoProvider(sqlRows.get(i).getString("photo_provider"));
 
-            invoice.setProvider(provider);
-            invoice.setStatusInvoice(sqlRows.get(i).getInteger("status"));
-            invoice.setIdInvoice(sqlRows.get(i).getLong("invo_id"));
-            invoice.setStartDateInvoice( Request.dateFormatter.parseDateTime(sqlRows.get(i).getString("start_date")));
-            invoice.setClosedDateInvoice(Request.dateFormatter.parseDateTime(sqlRows.get(i).getString("closed_date")));
-            invoice.setTotalInvoice(sqlRows.get(i).getDouble("total"));
+                invoice.setProvider(provider);
+                invoice.setStatusInvoice(sqlRows.get(i).getInteger("status"));
+                invoice.setIdInvoice(sqlRows.get(i).getLong("invo_id"));
+                //invoice.setStartDateInvoice(Request.dateTimeFormatter.parseDateTime(sqlRows.get(i).getString("start_date")));
 
-            invoices.add(invoice);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+                SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = sdf.parse(sqlRows.get(i).getString("start_date"));
+                String formattedTime = output.format(d);
+
+                invoice.setStartDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
+
+
+                 d = sdf.parse(sqlRows.get(i).getString("closed_date"));
+                formattedTime = output.format(d);
+
+                invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
+                invoice.setTotalInvoice(sqlRows.get(i).getDouble("total"));
+
+                invoices.add(invoice);
+            }
+        }   catch(Exception e){
+            Throwable eRoot = Response.getCause(e);
+            eRoot.printStackTrace();
+            return null;
         }
 
         return invoices;

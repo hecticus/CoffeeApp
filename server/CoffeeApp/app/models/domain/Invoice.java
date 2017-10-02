@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class Invoice extends AbstractEntity
     @Column(nullable = false, name = "status_invoice")
     private Integer statusInvoice=1;
 
-    @Column(columnDefinition = "date", nullable = false, name = "dueDate_invoice")
+    @Column( nullable = false, name = "dueDate_invoice")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime startDateInvoice;
 
 
 
-    @Column(columnDefinition = "date", nullable = false,name = "closedDate_invoice")
+    @Column( nullable = false,name = "closedDate_invoice")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime closedDateInvoice;
 
