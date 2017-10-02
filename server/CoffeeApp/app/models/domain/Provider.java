@@ -20,7 +20,7 @@ public class Provider extends AbstractEntity
     private Long idProvider;
 
     @Constraints.Required
-    @Column(nullable = false, name = "identificationDoc_Provider")
+    @Column(unique=true,nullable = false, name = "identificationDoc_Provider")
     private String identificationDocProvider;
 
     @Constraints.Required

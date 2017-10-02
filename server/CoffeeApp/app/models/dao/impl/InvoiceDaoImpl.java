@@ -43,7 +43,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
                 " prov.phonenumber_provider as phone_number, prov.photo_provider as photo_provider" +
                 " FROM invoices invo " +
                 " INNER JOIN  providers prov ON prov.id_provider = invo.id_provider " +
-                " where invo.duedate_invoice= :date ";
+                " where invo.duedate_invoice like '"+date+"%'";
 
         if(typeProvider!=-1)  sql+=" and prov.id_providertype= :typeProvider ";
 

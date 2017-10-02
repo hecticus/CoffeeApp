@@ -110,6 +110,7 @@ create table providers (
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  constraint uq_providers_identificationdoc_provider unique (identificationdoc_provider),
   constraint pk_providers primary key (id_provider)
 );
 

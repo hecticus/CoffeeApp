@@ -6,6 +6,7 @@ package models.manager.impl;
 
 
 
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -59,9 +60,10 @@ public class ProviderManagerImpl implements ProviderManager
             if (identificationDoc == null || identificationDoc.asText().equals("null") || identificationDoc.asText().equals(""))
                 return Response.requiredParameter("identificationDocProvider","numero de identificacion");
 
+
             List<Integer> registered =  providerDao.getExist(identificationDoc.asText().toUpperCase());
             if(registered.get(0)==0)  return  Response.messageExist("identificationDocProvider");
-          //  if(registered==1) return  Response.messageExistDeleted("identificationDocProvider");
+            if(registered.get(0)==1) return  Response.messageExistDeleted("identificationDocProvider");
 
             JsonNode fullName = json.get("fullNameProvider");
             if (fullName == null || fullName.asText().equals("null") || fullName.asText().equals(""))
@@ -87,7 +89,15 @@ public class ProviderManagerImpl implements ProviderManager
             // mapping object-json
             Provider provider = Json.fromJson(json, Provider.class);
 
-            provider.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
+            ProviderType providerType = providerTypeDao.findById(typeProvider.asLong());
+            if(providerType.getNameProviderType().toUpperCase().equals("VENDEDOR"))
+            {
+                ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true);
+                if(list.entities.size()>0)
+                    return Response.messageExist("fullNameProvider");
+            }
+
+            provider.setProviderType(providerType);
 
             if(registered.get(0)==1)
             {   provider.setStatusDelete(0);
@@ -140,7 +150,17 @@ public class ProviderManagerImpl implements ProviderManager
                 return Response.requiredParameter("id_ProviderType", "tipo de proveedor");
 
             if (typeProvider != null)
-                provider.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
+            {
+                ProviderType providerType = providerTypeDao.findById(typeProvider.asLong());
+                if(providerType.getNameProviderType().toUpperCase().equals("VENDEDOR"))
+                {
+                    ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true);
+                    if(list.entities.size()>0)
+                        return Response.messageExist("fullNameProvider");
+                }
+
+                provider.setProviderType(providerType);
+            }
 
             JsonNode phoneNumber = json.get("phoneNumberProvider");
             if (phoneNumber == null || phoneNumber.asText().equals("null") || phoneNumber.asText().equals(""))
@@ -305,7 +325,7 @@ public class ProviderManagerImpl implements ProviderManager
         try {
 
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties);
+            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties,false);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
