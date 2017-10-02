@@ -1,0 +1,132 @@
+<resources>
+    <string name="app_name" translatable="false">Eleta</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="type">Type</string>
+    <string name="phone">Phone</string>
+    <string name="DNI">DNI</string>
+    <string name="RUC">RUC</string>
+    <string name="name">Name</string>
+    <string name="full_name">Full name</string>
+    <string name="contact">Contact</string>
+    <string name="address">Address</string>
+    <string name="dni_or_name">DNI or Name</string>
+    <string name="ruc_or_name">RUC or Name</string>
+
+    <string name="login">Login</string>
+    <string name="recover_password">Recover password</string>
+    <string name="recovery">Recovery</string>
+    <string name="save">Save</string>
+    <string name="print">Print</string>
+
+    <string name="cannot_establish_connection">Cannot establish connection</string>
+    <string name="bluetooth_not_supported">Bluetooth not supported!</string>
+    <string name="getting_all_available_bluetooth_devices">Getting all available Bluetooth Devices</string>
+    <string name="refresh_scanning">Refresh Scanning</string>
+    <string name="connecting_to">Connecting to</string>
+
+    <string name="login_successful">Login successful</string>
+    <string name="recovery_successful">Recovery successful. Check your mail!</string>
+    <string name="error_in_recovery">Error recovering password!</string>
+    <string name="login_error">Login error!</string>
+    <string name="invalid_email_or_password">Invalid email or password</string>
+    <string name="create">Create</string>
+    <string name="edit">Edit</string>
+
+    <string name="title_activity_logged_in">LoggedInActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="home">Home</string>
+    <string name="harvest">Harvest</string>
+    <string name="new_harvest">NEW HARVEST</string>
+    <string name="purchases">Purchases</string>
+    <string name="providers">Providers</string>
+    <string name="new_provider">NEW PROVIDER</string>
+    <string name="new_purchase">NEW PURCHASE</string>
+    <string name="old_provider">PROVIDER</string>
+    <string name="harvest_of_day">HARVEST OF DAY</string>
+    <string name="purchase_of_day">PURCHASE OF DAY</string>
+
+    <string name="make_purchase">MAKE PURCHASE</string>
+    <string name="print_invoice">PRINT INVOICE</string>
+
+    <string name="error_getting_providers">Error getting providers</string>
+    <string name="error_deleting_provider">Error deleting provider</string>
+    <string name="provider_deleted_successful">Provider deleted successful!</string>
+
+    <string name="error_getting_harvests">Error getting harvests</string>
+    <string name="error_deleting_harvest">Error deleting harvest</string>
+    <string name="harvest_deleted_successful">Harvest deleted successful!</string>
+
+    <string name="error_getting_purchases">Error getting purchases</string>
+    <string name="error_deleting_purchase">Error erasing purchase</string>
+    <string name="purchase_deleted_successful">Purchase deleted successful!</string>
+
+    <string name="error_getting_farms">Error getting farms</string>
+    <string name="error_getting_lots">Error getting lots</string>
+    <string name="error_getting_items">Error getting items</string>
+    <string name="error_getting_purities">Error getting purities</string>
+
+    <string name="farm">Farm</string>
+    <string name="lot">Lot</string>
+
+    <string-array name="providers_type">
+        <item>Harvester</item>
+        <item>Provider</item>
+    </string-array>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="harvester">Harvester</string>
+    <string name="provider">Provider</string>
+
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="image_source">Image source</string>
+    <string name="no_camera_app">No camera app!</string>
+    <string name="no_gallery_app">No gallery app!</string>
+    <string name="no_image_selected">No image selected!</string>
+    <string name="error_during_operation">Error during operation. Please try again.</string>
+    <string name="storage_permission_needed">Storage permission needed for this feature</string>
+    <string name="camera_and_storage_permission_needed">Camera and Storage permissions needed for this feature</string>
+
+
+    <string name="error_saving_changes">Error saving changes</string>
+    <string name="error_updating_image">Error updating image</string>
+    <string name="data_updated_correctly">Data updated correctly</string>
+    <string name="image_updated_correctly">Image updated correctly</string>
+    <string name="invalid_fields">Invalid fields</string>
+    <string name="saved">Saved</string>
+
+    <string name="pounds_dry">Pounds Dry</string>
+    <string name="pounds_ripe">Pounds Ripe</string>
+    <string name="pounds_unripe">Pounds Unripe</string>
+    <string name="observations">Observations</string>
+    <string name="error">Error</string>
+    <string name="harvests">Harvests</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="close">Close</string>
+    <string name="gathering">Store</string>
+    <string name="freight">freight</string>
+    <string name="no_changes">No changes!</string>
+
+    <string name="insufficient_data">Insufficient data</string>
+    <string name="you_must_select_a_harvester">You must select a harvester</string>
+    <string name="you_must_select_a_valid_lot">You must select a valid lot</string>
+    <string name="you_must_enter_some_weight">You must enter some weight</string>
+
+    <string name="amount">Amount</string>
+    <string name="price">Price</string>
+    <string name="dispatch_by">Dispatch by</string>
+
+</resources>

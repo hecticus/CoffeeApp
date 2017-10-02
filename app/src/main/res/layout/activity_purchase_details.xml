@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/background"
+    android:padding="@dimen/padding_main_layout"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_main_linear_layout">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/purchase_details_simple_header"
+                    layout="@layout/custom_header_w_description" />
+
+                <include
+                    android:id="@+id/purchase_details_profile_header"
+                    layout="@layout/custom_header_profile" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    android:id="@+id/purchase_details_provider_linear_layour"
+                    android:background="@color/colorBackgroundPairItem">
+
+                    <include
+                        android:layout_width="0dp"
+                        android:layout_weight="9"
+                        android:layout_height="wrap_content"
+                        layout="@layout/custom_edit_text2"
+                        android:id="@+id/purchase_details_text_edit_provider"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/purchase_details_button_add"
+                            android:layout_width="@dimen/width_item_list_image_button"
+                            android:layout_height="@dimen/width_item_list_image_button"
+                            android:background="@null"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/plus" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/purchase_detail_custom_spinner_store"
+                    layout="@layout/custom_spinner2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:weightSum="3"
+                    android:orientation="horizontal"
+                    android:background="@color/colorBackgroundPairItem">
+
+                    <TextView
+                        style="?android:attr/textAppearanceSmall"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/space_between_views_in_custom_edit_text"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="@string/freight"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2">
+                        <CheckBox
+                            android:id="@+id/purchase_details_checkbox_freight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@drawable/check_drawable"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/purchase_detail_custom_spinner_items"
+                    layout="@layout/custom_spinner2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/purchase_detail_text_edit_amount"
+                    layout="@layout/custom_edit_text2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/purchase_detail_text_edit_price"
+                    layout="@layout/custom_edit_text2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/purchase_details_purity_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/purchase_detail_text_edit_dispatcher"
+                    layout="@layout/custom_edit_text2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/custom_edit_text2"
+                    android:id="@+id/purchase_details_text_edit_observations"/>
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/custom_send_button_w_border"/>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:indeterminateTint="@color/colorPrimary"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+</FrameLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hecticus.eleta">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo_eleta_square"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".login.LoginActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoggedInActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".provider.detail.ProviderDetailsActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".harvest.detail.HarvestDetailsActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".PrintActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".BluetoothDevicesList"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".of_day.HarvestsOfDayListActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".of_day.PurchasesOfDayListActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".recovery_password.RecoveryPasswordActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".purchases.detail.PurchaseDetailsActivity"
+            android:launchMode="singleTask" />
+    </application>
+
+</manifest>

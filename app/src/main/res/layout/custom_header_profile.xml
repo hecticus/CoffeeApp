@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingRight="@dimen/padding_main_linear_layout"
+    android:paddingLeft="@dimen/padding_main_linear_layout"
+    android:layout_marginBottom="@dimen/margin_between_header_and_list">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="@dimen/width_header_image_profile"
+        android:layout_height="@dimen/height_header_image_profile"
+        android:layout_marginRight="@dimen/margin_left_and_right_header_image"
+        android:elevation="12dp"
+        app:cardCornerRadius="10dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9">
+        <ImageView
+            android:id="@+id/custom_profile_header_avatar_image_view"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:srcCompat="@mipmap/placeholder_avatar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+        </ImageView>
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@color/colorPrimaryDark"
+            style="?android:attr/textAppearanceSmall"
+            android:id="@+id/custom_profile_header_name_edit_text"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            style="?android:attr/textAppearanceMedium"
+            android:id="@+id/custom_profile_header_title_edit_text"/>
+
+    </LinearLayout>
+ </LinearLayout>

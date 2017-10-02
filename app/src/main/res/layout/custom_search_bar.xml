@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/doctors_search_bar"
+    android:padding="5dp"
+    android:visibility="visible"
+    android:background="@color/colorBorder">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/custom_search_bar_custom_text_edit"
+            layout="@layout/custom_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_button"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="3dp">
+            <Button
+                android:layout_width="0dp"
+                android:id="@+id/custom_search_bar_cancel_button"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:layout_marginRight="5dp"
+                android:background="@color/colorBorder"/>
+            <Button
+                android:id="@+id/custom_search_bar_search_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:text="@string/search"
+                android:background="@drawable/button_border"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

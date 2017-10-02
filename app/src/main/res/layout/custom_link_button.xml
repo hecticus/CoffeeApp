@@ -1,0 +1,19 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/custom_link_button"
+        style="?android:attr/textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_button_link"
+        android:background="@android:color/transparent"
+        android:text="Action"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextButtonLink"
+        android:gravity="top|center"
+        android:textAllCaps="false"/>
+
+</FrameLayout>

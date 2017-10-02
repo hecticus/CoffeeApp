@@ -1,0 +1,62 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="space_between_edit_text">5dp</dimen>
+    <dimen name="height_edit_text">40dp</dimen>
+    <dimen name="width_button_send">200dp</dimen>
+
+    <dimen name="width_main_image">150dp</dimen>
+    <dimen name="height_main_image">150dp</dimen>
+    <dimen name="margin_top_main_image">40dp</dimen>
+    <dimen name="margin_bottom_main_image">40dp</dimen>
+
+    <dimen name="width_header_image">45dp</dimen>
+    <dimen name="height_header_image">45dp</dimen>
+
+    <dimen name="width_button_image">20dp</dimen>
+    <dimen name="height_button_image">20dp</dimen>
+
+    <dimen name="height_button_w_image">50dp</dimen>
+
+    <dimen name="width_header_button">40dp</dimen>
+    <dimen name="height_header_button">40dp</dimen>
+
+    <dimen name="width_header_image_profile">80dp</dimen>
+    <dimen name="height_header_image_profile">80dp</dimen>
+
+    <dimen name="margin_top_header_image">5dp</dimen>
+    <dimen name="margin_bottom_header_image">5dp</dimen>
+    <dimen name="margin_left_and_right_header_image">10dp</dimen>
+    <dimen name="margin_top_and_bottom_header_image">10dp</dimen>
+
+
+    <dimen name="height_header_description">30dp</dimen>
+    <dimen name="margin_between_header_and_list">15dp</dimen>
+
+    <dimen name="margin_small">10dp</dimen>
+
+    <dimen name="height_button">40dp</dimen>
+    <dimen name="margin_top_button_send">40dp</dimen>
+
+    <dimen name="margin_top_button_link">20dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="width_item_list_image_button">25dp</dimen>
+    <dimen name="space_between_views_in_item">10dp</dimen>
+
+    <dimen name="space_between_views_in_custom_edit_text">10dp</dimen>
+    <dimen name="margin_left_and_right">10dp</dimen>
+
+    <dimen name="padding_main_linear_layout">15dp</dimen>
+    <dimen name="padding_main_layout">20dp</dimen>
+    <dimen name="margin_top_action_button">20dp</dimen>
+
+    <dimen name="design_fab_size_normal">@dimen/height_header_image</dimen>
+    <dimen name="design_fab_size_mini">@dimen/width_header_button</dimen>
+
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingRight="@dimen/padding_main_linear_layout"
+    android:paddingLeft="@dimen/padding_main_linear_layout"
+    android:layout_marginBottom="@dimen/margin_between_header_and_list">
+
+
+        <ImageView
+            android:layout_width="@dimen/width_header_image"
+            android:layout_height="@dimen/height_header_image"
+            android:layout_marginRight="@dimen/margin_left_and_right_header_image"
+            android:visibility="visible"
+            android:background="@null"
+            android:id="@+id/custom_header_w_add_action_image"
+            android:scaleType="center"
+            app:srcCompat="@mipmap/coffee_beans" />
+
+        <TextView
+            android:id="@+id/custom_header_w_add_action_title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_header_description"
+            android:layout_weight="5"
+            android:textColor="@color/colorTextTitle"
+            android:textStyle="bold"
+            android:text="DESCRIPTION"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"/>
+
+        <ImageButton
+            android:id="@+id/custom_header_w_add_action_button"
+            android:layout_width="@dimen/width_header_button"
+            android:layout_height="@dimen/width_header_button"
+            android:background="@null"
+            android:src="@mipmap/plus"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_vertical"/>
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:id="@+id/custom_send_button"
+        android:layout_height="@dimen/height_button"
+        android:layout_marginTop="@dimen/margin_top_button_send"
+        android:background="@color/colorPrimary"
+        android:text="Action"
+        android:textColor="@color/colorTextButtonSend"
+        android:textAllCaps="false" />
+
+</FrameLayout>

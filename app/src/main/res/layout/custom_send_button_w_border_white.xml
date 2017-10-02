@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="220dp"
+        android:id="@+id/custom_send_button"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin_top_button_send"
+        android:background="@drawable/button_border"
+        android:text="Action"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorTextButtonSendWBoder"
+        android:textAllCaps="false" />
+
+</RelativeLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/padding_main_linear_layout"
+    android:paddingBottom="@dimen/padding_main_linear_layout"
+    android:paddingLeft="@dimen/padding_main_layout"
+    android:paddingRight="@dimen/padding_main_layout"
+    android:id="@+id/item_whole_linearlayout"
+    android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/item_list_description_text_view"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:layout_height="match_parent"
+        android:text="Description"
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        style="?android:attr/textAppearanceSmall"
+        android:textIsSelectable="false"
+        android:maxLines="1"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginRight="@dimen/space_between_views_in_item"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_list_buttons_container_view">
+
+        <ImageButton
+            android:id="@+id/item_list_print_image_button"
+            android:layout_width="@dimen/width_item_list_image_button"
+            android:layout_height="@dimen/width_item_list_image_button"
+            android:src="@mipmap/print"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:layout_marginRight="@dimen/space_between_views_in_item"/>
+
+        <ImageButton
+            android:id="@+id/item_list_edit_image_button"
+            android:layout_width="@dimen/width_item_list_image_button"
+            android:layout_height="@dimen/width_item_list_image_button"
+            android:src="@mipmap/edit"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:layout_marginRight="@dimen/space_between_views_in_item"/>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorBorder"
+            android:layout_marginRight="@dimen/space_between_views_in_item"
+            />
+
+        <ImageButton
+            android:id="@+id/item_list_delete_image_button"
+            android:layout_width="@dimen/width_item_list_image_button"
+            android:layout_height="@dimen/width_item_list_image_button"
+            android:src="@mipmap/delete"
+            android:scaleType="fitCenter"
+            android:background="@null" />
+
+    </LinearLayout>
+
+</LinearLayout>
