@@ -64,8 +64,8 @@ public class Providers
     }
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-        return providerManager.findAllSearch(name, pager.index, pager.size, sort, collection);
+    public Result findAllSearch(String name, Pager pager, String sort, String collection, Integer listaAll ) {
+        return providerManager.findAllSearch(name, pager.index, pager.size, sort, collection, listaAll);
     }
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")

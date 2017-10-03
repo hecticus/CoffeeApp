@@ -92,7 +92,7 @@ public class ProviderManagerImpl implements ProviderManager
             ProviderType providerType = providerTypeDao.findById(typeProvider.asLong());
             if(providerType.getNameProviderType().toUpperCase().equals("VENDEDOR"))
             {
-                ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true);
+                ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true,1,true);
                 if(list.entities.size()>0)
                     return Response.messageExist("fullNameProvider");
             }
@@ -154,7 +154,7 @@ public class ProviderManagerImpl implements ProviderManager
                 ProviderType providerType = providerTypeDao.findById(typeProvider.asLong());
                 if(providerType.getNameProviderType().toUpperCase().equals("VENDEDOR"))
                 {
-                    ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true);
+                    ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true,1,true);
                     if(list.entities.size()>0)
                         return Response.messageExist("fullNameProvider");
                 }
@@ -321,11 +321,11 @@ public class ProviderManagerImpl implements ProviderManager
     }
 
     @Override
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll) {
         try {
 
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties,false);
+            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties,false, listAll, false);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

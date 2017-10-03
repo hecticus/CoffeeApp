@@ -21,7 +21,8 @@ public interface ProviderDao extends AbstractDao<Long, Provider>{
 
     List<Integer>  getExist(String IdentificationDoc);
 
-    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties, boolean all);
+    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties, boolean all, Integer listALL, boolean
+            inside);
 
     String uploadPhoto(String base64Photo, String ext);
 

@@ -444,6 +444,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
     public Result updateBuyHarvestsAndCoffe()
     {
         float monto=0;
+        boolean auxCreate = false;
         InvoiceDetailPurity invoiceDetailPurity;
         JsonNode json = request().body().asJson();
         if(json == null)
@@ -593,10 +594,17 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
                     invoiceDetailPurity = invoiceDetailPurityDao.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
 
+                    if(invoiceDetailPurity==null)
+                    {
+                        invoiceDetailPurity = new InvoiceDetailPurity();
+                        auxCreate=true;
+                    }
+
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-                    invoiceDetailPurityDao.update(invoiceDetailPurity);
+                    if(auxCreate) invoiceDetailPurityDao.create(invoiceDetailPurity);
+                    else invoiceDetailPurityDao.update(invoiceDetailPurity);
                 }
 
             }

@@ -97,8 +97,11 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     }
 
     @Override
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = find.where().eq("status_delete",0);
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all) {
+
+        ExpressionList expressionList = null;
+        if(all.equals(1))  expressionList = find.where().eq("status_delete",0);
+        else  expressionList = find.where().eq("status_delete",0).eq("status_lot",1);
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);
