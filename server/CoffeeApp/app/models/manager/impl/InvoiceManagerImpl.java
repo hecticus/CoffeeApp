@@ -352,6 +352,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
                 monto = Amount.asInt() * (float) price.asDouble();
 
+                invoiceDetail.setPriceItemTypeByLot((float) 0.00);
+
                 /*
                 comentado por el nuevo caculo que viene en caos de compra
                 monto = Amount.asInt() * itemType.getCostItemType();
