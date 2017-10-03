@@ -267,6 +267,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
     public Result buyHarvestsAndCoffe()
     {
         float monto;
+        InvoiceDetailPurity invoiceDetailPurity;
         JsonNode json = request().body().asJson();
         if(json == null)
             return Response.requiredJson();
@@ -310,7 +311,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
         for (JsonNode itemtypeAux : itemtypes) {
 
-            InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
+
             JsonNode Amount = itemtypeAux.get("amount");
             if (Amount == null)
                 return Response.requiredParameter("amount");
@@ -416,6 +417,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                     return Response.requiredParameter("purities");
                 for(JsonNode purity : purities)
                 {
+                    invoiceDetailPurity = new InvoiceDetailPurity();
                     JsonNode idPurity = purity.get("idPurity");
                     if (idPurity == null)
                         return Response.requiredParameter("idPurity");
@@ -442,6 +444,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
     public Result updateBuyHarvestsAndCoffe()
     {
         float monto=0;
+        InvoiceDetailPurity invoiceDetailPurity;
         JsonNode json = request().body().asJson();
         if(json == null)
             return Response.requiredJson();
@@ -588,7 +591,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
                     Purity puritys = purityDao.findById(idPurity.asLong());
 
-                    InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
+                    invoiceDetailPurity = invoiceDetailPurityDao.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
 
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
