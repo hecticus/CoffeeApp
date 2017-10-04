@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 export class BaseService{ 
 
    public HOST: string = 'https://dev.api.coffee.hecticus.com';
- // public HOST: string = 'http://localhost:9000';
+//  public HOST: string = 'http://localhost:9000';
     public PAGE_SIZE: string = "4";
 
 
@@ -85,7 +85,7 @@ export class BaseService{
         return contentHeaders;
     }
 
-     public buildRequestOptionsFinder(sort?: string, collection?: string, filter?: {}, pager?: {pageIndex: number, pageSize: number}): RequestOptions{
+     public buildRequestOptionsFinder(sort?: string, collection?: string, all?:string, filter?: {}, pager?: {pageIndex: number, pageSize: number}): RequestOptions{
         let params: URLSearchParams = new URLSearchParams();
 
         if(sort != undefined){
@@ -93,6 +93,11 @@ export class BaseService{
         }
         if(collection != undefined){
             params.set('collection', collection);
+        }
+
+        if(all!=undefined)
+        {
+           params.set('all', all); 
         }
         for (var key in filter){
             params.set(key, filter[key].toString());

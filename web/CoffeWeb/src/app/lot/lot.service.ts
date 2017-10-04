@@ -37,7 +37,7 @@ export class LotService extends BaseService
         private farmService: FarmService
     ){
         super();
-        console.log(contentHeaders);
+     //   console.log(contentHeaders);
      //   contentHeaders.append("Authorization", sessionStorage.getItem('token'));
     }
 
@@ -55,10 +55,12 @@ export class LotService extends BaseService
     }
 
     getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Lot[]>{
-        requestOptions.headers = contentHeaders;
+       requestOptions.headers = contentHeaders;
+        console.log("aq2ui");
         return this.http.get(this.urlLot + '/search', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
+
     }
 
     new(): Observable<Lot> {
@@ -116,7 +118,21 @@ export class LotService extends BaseService
         });
          
         this.farmService.getAll(this.buildRequestOptionsFinder("name_farm", "s")).subscribe(params => { 
-                  dropdownQuestionFarm.options = params['result'];    });
+                  dropdownQuestionFarm.options = params['result']; 
+                   console.log(dropdownQuestionFarm.options); 
+                 });
+                
+        let dropdownQuestionStatus = new DropdownQuestion({
+            key: 'statusLot',
+            label: 'Status:',
+            value: lot.statusLot,
+            optionsKey: 'id',
+            optionsValue: 'name',
+            required: true,
+        });
+     
+
+        dropdownQuestionStatus.options =[{ id: 0, name: "No Activo" }, { id: 1, name: "Activo" }];
 
           let questions: Fieldset[] = [
             new Fieldset({
@@ -134,13 +150,6 @@ export class LotService extends BaseService
                         label: 'nameChange',
                         value: lot.nameLot,
                         type: 'text',
-                        hidden: true,
-                    })],[
-                    new TextboxQuestion({
-                        key: 'status',
-                        label: 'status',
-                        value: 0,
-                        type: 'number',
                         hidden: true,
                     })],
                     [
@@ -174,7 +183,9 @@ export class LotService extends BaseService
                         type: 'number',
                         required: true,
                     })
-                    ]]
+                    ],[
+                    dropdownQuestionStatus
+                ],]
             })
         ];
         return questions;
@@ -222,7 +233,15 @@ export class LotService extends BaseService
                         value: lot.price_lot,
                         type: 'text'
                     }),
-                ]
+                ],
+                [
+                    new TextboxClickAnswer({
+                        key: 'statusLot',
+                        label: 'status',
+                        value: (lot.statusLot == "0") ? " No Activo":"Activo",
+                        type: 'text'
+                    }),
+                ],
                 ]
             }),
         ];

@@ -27,6 +27,10 @@ export class MenuComponent {
 			routerLink: './lot',
 			selected: false
 		},{
+			title: 'Ordenes',
+			routerLink: './invoice',
+			selected: false
+		},{
 			title: 'Usuarios',
 			expanded: false,
 			children: [

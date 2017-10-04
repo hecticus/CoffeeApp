@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { BaseService } from '../common/services/base.service';
 import { contentHeaders } from '../common/headers';
 
-import { Provider } from './provider';
+import { Invoice } from './invoice';
 import { Fieldset } from '../shared/dynamic-form/question/fieldset';
 import { TextboxQuestion } from '../shared/dynamic-form/question/question-textbox';
 import { NumberboxQuestion } from '../shared/dynamic-form/question/question-numberbox';
@@ -19,268 +19,239 @@ import { TextboxClickAnswer } from '../shared/dynamic-show/answer/answer-textbox
 import { DropdownAnswer } from '../shared/dynamic-show/answer/answer-dropdown';
 import { DatePickerAnswer } from '../shared/dynamic-show/answer/answer-datepicker';
 
-import { ProviderType } from '../providerType/providerType';
-import { ProviderTypeService } from '../providerType/providerType.service';
 
 export interface Filter {
   }
 
 @Injectable()
-export class ProviderService extends BaseService
+export class InvoiceService extends BaseService
 {
-	 private urlProvider: string= this.HOST+'/provider';
+	 private urlInvoice: string= this.HOST+'/invoice';
 
 
 	constructor(
         private http: Http,
-        private providerTypeService: ProviderTypeService
     ){
         super();
-      //  console.log(contentHeaders);
+        console.log(contentHeaders);
      //   contentHeaders.append("Authorization", sessionStorage.getItem('token'));
     }
 
-    getById(id: number): Observable<Provider> {
-        return this.http.get(this.urlProvider + '/' + id, {headers: contentHeaders})
+    getById(id: number): Observable<Invoice> {
+        return this.http.get(this.urlInvoice + '/' + id, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Provider[]> {
+    getAll(requestOptions: RequestOptions = new RequestOptions()): Observable<Invoice[]> {
         requestOptions.headers = contentHeaders;
-        return this.http.get(this.urlProvider+'', requestOptions)
+        return this.http.get(this.urlInvoice+'', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
     }
 
-    getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Provider[]>{
+    getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Invoice[]>{
        
-       console.log("getAllSearch provider");
+       console.log("getAllSearch invoice");
         requestOptions.headers = contentHeaders;
 
-        return this.http.get(this.urlProvider + '/search', requestOptions)
+        return this.http.get(this.urlInvoice + '/search', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
 
 
     }
 
-    new(): Observable<Provider> {
-        return this.http.get(this.urlProvider + '/new', {headers: contentHeaders})
+    new(): Observable<Invoice> {
+        return this.http.get(this.urlInvoice + '/new', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    edit(id: number): Observable<Provider> {
-        return this.http.get(this.urlProvider + '/' + id + '', {headers: contentHeaders})
+    edit(id: number): Observable<Invoice> {
+        return this.http.get(this.urlInvoice + '/' + id + '', {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    create(provider: Provider): Observable<Provider> {
-        return this.http.post(this.urlProvider, provider, {headers: contentHeaders})
+    create(invoice: Invoice): Observable<Invoice> {
+        return this.http.post(this.urlInvoice, invoice, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
 
             
     }
 
-    update(provider: Provider): Observable<Provider> {
-        return this.http.put(this.urlProvider, provider, {headers: contentHeaders})
+    update(invoice: Invoice): Observable<Invoice> {
+        return this.http.put(this.urlInvoice, invoice, {headers: contentHeaders})
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     delete(id: number): Observable<any> {
-        return this.http.delete(this.urlProvider + '/' + id, {headers: contentHeaders});
+        return this.http.delete(this.urlInvoice + '/' + id, {headers: contentHeaders});
     }
 
     deletes(ids: {"ids": number[]}): Observable<any> {
-;
-        return this.http.post(this.urlProvider + '/deletes', ids, {headers: contentHeaders});
+        return this.http.post(this.urlInvoice + '/deletes', ids, {headers: contentHeaders});
     }
 
-    getQuestions(provider: Provider) {
-            let dropdownQuestionProviderType = new DropdownQuestion({
-            key: 'id_ProviderType',
+    getQuestions(invoice: Invoice) {
+   /*         let dropdownQuestionInvoiceType = new DropdownQuestion({
+            key: 'id_InvoiceType',
             label: 'Tipo del proveedor:',
-            value: provider.providerType['idProviderType'],
-            optionsKey: 'idProviderType',
-            optionsValue: 'nameProviderType',
+            value: invoice.invoiceType['idInvoiceType'],
+            optionsKey: 'idInvoiceType',
+            optionsValue: 'nameInvoiceType',
             required: true,
         });
          
-        this.providerTypeService.getAll(this.buildRequestOptionsFinder("name_provider_type", "s")).subscribe(params => { 
-                  dropdownQuestionProviderType.options = params['result']; });
-
-           let dropdownQuestionStatus = new DropdownQuestion({
-            key: 'statusProvider',
-            label: 'Status:',
-            value: provider.statusProvider,
-            optionsKey: 'id',
-            optionsValue: 'name',
-            required: true,
-        });
-     
-
-        dropdownQuestionStatus.options =[{ id: 0, name: "No Activo" }, { id: 1, name: "Activo" }];
-
-
-        console.log(dropdownQuestionProviderType);
+        this.invoiceTypeService.getAll(this.buildRequestOptionsFinder("name_invoice_type", "s")).subscribe(params => { 
+                  dropdownQuestionInvoiceType.options = params['result']; });
+*/
         let questions: Fieldset[] = [
             new Fieldset({
                 legend: 'infomación de Proveedor',
                 fields: [[
                   new TextboxQuestion({
-                        key: 'idProvider',
+                        key: 'idInvoice',
                         label: 'id',
-                        value: provider.idProvider,
+                        value: invoice.idInvoice,
                         type: 'number',
                         hidden: true
-                    })],[
+                    })],/*[
                     new TextboxQuestion({
                         key: 'nameChange',
                         label: 'nameChange',
-                        value: provider.fullNameProvider,
+                        value: invoice.fullNameInvoice,
                         type: 'text',
+                        hidden: true
+                    })],[
+                    new TextboxQuestion({
+                        key: 'status',
+                        label: 'status',
+                        value: 0,
+                        type: 'number',
                         hidden: true
                     })],
                     [
                     new TextboxQuestion({
-                        key: 'identificationDocProvider',
+                        key: 'identificationDocInvoice',
                         label: 'Numero de identificacion del proveedor:',
-                        value: provider.identificationDocProvider,
+                        value: invoice.identificationDocInvoice,
                         type: 'text',
                         required: true
                     })],
                     [
                     new TextboxQuestion({
-                        key: 'identificationDocProviderChange',
-                        value: provider.identificationDocProvider,
+                        key: 'identificationDocInvoiceChange',
+                        value: invoice.identificationDocInvoice,
                         type: 'text',
                         hidden: true
                     })],
                     [
                     new TextboxQuestion({
-                        key: 'fullNameProvider',
+                        key: 'fullNameInvoice',
                         label: 'Nombre del proveedor:',
-                        value: provider.fullNameProvider,
+                        value: invoice.fullNameInvoice,
                         type: 'text',
                         required: true
                     })],[
-                    dropdownQuestionProviderType
+                    dropdownQuestionInvoiceType
                 ],
                     [
                     new TextboxQuestion({
-                        key: 'phoneNumberProvider',
+                        key: 'phoneNumberInvoice',
                         label: 'telefono:',
-                        value: provider.phoneNumberProvider,
+                        value: invoice.phoneNumberInvoice,
                         type: 'number',
                         required: true
                     })],
                 [
                     new TextboxQuestion({
-                        key: 'addressProvider',
+                        key: 'addressInvoice',
                         label: 'Direccion:',
-                        value: provider.addressProvider,
+                        value: invoice.addressInvoice,
                         type: 'text',
                         required: true
                     }),
                 ],
                 [
                     new TextboxQuestion({
-                        key: 'emailProvider',
+                        key: 'emailInvoice',
                         label: 'Correo:',
-                        value: provider.emailProvider,
+                        value: invoice.emailInvoice,
                         type: 'text'
                     }),
                 ],
                 [
                     new TextboxQuestion({
-                        key: 'contactNameProvider',
+                        key: 'contactNameInvoice',
                         label: 'Contacto:',
-                        value: provider.contactNameProvider,
+                        value: invoice.contactNameInvoice,
                         type: 'text',
                         required: true
                     }),
-                ],
-                [
-                    dropdownQuestionStatus
+                ]*/
                     ]
-                ]
             })
         ];
         return questions;
     }
 
-    getAnswers(provider: Provider) {
+    getAnswers(invoice: Invoice) {
 
         let answers: FieldsetAnswer[] = [
             new FieldsetAnswer({
                 legend: 'infomación de Proveedor',
-                fields: [,
-                    [
+                fields: [ /* [
                     new TextboxAnswer({
-                        key: 'identificationDocProvider',
-                        label: 'Numero de identificacion del proveedor:',
-                        value: provider.identificationDocProvider,
-                        type: 'text'
-                    })],[
-                    new TextboxAnswer({
-                        key: 'fullNameProvider',
+                        key: 'fullNameInvoice',
                         label: 'Nombre del proveedor:',
-                        value: provider.fullNameProvider,
+                        value: invoice.fullNameInvoice,
                         type: 'text'
                     }),
                 ],
                 [
                     new TextboxAnswer({
-                        key: 'providerType',
+                        key: 'invoiceType',
                         label: 'tipo de Proveedor:',
-                        value: provider.providerType["nameProviderType"],
+                        value: invoice.invoiceType["nameInvoiceType"],
                         type: 'number'
                     }),
                 ],
                 [
                     new TextboxAnswer({
-                        key: 'phoneNumberProvider',
+                        key: 'phoneNumberInvoice',
                         label: 'telefono:',
-                        value: provider.phoneNumberProvider,
+                        value: invoice.phoneNumberInvoice,
                         type: 'number'
                     }),
                 ],
                 [
                     new TextboxAnswer({
-                        key: 'addressProvider',
+                        key: 'addressInvoice',
                         label: 'Direccion:',
-                        value: provider.addressProvider,
+                        value: invoice.addressInvoice,
                         type: 'text'
                     }),
                 ],
                 [
                     new TextboxAnswer({
-                        key: 'emailProvider',
+                        key: 'emailInvoice',
                         label: 'Correo:',
-                        value: provider.emailProvider,
+                        value: invoice.emailInvoice,
                         type: 'text'
                     }),
                 ],
                 [
                     new TextboxAnswer({
-                        key: 'contactNameProvider',
+                        key: 'contactNameInvoice',
                         label: 'Contacto:',
-                        value: provider.contactNameProvider,
+                        value: invoice.contactNameInvoice,
                         type: 'text'
                     }),
-                ],
-                [
-                    new TextboxClickAnswer({
-                        key: 'statusLot',
-                        label: 'status',
-                        value: (provider.statusProvider == "0") ? " No Activo":"Activo",
-                        type: 'text'
-                    }),
-                ]
+                ]*/
                 ]
             }),
         ];

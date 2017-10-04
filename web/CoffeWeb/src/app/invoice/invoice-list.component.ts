@@ -1,31 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { LotService } from './lot.service';
-import { Lot } from './lot';
-import { TableService } from 'app/shared/table-ns/table-ns.service';
-import { TableColumn } from 'app/shared/table-ns/table-ns-column';
-import { FilterService } from 'app/shared/filter-ns/filter-ns.service';
-import { QuestionFilterBase } from 'app/shared/filter-ns/question-filter/question-filter-base';
-import { QuestionFilterDropdown } from 'app/shared/filter-ns/question-filter/question-filter-dropdown';
-import { QuestionFilterTextbox } from 'app/shared/filter-ns/question-filter/question-filter-textbox';
-import { ToolBase } from 'app/shared/tool-ns/tool/tool-base';
-import { IconTool } from 'app/shared/tool-ns/tool/tool-icon';
-import { Confirmation } from 'app/shared/confirmation-ns/confirmation-ns.service';
+import { InvoiceService } from './invoice.service';
+import { Invoice } from './invoice';
+import { TableService } from '../shared/table-ns/table-ns.service';
+import { TableColumn } from '../shared/table-ns/table-ns-column';
+import { FilterService } from '../shared/filter-ns/filter-ns.service';
+import { QuestionFilterBase } from '../shared/filter-ns/question-filter/question-filter-base';
+import { QuestionFilterDropdown } from '../shared/filter-ns/question-filter/question-filter-dropdown';
+import { QuestionFilterTextbox } from '../shared/filter-ns/question-filter/question-filter-textbox';
+import { ToolBase } from '../shared/tool-ns/tool/tool-base';
+import { IconTool } from '../shared/tool-ns/tool/tool-icon';
+import { Confirmation } from '../shared/confirmation-ns/confirmation-ns.service';
 import { NotificationService } from '../common/notification/notification.service';
 
 @Component({
   	templateUrl: '../common/crud/list/list.component.html'
 })
-export class LotListComponent implements OnInit {
+export class InvoiceListComponent implements OnInit {
 
-title: string = "Lista de Lotes";
+title: string = "Ordenes / Cosechas";
 	@ViewChild('tableCmp') tableCmp;
-	items: Lot[];
+	items: Invoice[];
 	cols: TableColumn[] = [
-		new TableColumn({name:"Nombre", key: "nameLot", proportion: 1}),
-		new TableColumn({name:"Finca", key: "farm.nameFarm", proportion: 2}),
-		new TableColumn({name:"Status", key: "statusLot", proportion: 1})
+		new TableColumn({name:"Nombre", key: "idInvoice", proportion: 1}),
+		new TableColumn({name:"Status", key: "statusInvoice", proportion: 1})
 	];
 	actions = [
 		{
@@ -55,36 +54,33 @@ title: string = "Lista de Lotes";
   constructor(	
     private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private lotService: LotService,
+		private providerService: InvoiceService,
 		private tableService: TableService,
 		private filterService: FilterService,
 		private notificationService:NotificationService) { }
 
   ngOnInit() {
-	  
-    	this.tableService.setSort(this.cols[0].key);
-		this.filter();
-		this.list(this.tableService.pager.pageIndex);
+    		this.tableService.setSort(this.cols[0].key);
+			this.filter();
+			this.list(this.tableService.pager.pageIndex);
   }
 
 filter(){
-
 		let questionFilterName =
 			new QuestionFilterTextbox({
                 key: 'name',
-                label: 'Nombre del Lote',
-                value: this.filterService.filter['name']!=undefined? this.filterService.filter['name']: '',
+                label: 'Nombre del Proveedor',
+                value: this.filterService.filter['idInvoice']!=undefined? this.filterService.filter['idInvoice']: '',
             });
 		
 		this.questionFilters = [questionFilterName];
-	
+
 	}
 
 	list(page?: number){
-	this.lotService.getAllSearch(this.lotService.buildRequestOptionsFinder(
+	this.providerService.getAllSearch(this.providerService.buildRequestOptionsFinder(
 			this.tableService.sort,
-            "",
-			"1",
+            "","",
 			this.filterService.filter,
 			{pageIndex: page, pageSize: this.tableService.pager.pageSize}
 		)).subscribe(params => {
@@ -93,45 +89,46 @@ filter(){
 			this.tableService.pager.pageIndex = page;
 			this.tableCmp.deselectAll();
 
+			console.log(this.items);
 			for(let item of this.items)
 			{
-				item.id=item.idLot;
-				if(item.statusLot == '1')
+				item.id=item.idInvoice;
+			/*	if(item.statusInvoice == '1')
 				{
-					item.statusLot="Activo";
+					item.statusInvoice="Activo";
 				}
 				else
 				{
-					item.statusLot="No Activo";
-				}
-			}
+					item.statusInvoice="No Activo";
+				}*/
+      }
 		});
 		
 	}
 
-	read(item: Lot){
-		this.router.navigate(['./' + item.idLot], {relativeTo: this.activatedRoute});
+	read(item: Invoice){
+		this.router.navigate(['./' + item.idInvoice], {relativeTo: this.activatedRoute});
 	}
 
 	create(){
 		this.router.navigate(["./create"], {relativeTo: this.activatedRoute});
 	}
 
-	update(item: Lot){
-		this.router.navigate(['./' + item.idLot + '/update'], {relativeTo: this.activatedRoute})
+	update(item: Invoice){
+		this.router.navigate(['./' + item.idInvoice + '/update'], {relativeTo: this.activatedRoute})
 	}
 
-	delete(this, item: Lot){
+	delete(this, item: Invoice){
 
-		this.lotService.delete(item.idLot).subscribe(any =>  {
-			this.notificationService.delete(item.nameLot);
-			this.tableCmp.remove(item.idLot);
+		this.providerService.delete(item.idInvoice).subscribe(any =>  {
+			this.notificationService.delete(item.idInvoice);
+			this.tableCmp.remove(item.idInvoice);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));
 		}, err => this.notificationService.error(err));
 	}
 
 	deletes(this, ids: number[]){
-		this.lotService.deletes({'ids': ids}).subscribe(any =>  {
+		this.providerService.deletes({'ids': ids}).subscribe(any =>  {
 			this.notificationService.deletes();
 			this.tableCmp.removes(ids);
 			this.list(this.tableService.refreshPageIndexAfterRemove(ids.length, this.pager));
@@ -155,4 +152,5 @@ filter(){
 				hiddenClose: false
 			};
 	}
+
 }

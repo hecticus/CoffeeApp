@@ -5,6 +5,7 @@ import { AuthGuard } from '../common/auth.guard';
 import { userRoutes } from '../user/user.routes';
 import { lotRoutes } from '../lot/lot.routes';
 import { providerRoutes } from '../provider/provider.routes';
+import { invoiceRoutes } from '../invoice/invoice.routes';
 
 
 export const homeRoutes: Routes = [
@@ -14,7 +15,8 @@ export const homeRoutes: Routes = [
         canActivate: [AuthGuard],
         children: [
            ...lotRoutes,
-           ...providerRoutes
+           ...providerRoutes,
+           ...invoiceRoutes
         ],
         data: {
             breadcrumb: "home",

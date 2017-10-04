@@ -39,7 +39,7 @@ create(form: FormGroup) {
 		}, err => {
 			switch(err.body.error)
 			{
-				case 409: this.notificationService.alert("Identificador del Proveedor, ya registrado"); break;
+				case 409: this.notificationService.alert("Identificador o Nombre del Proveedor, ya registrado"); break;
 				case 412: this.notificationService.alert(err.body.errorDescription); break;
 				default: this.notificationService.error(err);
 			}

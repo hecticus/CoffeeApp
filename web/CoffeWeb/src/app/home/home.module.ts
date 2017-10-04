@@ -16,6 +16,7 @@ import { HomeComponent } from './home.component';
 
 import { LotModule } from '../lot/lot.module';
 import { ProviderModule } from '../provider/provider.module';
+import { InvoiceModule } from '../invoice/invoice.module';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -33,7 +34,8 @@ import { contentHeaders } from '../common/headers';
         SharedModule,
 
         LotModule,
-        ProviderModule
+        ProviderModule,
+        InvoiceModule
         
         ],
     declarations: [
