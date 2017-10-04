@@ -19,7 +19,7 @@ GET     /providerType/:id                      controllers.ProviderTypes.findByI
 
 
 GET     /provider                          controllers.Providers.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /provider/search                   controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0 )
+GET     /provider/search                   controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
 GET     /provider/new                      controllers.Providers.preCreate()
 GET     /provider/:id                      controllers.Providers.findById(id : Long)
 #GET     /provider/findAll/:index/:size     controllers.Providers.findAll(index: Integer, size: Integer)

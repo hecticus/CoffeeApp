@@ -144,6 +144,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
     @Override
     public ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+
         ExpressionList expressionList = find.where().eq("status_delete",0);
 
         if(pathProperties != null)

@@ -147,7 +147,7 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
     @Override
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, boolean all, Integer listAll, boolean
-            inside) {
+            inside, Integer idProviderType) {
 
         ExpressionList expressionList;
 
@@ -158,7 +158,11 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
         }
         else
         {
-            if(listAll.equals(1))  expressionList = find.where().eq("status_delete",0);
+            if(listAll.equals(1))
+            {
+                if(idProviderType.equals(-1)) expressionList = find.where().eq("status_delete",0);
+                else expressionList = find.where().eq("status_delete",0).eq("id_providertype",idProviderType);
+            }
             else  expressionList = find.where().eq("status_delete",0).eq("status_provider",1);
         }
 

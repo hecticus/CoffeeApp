@@ -187,12 +187,21 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
 
     @Override
     public Result delete(Long id) {
+        Invoice invoice;
         try{
             InvoiceDetail invoiceDetail = invoiceDetailDao.findById(id);
             if(invoiceDetail != null) {
 
                 invoiceDetail.setStatusDelete(1);
                 invoiceDetail = invoiceDetailDao.update(invoiceDetail);
+
+              List<InvoiceDetail> invoicesDetailsOpen= invoiceDetailDao.findAllByIdInvoice(invoiceDetail.getInvoice().getIdInvoice());
+             if ( invoicesDetailsOpen.size()==0)
+             {
+                 invoice = invoiceDetail.getInvoice();
+                 invoice.setStatusDelete(1);
+                 invoice = invoiceDao.update(invoice);
+             }
 
                 return Response.deletedEntity();
             } else {
