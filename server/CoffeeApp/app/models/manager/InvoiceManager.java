@@ -34,4 +34,6 @@ public interface InvoiceManager {
     Result buyHarvestsAndCoffe();
 
     Result updateBuyHarvestsAndCoffe();
+
+    public Result createReceipt(Long idInvoice);
 }

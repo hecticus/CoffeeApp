@@ -1,6 +1,7 @@
 package models.manager.impl;
 
 import com.avaje.ebean.text.PathProperties;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.*;
 import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
@@ -12,6 +13,7 @@ import models.manager.InvoiceManager;
 import play.libs.Json;
 import play.mvc.Result;
 import java.util.List;
+import models.domain.Config;
 
 import static play.mvc.Controller.request;
 import models.manager.requestUtils.Request;
@@ -614,7 +616,20 @@ public class InvoiceManagerImpl  implements InvoiceManager
         return Response.updatedEntity(Json.toJson(openInvoice));
     }
 
+    @Override
+    public Result createReceipt(Long idInvoice)
+    {
+        Invoice invoice = invoiceDao.findById(idInvoice);
+        ObjectNode response = Json.newObject();
+        ((ObjectNode) response).put("nameCompany", Config.getString("nameCompany"));
+        ((ObjectNode) response).put("invoiceDescription", Config.getString("invoiceDescription"));
+        ((ObjectNode) response).put("invoiceType", Config.getString("invoiceType"));
+        ((ObjectNode) response).put("RUC", Config.getString("RUC"));
+        ((ObjectNode) response).put("telephonoCompany", Config.getString("telephonoCompany"));
+        ((ObjectNode) response).put("invoice", Json.toJson(invoice));
 
+        return Response.createdEntity(response);
+    }
 
 }
 

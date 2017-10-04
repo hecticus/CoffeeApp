@@ -97,11 +97,18 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     }
 
     @Override
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all) {
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Integer idFarm) {
 
         ExpressionList expressionList = null;
-        if(all.equals(1))  expressionList = find.where().eq("status_delete",0);
-        else  expressionList = find.where().eq("status_delete",0).eq("status_lot",1);
+        if(idFarm.equals(-1)) {
+            if (all.equals(1)) expressionList = find.where().eq("status_delete", 0);
+            else expressionList = find.where().eq("status_delete", 0).eq("status_lot", 1);
+        }
+        else
+        {
+            if (all.equals(1)) expressionList = find.where().eq("status_delete", 0).eq("id_farm",idFarm);
+            else expressionList = find.where().eq("status_delete", 0).eq("status_lot", 1).eq("id_farm",idFarm);
+        }
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);
@@ -120,7 +127,7 @@ public class LotDaoImpl  extends AbstractDaoImpl<Long, Lot> implements LotDao {
     @Override
     public  ListPagerCollection  getByIdFarm(Long idFarm, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties)
     {
-        ExpressionList expressionList =  find.where().eq("status_delete",0).eq("id_farm",idFarm);
+        ExpressionList expressionList =  find.where().eq("status_delete",0).eq("id_farm",idFarm).eq("status_lot",1);
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);

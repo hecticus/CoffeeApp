@@ -190,18 +190,23 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
         Invoice invoice;
         try{
             InvoiceDetail invoiceDetail = invoiceDetailDao.findById(id);
-            if(invoiceDetail != null) {
+            if(invoiceDetail != null)
+            {
 
                 invoiceDetail.setStatusDelete(1);
                 invoiceDetail = invoiceDetailDao.update(invoiceDetail);
 
               List<InvoiceDetail> invoicesDetailsOpen= invoiceDetailDao.findAllByIdInvoice(invoiceDetail.getInvoice().getIdInvoice());
-             if ( invoicesDetailsOpen.size()==0)
-             {
-                 invoice = invoiceDetail.getInvoice();
+                invoice = invoiceDetail.getInvoice();
+                if ( invoicesDetailsOpen.size()==0)
+                {
+
                  invoice.setStatusDelete(1);
-                 invoice = invoiceDao.update(invoice);
-             }
+
+                 }
+                double  newTotal = invoiceDao.calcularTotalInvoice(invoice.getIdInvoice());
+                invoice.setTotalInvoice(newTotal);
+                invoice = invoiceDao.update(invoice);
 
                 return Response.deletedEntity();
             } else {
@@ -266,11 +271,23 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
     @Override
     public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date)
     {
+        double newTotal;
         try {
              List<InvoiceDetail> invoiceDetails;
 
              int result = invoiceDetailDao.deleteAllByIdInvoiceAndDate(IdInvoice,date);
 
+            List<InvoiceDetail> invoicesDetailsOpen= invoiceDetailDao.findAllByIdInvoice(IdInvoice);
+            Invoice  invoice = invoiceDao.findById(IdInvoice);
+            if ( invoicesDetailsOpen.size()==0)
+            {
+
+                invoice.setStatusDelete(1);
+
+            }
+            newTotal = invoiceDao.calcularTotalInvoice(IdInvoice);
+            invoice.setTotalInvoice(newTotal);
+            invoice = invoiceDao.update(invoice);
              return this.findAllByIdInvoice(IdInvoice);
 
         }catch(Exception e){

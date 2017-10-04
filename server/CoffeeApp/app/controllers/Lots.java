@@ -55,8 +55,8 @@ public class Lots {
     }
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAllSearch(String name, Pager pager, String sort, String collection, Integer all) {
-        return lotManager.findAllSearch(name, pager.index, pager.size, sort, collection, all);
+    public Result findAllSearch(String name, Pager pager, String sort, String collection, Integer all, Integer idFarm) {
+        return lotManager.findAllSearch(name, pager.index, pager.size, sort, collection, all, idFarm);
     }
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")

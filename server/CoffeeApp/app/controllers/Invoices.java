@@ -69,4 +69,9 @@ public class Invoices
     public Result updateBuyHarvestsAndCoffe() {
         return invoiceManager.updateBuyHarvestsAndCoffe();
     }
+
+    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    public Result createReceipt(Long idInvoice)  {
+        return invoiceManager.createReceipt(idInvoice);
+    }
 }

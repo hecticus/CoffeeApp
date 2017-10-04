@@ -3,8 +3,12 @@ package models.dao.impl;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.text.PathProperties;
 import models.dao.InvoiceDao;
+import models.dao.InvoiceDetailDao;
+import models.dao.LotDao;
 import models.dao.utils.ListPagerCollection;
 import models.domain.Invoice;
+import models.domain.InvoiceDetail;
+import models.domain.Lot;
 import models.domain.Provider;
 import models.manager.requestUtils.Request;
 import com.avaje.ebean.Ebean;
@@ -23,6 +27,8 @@ import java.text.SimpleDateFormat;
  */
 public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements InvoiceDao {
 
+    private static InvoiceDetailDao invoiceDetailDao = new InvoiceDetailDaoImpl();
+    private static LotDao lotDao = new LotDaoImpl();
     public InvoiceDaoImpl() {
         super(Invoice.class);
     }
@@ -157,6 +163,30 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
             return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
     }
+
+    @Override
+   public double calcularTotalInvoice(Long idInvioce)
+    {
+        List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAllByIdInvoice(idInvioce);
+        Lot lot;
+        Invoice invoice = this.findById(idInvioce);
+        double total = 0;
+        boolean harvest = true;
+        if(invoice.getProvider().getProviderType().getNameProviderType().toUpperCase().equals("VENDEDOR")) harvest=false;
+
+        for(InvoiceDetail invoiceDetail: invoiceDetails)
+        {
+            if (!harvest) total=total+(invoiceDetail.getCostItemType()*invoiceDetail.getAmountInvoiceDetail());
+            else
+            {
+                lot = lotDao.findById(invoiceDetail.getLot().getIdLot());
+                total=total+(lot.getPrice_lot()*invoiceDetail.getAmountInvoiceDetail());
+            }
+        }
+
+        return total;
+    }
+
 
 
 }

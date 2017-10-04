@@ -14,6 +14,6 @@ public interface LotDao extends AbstractDao<Long, Lot>{
     List<Integer> getExist(String name_lot, int id_farm);
     List<Lot> getByNameLot(String NameLot, String order);
     List<Lot> getByStatusLot(String StatusLot, String order);
-    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties, Integer all);
+    ListPagerCollection findAllSearch(String name, Integer index, Integer size, String sort, PathProperties pathProperties, Integer all, Integer idFarm);
     ListPagerCollection getByIdFarm(Long idFarm, Integer index, Integer size, String sort, PathProperties pathProperties);
 }

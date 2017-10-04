@@ -18,5 +18,6 @@ public interface InvoiceDao extends AbstractDao<Long, Invoice>
     List<Invoice> getOpenByProviderId(Long providerId);
     Boolean deletedInvoice( Long invoiceId);
     ListPagerCollection findAllSearch(Integer index, Integer size, String sort, PathProperties pathProperties);
+    double calcularTotalInvoice(Long idInvioce);
 }
 
