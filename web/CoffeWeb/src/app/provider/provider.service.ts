@@ -37,7 +37,8 @@ export class ProviderService extends BaseService
     ){
         super();
       //  console.log(contentHeaders);
-     //   contentHeaders.append("Authorization", sessionStorage.getItem('token'));
+       contentHeaders.delete("Authorization");
+       contentHeaders.append("Authorization", sessionStorage.getItem('token'));
     }
 
     getById(id: number): Observable<Provider> {
@@ -54,8 +55,7 @@ export class ProviderService extends BaseService
     }
 
     getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Provider[]>{
-       
-       console.log("getAllSearch provider");
+
         requestOptions.headers = contentHeaders;
 
         return this.http.get(this.urlProvider + '/search', requestOptions)

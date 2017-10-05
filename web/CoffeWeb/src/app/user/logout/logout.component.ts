@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthHttp } from 'angular2-jwt';
 import { Injectable } from '@angular/core';
 import { NotificationService } from '../../common/notification/notification.service';
+import { contentHeaders } from '../../common/headers';
 
 
 @Component({
@@ -18,6 +19,6 @@ export class LogoutComponent implements OnInit {
   constructor(public router: Router, public http: Http, public authHttp: AuthHttp, private notificationService: NotificationService) { }
 
   ngOnInit() {
-       //console.log("************");
+
   }
 }

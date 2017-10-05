@@ -14,6 +14,9 @@ import { IconTool } from 'app/shared/tool-ns/tool/tool-icon';
 import { Confirmation } from 'app/shared/confirmation-ns/confirmation-ns.service';
 import { NotificationService } from '../common/notification/notification.service';
 
+import { Farm } from '../farm/farm';
+import { FarmService } from '../farm/farm.service';
+
 @Component({
   	templateUrl: '../common/crud/list/list.component.html'
 })
@@ -51,6 +54,7 @@ title: string = "Lista de Lotes";
 	confirmation: Confirmation = {hiddenClose: true};
 	pager: any;
 	questionFilters: QuestionFilterBase<any>[] = [];
+	questionFilterDropdownsFarm: QuestionFilterDropdown;
 
   constructor(	
     private router: Router,
@@ -58,25 +62,43 @@ title: string = "Lista de Lotes";
 		private lotService: LotService,
 		private tableService: TableService,
 		private filterService: FilterService,
-		private notificationService:NotificationService) { }
+		private notificationService:NotificationService,
+		private farmService: FarmService) { }
 
   ngOnInit() {
 	  
     	this.tableService.setSort(this.cols[0].key);
+	
 		this.filter();
 		this.list(this.tableService.pager.pageIndex);
+
   }
 
 filter(){
 
-		let questionFilterName =
+	let questionFilterName =
 			new QuestionFilterTextbox({
                 key: 'name',
                 label: 'Nombre del Lote',
                 value: this.filterService.filter['name']!=undefined? this.filterService.filter['name']: '',
-            });
+        });
+
+		this.questionFilterDropdownsFarm =
+			 new QuestionFilterDropdown({
+            key: 'idFarm',
+            label: 'Nombre de la Granja:',
+            value:  this.filterService.filter['idFarm']!=undefined? this.filterService.filter['idFarm']: -1,
+            optionsKey: 'idFarm',
+            optionsValue: 'NameFarm'           
+        });
+       
+        this.farmService.getAll(this.farmService.buildRequestOptionsFinder("name_farm", "s")).subscribe(params => { 
+                  this.questionFilterDropdownsFarm.options = params['result']; 
+                 }); 
+
+
 		
-		this.questionFilters = [questionFilterName];
+        this.questionFilters = [questionFilterName,this.questionFilterDropdownsFarm];
 	
 	}
 
@@ -155,4 +177,5 @@ filter(){
 				hiddenClose: false
 			};
 	}
+
 }

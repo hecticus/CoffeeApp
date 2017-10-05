@@ -38,7 +38,8 @@ export class LotService extends BaseService
     ){
         super();
      //   console.log(contentHeaders);
-     //   contentHeaders.append("Authorization", sessionStorage.getItem('token'));
+       contentHeaders.delete("Authorization");
+       contentHeaders.append("Authorization", sessionStorage.getItem('token'));
     }
 
     getById(id: number): Observable<Lot> {
