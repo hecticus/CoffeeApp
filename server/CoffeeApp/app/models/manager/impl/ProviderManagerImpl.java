@@ -154,8 +154,8 @@ public class ProviderManagerImpl implements ProviderManager
                 ProviderType providerType = providerTypeDao.findById(typeProvider.asLong());
                 if(providerType.getNameProviderType().toUpperCase().equals("VENDEDOR"))
                 {
-                    ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true,1,true,-1);
-                    if(list.entities.size()>0)
+                    ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true,1,false,1);
+                    if(list.entities.size()>1)
                         return Response.messageExist("fullNameProvider");
                 }
 
