@@ -439,6 +439,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
         }
 
+        openInvoice.setTotalInvoice(invoiceDao.calcularTotalInvoice(openInvoice.getIdInvoice()));
+        invoiceDao.update(openInvoice);
         return Response.createdEntity(Json.toJson(openInvoice));
     }
 
@@ -613,6 +615,8 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
         }
 
+        openInvoice.setTotalInvoice(invoiceDao.calcularTotalInvoice(openInvoice.getIdInvoice()));
+        invoiceDao.update(openInvoice);
         return Response.updatedEntity(Json.toJson(openInvoice));
     }
 
