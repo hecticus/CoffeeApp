@@ -151,7 +151,7 @@ public class UserManagerImpl implements UserManager {
                     hmap.put("email", user.textValue());
 
                     AuthJWT aut = new AuthJWT(this.secret_key);
-                    String jwt = aut.createJWT(USER.getIdUser().toString(), app_server, auth_path, 80000, hmap);
+                    String jwt = aut.createJWT(USER.getIdUser().toString(), app_server, auth_path, 72000000, hmap);
 
                     return ok()
                             .withHeader("Authorization", jwt)

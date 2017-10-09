@@ -170,7 +170,7 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.icontains("fullName_Provider", name);
+            expressionList.icontains("fullName_provider", name);
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));

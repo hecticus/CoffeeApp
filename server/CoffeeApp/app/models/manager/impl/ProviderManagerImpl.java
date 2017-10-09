@@ -44,7 +44,7 @@ public class ProviderManagerImpl implements ProviderManager
 
     public ProviderManagerImpl(){
 
-        propertiesCollection.putPropertiesCollection("s", "(idProvider, fullName_Provider)");
+        propertiesCollection.putPropertiesCollection("s", "(idProvider, fullNameProvider)");
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
