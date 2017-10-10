@@ -381,7 +381,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider.asLong());
 
-            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-mm-dd").equals(startDatetime.toString("yyyy-mm-dd"))) {
+            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd").equals(startDatetime.toString("yyyy-MM-dd"))) {
                 openInvoice = invoices.get(0);
             } else {
                 openInvoice = new Invoice();
