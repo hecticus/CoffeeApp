@@ -1,6 +1,7 @@
 package com.hecticus.eleta.purchases.list;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseModel;
@@ -46,14 +47,15 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
         mView.goToPurchasesListByProvider((Invoice)model);
     }
 
+    @DebugLog
     @Override
     public void onClickDeleteButton(BaseModel model) {
-        //mView.showWorkingIndicator();
+        mView.showWorkingIndicator();
         Invoice invoice = (Invoice) model;
-        //TODO
-        //mRepository.deleteHarvest(harvest.getIdProvider());
+        mRepository.deletePurchase(invoice.getInvoiceId());
     }
 
+    @DebugLog
     @Override
     public void getInitialData() {
         mView.showWorkingIndicator();
@@ -82,10 +84,11 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
     @Override
     public void updatePager(Pager pager) {
         //TODO
-        lastPage = 1;//pager.getEndIndex();
-        //currentPage = pager.getPageIndex();
+        lastPage = pager.getEndIndex();
+        currentPage = pager.getPageIndex();
     }
 
+    @DebugLog
     @Override
     public void onPurchaseDeleted() {
         mView.hideWorkingIndicator();
@@ -93,6 +96,7 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
         refreshPurchasesList();
     }
 
+    @DebugLog
     @Override
     public void getMorePurchases() {
         mView.showWorkingIndicator();

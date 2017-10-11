@@ -4,8 +4,12 @@ import android.content.Context;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseModel;
+import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.util.Constants;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -19,11 +23,11 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
     Context context;
     private ProvidersListContract.View mView;
     private ProvidersListContract.Repository mRepository;
+    private int currentType = Constants.TYPE_HARVESTER;
+
 
     //private int lastPage = Constants.INITIAL_PAGE_IN_PAGER;
     //private int currentPage = Constants.INITIAL_PAGE_IN_PAGER;
-
-    private int selectedProviderType = 1;
 
     @DebugLog
     public ProvidersListPresenter(Context context, ProvidersListContract.View mView) {
@@ -63,12 +67,12 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
         //lastPage = Constants.INITIAL_PAGE_IN_PAGER;
         //currentPage = Constants.INITIAL_PAGE_IN_PAGER;
         //mRepository.getProviders(currentPage);//currentPage
-        mRepository.getProvidersOfType(selectedProviderType);
+        mRepository.getProvidersOfType(currentType);
     }
 
     @Override
     public void getProvidersByType(int providerType) {
-        selectedProviderType = providerType;
+        currentType = providerType;
         mView.showWorkingIndicator();
         mRepository.getProvidersOfType(providerType);
     }
@@ -79,13 +83,39 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
     }
 
     @Override
+    public void cancelSearch() {
+        mView.updateProvidersList(mRepository.getCurrentProviders());
+    }
+
+    @Override
     public void handleSuccessfulProvidersRequest(List<Provider> providersList) {
-        mView.hideWorkingIndicator();
+        Collections.sort(providersList, new Comparator<Provider>() {
+            @Override
+            public int compare(Provider o1, Provider o2) {
+                String string1 = o1.getFullNameProvider()!=null?o1.getFullNameProvider().toLowerCase():"";
+                String string2 = o2.getFullNameProvider()!=null?o2.getFullNameProvider().toLowerCase():"";
+                return string1.compareTo(string2);
+            }
+        });
+
         //if (currentPage == Constants.INITIAL_PAGE_IN_PAGER) {
         mView.updateProvidersList(providersList);
         /*} else {
             mView.addMoreProvidersToTheList(providersList);
         }*/
+
+        mView.hideWorkingIndicator();
+
+    }
+
+    @Override
+    public void searchProvidersByName(String name) {
+        if (name.isEmpty()){
+            mView.updateProvidersList(mRepository.getCurrentProviders());
+        }else {
+            mView.showWorkingIndicator();
+            mRepository.searchProvidersByTypeByName(currentType, name);
+        }
     }
 
     /*@Override

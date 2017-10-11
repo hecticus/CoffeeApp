@@ -1,4 +1,4 @@
-package com.hecticus.eleta.search;
+package com.hecticus.eleta.search_dialog;
 
 import android.support.annotation.NonNull;
 

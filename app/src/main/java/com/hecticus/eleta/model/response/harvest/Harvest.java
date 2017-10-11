@@ -12,4 +12,9 @@ public class Harvest extends BaseModel {
     public String getReadableDescription() {
         return "nada";
     }
+
+    @Override
+    public boolean canDelete() {
+        return true;
+    }
 }

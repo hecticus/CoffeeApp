@@ -58,11 +58,11 @@ public class ProviderDetailsContract {
 
         void undoChanges();
 
-        void uploadImage(String imagePath);
+        void uploadImage(Provider provider, String imagePath);
 
         void onImageUpdateSuccess(String newImageString);
 
-        void onCreateError();
+        void onCreateError(String message);
     }
 
     public interface Repository {
@@ -71,9 +71,9 @@ public class ProviderDetailsContract {
 
         void updateProviderRequest(Provider provider);
 
-        void onCreateError();
+        void onCreateError(String message);
 
-        void onDataUpdateError();
+        void onDataUpdateError(boolean isAlreadyExists);
 
         void onImageUpdateError(Provider provider, String previousImageString);
 

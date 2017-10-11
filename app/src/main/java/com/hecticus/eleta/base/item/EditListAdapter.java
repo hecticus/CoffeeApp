@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseEditableModel;
 import com.hecticus.eleta.model.response.item.ItemType;
+import com.hecticus.eleta.model.response.purity.Purity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,11 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
     }
 
     public List<ItemType> getItemsValues() {
-        return (List<ItemType>)(BaseEditableModel)list;
+        return (List<ItemType>)(Object)list;
     }
+
+    public List<Purity> getPuritiesValues() {
+        return (List<Purity>)(Object)list;
+    }
+
 }

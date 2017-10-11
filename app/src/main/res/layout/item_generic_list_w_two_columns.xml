@@ -66,28 +66,36 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/item_list_edit_image_button"
-        android:layout_width="@dimen/width_item_list_image_button"
-        android:layout_height="@dimen/width_item_list_image_button"
-        android:src="@mipmap/edit"
-        android:scaleType="fitCenter"
-        android:background="@null"
-        android:layout_marginRight="@dimen/space_between_views_in_item"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/item_list_buttons_container_view">
 
-    <View
-        android:layout_width="2dp"
-        android:layout_height="match_parent"
-        android:background="@color/colorBorder"
-        android:layout_marginRight="@dimen/space_between_views_in_item"
-        />
+        <ImageButton
+            android:id="@+id/item_list_edit_image_button"
+            android:layout_width="@dimen/width_item_list_image_button"
+            android:layout_height="@dimen/width_item_list_image_button"
+            android:src="@mipmap/edit"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:layout_marginRight="@dimen/space_between_views_in_item"/>
 
-    <ImageButton
-        android:id="@+id/item_list_delete_image_button"
-        android:layout_width="@dimen/width_item_list_image_button"
-        android:layout_height="@dimen/width_item_list_image_button"
-        android:src="@mipmap/delete"
-        android:scaleType="fitCenter"
-        android:background="@null" />
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorBorder"
+            android:layout_marginRight="@dimen/space_between_views_in_item"
+            />
+
+        <ImageButton
+            android:id="@+id/item_list_delete_image_button"
+            android:layout_width="@dimen/width_item_list_image_button"
+            android:layout_height="@dimen/width_item_list_image_button"
+            android:src="@mipmap/delete"
+            android:scaleType="fitCenter"
+            android:background="@null" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -2,12 +2,10 @@ package com.hecticus.eleta.purchases.detail;
 
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -17,20 +15,21 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.hecticus.eleta.LoggedInActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.base.item.EditListAdapter;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.custom_views.CustomSpinner;
-import com.hecticus.eleta.model.PurchaseModel;
 import com.hecticus.eleta.model.callback.SelectedProviderInterface;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
+import com.hecticus.eleta.of_day.PurchasesOfDayListActivity;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
-import com.hecticus.eleta.search.SearchDialogFragment;
+import com.hecticus.eleta.search_dialog.SearchDialogFragment;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.GlideApp;
 
@@ -146,9 +145,9 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
             }
         });
 
-        amountEditText.initWithTypeAndDescription(CustomEditText.Type.NUMERIC,getString(R.string.amount));
+        amountEditText.initWithTypeAndDescription(CustomEditText.Type.DECIMAL,getString(R.string.amount));
         amountEditText.setBackground();
-        priceEditText.initWithTypeAndDescription(CustomEditText.Type.NUMERIC,getString(R.string.price));
+        priceEditText.initWithTypeAndDescription(CustomEditText.Type.DECIMAL,getString(R.string.price));
         dispatcherEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT,getString(R.string.dispatch_by));
 
         observationsEditText.initWithTypeAndDescription(CustomEditText.Type.MULTILINE,getString(R.string.observations));
@@ -210,7 +209,16 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
     @Override
     public void handleSuccessfulUpdate() {
-
+        if (mPresenter.isAdd()){
+            Intent mIntent = new Intent(PurchaseDetailsActivity.this, LoggedInActivity.class);
+            mIntent.putExtra("reloadPurchases", true);
+            startActivity(mIntent);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("reload", true);
+            setResult(RESULT_OK, intent);
+        }
+        finish();
     }
 
     @Override
@@ -224,32 +232,20 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         observationsEditText.setEnable(enabled);
     }
 
-    @Override
-    public PurchaseModel getValues() {
-        /*PurchaseModel model = new PurchaseModel();
-        if (storeSpinner.getSelectedItem()!=null) {
-            model.setStoreId(storeSpinner.getSelectedItem().getItemId());
-        }
-
-        model.setSelectedFreight(freightCheckBox.isChecked());
-        model.setItems(mAdapter.getValues());*/
-        return null;
-    }
-
-    @Override
-    public void updateFields(PurchaseModel purchase) {
-        //TODO
-    }
-
-    @Override
-    public void updateMenuOptions() {
-        //TODO
-    }
-
     @OnClick(R.id.custom_send_button)
     @Override
     public void onClickSaveChangesButton() {
-        mPresenter.onSaveChanges(getValues());
+        mPresenter.onSaveChanges(
+                storeSpinner.getSelectedItem().getItemId(),
+                freightCheckBox.isChecked(),
+                itemsSpinner.getSelectedItem().getItemId(),
+                amountEditText.getText(),
+                priceEditText.getText(),
+                mAdapter.getPuritiesValues(),
+                dispatcherEditText.getText(),
+                observationsEditText.getText()
+
+        );
     }
 
     @OnClick(R.id.purchase_details_button_add)
@@ -306,7 +302,11 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     }
 
     @Override
-    public void loadObservation(String observation) {
+    public void loadFields(boolean freight, String amount, String price, String dispatcher, String observation) {
+        freightCheckBox.setChecked(freight);
+        amountEditText.setText(amount);
+        priceEditText.setText(price);
+        dispatcherEditText.setText(dispatcher);
         observationsEditText.setText(observation);
     }
 

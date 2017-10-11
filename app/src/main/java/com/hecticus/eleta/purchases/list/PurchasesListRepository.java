@@ -8,6 +8,7 @@ import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.Util;
 
 import java.io.IOException;
 
@@ -55,6 +56,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
         invoiceApi = retrofit.create(InvoiceRetrofitInterface.class);
     }
 
+
     @DebugLog
     @Override
     public void onError(String error) {
@@ -64,7 +66,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
     @DebugLog
     @Override
     public void purchasesRequest(final int index) {
-        Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider("2012-02-02", Constants.TYPE_SELLER, index);
+        Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_SELLER, index);//Util.getCurrentDate()//"2017-09-28"
 
         call.enqueue(new Callback<InvoiceListResponse>() {
             @DebugLog
@@ -101,7 +103,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             @Override
             public void onResponse(@NonNull Call<Message> call, @NonNull Response<Message> response) {
                 try {
-                    if (response.isSuccessful() && response.body().getMessage().equals("Successful deleted")) {
+                    if (response.isSuccessful()) {// && response.body().getMessage().equals("Successful deleted")
                         mPresenter.onPurchaseDeleted();
                     } else
                         onError(mPresenter.context.getString(R.string.error_deleting_purchase));

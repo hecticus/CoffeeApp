@@ -30,11 +30,15 @@ public class ItemPost {
 
     @SerializedName("purities")
     @Expose
-    private List<Purity> purities = null;
+    private List<PurityPost> purities = null;
 
     @SerializedName("valueRateInvoiceDetailPurity")
     @Expose
     private float rateValue = 0;
+
+    @SerializedName("id_store")
+    @Expose
+    private int storeId = -1;
 
     public ItemPost(int itemTypeId, float amount){
         this.itemTypeId = itemTypeId;
@@ -46,13 +50,13 @@ public class ItemPost {
         this.invoiceDetailId = invoiceDetailId;
     }
 
-    public ItemPost(int itemTypeId, float amount, int price, List<Purity> purities){
+    public ItemPost(int itemTypeId, float amount, int price, List<PurityPost> purities){
         this(itemTypeId,amount);
         this.price = price;
         this.purities = purities;
     }
 
-    public ItemPost(int itemTypeId, float amount, int price, List<Purity> purities, int invoiceDetailId){
+    public ItemPost(int itemTypeId, float amount, int price, List<PurityPost> purities, int invoiceDetailId){
         this(itemTypeId,amount, price, purities);
         this.invoiceDetailId = invoiceDetailId;
     }
@@ -97,11 +101,19 @@ public class ItemPost {
         this.price = price;
     }
 
-    public List<Purity> getPurities() {
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
+    }
+
+    public List<PurityPost> getPurities() {
         return purities;
     }
 
-    public void setPurities(List<Purity> purities) {
+    public void setPurities(List<PurityPost> purities) {
         this.purities = purities;
     }
 }

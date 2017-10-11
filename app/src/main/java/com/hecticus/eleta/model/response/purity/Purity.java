@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseEditableModel;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by roselyn545 on 28/9/17.

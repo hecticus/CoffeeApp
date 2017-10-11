@@ -12,4 +12,9 @@ public class HarvesterModel extends BaseModel {
     public String getReadableDescription() {
         return "prueba";
     }
+
+    @Override
+    public boolean canDelete() {
+        return true;
+    }
 }

@@ -1,9 +1,12 @@
 package com.hecticus.eleta.of_day;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
+import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
@@ -57,6 +60,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
         invoiceApi = retrofit.create(InvoiceRetrofitInterface.class);
     }
 
+    @DebugLog
     @Override
     public void onError(String error) {
         mPresenter.onError(error);
@@ -113,6 +117,37 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
             public void onFailure(Call<InvoiceDetailsResponse> call, Throwable t) {
                 t.printStackTrace();
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
+            }
+        });
+    }
+
+    @DebugLog
+    @Override
+    public void closeInvoiceRequest(CloseInvoicePost post) {
+        Call<Message> call = invoiceApi.closeInvoice(post);
+
+        call.enqueue(new Callback<Message>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<Message> call,
+                                   @NonNull Response<Message> response) {
+
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        mPresenter.onCloseInvoiceSuccessful();
+                    } else{
+                        onError(mPresenter.context.getString(R.string.error_closing_purchase));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onError(mPresenter.context.getString(R.string.error_closing_purchase));
+                }
+            }
+            @DebugLog
+            @Override
+            public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                onError(mPresenter.context.getString(R.string.error_closing_purchase));
             }
         });
     }

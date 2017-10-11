@@ -20,7 +20,7 @@ import com.hecticus.eleta.R;
 public class CustomEditText extends LinearLayout {
 
     public enum Type {
-        PASSWORD, TEXT, EMAIL, DATE, DNI, NUMERIC, PHONE, MULTILINE
+        PASSWORD, TEXT, EMAIL, DATE, DNI, NUMERIC, PHONE, MULTILINE, DECIMAL
     }
 
     TextView descriptionTextView;
@@ -64,6 +64,9 @@ public class CustomEditText extends LinearLayout {
                 break;
             case DNI:
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case DECIMAL:
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 break;
             case MULTILINE:
                 editText.setSingleLine(false);
@@ -121,5 +124,9 @@ public class CustomEditText extends LinearLayout {
 
     public EditText getEditText(){
         return editText;
+    }
+
+    public void setSingleLine(){
+        editText.setSingleLine();
     }
 }

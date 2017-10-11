@@ -27,10 +27,6 @@ public class InvoicePost {
     @Expose
     private boolean freigh = true;
 
-    @SerializedName("idStore")
-    @Expose
-    private int storeId = -1;
-
     @SerializedName("nameReceivedInvoiceDetail")
     @Expose
     private String receiverName = null;
@@ -85,14 +81,6 @@ public class InvoicePost {
 
     public void setFreigh(boolean freigh) {
         this.freigh = freigh;
-    }
-
-    public int getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
     }
 
     public String getReceiverName() {

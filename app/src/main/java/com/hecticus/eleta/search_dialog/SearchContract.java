@@ -1,4 +1,4 @@
-package com.hecticus.eleta.search;
+package com.hecticus.eleta.search_dialog;
 
 import com.hecticus.eleta.base.BaseListContract;
 import com.hecticus.eleta.model.response.providers.Provider;

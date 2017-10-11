@@ -5,7 +5,6 @@ import android.support.design.widget.Snackbar;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,26 +15,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.hecticus.eleta.LoggedInActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.base.item.EditListAdapter;
-import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.custom_views.CustomSpinner;
-import com.hecticus.eleta.model.HarvestModel;
-import com.hecticus.eleta.model.ItemSpinnerInterface;
 import com.hecticus.eleta.model.callback.SelectedProviderInterface;
 import com.hecticus.eleta.model.response.farm.Farm;
-import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
-import com.hecticus.eleta.search.SearchDialogFragment;
+import com.hecticus.eleta.search_dialog.SearchDialogFragment;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.GlideApp;
-import com.hecticus.eleta.util.Util;
 
 import java.util.List;
 
@@ -206,7 +201,16 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     @Override
     public void handleSuccessfulUpdate() {
-
+        if (mPresenter.isAdd()){
+            Intent mIntent = new Intent(HarvestDetailsActivity.this, LoggedInActivity.class);
+            mIntent.putExtra("reloadHarvests", true);
+            startActivity(mIntent);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("reload", true);
+            setResult(RESULT_OK, intent);
+        }
+        finish();
     }
 
     @Override

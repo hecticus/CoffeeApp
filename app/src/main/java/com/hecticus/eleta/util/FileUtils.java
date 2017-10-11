@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -221,6 +222,8 @@ public class FileUtils {
     @DebugLog
     public static String getOptimizedBase64FromImagePath(String takenOrPickedImagePath) {
 
+        Log.d("PHOTO", "--->Optimizing image");
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
@@ -243,7 +246,13 @@ public class FileUtils {
         bitmap = BitmapFactory.decodeFile(takenOrPickedImagePath, bmpFactoryOptions);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
 
-        return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        Log.d("PHOTO", "--->Converting image to text");
+
+        String base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
+        Log.d("PHOTO", "--->Converted image to text");
+
+        return base64;
 
     }
 }

@@ -159,6 +159,11 @@ public class Provider extends BaseModel implements Serializable {
         return getFullNameProvider();
     }
 
+    @Override
+    public boolean canDelete() {
+        return true;
+    }
+
     public Integer getIdProviderType() {
         return idProviderType;
     }

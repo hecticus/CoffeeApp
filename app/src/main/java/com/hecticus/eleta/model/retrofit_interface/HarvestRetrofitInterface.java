@@ -22,7 +22,7 @@ public interface HarvestRetrofitInterface {
     static final String HARVEST_SEARCH_URL = "provider/search?sort=fullName_Provider&collection=m";
     static final String HARVEST_DELETE_URL = "provider/{idProvider}";
     static final String FARMS_URL = "farm?sort=name_farm&collection=s";
-    static final String LOTS_BY_FARM_URL = "lot/getByIdFarm/{idFarm}";
+    static final String LOTS_BY_FARM_URL = "lot/getByIdFarm/{idFarm}?sort=nameLot";
     static final String HARVEST_ITEMS_URL = "itemType/getByProviderTypeId/{providerTypeId}/0"; //Constants.TYPE_HARVESTER
 
     @GET(HARVEST_SEARCH_URL)

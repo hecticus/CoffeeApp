@@ -5,12 +5,14 @@ import android.support.design.widget.Snackbar;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.hecticus.eleta.LoggedInActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.base.item.TwoColumnsGenericListAdapter;
@@ -103,7 +105,13 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     @OnClick(R.id.harvests_of_day_make_puchase)
     @Override
     public void onClickCMakePurchase() {
-        //TODO
+        mPresenter.closeInvoice();
+    }
+
+    @Override
+    public void closedInvoice() {
+        mAdapter.setShowActions(false);
+        makePurchaseButtom.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -114,7 +122,7 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
             intent.putExtra("provider", Util.getGson().toJson(provider));
             intent.putExtra("isAdd",false);
             intent.putExtra("canEdit",true);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -158,6 +166,10 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
         printInvoiceButton.initWithTypeAndText(CustomButtonWBorderAndImage.Type.PRINT,getString(R.string.print_invoice));
         makePurchaseButtom.initWithTypeAndText(CustomButtonWBorderAndImage.Type.CHECK,getString(R.string.make_purchase));
 
+        if (mPresenter.isCurrentClosedInvoice()){
+            makePurchaseButtom.setVisibility(View.INVISIBLE);
+        }
+
         initString();
     }
 
@@ -167,7 +179,7 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         harvestsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new TwoColumnsGenericListAdapter(mPresenter);
+        mAdapter = new TwoColumnsGenericListAdapter(mPresenter, !mPresenter.isCurrentClosedInvoice());
         harvestsRecyclerView.setAdapter(mAdapter);
 
         /*harvestsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -187,5 +199,48 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     public void initString() {
         headerNameTextView.setText("");
         headerTitleTextView.setText(getString(R.string.harvest_of_day));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+            doBack();
+        return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                if (data.getBooleanExtra("reload",false)) {
+                    mPresenter.refreshHarvestsList();
+                }
+            }
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void doBack(){
+        if (mPresenter.needReloadMainList()) {
+            Intent mIntent = new Intent(HarvestsOfDayListActivity.this, LoggedInActivity.class);
+            mIntent.putExtra("reloadHarvests", true);
+            startActivity(mIntent);
+        }
+        finish();
+    }
+
+    @DebugLog
+    @Override
+    public void onBackPressed() {
+        if (mPresenter.needReloadMainList()) {
+            Intent mIntent = new Intent(HarvestsOfDayListActivity.this, LoggedInActivity.class);
+            mIntent.putExtra("reloadHarvests", true);
+            startActivity(mIntent);
+            finish();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,6 +50,9 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
     @BindView(R.id.provider_list_text_edit_provider)
     CustomEditText providerEditText;
 
+    @BindView(R.id.provider_list_cancel_search_image_button)
+    ImageButton cancelSearchImageView;
+
     private GenericListAdapter mAdapter;
 
     @Override
@@ -73,6 +77,7 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
     public void initViews() {
         setUpRecyclerView();
         providerEditText.init();
+        providerEditText.setSingleLine();
         initString();
         headerImageView.setImageResource(R.mipmap.file_text);
         ArrayAdapter providerTypeAdapter = ArrayAdapter.createFromResource(getContext(), R.array.providers_type, android.R.layout.simple_spinner_item);
@@ -158,7 +163,21 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
     @OnClick(R.id.provider_list_search_image_button)
     @Override
     public void onClickSearchProvider() {
-        //TODO
+        if (!providerEditText.getText().trim().isEmpty()) {
+            cancelSearchImageView.setVisibility(View.VISIBLE);
+        }else {
+            cancelSearchImageView.setVisibility(View.GONE);
+        }
+        mPresenter.searchProvidersByName(providerEditText.getText().trim());
+
+    }
+
+    @OnClick(R.id.provider_list_cancel_search_image_button)
+    @Override
+    public void onClickCancelSearchProvider() {
+        providerEditText.setText("");
+        cancelSearchImageView.setVisibility(View.GONE);
+        mPresenter.cancelSearch();
     }
 
     @DebugLog

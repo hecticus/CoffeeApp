@@ -16,6 +16,7 @@ import com.hecticus.eleta.recovery_password.RecoveryPasswordActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hugo.weaving.DebugLog;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
@@ -50,6 +51,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         }
     }
 
+    @DebugLog
     @Override
     public void initViews() {
         emailEditText.initWithTypeAndDescription(CustomEditText.Type.EMAIL,getString(R.string.email));
@@ -125,6 +127,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
+    @DebugLog
     @Override
     public void goToLoggedInView() {
         Intent intent = new Intent(this, LoggedInActivity.class);

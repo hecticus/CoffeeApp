@@ -26,6 +26,7 @@
         style="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorPrimaryDark"
         android:textColorHint="@color/colorHintText"
+        android:inputType="numberDecimal"
         android:maxLines="1" />
 
 </LinearLayout>

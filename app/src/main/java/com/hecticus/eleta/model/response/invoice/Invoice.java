@@ -47,6 +47,11 @@ public class Invoice  extends BaseModel implements Serializable {
         return "";
     }
 
+    @Override
+    public boolean canDelete() {
+        return invoiceStatus<3;
+    }
+
     public int getInvoiceId() {
         return invoiceId;
     }

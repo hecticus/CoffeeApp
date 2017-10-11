@@ -46,6 +46,8 @@
     <string name="email">Email</string>
     <string name="error_during_operation">Error durante la operación. Por favor intente nuevamente.</string>
     <string name="error_deleting_provider">Error borrando proveedor</string>
+    <string name="provider_with_invoices">No puede eliminar este proveedor. Tiene facturas aun no cerradas</string>
+
     <string name="hello_blank_fragment">Hola fragmento vacío</string>
     <string name="login_error">¡Error iniciando sesión!</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
@@ -68,7 +70,7 @@
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
     <string name="no_image_selected">¡No seleccionó ninguna imagen!</string>
     <string name="harvester">Cosechador</string>
-    <string name="make_purchase">REALIZAR COMPRA</string>
+    <string name="make_purchase">CERRAR COMPRA</string>
     <string name="name">Nombre</string>
     <string name="new_harvest">NUEVA COSECHA</string>
     <string name="new_provider">NUEVO PROVEEDOR</string>
@@ -77,14 +79,17 @@
     <string name="invalid_fields">Campos inválidos</string>
     <string name="harvest_deleted_successful">¡Cosecha eliminada exitosamente!</string>
     <string name="error_updating_image">Error actualizando imagen</string>
-    <string name="harvests">Cosechas</string>
+    <string name="purchase_closed_successful">Compra cerrada exitosamente!</string>
 
+    <string name="harvests">Cosechas</string>
     <string name="farm">Granja</string>
     <string name="lot">Lote</string>
     <string name="error_getting_farms">Error obteniendo las granjas</string>
     <string name="error_getting_lots">Error obteniendo los lotes</string>
     <string name="error_getting_items">Error obteniendo los items</string>
     <string name="error_getting_purities">Error obteniendo las purezas</string>
+
+    <string name="error_closing_purchase">Error cerrando compra</string>
 
     <string name="cancel">Cancelar</string>
     <string name="search">Buscar</string>
@@ -100,10 +105,30 @@
     <string name="you_must_select_a_harvester">Debe seleccionar un cosechero</string>
     <string name="you_must_select_a_valid_lot">Debe seleccionar un lote valido</string>
     <string name="you_must_enter_some_weight">Debe ingresar algun peso</string>
-
+    <string name="you_must_enter_some_price">Debe ingresar algun precio</string>
+    <string name="you_must_enter_some_purity">Debe ingresar alguna pureza</string>
+    <string name="you_must_select_a_provider">Debe seleccionar un proveedor</string>
+    <string name="you_must_select_a_valid_store">Debe seleccionar un acopio valido</string>
+    <string name="you_must_select_a_valid_item">Debe seleccionar un café valido</string>
+    <string name="you_must_enter_dispatcher_name">Debe ingresar un nombre de despachador</string>
 
     <string name="amount">Peso</string>
     <string name="price">Precio</string>
     <string name="dispatch_by">Entregado por</string>
+    <string name="already_exists">¡Ya existe!</string>
+
+    <string-array name="providers_type">
+        <item>Cosechador</item>
+        <item>Proveedor</item>
+    </string-array>
+
+    <string name="dni_empty">El DNI no puede estar vacío</string>
+    <string name="ruc_empty">El RUC no puede estar vacío</string>
+    <string name="name_empty">El nombre no puede estar vacío</string>
+    <string name="address_empty">La dirección no puede estar vacía</string>
+    <string name="phone_empty">El teléfono no puede estar vacío</string>
+    <string name="email_empty">El correo no puede estar vacío</string>
+    <string name="contact_empty">El nombre de contacto no puede estar vacío</string>
+    <string name="email_invalid">El correo ingresado no tiene un formato válido</string>
 
 </resources>

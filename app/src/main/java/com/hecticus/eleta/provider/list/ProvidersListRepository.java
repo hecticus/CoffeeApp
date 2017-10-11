@@ -1,15 +1,22 @@
 package com.hecticus.eleta.provider.list;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model.Session;
 import com.hecticus.eleta.model.response.Message;
+import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
@@ -29,6 +36,8 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
 
     private final ProviderRetrofitInterface providersApi;
     private final ProvidersListPresenter mPresenter;
+
+    private List<Provider> currentProviders = new ArrayList<Provider>();
 
     @DebugLog
     public ProvidersListRepository(ProvidersListPresenter presenterParam) {
@@ -61,10 +70,64 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
         mPresenter.onError(error);
     }
 
+
+    @Override
+    public List<Provider> getCurrentProviders() {
+        return currentProviders;
+    }
+
+
     @DebugLog
     @Override
     public void getProvidersOfType(int providerType) {
         Call<ProvidersListResponse> call = providersApi.providersByType(providerType);
+
+        call.enqueue(new Callback<ProvidersListResponse>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<ProvidersListResponse> call,
+                                   @NonNull Response<ProvidersListResponse> response) {
+
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        currentProviders = response.body().getResult();
+                        onGetProvidersSuccess(response.body());
+                        return;
+                    } else
+                        onError(mPresenter.context.getString(R.string.error_getting_providers));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onError(mPresenter.context.getString(R.string.error_getting_providers));
+                }
+                try {
+                    Log.d("RETRO", "--->getProvidersOfType unsuccess (" + response.code() + ") body: " + response.body());
+                    Log.d("RETRO", "--->getProvidersOfType unsuccess (" + response.code() + ") error body: " + new JSONObject(response.errorBody().string()));
+                } catch (JSONException | IOException e) {
+                    Log.d("RETRO", "--->getProvidersOfType error error (" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
+                Log.d("RETRO", "--->getProvidersOfType onFailure: " + t.getMessage());
+                t.printStackTrace();
+                onError(mPresenter.context.getString(R.string.error_getting_providers));
+            }
+        });
+    }
+
+    @DebugLog
+    @Override
+    public void onGetProvidersSuccess(ProvidersListResponse providersListResponse) {
+        //mPresenter.updatePager(providersListResponse.getPager());
+        mPresenter.handleSuccessfulProvidersRequest(providersListResponse.getResult());
+    }
+
+    @Override
+    public void searchProvidersByTypeByName(int type, String name) {
+        Call<ProvidersListResponse> call = providersApi.searchProviders(type, name);
 
         call.enqueue(new Callback<ProvidersListResponse>() {
             @DebugLog
@@ -94,13 +157,6 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
 
     @DebugLog
     @Override
-    public void onGetProvidersSuccess(ProvidersListResponse providersListResponse) {
-        //mPresenter.updatePager(providersListResponse.getPager());
-        mPresenter.handleSuccessfulProvidersRequest(providersListResponse.getResult());
-    }
-
-    @DebugLog
-    @Override
     public void deleteProvider(final int providerId) {
         Call<Message> call = providersApi.deleteProvider(providerId);
         call.enqueue(new Callback<Message>() {
@@ -110,8 +166,14 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                 try {
                     if (response.isSuccessful() && response.body().getMessage().equals("Successful deleted")) {
                         mPresenter.onProviderDeleted();
-                    } else
-                        onError(mPresenter.context.getString(R.string.error_deleting_provider));
+                    } else {
+                        JSONObject object = new JSONObject(response.errorBody().string());
+                        if (object.optInt("error") == 409) {
+                            onError(mPresenter.context.getString(R.string.provider_with_invoices));
+                        } else {
+                            onError(mPresenter.context.getString(R.string.error_deleting_provider));
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     onError(mPresenter.context.getString(R.string.error_deleting_provider));

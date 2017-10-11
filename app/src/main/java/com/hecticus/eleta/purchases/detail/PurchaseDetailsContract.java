@@ -1,6 +1,8 @@
 package com.hecticus.eleta.purchases.detail;
 
 import com.hecticus.eleta.model.PurchaseModel;
+import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
@@ -30,12 +32,6 @@ public class PurchaseDetailsContract {
 
         void enableEdition(boolean enabled);
 
-        PurchaseModel getValues();
-
-        void updateFields(PurchaseModel purchase);
-
-        void updateMenuOptions();
-
         void onClickSaveChangesButton();
 
         void onClickAddProviderButton();
@@ -50,7 +46,7 @@ public class PurchaseDetailsContract {
 
         void loadHeader(String providerName, String imageUrl);
 
-        void loadObservation(String observation);
+        void loadFields(boolean freight, String amount, String price, String dispatcher, String observation);
     }
 
     public interface Actions {
@@ -61,17 +57,15 @@ public class PurchaseDetailsContract {
 
         boolean isAdd();
 
-        void onSaveChanges(PurchaseModel purchaseModel);
+        void onSaveChanges(int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations);
 
-        HashMap<String, Object> getChanges(PurchaseModel purchaseModel);
-
-        void onCancelChangesButtonClicked();
+        InvoicePost getChanges(int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations);
 
         void onUpdateError();
 
         void onError(String error);
 
-        void onUpdatePurchase(PurchaseModel purchaseModel);
+        void onUpdatePurchase();
 
         void loadStores(List<Store> storesList);
 
@@ -79,23 +73,19 @@ public class PurchaseDetailsContract {
 
         void loadPurities(List<Purity> purityList);
 
-        void undoChanges();
-
         void onProviderSelected(Provider provider);
 
     }
 
     public interface Repository {
 
-        void updatedPurchaseResquest(HashMap<String, Object> purchase);
-
-        void savePurchaseResquest(PurchaseModel purchaseModel);
+        void savePurchaseResquest(InvoicePost invoicePost, boolean isAdd);
 
         void onError();
 
         void onError(String error);
 
-        void onSuccessUpdatePurchase(PurchaseModel purchaseModel);
+        void onSuccessUpdatePurchase();
 
         void getItemTypesRequest();
 

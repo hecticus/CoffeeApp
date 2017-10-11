@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hecticus.eleta.R;
 import com.hecticus.eleta.model.Session;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
@@ -115,20 +116,33 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             public void onResponse(@NonNull Call<ProviderCreationResponse> call, @NonNull Response<ProviderCreationResponse> response) {
                 if (response.isSuccessful()) {
                     try {
-                        mPresenter.uploadImage(imagePath);
-                        Log.d("DETAILS", "--->Success " + response.body());
+                        mPresenter.uploadImage(response.body().getProvider(), imagePath);
                         onSuccessSaveProvider(response.body().getProvider());
+                        Log.d("DETAILS", "--->Success " + response.body());
                     } catch (Exception e) {
+                        Log.d("DETAILS", "--->createProviderRequest Error (" + response.code() + "):" + response.body());
                         e.printStackTrace();
-                        onCreateError();
+                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
                     }
                 } else {
+
                     try {
-                        Log.d("DETAILS", "--->Error " + new JSONObject(response.errorBody().string()));
+                        JSONObject object = new JSONObject(response.errorBody().string());
+
+                        if (object.optInt("error") == 409) {
+                            Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + response.code() + "):" + response.body());
+
+                            onCreateError(mPresenter.context.getString(R.string.already_exists));
+                        } else {
+                            Log.d("DETAILS", "--->createProviderRequest Error 1b No Existia (" + response.code() + "):" + response.body());
+
+                            onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                        }
                     } catch (JSONException | IOException e) {
+                        Log.d("DETAILS", "--->createProviderRequest Error 2 (" + response.code() + "):" + response.body());
                         e.printStackTrace();
+                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
                     }
-                    onCreateError();
                 }
             }
 
@@ -137,7 +151,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.d("RETRO", "--->ERROR: " + t.getMessage());
-                onCreateError();
+                onCreateError(mPresenter.context.getString(R.string.error_during_operation));
             }
         });
     }
@@ -164,15 +178,26 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                         onSuccessSaveProvider(response.body().getProvider());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onDataUpdateError();
+                        onDataUpdateError(false);
                     }
                 } else {
                     try {
-                        Log.d("DETAILS", "--->Error " + new JSONObject(response.errorBody().string()));
+                        JSONObject object = new JSONObject(response.errorBody().string());
+
+                        if (object.optInt("error") == 409) {
+                            Log.d("DETAILS", "--->updateProviderRequest Error 1a Existe (" + response.code() + "):" + response.body());
+
+                            onDataUpdateError(true);
+                        } else {
+                            Log.d("DETAILS", "--->updateProviderRequest Error 1b No Existia (" + response.code() + "):" + response.body());
+
+                            onDataUpdateError(false);
+                        }
                     } catch (JSONException | IOException e) {
+                        Log.d("DETAILS", "--->updateProviderRequest Error 2 (" + response.code() + "):" + response.body());
                         e.printStackTrace();
+                        onDataUpdateError(false);
                     }
-                    onDataUpdateError();
                 }
             }
 
@@ -181,19 +206,23 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.d("RETRO", "--->ERROR: " + t.getMessage());
-                onDataUpdateError();
+                onDataUpdateError(false);
             }
         });
     }
 
+    @DebugLog
     @Override
-    public void onCreateError() {
-        mPresenter.onCreateError();
+    public void onCreateError(String message) {
+        mPresenter.onCreateError(message);
     }
 
     @Override
-    public void onDataUpdateError() {
-        mPresenter.onUpdateError(0);
+    public void onDataUpdateError(boolean isAlreadyExists) {
+        if (isAlreadyExists)
+            mPresenter.onUpdateError(2);
+        else
+            mPresenter.onUpdateError(0);
     }
 
     @Override
@@ -232,7 +261,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                                    @NonNull Response<ProviderImageUpdateResponse> response) {
                 if (response.isSuccessful()) {
                     try {
-                        Log.d("DETAILS", "--->Success " + response.body());
+                        Log.d("DETAILS", "--->uploadImageRequest Success " + response.body());
 
                         onImageUpdateSuccess(response.body().getUploadedImageUrl());
 
@@ -242,9 +271,9 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                     }
                 } else {
                     try {
-                        Log.e("DETAILS", "--->Error " + new JSONObject(response.errorBody().string()));
+                        Log.e("DETAILS", "--->uploadImageRequest Error " + new JSONObject(response.errorBody().string()));
                     } catch (JSONException | IOException e) {
-                        Log.e("DETAILS", "--->Error with error");
+                        Log.e("DETAILS", "--->uploadImageRequest Error with error");
                         e.printStackTrace();
                     }
                     onImageUpdateError(provider, previousProviderImageString);

@@ -47,4 +47,16 @@ public class Util {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
     }
+
+    public static String getTomorrowDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DATE, 1);
+        Date tomorrowDate = calendar.getTime();
+
+        String finalDate = sdf.format(tomorrowDate) + " 00:00:00";
+        return finalDate;
+    }
 }

@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.hecticus.eleta.LoggedInActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.base.item.TwoColumnsGenericListAdapter;
@@ -75,6 +77,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         mPresenter.getInitialData();
     }
 
+    @DebugLog
     @Override
     public void showWorkingIndicator() {
         harvestsRecyclerView.setEnabled(false);
@@ -82,6 +85,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         progressBar.setVisibility(View.VISIBLE);
     }
 
+    @DebugLog
     @Override
     public void hideWorkingIndicator() {
         harvestsRecyclerView.setEnabled(true);
@@ -89,11 +93,13 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         progressBar.setVisibility(View.GONE);
     }
 
+    @DebugLog
     @Override
     public void showMessage(String message) {
         Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
+    @DebugLog
     @Override
     public void showError(String error) {
         Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -102,13 +108,20 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
     @OnClick(R.id.harvests_of_day_print_invoice)
     @Override
     public void onClickPrintInvoice() {
-        //TODO
+        doBack();
     }
 
     @OnClick(R.id.harvests_of_day_make_puchase)
     @Override
     public void onClickCMakePurchase() {
-        //TODO
+        mPresenter.closeInvoice();
+    }
+
+    @DebugLog
+    @Override
+    public void closedInvoice() {
+        mAdapter.setShowActions(false);
+        makePurchaseButtom.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -119,7 +132,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
             intent.putExtra("provider", Util.getGson().toJson(provider));
             intent.putExtra("isAdd",false);
             intent.putExtra("canEdit",true);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -158,6 +171,10 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         printInvoiceButton.initWithTypeAndText(CustomButtonWBorderAndImage.Type.PRINT, getString(R.string.print_invoice));
         makePurchaseButtom.initWithTypeAndText(CustomButtonWBorderAndImage.Type.CHECK, getString(R.string.make_purchase));
 
+        if (mPresenter.isCurrentClosedInvoice()){
+            makePurchaseButtom.setVisibility(View.INVISIBLE);
+        }
+
         initString();
     }
 
@@ -167,7 +184,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         harvestsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new TwoColumnsGenericListAdapter(mPresenter);
+        mAdapter = new TwoColumnsGenericListAdapter(mPresenter, !mPresenter.isCurrentClosedInvoice());
         harvestsRecyclerView.setAdapter(mAdapter);
 
     }
@@ -176,5 +193,47 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
     public void initString() {
         headerNameTextView.setText("");
         headerTitleTextView.setText(getString(R.string.purchase_of_day));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+            doBack();
+        return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                if (data.getBooleanExtra("reload",false)) {
+                    mPresenter.refreshHarvestsList();
+                }
+            }
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void doBack(){
+        if (mPresenter.needReloadMainList()) {
+            Intent mIntent = new Intent(PurchasesOfDayListActivity.this, LoggedInActivity.class);
+            mIntent.putExtra("reloadPurchases", true);
+            startActivity(mIntent);
+        }
+        finish();
+    }
+
+    @DebugLog
+    @Override
+    public void onBackPressed() {
+        if (mPresenter.needReloadMainList()) {
+            Intent mIntent = new Intent(PurchasesOfDayListActivity.this, LoggedInActivity.class);
+            mIntent.putExtra("reloadPurchases", true);
+            startActivity(mIntent);
+            finish();
+        }
+        else
+            super.onBackPressed();
     }
 }

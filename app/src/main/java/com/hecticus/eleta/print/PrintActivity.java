@@ -1,4 +1,4 @@
-package com.hecticus.eleta;
+package com.hecticus.eleta.print;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hecticus.eleta.BluetoothDevicesList;
+import com.hecticus.eleta.R;
 
 import java.io.IOException;
 import java.io.OutputStream;

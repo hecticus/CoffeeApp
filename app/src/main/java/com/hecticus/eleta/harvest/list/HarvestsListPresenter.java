@@ -1,6 +1,7 @@
 package com.hecticus.eleta.harvest.list;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseModel;
@@ -38,7 +39,12 @@ public class HarvestsListPresenter implements HarvestsListContract.Actions {
     @Override
     public void onClickPrintButton(BaseModel model) {
         //TODO
-        mView.printHarvest("Prueba");
+        Invoice invoice = (Invoice) model;
+        String text = "Nombre: "+invoice.getProvider().getFullNameProvider()+"\n"+
+                    "Fecha: "+invoice.getInvoiceClosedDate()+"\n"+
+                "Total: "+invoice.getInvoiceTotal();
+        Log.d("TEST","imprimir: "+text);
+        //mView.printHarvest("Prueba");
     }
 
     @Override
@@ -51,10 +57,9 @@ public class HarvestsListPresenter implements HarvestsListContract.Actions {
 
     @Override
     public void onClickDeleteButton(BaseModel model) {
-        //mView.showWorkingIndicator();
-        Harvest harvest = (Harvest) model;
-        //TODO
-        //mRepository.deleteHarvest(harvest.getIdProvider());
+        mView.showWorkingIndicator();
+        Invoice invoice = (Invoice) model;
+        mRepository.deleteHarvest(invoice.getInvoiceId());
     }
 
     @Override

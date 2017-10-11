@@ -1,6 +1,7 @@
 package com.hecticus.eleta.of_day;
 
 import com.hecticus.eleta.base.BaseDetailListContract;
+import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.Pager;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.harvest.HarvestsListResponse;
@@ -30,6 +31,8 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void onClickCMakePurchase();
 
+        void closedInvoice();
+
         void goToHarvestDetail(Provider provider, List<InvoiceDetails> detailsList);
 
         void updateHarvestsList(List<HarvestOfDay> harvestsList);
@@ -40,6 +43,8 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void initHeader(String name, String imageUrl);
 
+        void doBack();
+
     }
 
     public interface Actions extends BaseDetailListContract.Actions{
@@ -48,11 +53,19 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void refreshHarvestsList();
 
+        boolean isCurrentClosedInvoice();
+
         void handleSuccessfulHarvestsRequest(InvoiceDetailsResponse invoiceDetailsResponse);
 
         //void updatePager(Pager pager);
 
         void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse);
+
+        void closeInvoice();
+
+        void onCloseInvoiceSuccessful();
+
+        boolean needReloadMainList();
 
         //void getMoreHarvests();
 
@@ -68,6 +81,8 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
         void harvestsRequest(int invoiceId);
 
         void deleteHarvest(int invoiceId, String date);
+
+        void closeInvoiceRequest(CloseInvoicePost post);
 
         void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse);
     }

@@ -1,5 +1,6 @@
 package com.hecticus.eleta.model.retrofit_interface;
 
+import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
@@ -24,6 +25,7 @@ public interface InvoiceRetrofitInterface {
     static final String INVOICE_DELETE_URL = "invoice/{idInvoice}";
     static final String INVOICE_DETAIL_DELETE_URL = "invoiceDetail/deleteAllByIdInvoiceAndDate/{idInvoice}/{date}";
     static final String INVOICE_DETAIL_NEW_URL = "invoice/buyHarvestsAndCoffe";
+    static final String INVOICE_CLOSE_URL = "invoice";
 
 
     @GET(INVOICES_LIST_URL)
@@ -43,5 +45,8 @@ public interface InvoiceRetrofitInterface {
 
     @PUT(INVOICE_DETAIL_NEW_URL)
     Call<Message> updateInvoiceDetail(@Body InvoicePost post);
+
+    @PUT(INVOICE_CLOSE_URL)
+    Call<Message> closeInvoice(@Body CloseInvoicePost post);
 
 }

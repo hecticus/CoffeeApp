@@ -65,7 +65,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
     @DebugLog
     @Override
     public void harvestsRequest(final int index) {
-        Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider("2017-09-28",Constants.TYPE_HARVESTER,index);//Util.getCurrentDate()//"2017-09-25"
+        Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(),Constants.TYPE_HARVESTER,index);//Util.getCurrentDate()//"2017-09-25"
 
         call.enqueue(new Callback<InvoiceListResponse>() {
             @DebugLog
@@ -101,7 +101,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
             @Override
             public void onResponse(@NonNull Call<Message> call, @NonNull Response<Message> response) {
                 try {
-                    if (response.isSuccessful() && response.body().getMessage().equals("Successful deleted")) {
+                    if (response.isSuccessful()) {// && response.body().getMessage().equals("Successful deleted")
                         mPresenter.onHarvestDeleted();
                     } else
                         onError(mPresenter.context.getString(R.string.error_deleting_harvest));

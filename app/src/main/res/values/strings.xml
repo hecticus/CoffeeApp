@@ -63,9 +63,12 @@
     <string name="error_deleting_provider">Error deleting provider</string>
     <string name="provider_deleted_successful">Provider deleted successful!</string>
 
+    <string name="provider_with_invoices">You can not delete this provider. Has open invoices</string>
+
     <string name="error_getting_harvests">Error getting harvests</string>
     <string name="error_deleting_harvest">Error deleting harvest</string>
     <string name="harvest_deleted_successful">Harvest deleted successful!</string>
+    <string name="purchase_closed_successful">Purchase closed successful!</string>
 
     <string name="error_getting_purchases">Error getting purchases</string>
     <string name="error_deleting_purchase">Error erasing purchase</string>
@@ -75,6 +78,9 @@
     <string name="error_getting_lots">Error getting lots</string>
     <string name="error_getting_items">Error getting items</string>
     <string name="error_getting_purities">Error getting purities</string>
+
+    <string name="error_closing_purchase">Error closing purchase</string>
+
 
     <string name="farm">Farm</string>
     <string name="lot">Lot</string>
@@ -124,9 +130,25 @@
     <string name="you_must_select_a_harvester">You must select a harvester</string>
     <string name="you_must_select_a_valid_lot">You must select a valid lot</string>
     <string name="you_must_enter_some_weight">You must enter some weight</string>
+    <string name="you_must_enter_some_price">You must enter some priceByLot</string>
+    <string name="you_must_enter_some_purity">You must enter some purity</string>
+    <string name="you_must_select_a_provider">You must select a provider</string>
+    <string name="you_must_select_a_valid_store">You must select a valid store</string>
+    <string name="you_must_select_a_valid_item">You must select a valid coffee</string>
+    <string name="you_must_enter_dispatcher_name">You must enter dispatcher name</string>
 
     <string name="amount">Amount</string>
     <string name="price">Price</string>
     <string name="dispatch_by">Dispatch by</string>
+    <string name="already_exists">Already exists!</string>
+
+    <string name="dni_empty">El DNI no puede estar vacío</string>
+    <string name="ruc_empty">El RUC no puede estar vacío</string>
+    <string name="name_empty">El nombre no puede estar vacío</string>
+    <string name="address_empty">La dirección no puede estar vacía</string>
+    <string name="phone_empty">El teléfono no puede estar vacío</string>
+    <string name="email_empty">El correo no puede estar vacío</string>
+    <string name="contact_empty">El nombre de contacto no puede estar vacío</string>
+    <string name="email_invalid">El correo ingresado no tiene un formato válido</string>
 
 </resources>

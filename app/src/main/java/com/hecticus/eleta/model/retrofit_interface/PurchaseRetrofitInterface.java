@@ -18,7 +18,7 @@ public interface PurchaseRetrofitInterface {
     //static final String HARVEST_DELETE_URL = "provider/{idProvider}";
     static final String STORES_URL = "store/getByStatusStore/1/ASC";
     static final String PURITIES_URL = "purity/getByStatusPurity/1/ASC";
-    static final String PURCHASE_ITEMS_URL = "itemType/getByProviderTypeId/{providerTypeId}/0"; //Constants.TYPE_HARVESTER
+    static final String PURCHASE_ITEMS_URL = "itemType/getByProviderTypeId/{providerTypeId}/0?sort=nameItemType"; //Constants.TYPE_HARVESTER
 
     /*@GET(HARVEST_SEARCH_URL)
     Call<HarvestsListResponse> searchHarvest();

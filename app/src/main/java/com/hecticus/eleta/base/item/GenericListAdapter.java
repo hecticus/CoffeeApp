@@ -73,12 +73,18 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
             }
         }
 
-        genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.onClickDeleteButton(list.get(position));
-            }
-        });
+        if (list.get(position).canDelete())
+        {
+            genericItemViewHolder.getDeleteImageButton().setVisibility(View.VISIBLE);
+            genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPresenter.onClickDeleteButton(list.get(position));
+                }
+            });
+        } else {
+            genericItemViewHolder.getDeleteImageButton().setVisibility(View.INVISIBLE);
+        }
 
         genericItemViewHolder.getItemWholeLinearLayout().setOnClickListener(new View.OnClickListener() {
             @DebugLog

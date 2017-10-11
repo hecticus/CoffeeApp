@@ -24,10 +24,13 @@ public class TwoColumnsGenericListAdapter extends RecyclerView.Adapter<TwoColumn
     private List<? extends BaseDetailModel> list;
     private BaseDetailListContract.Actions mPresenter;
 
+    private boolean showActions = true;
+
     @DebugLog
-    public TwoColumnsGenericListAdapter(BaseDetailListContract.Actions mPresenterParam) {
+    public TwoColumnsGenericListAdapter(BaseDetailListContract.Actions mPresenterParam, boolean showActions) {
         list = new ArrayList<>();
         mPresenter = mPresenterParam;
+        this.showActions = showActions;
     }
 
     @Override
@@ -49,26 +52,32 @@ public class TwoColumnsGenericListAdapter extends RecyclerView.Adapter<TwoColumn
             genericItemViewHolder.getItemWholeLinearLayout().setBackgroundResource(R.color.colorBackgroundOddItem);
         }
 
-        genericItemViewHolder.getEditImageButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.onClickEditButton(list.get(position));
-            }
-        });
+        if (showActions) {
+            genericItemViewHolder.getButtonsLinearLayout().setVisibility(View.VISIBLE);
 
-        genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.onClickDeleteButton(list.get(position));
-            }
-        });
+            genericItemViewHolder.getEditImageButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPresenter.onClickEditButton(list.get(position));
+                }
+            });
 
-        genericItemViewHolder.getItemWholeLinearLayout().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.onClickItem(list.get(position));
-            }
-        });
+            genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPresenter.onClickDeleteButton(list.get(position));
+                }
+            });
+
+            genericItemViewHolder.getItemWholeLinearLayout().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPresenter.onClickItem(list.get(position));
+                }
+            });
+        }else {
+            genericItemViewHolder.getButtonsLinearLayout().setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -98,6 +107,11 @@ public class TwoColumnsGenericListAdapter extends RecyclerView.Adapter<TwoColumn
     @DebugLog
     public void clearDataSet() {
         list = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    public void setShowActions(boolean showActions) {
+        this.showActions = showActions;
         notifyDataSetChanged();
     }
 }

@@ -82,8 +82,7 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
                         providerParam.setIdentificationDocProviderChange(currentProvider.getIdentificationDocProvider());
                         mRepository.updateProviderRequest(providerParam);
                     }
-
-                    uploadImage(imagePath);
+                    uploadImage(providerParam, imagePath);
                 }
             }
         }
@@ -129,9 +128,10 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         undoChanges();
     }
 
+    @DebugLog
     @Override
-    public void onCreateError() {
-        mView.showMessage(context.getString(R.string.error_during_operation));
+    public void onCreateError(String message) {
+        mView.showMessage(message);
     }
 
     @Override
@@ -148,6 +148,9 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
             case 1:
                 mView.showMessage(context.getString(R.string.error_updating_image));
                 break;
+            case 2:
+                mView.showMessage(context.getString(R.string.already_exists));
+                break;
         }
 
     }
@@ -156,16 +159,19 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
     @Override
     public void onSavedProvider(Provider providerParam) {
         updated = true;
-        unsavedChangesCount--;
+        if (unsavedChangesCount > 0)
+            unsavedChangesCount--;
+
         if (unsavedChangesCount == 0) {
 
-            if (currentProvider != null){
+            //Maybe an image was uploaded before this, so we keep the current image string
+            if (currentProvider != null) {
                 providerParam.setPhotoProvider(currentProvider.getPhotoProvider());
             }
-            //Maybe an image was uploaded before this, so we keep the current image string
+
             currentProvider = providerParam;
 
-            Log.d("DETAILS", "--->No changes left");
+            Log.d("DETAILS", "--->No changes left (onSavedProvider)");
             mView.onSavedProvider(providerParam);
         } else {
 
@@ -200,10 +206,16 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
 
     @DebugLog
     @Override
-    public void uploadImage(String imagePath) {
+    public void uploadImage(Provider provider, String imagePath) {
         if (imagePath != null) {
             unsavedChangesCount++;
             mView.showWorkingIndicator();
+
+            if (currentProvider == null) {
+                Log.d("PHOTO", "--->Saving provider in presenter before uploading image");
+                currentProvider = provider;
+            }
+
             mRepository.uploadImageRequest(currentProvider, imagePath);
         } else
             Log.w("PHOTO", "--->No image path to upload");

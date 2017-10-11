@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hecticus.eleta.PrintActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseFragment;
 import com.hecticus.eleta.base.item.GenericListAdapter;
@@ -44,6 +42,7 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
 
     private GenericListAdapter mAdapter;
 
+    @DebugLog
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -149,6 +148,7 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
         mAdapter.showMoreDataSet(invoicesList);
     }
 
+    @DebugLog
     @Override
     public void refreshList() {
         mPresenter.getInitialData();
@@ -156,8 +156,10 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
 
     @Override
     public void printPurchase(String text) {
-        Intent intent = new Intent(getActivity(), PrintActivity.class);
+        //TODO
+        showMessage("DISABLED");
+        /*Intent intent = new Intent(getActivity(), PrintActivity.class);
         intent.putExtra("text", text);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 }

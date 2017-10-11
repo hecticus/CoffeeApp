@@ -1,4 +1,4 @@
-package com.hecticus.eleta.search;
+package com.hecticus.eleta.search_dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,7 +15,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -98,6 +97,7 @@ public class SearchDialogFragment extends DialogFragment implements SearchContra
     public void initViews() {
         setUpRecyclerView();
         providerEditText.init();
+        providerEditText.setSingleLine();
         initString();
     }
 

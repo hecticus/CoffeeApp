@@ -258,18 +258,56 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
         if (validFields()) {
             mPresenter.saveProvider(getProviderFromFields(), takenOrPickedImagePath);
-        } else
-            showMessage(getString(R.string.invalid_fields));
+        }
     }
 
     @DebugLog
     private boolean validFields() {
-        //TODO Add case for contact name
-        return !(dniEditText.getText().trim().isEmpty() ||
-                nameEditText.getText().trim().isEmpty() ||
-                addressEditText.getText().trim().isEmpty() ||
-                phoneEditText.getText().trim().isEmpty() ||
-                emailEditText.getText().trim().isEmpty());
+
+        if (dniEditText.getText().trim().isEmpty()){
+            if (mPresenter.isHarvester()) {
+                showMessage(getString(R.string.dni_empty));
+            }else {
+                showMessage(getString(R.string.ruc_empty));
+            }
+            return false;
+        }
+
+
+        if (nameEditText.getText().trim().isEmpty()){
+            showMessage(getString(R.string.name_empty));
+            return false;
+        }
+
+
+        if (addressEditText.getText().trim().isEmpty()){
+            showMessage(getString(R.string.address_empty));
+            return false;
+        }
+
+
+        if (phoneEditText.getText().trim().isEmpty()){
+            showMessage(getString(R.string.phone_empty));
+            return false;
+        }
+
+
+        if (emailEditText.getText().trim().isEmpty()){
+            showMessage(getString(R.string.email_empty));
+            return false;
+        }
+
+        if (!mPresenter.isHarvester() && contactEditText.getText().trim().isEmpty()){
+            showMessage(getString(R.string.contact_empty));
+            return false;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText()).matches()){
+            showMessage(getString(R.string.email_invalid));
+            return false;
+        }
+
+        return true;
     }
 
     @OnClick(R.id.custom_header_w_des_image_button)
@@ -430,9 +468,9 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         if (!fromProvidersList) {
             finish();
         }else {
-            Intent intent = new Intent();
+            Intent intent = new Intent(ProviderDetailsActivity.this, LoggedInActivity.class);
             intent.putExtra("reloadProviders", mPresenter.isUpdated());
-            setResult(RESULT_OK, intent);
+            startActivity(intent);
             finish();
         }
     }

@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
-import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.store.Store;
 
 import java.io.Serializable;
@@ -31,6 +30,10 @@ public class InvoiceDetails implements Serializable {
     @Expose
     private ItemType itemType = null;
 
+    @SerializedName("invoiceDetailPurity")
+    @Expose
+    private List<InvoiceDetailPurity> detailPurities = null;
+
     @SerializedName("lot")
     @Expose
     private Lot lot = null;
@@ -41,7 +44,11 @@ public class InvoiceDetails implements Serializable {
 
     @SerializedName("priceItemTypeByLot")
     @Expose
-    private float price =-1;
+    private float priceByLot =-1;
+
+    @SerializedName("costItemType")
+    @Expose
+    private float priceItem =-1;
 
     @SerializedName("startDateInvoiceDetail")
     @Expose
@@ -119,12 +126,12 @@ public class InvoiceDetails implements Serializable {
         this.store = store;
     }
 
-    public float getPrice() {
-        return price;
+    public float getPriceByLot() {
+        return priceByLot;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setPriceByLot(float priceByLot) {
+        this.priceByLot = priceByLot;
     }
 
     public String getStartDate() {
@@ -183,6 +190,22 @@ public class InvoiceDetails implements Serializable {
         this.status = status;
     }
 
+    public float getPriceItem() {
+        return priceItem;
+    }
+
+    public void setPriceItem(float priceItem) {
+        this.priceItem = priceItem;
+    }
+
+    public List<InvoiceDetailPurity> getDetailPurities() {
+        return detailPurities;
+    }
+
+    public void setDetailPurities(List<InvoiceDetailPurity> detailPurities) {
+        this.detailPurities = detailPurities;
+    }
+
     public boolean isSameType(int itemTypeId) {
         if (getItemType()!=null && getItemType().getId() == itemTypeId) {
             return true;
@@ -190,7 +213,7 @@ public class InvoiceDetails implements Serializable {
         return false;
     }
 
-    public static InvoiceDetails getItem(final List<InvoiceDetails> list, int id){
+    public static InvoiceDetails findItem(final List<InvoiceDetails> list, int id){
         for(InvoiceDetails detail : list) {
             if(detail != null && detail.isSameType(id)) {
                 return detail;

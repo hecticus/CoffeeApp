@@ -142,6 +142,7 @@ public class LoggedInActivity extends AppCompatActivity {
         }
     }
 
+    @DebugLog
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -151,6 +152,23 @@ public class LoggedInActivity extends AppCompatActivity {
             if (page != null && page instanceof ProvidersListFragment) {
                 ((ProvidersListFragment) page).refreshList();
             }
+            return;
+        }
+
+        if (intent.getBooleanExtra("reloadPurchases", false)) {
+            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+            if (page != null && page instanceof PurchasesListFragment) {
+                ((PurchasesListFragment) page).refreshList();
+            }
+            return;
+        }
+
+        if (intent.getBooleanExtra("reloadHarvests", false)) {
+            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+            if (page != null && page instanceof HarvestsListFragment) {
+                ((HarvestsListFragment) page).refreshList();
+            }
+            return;
         }
     }
 }

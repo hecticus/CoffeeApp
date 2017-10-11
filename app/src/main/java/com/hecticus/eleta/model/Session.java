@@ -21,8 +21,7 @@ public class Session {
 
     @DebugLog
     public static boolean isValidSession(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
-        if (sharedPreferences.getString(ACCESS_TOKEN, "").isEmpty()) {
+        if (getAccessToken(context).isEmpty()) {
             clearPreferences(context);
             return false;
         }
@@ -55,6 +54,7 @@ public class Session {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ACCESS_TOKEN, response.getToken());
+        editor.putString(USER_NAME, response.getName());
         editor.commit();
     }
 

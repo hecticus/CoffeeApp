@@ -1,4 +1,4 @@
-package com.hecticus.eleta.search;
+package com.hecticus.eleta.search_dialog;
 
 import android.content.Context;
 
@@ -6,6 +6,8 @@ import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.util.Constants;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -68,8 +70,16 @@ public class SearchPresenter implements SearchContract.Actions {
 
     @Override
     public void handleSuccessfulProvidersRequest(List<Provider> providersList) {
-        mView.hideWorkingIndicator();
+        Collections.sort(providersList, new Comparator<Provider>() {
+            @Override
+            public int compare(Provider o1, Provider o2) {
+                String string1 = o1.getFullNameProvider()!=null?o1.getFullNameProvider().toLowerCase():"";
+                String string2 = o2.getFullNameProvider()!=null?o2.getFullNameProvider().toLowerCase():"";
+                return string1.compareTo(string2);
+            }
+        });
         mView.updateProvidersList(providersList);
+        mView.hideWorkingIndicator();
     }
 
     @Override

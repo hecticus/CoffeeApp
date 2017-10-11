@@ -2,6 +2,7 @@ package com.hecticus.eleta.purchases.detail;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,11 +10,16 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.harvest.detail.HarvestDetailsPresenter;
 import com.hecticus.eleta.model.PurchaseModel;
 import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
 import com.hecticus.eleta.model.response.purity.PurityListResponse;
 import com.hecticus.eleta.model.response.store.StoresListResponse;
+import com.hecticus.eleta.model.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.model.retrofit_interface.PurchaseRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,6 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PurchaseDetailsRepository implements PurchaseDetailsContract.Repository{
 
     private final PurchaseRetrofitInterface purchaseApi;
+    private final InvoiceRetrofitInterface invoiceApi;
     private final PurchaseDetailsPresenter mPresenter;
 
     public PurchaseDetailsRepository(PurchaseDetailsPresenter presenterParam) {
@@ -62,17 +69,43 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 .build();
 
         purchaseApi = retrofit.create(PurchaseRetrofitInterface.class);
+        invoiceApi = retrofit.create(InvoiceRetrofitInterface.class);
         mPresenter = presenterParam;
     }
 
     @Override
-    public void updatedPurchaseResquest(HashMap<String, Object> purchase) {
+    public void savePurchaseResquest(InvoicePost invoicePost, boolean isAdd) {
+        Call<Message> call;
+        if (isAdd){
+            call = invoiceApi.newInvoiceDetail(invoicePost);
+        }else{
+            call = invoiceApi.updateInvoiceDetail(invoicePost);
+        }
+        call.enqueue(new Callback<Message>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<Message> call, @NonNull Response<Message> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        onSuccessUpdatePurchase();
+                    } else {
+                        Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
+                        onError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onError();
+                }
 
-    }
-
-    @Override
-    public void savePurchaseResquest(PurchaseModel purchaseModel) {
-
+            }
+            @DebugLog
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                t.printStackTrace();
+                Log.e("RETRO", "--->ERROR");
+                onError();
+            }
+        });
     }
 
     @Override
@@ -86,8 +119,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     }
 
     @Override
-    public void onSuccessUpdatePurchase(PurchaseModel purchaseModel) {
-        mPresenter.onUpdatePurchase(purchaseModel);
+    public void onSuccessUpdatePurchase() {
+        mPresenter.onUpdatePurchase();
     }
 
     @Override

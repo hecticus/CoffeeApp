@@ -32,6 +32,9 @@ public class TwoColumnsGenericItemViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_list_delete_image_button)
     ImageButton deleteImageButton;
 
+    @BindView(R.id.item_list_buttons_container_view)
+    LinearLayout buttonsLinearLayout;
+
     @BindView(R.id.item_whole_linearlayout)
     LinearLayout itemWholeLinearLayout;
 
@@ -78,6 +81,14 @@ public class TwoColumnsGenericItemViewHolder extends RecyclerView.ViewHolder {
 
     public void setDeleteImageButton(ImageButton deleteImageButton) {
         this.deleteImageButton = deleteImageButton;
+    }
+
+    public LinearLayout getButtonsLinearLayout() {
+        return buttonsLinearLayout;
+    }
+
+    public void setButtonsLinearLayout(LinearLayout buttonsLinearLayout) {
+        this.buttonsLinearLayout = buttonsLinearLayout;
     }
 
     public LinearLayout getItemWholeLinearLayout() {

@@ -12,10 +12,13 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -182,7 +185,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
         List<ItemPost> postItems = new ArrayList<ItemPost>();
         for (ItemType item: items) {
-            InvoiceDetails details = InvoiceDetails.getItem(currentDetailsList,item.getId());
+            InvoiceDetails details = InvoiceDetails.findItem(currentDetailsList,item.getId());
             if (details != null){
                 if (!item.getWeightString().trim().equals(details.getAmount()+"")){
                     postItems.add(new ItemPost(item.getId(), Float.parseFloat(item.getWeightString().trim()), details.getId()));
@@ -212,6 +215,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
     @Override
     public void onError(String error) {
+        mView.hideWorkingIndicator();
         mView.showUpdateMessage(error);
     }
 
@@ -219,11 +223,18 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
     public void onUpdateHarvest() {
         mView.hideWorkingIndicator();
         mView.showUpdateMessage(context.getString(R.string.data_updated_correctly));
-        //TODO back y reload
+        mView.handleSuccessfulUpdate();
     }
 
     @Override
     public void loadFarms(List<Farm> farmsList) {
+        /*Collections.sort(farmsList, new Comparator<Farm>() {
+            @Override
+            public int compare(Farm o1, Farm o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });*/
+
         if (!isAdd && !initializedFarm) {
             initializedFarm = true;
             if (currentDetailsList.size()<=0){
@@ -243,6 +254,13 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
     @Override
     public void loadLots(List<Lot> lotsList) {
+        /*Collections.sort(lotsList, new Comparator<Lot>() {
+            @Override
+            public int compare(Lot o1, Lot o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });*/
+
         if (!isAdd && !initializedLot) {
             initializedLot = true;
             if (currentDetailsList.size()<=0){
@@ -259,19 +277,29 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
     @Override
     public void loadItems(List<ItemType> itemTypeList) {
-        mView.hideWorkingIndicator();
+        Collections.sort(itemTypeList, new Comparator<ItemType>() {
+            @Override
+            public int compare(ItemType o1, ItemType o2) {
+                String string1 = o1.getName()!=null?o1.getName().toLowerCase():"";
+                String string2 = o2.getName()!=null?o2.getName().toLowerCase():"";
+                return string1.compareTo(string2);
+            }
+        });
 
         if (!isAdd && !initializedItems) {
             initializedItems = true;
 
             for (ItemType item: itemTypeList) {
-                InvoiceDetails invoice = InvoiceDetails.getItem(currentDetailsList,item.getId());
+                InvoiceDetails invoice = InvoiceDetails.findItem(currentDetailsList,item.getId());
                 if (invoice != null){
                     item.setWeightString(invoice.getAmount()+"");
                 }
             }
         }
         mView.updateItems(itemTypeList);
+
+        mView.hideWorkingIndicator();
+
     }
 
     @Override

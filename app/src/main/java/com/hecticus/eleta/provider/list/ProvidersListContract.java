@@ -33,6 +33,8 @@ public class ProvidersListContract extends BaseListContract {
 
         void updateProvidersList(List<Provider> providersList);
 
+        void onClickCancelSearchProvider();
+
         //void addMoreProvidersToTheList(List<Provider> providersList);
 
         void refreshList();
@@ -46,7 +48,11 @@ public class ProvidersListContract extends BaseListContract {
 
         void refreshProvidersList();
 
+        void cancelSearch();
+
         void handleSuccessfulProvidersRequest(List<Provider> providersList);
+
+        void searchProvidersByName(String name);
 
         //void updatePager(Pager pager);
 
@@ -65,8 +71,12 @@ public class ProvidersListContract extends BaseListContract {
 
         void onGetProvidersSuccess(ProvidersListResponse providersListResponse);
 
+        void searchProvidersByTypeByName(int type, String name);
+
         void deleteProvider(int providerId);
 
         void onError(String error);
+
+        List<Provider> getCurrentProviders();
     }
 }

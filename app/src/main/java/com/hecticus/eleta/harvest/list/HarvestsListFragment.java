@@ -5,19 +5,18 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.hecticus.eleta.PrintActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseFragment;
 import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.harvest.detail.HarvestDetailsActivity;
 import com.hecticus.eleta.of_day.HarvestsOfDayListActivity;
 import com.hecticus.eleta.model.response.invoice.Invoice;
+import com.hecticus.eleta.print.PrintActivity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
 
@@ -155,8 +154,10 @@ public class HarvestsListFragment extends BaseFragment implements HarvestsListCo
 
     @Override
     public void printHarvest(String text) {
-        Intent intent = new Intent(getActivity(), PrintActivity.class);
+        //TODO
+        showMessage("DISABLED");
+        /*Intent intent = new Intent(getActivity(), PrintActivity.class);
         intent.putExtra("text",text);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 }

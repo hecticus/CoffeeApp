@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
+import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
+import com.hecticus.eleta.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,11 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     //private int lastPage = Constants.INITIAL_PAGE_IN_PAGER;
     //private int currentPage = Constants.INITIAL_PAGE_IN_PAGER;
 
+
     private Invoice currentInvoice = null;
     private List<HarvestOfDay> harvestList = null;
     private List<InvoiceDetails> detailsList = null;
+    private boolean needReloadMainList = false;
 
     @DebugLog
     public InvoicesOfDayListPresenter(Context context, InvoicesOfDayListContract.View mView, Invoice currentInvoiceParam) {
@@ -40,11 +44,12 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         mRepository = new InvoicesOfDayListRepository(this);
     }
 
+
     @Override
     public void onClickEditButton(BaseDetailModel model) {
         List<InvoiceDetails> detailsOfHarvest = new ArrayList<InvoiceDetails>();
         HarvestOfDay harvestOfDay = (HarvestOfDay) model;
-        for (InvoiceDetails detail:detailsList) {
+        for (InvoiceDetails detail : detailsList) {
             if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
                 detailsOfHarvest.add(detail);
             }
@@ -53,13 +58,14 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     }
 
     @Override
-    public void onClickItem(BaseDetailModel model) {}
+    public void onClickItem(BaseDetailModel model) {
+    }
 
     @Override
     public void onClickDeleteButton(BaseDetailModel model) {
         mView.showWorkingIndicator();
         HarvestOfDay harvest = (HarvestOfDay) model;
-        mRepository.deleteHarvest(currentInvoice.getInvoiceId(),harvest.getStartDate());
+        mRepository.deleteHarvest(currentInvoice.getInvoiceId(), harvest.getStartDate());
     }
 
     @Override
@@ -67,9 +73,9 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         mView.showWorkingIndicator();
         //lastPage = Constants.INITIAL_PAGE_IN_PAGER;
         //currentPage = Constants.INITIAL_PAGE_IN_PAGER;
-        if (currentInvoice!=null) {
-            Log.d("TEST","provider invoice "+currentInvoice.getProvider());
-            mView.initHeader(currentInvoice.getProvider().getFullNameProvider(),currentInvoice.getProvider().getPhotoProvider());
+        if (currentInvoice != null) {
+            Log.d("TEST", "provider invoice " + currentInvoice.getProvider());
+            mView.initHeader(currentInvoice.getProvider().getFullNameProvider(), currentInvoice.getProvider().getPhotoProvider());
             mRepository.harvestsRequest(currentInvoice.getInvoiceId());
         }
     }
@@ -77,6 +83,11 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void refreshHarvestsList() {
         getInitialData();
+    }
+
+    @Override
+    public boolean isCurrentClosedInvoice() {
+        return currentInvoice.getInvoiceStatus() == 3;
     }
 
     @Override
@@ -89,7 +100,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         } else {
             mView.addMoreHarvestsToTheList(harvestsList);
         }*/
-        if (harvestList!=null){
+        if (harvestList != null) {
             mView.updateHarvestsList(harvestList);
         }
     }
@@ -106,9 +117,37 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         harvestList = invoiceDetailsResponse.getHarvests();
         mView.hideWorkingIndicator();
         mView.showMessage(context.getString(R.string.harvest_deleted_successful));
-        if (harvestList!=null){
-            mView.updateHarvestsList(harvestList);
+
+        if (harvestList != null && harvestList.size() > 0) {
+            if (harvestList != null) {
+                mView.updateHarvestsList(harvestList);
+            }
+        } else {
+            needReloadMainList = true;
+            mView.doBack();
         }
+    }
+
+    @Override
+    public void closeInvoice() {
+        mView.showWorkingIndicator();
+        CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getInvoiceId(), Util.getTomorrowDate());
+        mRepository.closeInvoiceRequest(closePost);
+    }
+
+    @DebugLog
+    @Override
+    public void onCloseInvoiceSuccessful() {
+        needReloadMainList = true;
+        mView.closedInvoice();
+        mView.hideWorkingIndicator();
+        mView.showMessage(context.getString(R.string.purchase_closed_successful));
+    }
+
+    @DebugLog
+    @Override
+    public boolean needReloadMainList() {
+        return needReloadMainList;
     }
 
     /*@Override

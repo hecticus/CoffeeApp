@@ -7,4 +7,6 @@ package com.hecticus.eleta.base;
 public abstract class BaseModel {
 
     public abstract String getReadableDescription();
+
+    public abstract boolean canDelete();
 }
