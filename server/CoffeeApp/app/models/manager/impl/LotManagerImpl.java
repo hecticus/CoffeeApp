@@ -77,9 +77,9 @@ public class LotManagerImpl implements LotManager {
             if (price_lot == null || price_lot.asText().equals("null") || price_lot.asText().equals(""))
                 return Response.requiredParameter("price_lot", "US precio");
 
-            JsonNode status = json.get("status");
+            JsonNode status = json.get("statusLot");
             if (status == null || status.asText().equals("null") || status.asText().equals(""))
-                return Response.requiredParameter("status");
+                return Response.requiredParameter("statusLot");
 
 
             // mapping object-json
@@ -178,8 +178,8 @@ public class LotManagerImpl implements LotManager {
                 return Response.deletedEntity();
             } else {
 
-                if(lot == null)  return  Response.message("Successful no existe el registro a eliminar");
-                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
+                if(lot == null)  return  Response.messageNotDeleted("no existe el registro a eliminar");
+                else  return  Response.messageNotDeleted("el registro tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -304,6 +304,7 @@ public class LotManagerImpl implements LotManager {
 
     @Override
     public Result deletes() {
+        boolean aux_delete = true;
         try
         {
             JsonNode json = request().body().asJson();
@@ -315,11 +316,24 @@ public class LotManagerImpl implements LotManager {
 
             for (Long id : aux)
             {
-                this.delete(id);
+                Lot lot = lotDao.findById(id);
+
+                List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+                if(lot != null  && invoiceDetails.size()==0) {
+
+                    lot.setStatusDelete(1);
+                    lot = lotDao.update(lot);
+
+                    return Response.deletedEntity();
+                } else {
+                    aux_delete = false;
+
+                }
 
             }
 
-            return Response.message("Successful deletes");
+            if(aux_delete)  return  Response.messageNotDeleted("La eliminacion fue correcta");
+            else  return  Response.messageNotDeleted(" algunos registros tiene facturas aun no cerradas");
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }

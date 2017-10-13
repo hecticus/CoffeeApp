@@ -195,8 +195,8 @@ public class ProviderManagerImpl implements ProviderManager
 
                 return Response.deletedEntity();
             } else {
-                if(provider == null)  return  Response.messageNotDeleted("Successful no existe el registro a eliminar");
-                else  return  Response.messageNotDeleted("Successful el proveedor tiene facturas aun no cerradas");
+                if(provider == null)  return  Response.messageNotDeleted(" no existe el registro a eliminar");
+                else  return  Response.messageNotDeleted(" el proveedor tiene facturas aun no cerradas");
             }
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
