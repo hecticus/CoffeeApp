@@ -33,8 +33,9 @@ export class InvoiceService extends BaseService
         private http: Http,
     ){
         super();
-        console.log(contentHeaders);
-     //   contentHeaders.append("Authorization", sessionStorage.getItem('token'));
+      //  console.log(contentHeaders);
+        contentHeaders.delete("Authorization");
+        contentHeaders.append("Authorization", sessionStorage.getItem('token'));
     }
 
     getById(id: number): Observable<Invoice> {
@@ -122,7 +123,7 @@ export class InvoiceService extends BaseService
                     })],/*[
                     new TextboxQuestion({
                         key: 'nameChange',
-                        label: 'nameChange',
+                        label: 'nameChange',fullNameInvoice
                         value: invoice.fullNameInvoice,
                         type: 'text',
                         hidden: true

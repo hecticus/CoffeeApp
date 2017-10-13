@@ -57,8 +57,7 @@ export class LotService extends BaseService
 
     getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Lot[]>{
        requestOptions.headers = contentHeaders;
-        console.log("aq2ui");
-        return this.http.get(this.urlLot + '/search', requestOptions)
+          return this.http.get(this.urlLot + '/search', requestOptions)
             .map(this.extractDataFull)
             .catch(this.handleError);
 

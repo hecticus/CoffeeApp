@@ -164,7 +164,13 @@ filter(){
 			this.notificationService.delete(item.fullNameProvider);
 			this.tableCmp.remove(item.idProvider);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));
-		}, err => this.notificationService.error(err));
+		}, err => {
+		  let error = err.json();
+			if(error["error"]==409)	this.notificationService.alert(error["message"])
+			else this.notificationService.error(error["message"])
+			console.log(error)
+		
+		});
 	}
 
 	deletes(this, ids: number[]){
@@ -173,12 +179,11 @@ filter(){
 			this.tableCmp.removes(ids);
 			this.list(this.tableService.refreshPageIndexAfterRemove(ids.length, this.pager));
 		}, err => {
+		  let error = err.json();
+			if(error["error"]==409)	this.notificationService.alert(error["message"])
+			else this.notificationService.error(error["message"])
+			console.log(error)
 		
-			switch(err._body.error)
-			{
-				case 409: this.notificationService.alert(err.body.message); break;
-				default: this.notificationService.error(err);
-			}
 		});
 	}
 	

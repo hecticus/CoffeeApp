@@ -52,8 +52,8 @@ export class LoginComponent extends BaseService implements OnInit {
           }
           localStorage.setItem('token', response.json().result.token);
           sessionStorage.setItem('token', response.json().result.token);
-          //contentHeaders.delete("Authorization");
-        //  contentHeaders.append("Authorization", localStorage.getItem('token'));
+          contentHeaders.delete("Authorization");
+          contentHeaders.append("Authorization", localStorage.getItem('token'));
           this.notificationService.sucessLogin();
           this.router.navigate(['home']);
         },

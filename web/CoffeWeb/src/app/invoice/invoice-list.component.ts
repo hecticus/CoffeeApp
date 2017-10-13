@@ -14,6 +14,8 @@ import { IconTool } from '../shared/tool-ns/tool/tool-icon';
 import { Confirmation } from '../shared/confirmation-ns/confirmation-ns.service';
 import { NotificationService } from '../common/notification/notification.service';
 
+import { ProviderService } from '../provider/provider.service';
+
 @Component({
   	templateUrl: '../common/crud/list/list.component.html'
 })
@@ -23,8 +25,8 @@ title: string = "Ordenes / Cosechas";
 	@ViewChild('tableCmp') tableCmp;
 	items: Invoice[];
 	cols: TableColumn[] = [
-		new TableColumn({name:"Nombre", key: "idInvoice", proportion: 1}),
-		new TableColumn({name:"Status", key: "statusInvoice", proportion: 1})
+		new TableColumn({name:"Nombre", key: "idProvider", proportion: 1}),
+		new TableColumn({name:"Status", key: "statusProvider", proportion: 1})
 	];
 	actions = [
 		{
@@ -50,14 +52,16 @@ title: string = "Ordenes / Cosechas";
 	confirmation: Confirmation = {hiddenClose: true};
 	pager: any;
 	questionFilters: QuestionFilterBase<any>[] = [];
+	questionFilterDropdownsHarvest: QuestionFilterDropdown;
 
   constructor(	
     private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private providerService: InvoiceService,
+		private invoiceService: InvoiceService,
 		private tableService: TableService,
 		private filterService: FilterService,
-		private notificationService:NotificationService) { }
+		private notificationService:NotificationService,
+		private providerService: ProviderService) {}
 
   ngOnInit() {
     		this.tableService.setSort(this.cols[0].key);
@@ -66,19 +70,27 @@ title: string = "Ordenes / Cosechas";
   }
 
 filter(){
-		let questionFilterName =
-			new QuestionFilterTextbox({
-                key: 'name',
-                label: 'Nombre del Proveedor',
-                value: this.filterService.filter['idInvoice']!=undefined? this.filterService.filter['idInvoice']: '',
-            });
 		
-		this.questionFilters = [questionFilterName];
+		
+		this.questionFilterDropdownsHarvest =
+			 new QuestionFilterDropdown({
+            key: 'idProvider',
+            label: 'Nombre del Cosechador:',
+            value:  this.filterService.filter['idProvider']!=undefined? this.filterService.filter['idProvider']: -1,
+            optionsKey: 'idProvider',
+            optionsValue: 'fullNameProvider'           
+        });
+       
+        this.providerService.getAllSearch(this.providerService.buildRequestOptionsFinder("fullName_Provider", "s","1")).subscribe(params => { 
+                  this.questionFilterDropdownsHarvest.options = params['result']; 
+                 }); 
+
+		this.questionFilters = [this.questionFilterDropdownsHarvest];
 
 	}
 
 	list(page?: number){
-	this.providerService.getAllSearch(this.providerService.buildRequestOptionsFinder(
+	/*this.invoiceService.getAllSearch(this.invoiceService.buildRequestOptionsFinder(
 			this.tableService.sort,
             "","",
 			this.filterService.filter,
@@ -100,10 +112,10 @@ filter(){
 				else
 				{
 					item.statusInvoice="No Activo";
-				}*/
+				} * /
       }
 		});
-		
+		*/
 	}
 
 	read(item: Invoice){

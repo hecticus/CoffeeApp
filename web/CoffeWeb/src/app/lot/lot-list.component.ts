@@ -149,7 +149,13 @@ filter(){
 			this.notificationService.delete(item.nameLot);
 			this.tableCmp.remove(item.idLot);
 			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));
-		}, err => this.notificationService.error(err));
+		}, err =>
+		{  let error = err.json();
+			if(error["error"]==409)	this.notificationService.alert(error["message"])
+			else this.notificationService.error(error["message"])
+			console.log(error)
+		}
+		);
 	}
 
 	deletes(this, ids: number[]){
@@ -157,7 +163,11 @@ filter(){
 			this.notificationService.deletes();
 			this.tableCmp.removes(ids);
 			this.list(this.tableService.refreshPageIndexAfterRemove(ids.length, this.pager));
-		}, err => this.notificationService.error(err));
+		}, err => {  let error = err.json();
+			if(error["error"]==409)	this.notificationService.alert(error["message"])
+			else this.notificationService.error(error["message"])
+			console.log(error)
+		});
 	}
 
 	confirmationDelete(item){
