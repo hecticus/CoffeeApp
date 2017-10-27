@@ -153,19 +153,66 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
     }
 
     @Override
-    public ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+    public ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties,Integer id_provider,Integer id_providertype,String startDate, String endDate)
+    {
+        ExpressionList expressionList;
+        try
+        {
 
-        ExpressionList expressionList = find.where().eq("status_delete",0);
+            SimpleDateFormat Datetemp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            if(startDate.equals(""))
+            {
+                startDate = "1970-01-01";
+            }
 
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
+            if(endDate.equals(""))
+            {
+                endDate="5000-01-01";
+            }
+            String startDateTemp = startDate.concat(" 00:00:00");
+            String endDateTemp = endDate.concat(" 23:59:59");
+           // Date startDateTemp = Datetemp.parse(startDate);
+           // Date endDateTemp = Datetemp.parse(endDate);
 
-        if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+           if(!id_provider.equals(-2))
+           {
+               //to invoices t1 provider
+              if(!id_provider.equals(-1)) expressionList = find.fetch("provider").where().eq("t0.status_delete", 0).eq("t0.id_provider",id_provider).between("t0.duedate_invoice",startDateTemp,endDateTemp);
+              else
+              { expressionList = find
+                      .fetch("provider")
+                      .where()
+                      .eq("t1.id_providertype",id_providertype)
+                      .eq("t0.status_delete",0)
+                      .between("duedate_invoice",startDateTemp,endDateTemp);
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+              }
+
+              if (pathProperties != null)
+                   expressionList.apply(pathProperties);
+
+              if (sort != null)
+                   expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+              if (pageIndex == null || pageSize == null)
+                   return new ListPagerCollection(expressionList.findList());
+
+              //to invoices t1 provider
+              int findRowCount = expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).findList().size();
+
+              return new ListPagerCollection(expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).findPagedList(pageIndex, pageSize).getList(), findRowCount, pageIndex, pageSize);
+           }
+        }
+        catch(Exception e)
+        {
+            Throwable eRoot = Response.getCause(e);
+            eRoot.printStackTrace();
+
+        }
+
+        expressionList = find.where().eq("status_delete", -2);
+        return new ListPagerCollection(expressionList.findList());
+
     }
 
     @Override

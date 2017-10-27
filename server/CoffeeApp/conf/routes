@@ -35,7 +35,7 @@ POST /provider/uploadPhotoProvider controllers.Providers.uploadPhotoProvider()
 
 
 GET     /invoice     controllers.Invoices.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /invoice/search                   controllers.Invoices.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /invoice/search                   controllers.Invoices.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null,id_provider: Integer ?= -2, idProviderType: Integer ?= 2,startDate: String ?= null,endDate: String ?= null  )
 GET     /invoice/new                      controllers.Invoices.preCreate()
 GET     /invoice/:id                      controllers.Invoices.findById(id : Long)
 GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize  controllers.Invoices.getByDateByTypeProvider(date: String, typeProvider: Integer,pageindex: Integer, pagesize: Integer)

@@ -53,8 +53,8 @@ public class Invoices
     }
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-        return invoiceManager.findAllSearch(name, pager.index, pager.size, sort, collection);
+    public Result findAllSearch(String name, Pager pager, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
+        return invoiceManager.findAllSearch(name, pager.index, pager.size, sort, collection,id_provider,id_providertype,startDate,endDate);
     }
 
     @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")

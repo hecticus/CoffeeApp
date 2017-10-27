@@ -27,7 +27,7 @@ public interface InvoiceManager {
 
     Result findAll(Integer index, Integer size, String sort, String collection);
 
-    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection);
+    Result findAllSearch(String name, Integer index, Integer size, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate);
 
     Result preCreate();
 

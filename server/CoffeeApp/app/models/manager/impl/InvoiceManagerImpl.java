@@ -237,10 +237,10 @@ public class InvoiceManagerImpl  implements InvoiceManager
     }
 
     @Override
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDao.findAllSearch( index, size, sort, pathProperties);
+            ListPagerCollection listPager = invoiceDao.findAllSearch( index, size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
