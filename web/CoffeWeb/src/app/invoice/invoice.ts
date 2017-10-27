@@ -4,5 +4,6 @@ import { CommonModule } from '@angular/common';
 export class Invoice extends BaseModel
 {
     idInvoice: number;
-    statusInvoice: number;
+    statusInvoice: string;
+    duedate_invoice:Date;
 }

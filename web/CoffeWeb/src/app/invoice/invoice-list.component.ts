@@ -14,155 +14,221 @@ import { IconTool } from '../shared/tool-ns/tool/tool-icon';
 import { Confirmation } from '../shared/confirmation-ns/confirmation-ns.service';
 import { NotificationService } from '../common/notification/notification.service';
 
+//////////////
+import {IMyDpOptions} from 'mydatepicker';
+import {IMyDateModel, IMyInputFieldChanged, IMyCalendarViewChanged, IMyInputFocusBlur, IMyMarkedDate, IMyDate, IMySelector} from 'mydatepicker';
+import {MyDatePicker}  from 'mydatepicker';
+//////////////
+
 import { ProviderService } from '../provider/provider.service';
+import { Provider } from '../provider/provider';
+import { ProviderType } from '../providerType/providerType';
+import { ProviderTypeService } from '../providerType/providerType.service';
 
 @Component({
-  	templateUrl: '../common/crud/list/list.component.html'
+  	templateUrl: 'crudInvoice/list/list.component.html'
 })
 export class InvoiceListComponent implements OnInit {
+///////////////////////////////////////////////////////////
+/** https://github.com/kekeh/mydatepicker **/
+ @ViewChild('startDatePicker') startDatePicker: MyDatePicker;
+ @ViewChild('endDatePicker') endDatePicker: MyDatePicker;
+
+    private myDatePickerNormalOptions: IMyDpOptions = {
+        todayBtnTxt: 'Hoy',
+		firstDayOfWeek: 'do',
+        dateFormat: 'yyyy-mm-dd',
+        height: '34px',
+        width: '210px',
+        monthSelector: true,
+        yearSelector: true,
+        minYear: 1970,
+        maxYear: 2900,
+        showClearDateBtn: true,
+        showDecreaseDateBtn: true,
+        showIncreaseDateBtn: true,
+        monthLabels: {
+            1: 'Enero',
+            2: 'Febrero',
+            3: 'Marzo',
+            4: 'Abril',
+            5: 'Mayo',
+            6: 'Junio',
+            7: 'Julio',
+            8: 'Agosto',
+            9: 'Septiembre',
+            10: 'Octubre',
+            11: 'Noviembre',
+            12: 'Diciembre'
+        }
+    };
+    private startDateValue:string = '';
+	 private endDateValue:string = '';
+
+    private rangeDate: string = 'Seleccione rango de fecha';
+	private startDate: string = 'Fecha de Inicio';
+	private endDate: string = 'Fecha de Fin';
+    private disabled: boolean = false;
+	private aux: boolean = false;
+	private idProviderType: number= -2;
+
+///////////////////////////////////////////////////////////
 
 title: string = "Ordenes / Cosechas";
 	@ViewChild('tableCmp') tableCmp;
 	items: Invoice[];
 	cols: TableColumn[] = [
-		new TableColumn({name:"Nombre", key: "idProvider", proportion: 1}),
-		new TableColumn({name:"Status", key: "statusProvider", proportion: 1})
-	];
-	actions = [
-		{
-			html: (item) => 'update',
-			click: (item) => this.update(item)
-		},{
-			html: (item) => 'delete',
-			click: (item) => this.confirmationDelete(item)
-		},
-	];
-	tools: ToolBase<any>[] = [
-		new IconTool({
-	        title: "create",
-	        icon: "create",
-	        clicked: this.create.bind(this)
-		}),
-		new IconTool({
-	        title: "delete",
-	        icon: "delete",
-	        clicked: this.confirmationDeletes.bind(this)
-		})
+		new TableColumn({name:"Proveedor", key: "provider.fullNameProvider", proportion: 1}),
+		new TableColumn({name:"Fecha de la orden", key: "startDateInvoice", proportion: 1}),
+		new TableColumn({name:"Estatus de la Orden", key: "statusInvoice", proportion: 1})
 	];
 	confirmation: Confirmation = {hiddenClose: true};
 	pager: any;
 	questionFilters: QuestionFilterBase<any>[] = [];
-	questionFilterDropdownsHarvest: QuestionFilterDropdown;
+	questionFilterDropdownsProvider: QuestionFilterDropdown;
+	questionFilterDropdownsProviderType: QuestionFilterDropdown;
+
 
   constructor(	
-    private router: Router,
+	    private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private invoiceService: InvoiceService,
 		private tableService: TableService,
 		private filterService: FilterService,
 		private notificationService:NotificationService,
-		private providerService: ProviderService) {}
+		private providerService: ProviderService,
+		private providerTypeService:ProviderTypeService) {}
 
   ngOnInit() {
-    		this.tableService.setSort(this.cols[0].key);
-			this.filter();
-			this.list(this.tableService.pager.pageIndex);
-  }
+   	this.tableService.setSort("-"+this.cols[1].key);
+	this.filter();
+	this.list(this.tableService.pager.pageIndex);
+   }
 
+  ///////////////////////////////////////////////////
+    onDateChanged(event: IMyDateModel) {
+		this.startDateValue = event.formatted;
+    }
+
+	onEndDateChanged(event: IMyDateModel) {
+		this.endDateValue = event.formatted;
+    }
+
+    onInputFieldChanged(event: IMyInputFieldChanged) {
+        //console.log('onInputFieldChanged(): Value: ', event.value, ' - dateFormat: ', event.dateFormat, ' - valid: ', event.valid);
+    }
+
+    onCalendarViewChanged(event: IMyCalendarViewChanged) {
+        //console.log('onCalendarViewChanged(): Year: ', event.year, ' - month: ', event.month, ' - first: ', event.first, ' - last: ', event.last);
+    }
+
+    onCalendarToggle(event: number): void {
+        //console.log('onCalendarToggle(): Value: ', event);
+    }
+
+    onInputFocusBlur(event: IMyInputFocusBlur): void {
+        //console.log('onInputFocusBlur(): Reason: ', event. reason, ' - Value: ', event.value);
+    }
+
+    getCopyOfOptions(): IMyDpOptions {
+        return JSON.parse(JSON.stringify(this.myDatePickerNormalOptions));
+    }
+  ///////////////////////////////////////////////////
+ 
 filter(){
-		
-		
-		this.questionFilterDropdownsHarvest =
+	this.questionFilterDropdownsProvider =
 			 new QuestionFilterDropdown({
-            key: 'idProvider',
-            label: 'Nombre del Cosechador:',
-            value:  this.filterService.filter['idProvider']!=undefined? this.filterService.filter['idProvider']: -1,
+            key: 'id_provider',
+            label: 'Nombre del Proveedor:',
+            value:  this.filterService.filter['id_provider']!=undefined? this.filterService.filter['id_provider']: -2,
             optionsKey: 'idProvider',
-            optionsValue: 'fullNameProvider'           
-        });
-       
-        this.providerService.getAllSearch(this.providerService.buildRequestOptionsFinder("fullName_Provider", "s","1")).subscribe(params => { 
-                  this.questionFilterDropdownsHarvest.options = params['result']; 
-                 }); 
+            optionsValue: 'fullNameProvider'
+    });
 
-		this.questionFilters = [this.questionFilterDropdownsHarvest];
+	this.providerTypeService.getAll(this.providerTypeService.buildRequestOptionsFinder("name_provider_type", "s")).subscribe(params => { 
+               this.questionFilterDropdownsProviderType.options = params['result']; 
+		});
+	this.questionFilterDropdownsProviderType  =
+			new QuestionFilterDropdown({
+                key: 'idProviderType',
+                label: 'Tipo del proveedor:',
+                value: this.filterService.filter['idProviderType']!=undefined? this.filterService.filter['idProviderType']: -1,
+                optionsKey: 'idProviderType',
+                optionsValue: 'nameProviderType',
+				changed: this.changeProviderType.bind(this)
+           });
+    
+	this.questionFilters = [this.questionFilterDropdownsProviderType, this.questionFilterDropdownsProvider];
 
 	}
 
-	list(page?: number){
-	/*this.invoiceService.getAllSearch(this.invoiceService.buildRequestOptionsFinder(
+	changeProviderType(idProviderType: number)
+	{
+		this.filterService.changeFilter('idProviderType', idProviderType);
+		delete this.filterService.filter['name_provider_type'];
+		this.idProviderType = idProviderType;
+
+		this.filter();
+		var obj = JSON.parse('{ "idProvider":"-1", "fullNameProvider":" Buscar Todos"}');
+        this.providerService.getAllSearch(this.providerService.buildRequestOptionsFinder("-fullName_Provider", "s","1",{"idProviderType":this.idProviderType+""})).subscribe(params => { 
+		this.questionFilterDropdownsProvider.options = params['result'];
+		this.questionFilterDropdownsProvider.options.push(obj);
+		obj = this.questionFilterDropdownsProvider.options.reverse();
+				
+    }); 
+	}
+
+
+	list(page?: number)
+	{
+	
+	//console.log("---------->"+this.filterService.filter['id_provider']+"<----------");
+	if(!this.aux && this.filterService.filter['id_provider']!=-1)
+	{
+		this.aux=true;
+		this.filterService.filter['id_provider']=-2;
+		
+	}
+	else
+	{
+		if(this.filterService.filter['id_provider']==undefined) this.filterService.filter['id_provider']=-1;
+	}
+	//console.log("---------->"+this.filterService.filter['id_provider']+"<----------");
+	this.filterService.filter["startDate"] = this.startDateValue;
+	this.filterService.filter["endDate"]=this.endDateValue;
+		
+		this.invoiceService.getAllSearch(this.invoiceService.buildRequestOptionsFinder(
 			this.tableService.sort,
-            "","",
+			undefined,
+			"-1",
 			this.filterService.filter,
-			{pageIndex: page, pageSize: this.tableService.pager.pageSize}
+			{pageIndex: page, pageSize: this.tableService.pager.pageSize},
 		)).subscribe(params => {
 			this.items = params['result'];
 			this.pager = params['pager'];
 			this.tableService.pager.pageIndex = page;
 			this.tableCmp.deselectAll();
 
-			console.log(this.items);
+			//console.log(params['result']);
+
 			for(let item of this.items)
 			{
 				item.id=item.idInvoice;
-			/*	if(item.statusInvoice == '1')
+				if(item.statusInvoice == '1')
 				{
-					item.statusInvoice="Activo";
+					item.statusInvoice="Abierta";
 				}
 				else
 				{
-					item.statusInvoice="No Activo";
-				} * /
-      }
+					item.statusInvoice="Cerrada";
+				}
+		}
 		});
-		*/
+		
 	}
 
 	read(item: Invoice){
 		this.router.navigate(['./' + item.idInvoice], {relativeTo: this.activatedRoute});
-	}
-
-	create(){
-		this.router.navigate(["./create"], {relativeTo: this.activatedRoute});
-	}
-
-	update(item: Invoice){
-		this.router.navigate(['./' + item.idInvoice + '/update'], {relativeTo: this.activatedRoute})
-	}
-
-	delete(this, item: Invoice){
-
-		this.providerService.delete(item.idInvoice).subscribe(any =>  {
-			this.notificationService.delete(item.idInvoice);
-			this.tableCmp.remove(item.idInvoice);
-			this.list(this.tableService.refreshPageIndexAfterRemove(1, this.pager));
-		}, err => this.notificationService.error(err));
-	}
-
-	deletes(this, ids: number[]){
-		this.providerService.deletes({'ids': ids}).subscribe(any =>  {
-			this.notificationService.deletes();
-			this.tableCmp.removes(ids);
-			this.list(this.tableService.refreshPageIndexAfterRemove(ids.length, this.pager));
-		}, err => this.notificationService.error(err));
-	}
-
-	confirmationDelete(item){
-		this.confirmation = {
-			message: "¿Está seguro que desea eliminar el item seleccionado?",
-			yesClicked: this.delete.bind(this, item),
-			hiddenClose: false
-		};
-	}
-
-	confirmationDeletes(){
-		let ids: number[] = this.tableService.getSelectKeys();
-		if(ids.length > 0)
-			this.confirmation = {
-				message: "¿Está seguro que desea eliminar los items seleccionados?",
-				yesClicked: this.deletes.bind(this, ids),
-				hiddenClose: false
-			};
 	}
 
 }

@@ -8,12 +8,20 @@ import { homeRouting } from '../home/home.routes';
 
 import { InvoiceService } from './invoice.service';
 
+//-drocha-
+import { MyDatePickerModule } from 'mydatepicker';
+import { BrowserModule } from '@angular/platform-browser';
+//-drocha-
 
 @NgModule({
     imports: [
     CommonModule,
     homeRouting,
-    SharedModule
+    SharedModule,
+  //-drocha-
+   MyDatePickerModule,
+   BrowserModule
+  //-drocha-
   ],
   declarations: [
     InvoiceComponent,
