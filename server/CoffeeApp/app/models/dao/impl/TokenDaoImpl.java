@@ -25,4 +25,11 @@ public class TokenDaoImpl  extends AbstractDaoImpl<Long, Token> implements Token
             return tokens.get(0);
         return null;
     }
+
+
+    @Override
+    public  void deletedByToken(String token)
+    {
+         this.delete(this.findByToken(token).getIdToken());
+    }
 }

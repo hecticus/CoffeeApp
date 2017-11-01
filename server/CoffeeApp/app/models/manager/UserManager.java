@@ -16,6 +16,8 @@ public interface UserManager {
 
     Result login(Configuration config);
 
+    Result logout();
+
     Result authorize(Configuration config, String path);
 
     Result verify(Configuration config);

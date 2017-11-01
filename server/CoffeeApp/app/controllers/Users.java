@@ -42,4 +42,6 @@ public class Users extends Controller {
     public Result startResetPassword(String email){  return userManager.startResetPassword(email,this.mailerClient, this.configuration);  }
 
     public Result handleStartResetPassword(){  return userManager.handleStartResetPassword();  }
+
+    public Result  logout(){  return userManager.logout(); }
 }

@@ -7,4 +7,5 @@ import models.domain.Token;
 public interface TokenDao extends AbstractDao<Long, Token> {
 
     public Token findByToken(String token);
+    public void deletedByToken(String token);
 }

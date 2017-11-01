@@ -6,7 +6,9 @@ import com.hecticus.auth.AuthJWT;
 import com.hecticus.utils.basic.Notify;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
+import models.dao.TokenDao;
 import models.dao.UserDao;
+import models.dao.impl.TokenDaoImpl;
 import models.dao.impl.UserDaoImpl;
 import models.domain.Token;
 import models.domain.User;
@@ -33,6 +35,7 @@ import models.domain.Config;
 public class UserManagerImpl implements UserManager {
 
     private static UserDao userDao = new UserDaoImpl();
+    private static TokenDao tokenDao = new TokenDaoImpl();
     private static RoleManager roleDao = new RoleManagerImpl();
 
     private String secret_key = "";
@@ -71,6 +74,22 @@ public class UserManagerImpl implements UserManager {
         }
     }
 
+    @Override
+    public Result logout()
+    {
+        try
+        {
+             String token = request().getHeader("Authorization");
+            if(token!=null)  tokenDao.deletedByToken(token);
+            else return Response.message("pagina DE LOGIN CARGADA"); //cuanoo carga la pagina DE LOGIN
+        }
+        catch (Exception e)
+        {
+            return Response.internalServerErrorLF();
+        }
+
+        return Response.message("OK");
+    }
 
     @Override
     public Result login(Configuration config) {
@@ -114,6 +133,10 @@ public class UserManagerImpl implements UserManager {
                         return Response.messagebadRequest("Ha alcanzado el Maximo de conexiones",935);
                     }
                     tokens.add(0,token);
+                    /*
+                    * FALTA LA PARTE DE QUE EL USUARIO DECIDA CERRAR LA SESSION  MENOS USADA (FIFO)
+                    * SOBRE tokens
+                    * */
                     USER.setToken(token.getToken());
                     USER.setTokens(tokens);
                     userDao.update(USER);
