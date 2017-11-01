@@ -199,6 +199,16 @@ create table stores (
   constraint pk_stores primary key (id_store)
 );
 
+create table tokens (
+  id_token                      bigint auto_increment not null,
+  status_delete                 integer not null,
+  token                         varchar(500),
+  id_user                       bigint not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  constraint pk_tokens primary key (id_token)
+);
+
 create table units (
   id_unit                       bigint auto_increment not null,
   status_delete                 integer not null,
@@ -220,7 +230,6 @@ create table user (
   email_validated               smallint,
   archived                      tinyint default 0 not null,
   last_login                    datetime,
-  token                         varchar(500),
   role_id_role                  bigint,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
@@ -276,6 +285,9 @@ create index ix_tag_role_tag on tag_role (tag_id_security_tag);
 alter table tag_role add constraint fk_tag_role_role foreign key (role_id_role) references role (id_role) on delete restrict on update restrict;
 create index ix_tag_role_role on tag_role (role_id_role);
 
+alter table tokens add constraint fk_tokens_id_user foreign key (id_user) references user (id_user) on delete restrict on update restrict;
+create index ix_tokens_id_user on tokens (id_user);
+
 alter table user add constraint fk_user_role_id_role foreign key (role_id_role) references role (id_role) on delete restrict on update restrict;
 create index ix_user_role_id_role on user (role_id_role);
 
@@ -330,6 +342,9 @@ drop index ix_tag_role_tag on tag_role;
 alter table tag_role drop foreign key fk_tag_role_role;
 drop index ix_tag_role_role on tag_role;
 
+alter table tokens drop foreign key fk_tokens_id_user;
+drop index ix_tokens_id_user on tokens;
+
 alter table user drop foreign key fk_user_role_id_role;
 drop index ix_user_role_id_role on user;
 
@@ -366,6 +381,8 @@ drop table if exists tag_role;
 drop table if exists status;
 
 drop table if exists stores;
+
+drop table if exists tokens;
 
 drop table if exists units;
 

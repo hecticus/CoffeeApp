@@ -1,7 +1,9 @@
 package models.dao.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.dao.TokenDao;
 import models.dao.UserDao;
+import models.domain.Token;
 import models.domain.User;
 import models.manager.multimediaUtils.Multimedia;
 
@@ -15,6 +17,7 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
     public UserDaoImpl() {
         super(User.class);
     }
+    private static TokenDao tokenDao = new TokenDaoImpl();
 
     @Override
     public User findByEmail(String email){
@@ -42,13 +45,19 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
 
     @Override
     public User findByToken(String token){
+
+       Token tokenaux = tokenDao.findByToken(token);
+       return tokenaux.getUser();
+
+        /*
         List<User> users = find
                 .where()
-                .eq("token", token)
+                .eq("id_user", token)
                 .findList(); //por que no findunique?
         if(!users.isEmpty())
             return users.get(0);
         return null;
+        */
     }
 
     public User findUniqueByEmail(String email){

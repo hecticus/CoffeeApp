@@ -221,6 +221,14 @@ public class Response {
         return badRequest (response);
     }
 
+    public static Result messagebadRequest(String msg, int error){
+
+        ObjectNode response = Json.newObject();
+        response.put("message", msg);
+        response.put("error", error);
+        return badRequest (response);
+    }
+
 
     public static Result message(String msg){
         return ok(buildExtendResponse(msg));

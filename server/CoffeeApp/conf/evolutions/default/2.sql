@@ -10,9 +10,15 @@ INSERT INTO `route_tag` VALUES (1,1),(1,2),(2,2),(3,2),(3,3),(4,2),(4,4),(5,2),(
 
 INSERT INTO `tag_role` VALUES (2,1),(3,2),(4,3);
 
-INSERT INTO `config` VALUES (1,'SecurityEnabled','Enabled',NULL),(2,'Content-Type','application/json',NULL),(3,'method','POST',NULL),(4,'cdn-container','test01',''),(5,'cdn-parent','example',NULL),(6,'Url-WS-Rackspace','http://10.0.3.4:9000/media/create','url del servicio que sube la imagen al rackspace');
+INSERT INTO `config` VALUES (1,'SecurityEnabled','Enabled',NULL),(2,'Content-Type','application/json',NULL),(3,'method','POST',NULL),(4,'cdn-container','test01',''),(5,'cdn-parent','example',NULL),(6,'Url-WS-Rackspace','http://10.0.3.4:9000/media/create','url del servicio que sube la imagen al rackspace'),(7,'nameCompany','Cafe de Eleta, S.A',NULL),(8,'invoiceDescription','Recibo Diario de Cafe',NULL),(9,'invoiceType','Cosecha Propia',NULL),(10,'RUC','R.U.C 1727-188-34109 D.V. 69',NULL),(11,'telephonoCompany','6679-4752',NULL);
 
-INSERT INTO `user` VALUES (1,0,'Yenny1','123456','Yenny1','Fung1','darwinrocha@usb.ve',1,0,'2017-05-22 23:33:52',NULL,1,'2017-05-22 00:00:00','2017-06-05 16:10:22'),(2,0,'drocha','123456','darwin','Rocha','darwin.rocha@hecticus.com',1,0,'2017-05-22 23:33:52','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6ImRhcndpbi5yb2NoYUBoZWN0aWN1cy5jb20iLCJqdGkiOiIyIiwiaWF0IjoxNTA2NjMzNjkwLCJzdWIiOiJsb2dpbi8iLCJpc3MiOiJodHRwczovL2Rldi5jb2ZmZWUuaGVjdGljdXMuY29tLyMifQ.DQlSixZmO4VS-KjPK-OC_PUSXQnPSGDJqN4sq6ylDAUg0QRCA8Os3AzSlerK2s-r6r9U9tsbADQwjmFS_Pt7Hg',2,'2017-05-22 23:34:26','2017-09-28 17:21:30'),(3,0,'Andres','123456','Andres','Corra','darwinrocha85@gmail.com',1,0,'2017-05-22 23:33:52',NULL,3,'2017-05-23 16:18:49','2017-05-23 20:23:00'),(4,0,'Marwin','1234','Andres','Campo','marwin@hecticus.com',1,0,'2017-05-22 23:33:52','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6Im1hcndpbkBoZWN0aWN1cy5jb20iLCJqdGkiOiI0IiwiaWF0IjoxNTA2MDE4OTEyLCJzdWIiOiJsb2dpbi8iLCJpc3MiOiJodHRwczovL2Rldi5jb2ZmZWUuaGVjdGljdXMuY29tLyMifQ.D5ejd07aS1U78ltcnRCyhzTbpCZy-toHkRv0IkZmwCF4RH_drz5A63BtUXOa-_y-FgOpRHydExGUuTwXlH3Upw',1,'2017-05-23 20:21:56','2017-09-21 14:35:12'),(5,0,'Edwin','123456','Edwin','de respuesto','edwinderepuesto@gmail.com',1,0,NULL,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6ImVkd2luZGVyZXB1ZXN0b0BnbWFpbC5jb20iLCJqdGkiOiI1IiwiaWF0IjoxNTA2MTc2MTkxLCJzdWIiOiJsb2dpbi8iLCJpc3MiOiJodHRwczovL2Rldi5jb2ZmZWUuaGVjdGljdXMuY29tLyMifQ.POK3CtdZOrDBv5cezwBjoSJxE5eiFpmEn7MEwJO0onZWQkie-xlrMhiD2sUG-3OgZS--PKrL0jFTaON9tjkULg',2,'2017-09-14 14:01:29','2017-09-23 10:16:31');
-
-
+INSERT INTO `user` VALUES
+(1,0,'Yenny1','123456','Yenny1','Fung1','darwinrocha@usb.ve',1,0,'2017-05-22 23:33:52',1,'2017-05-22 00:00:00','2017-10-17 14:34:21'),
+(2,0,'drocha','258963','darwin','Rocha','darwin.rocha@hecticus.com',1,0,'2017-05-22 23:33:52',2,'2017-05-22 23:34:26','2017-10-27 17:45:45'),
+(3,0,'Andres','123456','Andres','Corra','darwinrocha85@gmail.com',1,0,'2017-05-22 23:33:52',3,'2017-05-23 16:18:49','2017-05-23 20:23:00'),
+(4,0,'Marwin','1234','Andres','Campo','marwin@hecticus.com',1,0,'2017-05-22 23:33:52',2,'2017-05-23 20:21:56','2017-10-18 14:37:40'),
+(5,0,'Edwin','123456','Edwin','de respuesto','edwinderepuesto@gmail.com',1,0,NULL,2,'2017-09-14 14:01:29','2017-10-31 10:40:27'),
+(6,0,'Alejandro','12345','Alejandro ','Carvallo','alejandro@hecticus.com',1,0,NULL,2,'2017-10-11 14:49:24','2017-10-13 10:24:20'),
+(7,0,'Max','12345','Orlando','Carvallo','orlando@hecticus.com',1,0,NULL,2,'2017-10-11 14:50:07','2017-10-11 12:56:44'),
+(9,0,'joha','johanna','Johanna','Chan','johanna.chan@hecticus.com',1,0,NULL,2,'2017-10-19 19:56:03','2017-10-19 17:19:32');
 

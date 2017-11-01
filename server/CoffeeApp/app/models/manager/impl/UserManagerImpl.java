@@ -8,6 +8,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import models.dao.UserDao;
 import models.dao.impl.UserDaoImpl;
+import models.domain.Token;
 import models.domain.User;
 import models.manager.RoleManager;
 import models.manager.UserManager;
@@ -18,12 +19,13 @@ import play.Configuration;
 import play.libs.Json;
 import play.libs.mailer.MailerClient;
 import play.mvc.Result;
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static play.mvc.Controller.request;
 import static play.mvc.Results.*;
+import models.domain.Config;
 
 /**
  * Created by yenny on 10/3/16.
@@ -88,6 +90,11 @@ public class UserManagerImpl implements UserManager {
 
             User USER = userDao.findByEmail(user.textValue());
 
+            Token token = new Token();
+
+            List<Token> tokens;
+
+
             if (USER != null) {
                 if (user.textValue().equals(USER.getEmail()) && pass.textValue().equals(USER.getPassword())) {
 
@@ -99,8 +106,16 @@ public class UserManagerImpl implements UserManager {
                     AuthJWT aut = new AuthJWT(this.secret_key);
                     String jwt = aut.createJWT(USER.getIdUser().toString(), app_server, "login/", -1, hmap);
 
-
-                    USER.setToken(jwt);
+                    token.setUser(USER);
+                    token.setToken(jwt);
+                    tokens = USER.getTokens();
+                    if(tokens.size() >= Integer.parseInt(Config.getString("MaxConnectionsAllowed")))
+                    {
+                        return Response.messagebadRequest("Ha alcanzado el Maximo de conexiones",935);
+                    }
+                    tokens.add(0,token);
+                    USER.setToken(token.getToken());
+                    USER.setTokens(tokens);
                     userDao.update(USER);
 
                     return ok(Response.buildExtendResponse("", JsonUtils.toJson(USER, User.class)))
@@ -111,9 +126,9 @@ public class UserManagerImpl implements UserManager {
                             .withHeader("Access-Control-Allow-Origin", "*");
 
                 } else {
-                    return badRequest(Response.buildExtendResponse("Check your username/password", null));
+                    return Response.messagebadRequest("Check your username/password",400);
                 }
-            } else return badRequest(Response.buildExtendResponse("Check your username/password",null));
+            } else return Response.messagebadRequest("Check your username/password",400);
 
 
         } catch (Exception e) {

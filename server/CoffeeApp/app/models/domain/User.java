@@ -1,8 +1,10 @@
 package models.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -73,9 +75,11 @@ public class User extends AbstractEntity {
     protected DateTime lastLogin;
 
 
-    @Constraints.MaxLength(500)
-    @Column(nullable = true, length = 500)
-    protected String token;
+    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL)
+    private List<Token> tokens = new ArrayList<>();
+
+    @Transient
+    private String token;
 
     @Constraints.Required
     @ManyToOne
@@ -146,12 +150,13 @@ public class User extends AbstractEntity {
         this.lastLogin = lastLogin;
     }
 
-    public String getToken() {
-        return token;
+    @JsonIgnore
+    public List<Token> getTokens() {
+        return tokens;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
     }
 
     public Role getRole() {
@@ -168,5 +173,14 @@ public class User extends AbstractEntity {
 
     public void setIdUser(Long idUser) {
         this.idUser = idUser;
+    }
+
+    @Transient
+    public String getToken() {
+        return token;
+    }
+    @Transient
+    public void setToken(String token) {
+        this.token = token;
     }
 }
