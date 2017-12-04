@@ -14,6 +14,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.CONFLICT;
 import static play.mvc.Results.*;
 
 import org.modelmapper.ModelMapper;
@@ -202,7 +204,7 @@ public class Response {
         ObjectNode response = Json.newObject();
         response.put("message", "registered ["+msg+"]");
         response.put("error", 409);
-         return badRequest (response);
+        return status(CONFLICT, response);
     }
 
     public static Result messageExistDeleted(String msg){
@@ -210,7 +212,7 @@ public class Response {
         ObjectNode response = Json.newObject();
         response.put("message", "registered and no active ["+msg+"]");
         response.put("error", 409);
-        return badRequest (response);
+        return status(CONFLICT, response);
     }
 
     public static Result messageNotDeleted(String msg){
@@ -218,7 +220,7 @@ public class Response {
         ObjectNode response = Json.newObject();
         response.put("message", msg);
         response.put("error", 409);
-        return badRequest (response);
+        return status(CONFLICT, response);
     }
 
     public static Result messagebadRequest(String msg, int error){
