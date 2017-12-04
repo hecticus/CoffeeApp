@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.CONFLICT;
+import static play.mvc.Http.Status.PRECONDITION_FAILED;
 import static play.mvc.Results.*;
 
 import org.modelmapper.ModelMapper;
@@ -120,7 +121,7 @@ public class Response {
         ObjectNode response = Json.newObject();
         response.put("message", "Missing parameter [" + parameter + "]");
         response.put("error", 412);
-        return badRequest (response);
+        return status(PRECONDITION_FAILED, response);
     }
 
     public static Result requiredParameter(String parameter,String description){
@@ -129,7 +130,7 @@ public class Response {
         response.put("message", "Missing parameter [" + parameter + "]");
         response.put("error", 412);
         response.put("errorDescription","el parametro: "+description+", es obligatorio");
-        return badRequest (response);
+        return status(PRECONDITION_FAILED, response);
     }
 
     public static Result invalidParameter(String parameter){
@@ -205,6 +206,7 @@ public class Response {
         response.put("message", "registered ["+msg+"]");
         response.put("error", 409);
         return status(CONFLICT, response);
+
     }
 
     public static Result messageExistDeleted(String msg){
