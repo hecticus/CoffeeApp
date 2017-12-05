@@ -23,9 +23,17 @@ ul li{
 }
 
 
+#side-nav > nav > side-nav-item > ul > li > div > a {font-size:large; color:#FFFFFF;text-align:center}
 
-/* 
-	text-overflow	
+side-nav{
+  width: 200px;
+  height: 100%;
+  border-right: 1px solid #e0e0e0;
+}
+
+
+/*
+	text-overflow
 */
 .ellipsis {
 	text-overflow: ellipsis;
@@ -44,15 +52,14 @@ ul li{
 	overflow: hidden !important;
 }
 
-
-
-/* 
+/*
 	flex
 */
 .row{
 	display: flex;
 	flex-direction: row;
 }
+
 .col-1{
 	flex: 1;
 }
@@ -100,8 +107,8 @@ ul li{
 
 
 
-/* 
-	contextmenu	
+/*
+	contextmenu
 */
 .angular2-contextmenu .dropdown-menu {
 	background-color: #fff;
@@ -125,8 +132,8 @@ ul li{
 			transition: all .1s linear;
 }
 .angular2-contextmenu a:hover {
-	color: #333;
-	background-color: #f3f3f3;
+	color: red;
+	background-color: orange;
 }
 
 
@@ -138,3 +145,6 @@ ul li{
 	width: 100%;
 }
 
+.container{
+  margin-left: 0px;
+}

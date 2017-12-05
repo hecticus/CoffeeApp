@@ -1,7 +1,8 @@
 .container {
   display: flex;
-  justify-content: center;  
+  justify-content: right;
 }
+
 .pagination {
   display: inline-block;
   padding-left: 0;

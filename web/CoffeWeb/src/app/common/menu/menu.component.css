@@ -2,19 +2,20 @@
 	width: 250px;
 	height: 100%;
 	border-right: 1px solid #e0e0e0;
+  background-color: #1A1919;
 }
 	#side-nav header{
 		height: 64px;
 		border-bottom: 1px solid #e0e0e0;
-		position: relative;  
+		position: relative;
 	}
 		#side-nav header #logo{
 		/*	height: 46px;*/
-			position: absolute;  
-		    top: 0;  
-		    bottom: 0;  
-		    left: 0;  
-		    right: 0;  
+			position: absolute;
+		    top: 0;
+		    bottom: 0;
+		    left: 0;
+		    right: 0;
 		    margin: auto;
 		    cursor: pointer;
 		}
@@ -22,7 +23,9 @@
 		padding: 12px 0 10px;
 	}
 
-
+body > auth-app > div > auth-app > div > login > div.container{
+  
+}
 
 
 
@@ -53,10 +56,10 @@ ul li{
 	   	height: 50px;
 	}
 ul li:hover{
-	background-color: #f2f2f2;
+	background-color: #000000;
 }
 	ul li a:hover{
-		color: #0099cc;		
+		color: #0099cc;
 	}
 ul li.with-sub-menu ul{
 	display: none;
@@ -92,11 +95,11 @@ ul li.with-sub-menu.expanded ul{
 
 
 
-/* 
+/*
 	grid
 */
 .row{
-	display: flex;
-	flex-direction: row;
+
+  margin-left: 1px;
 }
 
