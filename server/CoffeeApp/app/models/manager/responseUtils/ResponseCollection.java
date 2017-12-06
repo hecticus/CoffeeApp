@@ -148,11 +148,11 @@ public class ResponseCollection {
     * conflict 409
     */
     public static Result uniqueViolation(String parameter){
-        return status(409, buildExtendResponse("No unique parameter [" + parameter + "]"));
+        return status(CONFLICT, buildExtendResponse("No unique parameter [" + parameter + "]"));
     }
 
     public static Result constraintViolation(MySQLIntegrityConstraintViolationException e){
-        return status(409, buildExtendResponse("Violation constrain: " + e.getMessage()));
+        return status(CONFLICT, buildExtendResponse("Violation constrain: " + e.getMessage()));
     }
 
     /*

@@ -169,11 +169,11 @@ public class Response {
     }
 
     public static Result uniqueViolation(String parameter){
-        return badRequest(buildExtendResponse("No unique parameter [" + parameter + "]"));
+        return status(CONFLICT,buildExtendResponse("No unique parameter [" + parameter + "]"));
     }
 
     public static Result constraintViolation(MySQLIntegrityConstraintViolationException e){
-        return badRequest(buildExtendResponse(e.getMessage()));
+        return status(CONFLICT, buildExtendResponse(e.getMessage()));
     }
 
     /*
