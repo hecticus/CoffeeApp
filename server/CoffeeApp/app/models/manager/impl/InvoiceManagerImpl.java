@@ -275,14 +275,17 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(json == null)
             return Response.requiredJson();
 
-        Long idProvider = json.get("idProvider").asLong();
-        if (idProvider == null) {
+        JsonNode idprovider = json.get("idProvider");
+        Long idProvider;
+        if (idprovider == null) {
             JsonNode identificationDocProvider = json.get("identificationDocProvider");
             if(identificationDocProvider == null){
                 return Response.requiredParameter("identificationDocProvider or idProvider");
             }else{
                 idProvider = providerDao.getByIdentificationDoc(identificationDocProvider.asText()).getIdProvider();
             }
+        }else{
+            idProvider = idprovider.asLong();
         }
         JsonNode itemtypes = json.get("itemtypes");
         if (itemtypes == null)
