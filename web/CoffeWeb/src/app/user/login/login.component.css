@@ -1,21 +1,30 @@
 .container {
     position: absolute;
-    top: 45%;
-    left: 45%;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    background-image: url("/assets/images/bg_01.png") !important;
 }
 
-.form-control {    
+.form-control {
+
     width: 150%;
     height: 34px;
     border: 1px solid #ccc;
     padding: 6px 12px;
 }
 
-.form-controlModal {    
+#form{
+  top:45%;
+  position: absolute;
+}
+
+.form-controlModal {
     width: 100%;
     height: 34px;
     border: 1px solid #ccc;
@@ -38,11 +47,11 @@
 }
 
 /deep/ .form-group > bt-text button {
-    background-color: #003377;  
+    background-color: #003377;
 }
 
 /deep/ .form-group > bt-text .text {
-    color: #fff; 
+    color: #fff;
 }
 
 /deep/ .form-group > bt-text button:hover {
@@ -54,8 +63,46 @@
     color: #0099cc;
     text-decoration: underline;
 }
+.form-actions{
+  width:100%;
+  text-align: center;
+}
 
 .help-block {
     font-size: 12px;
     color: #fb5f5f;
+}
+
+#logo{
+  top: 10% !important;
+  width: 300px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: absolute;
+}
+
+.button{
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
+  width: 150px;
+}
+
+#email{
+  width: 320px;
+}
+
+#password{
+  width: 320px;
+}
+
+.imagen{
+  width: 150px;
+}
+.inner
+{
+  display: inline-block;
 }
