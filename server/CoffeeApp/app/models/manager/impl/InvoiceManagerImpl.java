@@ -6,6 +6,7 @@ import models.dao.*;
 import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
 import models.domain.*;
+import models.manager.ProviderManager;
 import models.manager.responseUtils.*;
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -274,10 +275,15 @@ public class InvoiceManagerImpl  implements InvoiceManager
         if(json == null)
             return Response.requiredJson();
 
-        JsonNode idProvider = json.get("idProvider");
-        if (idProvider == null)
-            return Response.requiredParameter("idProvider");
-
+        Long idProvider = json.get("idProvider").asLong();
+        if (idProvider == null) {
+            JsonNode identificationDocProvider = json.get("identificationDocProvider");
+            if(identificationDocProvider == null){
+                return Response.requiredParameter("identificationDocProvider or idProvider");
+            }else{
+                idProvider = providerDao.getByIdentificationDoc(identificationDocProvider.asText()).getIdProvider();
+            }
+        }
         JsonNode itemtypes = json.get("itemtypes");
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
@@ -379,7 +385,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
 
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
-            List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider.asLong());
+            List<Invoice> invoices = invoiceDao.getOpenByProviderId(idProvider);
 
             if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd").equals(startDatetime.toString("yyyy-MM-dd"))) {
                 openInvoice = invoices.get(0);
@@ -387,7 +393,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 openInvoice = new Invoice();
                 openInvoice.setStartDateInvoice(startDatetime);
                 openInvoice.setClosedDateInvoice(startDatetime);
-                openInvoice.setProvider(providerDao.findById(idProvider.asLong()));
+                openInvoice.setProvider(providerDao.findById(idProvider));
             }
 
 
