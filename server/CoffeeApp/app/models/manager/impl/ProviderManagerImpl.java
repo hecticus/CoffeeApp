@@ -397,9 +397,23 @@ public class ProviderManagerImpl implements ProviderManager
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("idProvider");
-            if (id == null)
-                return Response.requiredParameter("idProvider");
+            JsonNode idprovider = json.get("idProvider");
+            Long idProvider;
+            if (idprovider == null) {
+                JsonNode identificationDocProvider = json.get("identificationDocProvider");
+                if(identificationDocProvider == null){
+                    return Response.requiredParameter("identificationDocProvider or idProvider");
+                }else{
+                    Provider testp = providerDao.getByIdentificationDoc(identificationDocProvider.asText());
+                    if(testp != null){
+                        idProvider = testp.getIdProvider();
+                    }else{
+                        return Response.requiredParameter("identificationDocProvider invalid");
+                    }
+                }
+            }else{
+                idProvider = idprovider.asLong();
+            }
 
             JsonNode base64Photo_json = json.get("photoProvider");
             if (base64Photo_json == null)
@@ -418,7 +432,7 @@ public class ProviderManagerImpl implements ProviderManager
                 url = providerDao.uploadPhoto(base64Photo,"png");
             }
 
-            Provider provider = providerDao.findById(id.asLong());
+            Provider provider = providerDao.findById(idProvider);
 
             provider.setPhotoProvider(url);
 
