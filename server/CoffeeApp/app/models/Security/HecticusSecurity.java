@@ -43,26 +43,30 @@ public class HecticusSecurity extends Action<HSecurity> {
 
         String route  = configuration.value().split("@")[0];
         String token = getTokenFromHeader(ctx);
-        if (token != null) {
-            User user = userDao.findByToken(token);
-            if (user != null) {
-                SecurityRoute sc = securityRouteDao.CheckAndInsert(route, 0);
-                if( configuration.value().split("@").length > 1) {
-                    String[] separator = configuration.value().split("@")[1].split(",");
-                    List<SecurityTag> sclist = new ArrayList<SecurityTag>();
-                    for (int x = 0; x< separator.length; x++) {
-                        SecurityTag tmp = securityTagDao.CheckAndInsert(separator[x]);
-                        sclist.add(tmp);
+        try {
+            if (token != null) {
+                User user = userDao.findByToken(token);
+                if (user != null) {
+                    SecurityRoute sc = securityRouteDao.CheckAndInsert(route, 0);
+                    if (configuration.value().split("@").length > 1) {
+                        String[] separator = configuration.value().split("@")[1].split(",");
+                        List<SecurityTag> sclist = new ArrayList<SecurityTag>();
+                        for (int x = 0; x < separator.length; x++) {
+                            SecurityTag tmp = securityTagDao.CheckAndInsert(separator[x]);
+                            sclist.add(tmp);
+                        }
+                        sc.setSecurityTag(sclist);
+                        sc.update();
                     }
-                    sc.setSecurityTag(sclist);
-                    sc.update();
-                }
-                boolean canAccess = roleDao.AccessResource(user, route);
-                if(canAccess) {
-                    ctx.args.putIfAbsent("CurrentUser", user);
-                    return delegate.call(ctx);
+                    boolean canAccess = roleDao.AccessResource(user, route);
+                    if (canAccess) {
+                        ctx.args.putIfAbsent("CurrentUser", user);
+                        return delegate.call(ctx);
+                    }
                 }
             }
+        }catch(java.lang.NullPointerException exception){
+            return CompletableFuture.completedFuture(Response.accessDenied());
         }
         return CompletableFuture.completedFuture(Response.accessDenied());
     }
