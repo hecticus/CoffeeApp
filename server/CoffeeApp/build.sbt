@@ -7,13 +7,18 @@ lazy val `root` = (project in file(".")).enablePlugins(
   PlayJava,
   PlayEbean)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   jdbc,
   cache,
   javaWs,
   specs2 % Test,
+  guice,
+  openId,
+  "com.typesafe.play" %% "play-json" % "2.6.0",
+  "com.typesafe.play" %% "play-iteratees" % "2.6.1",
+  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1",
   "mysql" % "mysql-connector-java" % "5.1.38",
   "org.modelmapper" % "modelmapper" % "0.7.7",
   "com.typesafe.play" % "play-mailer_2.11" % "5.0.0",

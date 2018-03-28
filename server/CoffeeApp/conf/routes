@@ -2,11 +2,14 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                                                                                                               controllers.Application.index
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index
+
+# An example controller showing how to write asynchronous code
+GET     /message                    controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                                                                                                   controllers.Assets.at(path="/public", file)
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 
 # GET
 # POST
@@ -30,8 +33,8 @@ GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order  c
 POST    /provider                          controllers.Providers.create()
 PUT     /provider                          controllers.Providers.update()
 DELETE  /provider/:id                      controllers.Providers.delete(id : Long)
-POST  /provider/deletes  controllers.Providers.deletes()
-POST /provider/uploadPhotoProvider controllers.Providers.uploadPhotoProvider()
+POST    /provider/deletes  controllers.Providers.deletes()
+POST    /provider/uploadPhotoProvider controllers.Providers.uploadPhotoProvider()
 
 
 GET     /invoice     controllers.Invoices.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
