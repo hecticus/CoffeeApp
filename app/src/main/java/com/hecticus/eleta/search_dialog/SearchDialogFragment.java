@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomEditText;
@@ -72,6 +73,7 @@ public class SearchDialogFragment extends DialogFragment implements SearchContra
         return builder.create();
     }
 
+    @DebugLog
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -80,10 +82,11 @@ public class SearchDialogFragment extends DialogFragment implements SearchContra
                 mCallback = (SelectedProviderInterface) context;
             }
         } catch (ClassCastException e) {
-            Log.d("TEST", "Activity doesn't implement the SelectedDoctorInterface");
+            Log.d("TEST", "--->Activity doesn't implement the SelectedProviderInterface");
         }
     }
 
+    @DebugLog
     public void onResume() {
         super.onResume();
         Rect displayRectangle = new Rect();
@@ -133,23 +136,29 @@ public class SearchDialogFragment extends DialogFragment implements SearchContra
         progressBar.setVisibility(View.GONE);
     }
 
+    @DebugLog
     @Override
     public void showMessage(String message) {
+        if (mainRelativeLayout!= null)
         Snackbar.make(mainRelativeLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
     }
 
+    @DebugLog
     @Override
     public void showError(String error) {
-        Snackbar.make(mainRelativeLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainRelativeLayout!= null)
+            Snackbar.make(mainRelativeLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
+    @DebugLog
     @OnClick(R.id.custom_search_bar_search_button)
     @Override
     public void onClickSearchProvider() {
         mPresenter.searchProvidersByName(providerEditText.getText());
     }
 
+    @DebugLog
     @OnClick(R.id.custom_search_bar_cancel_button)
     @Override
     public void onClickCancelSearch() {
@@ -157,20 +166,43 @@ public class SearchDialogFragment extends DialogFragment implements SearchContra
         mPresenter.refreshProvidersList();
     }
 
+    @DebugLog
     @OnClick(R.id.cancel_button_dialog)
     @Override
     public void onClickDismissDialog() {
         getDialog().dismiss();
     }
 
+    @DebugLog
     @Override
-    public void selectedProvider(Provider provider) {
+    public void onProviderSelected(Provider provider) {
         mCallback.onProviderSelected(provider);
         dismiss();
     }
 
+    @DebugLog
     @Override
     public void updateProvidersList(List<Provider> providersList) {
         mAdapter.showNewDataSet(providersList);
+    }
+
+    @DebugLog
+    @Override
+    public void invalidToken() {
+        dismiss();
+        ((HomeActivity)getActivity()).goToLoginActivity();
+    }
+
+    @DebugLog
+    @Override
+    public boolean hasLocationPermissions() {
+        //TODO EDWIN
+        return false;
+    }
+
+    @DebugLog
+    @Override
+    public void requestLocationPermissions() {
+        //TODO EDWIN
     }
 }

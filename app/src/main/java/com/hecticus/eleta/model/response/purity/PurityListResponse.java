@@ -33,4 +33,12 @@ public class PurityListResponse {
     public void setResult(List<Purity> result) {
         this.result = result;
     }
+
+    @Override
+    public String toString() {
+        return "PurityListResponse{" +
+                "message='" + message + '\'' +
+                ", result=" + result +
+                '}';
+    }
 }

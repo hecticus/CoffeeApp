@@ -1,8 +1,8 @@
 package com.hecticus.eleta.purchases.detail;
 
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,24 +15,31 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.hecticus.eleta.LoggedInActivity;
+import com.google.gson.reflect.TypeToken;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
+import com.hecticus.eleta.base.BaseEditableModel;
+import com.hecticus.eleta.base.DescriptionAndValueModel;
 import com.hecticus.eleta.base.item.EditListAdapter;
+import com.hecticus.eleta.confirm_purchase.ConfirmDialogFragment;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.custom_views.CustomSpinner;
+import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.model.callback.AcceptConfirmInterface;
 import com.hecticus.eleta.model.callback.SelectedProviderInterface;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
-import com.hecticus.eleta.of_day.PurchasesOfDayListActivity;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
 import com.hecticus.eleta.search_dialog.SearchDialogFragment;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.GlideApp;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,7 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
-public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDetailsContract.View, SelectedProviderInterface {
+public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDetailsContract.View, SelectedProviderInterface, AcceptConfirmInterface {
 
     @BindView(R.id.purchase_details_provider_linear_layour)
     LinearLayout purchaseLinearLayout;
@@ -103,7 +110,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     ImageButton addImageButton;
 
     private PurchaseDetailsContract.Actions mPresenter;
-    private EditListAdapter mAdapter;
+    private EditListAdapter puritiesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,12 +119,15 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
         ButterKnife.bind(this);
 
-        boolean isAdd = getIntent().getBooleanExtra("isAdd",false);
-        boolean canEdit = getIntent().getBooleanExtra("canEdit",false);
+        boolean isAdd = getIntent().getBooleanExtra("isAdd", false);
+        boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
+        boolean invoiceHasOfflineOperation = getIntent().getBooleanExtra("invoiceHasOfflineOperation", false);
 
         List<InvoiceDetails> details = null;
         if (getIntent().getSerializableExtra("details") != null) {
-            details = (List<InvoiceDetails>) getIntent().getSerializableExtra("details");
+            Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
+            }.getType();
+            details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
         }
 
         Provider provider = null;
@@ -125,7 +135,8 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
             provider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
         }
 
-        mPresenter = new PurchaseDetailsPresenter(this, this, isAdd, canEdit, provider, details);
+        mPresenter = new PurchaseDetailsPresenter(this, this, isAdd, canEdit,
+                invoiceHasOfflineOperation, provider, details);
         initViews();
         mPresenter.initFields();
     }
@@ -134,7 +145,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     public void initViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        providerEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT,getString(R.string.provider));
+        providerEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT, getString(R.string.provider));
         providerEditText.getEditText().setFocusable(false);
         providerEditText.setHint(getString(R.string.ruc_or_name));
         providerEditText.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -145,18 +156,18 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
             }
         });
 
-        amountEditText.initWithTypeAndDescription(CustomEditText.Type.DECIMAL,getString(R.string.amount));
+        amountEditText.initWithTypeAndDescription(CustomEditText.Type.DECIMAL, getString(R.string.amount));
         amountEditText.setBackground();
-        priceEditText.initWithTypeAndDescription(CustomEditText.Type.DECIMAL,getString(R.string.price));
-        dispatcherEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT,getString(R.string.dispatch_by));
+        priceEditText.initWithTypeAndDescription(CustomEditText.Type.DECIMAL, getString(R.string.price));
+        dispatcherEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT, getString(R.string.dispatched_by));
 
-        observationsEditText.initWithTypeAndDescription(CustomEditText.Type.MULTILINE,getString(R.string.observations));
+        observationsEditText.initWithTypeAndDescription(CustomEditText.Type.MULTILINE, getString(R.string.observations));
 
 
-        if (mPresenter.isAdd()){
+        if (mPresenter.isAdd()) {
             profileHeaderLinearLayour.setVisibility(View.GONE);
             imageViewInDescriptionHeader.setImageResource(R.mipmap.package2);
-        }else {
+        } else {
             purchaseLinearLayout.setVisibility(View.GONE);
             simpleHeaderLinearLayour.setVisibility(View.GONE);
             addImageButton.setVisibility(View.GONE);
@@ -177,8 +188,9 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         purityRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new EditListAdapter(true,true);
-        purityRecyclerView.setAdapter(mAdapter);
+        puritiesAdapter = new EditListAdapter(true, true);
+
+        purityRecyclerView.setAdapter(puritiesAdapter);
     }
 
     @Override
@@ -187,7 +199,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         if (mPresenter.isAdd()) {
             titleTextViewInDescriptionHeader.setText(getString(R.string.new_purchase));
             descriptionTextViewInDescriptionHeader.setText(getString(R.string.create));
-        }else{
+        } else {
             titleTextViewInProfileHeader.setText(getString(R.string.purchase_of_day));
             fullNameTextViewInProfileHeader.setText(getString(R.string.name));//TODO
         }
@@ -209,8 +221,8 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
     @Override
     public void handleSuccessfulUpdate() {
-        if (mPresenter.isAdd()){
-            Intent mIntent = new Intent(PurchaseDetailsActivity.this, LoggedInActivity.class);
+        if (mPresenter.isAdd()) {
+            Intent mIntent = new Intent(PurchaseDetailsActivity.this, HomeActivity.class);
             mIntent.putExtra("reloadPurchases", true);
             startActivity(mIntent);
         } else {
@@ -222,7 +234,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     }
 
     @Override
-    public void showUpdateMessage(String message) {
+    public void showMessage(String message) {
         Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
@@ -232,22 +244,23 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         observationsEditText.setEnable(enabled);
     }
 
+    @DebugLog
     @OnClick(R.id.custom_send_button)
     @Override
     public void onClickSaveChangesButton() {
         mPresenter.onSaveChanges(
-                storeSpinner.getSelectedItem().getItemId(),
+                (Store) storeSpinner.getSelectedItem(),
                 freightCheckBox.isChecked(),
                 itemsSpinner.getSelectedItem().getItemId(),
                 amountEditText.getText(),
                 priceEditText.getText(),
-                mAdapter.getPuritiesValues(),
+                puritiesAdapter.getPuritiesValues(),
                 dispatcherEditText.getText(),
                 observationsEditText.getText()
-
         );
     }
 
+    @DebugLog
     @OnClick(R.id.purchase_details_button_add)
     @Override
     public void onClickAddProviderButton() {
@@ -256,29 +269,30 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         intent.putExtra("canEdit", true);
         intent.putExtra("isHarvester", false);
         intent.putExtra("fromProvidersList", false);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, Constants.REQUEST_CODE_PROVIDER_CREATION);
     }
 
     @Override
     public void updateStores(List<Store> stores, int selectedId) {
-        storeSpinner.setValuesAndSelect(stores,selectedId);
+        storeSpinner.setValuesAndSelect(stores, selectedId);
     }
 
     @Override
     public void updateItems(List<ItemType> itemTypeList, int selectedId) {
-        itemsSpinner.setValuesAndSelect(itemTypeList,selectedId);
+        itemsSpinner.setValuesAndSelect(itemTypeList, selectedId);
 
     }
 
+    @DebugLog
     @Override
     public void updatePurities(List<Purity> puritiesList) {
-        if (puritiesList != null && puritiesList.size()%2!=0) {
+        if (puritiesList != null && puritiesList.size() % 2 != 0) {
             observationsEditText.setBackground();
-        }else{
+        } else {
             dispatcherEditText.setBackground();
         }
 
-        mAdapter.showNewDataSet(puritiesList);
+        puritiesAdapter.showNewDataSet(puritiesList);
     }
 
     @Override
@@ -289,7 +303,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     @Override
     public void loadHeader(String providerName, String imageUrl) {
         fullNameTextViewInProfileHeader.setText(providerName);
-        if (imageUrl != null){
+        if (imageUrl != null) {
             GlideApp
                     .with(this)
                     .load(imageUrl)
@@ -301,6 +315,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         }
     }
 
+    @DebugLog
     @Override
     public void loadFields(boolean freight, String amount, String price, String dispatcher, String observation) {
         freightCheckBox.setChecked(freight);
@@ -308,6 +323,41 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         priceEditText.setText(price);
         dispatcherEditText.setText(dispatcher);
         observationsEditText.setText(observation);
+    }
+
+    @Override
+    public void invalidToken() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("invalidToken", true);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void showDialogConfirmation() {
+        ConfirmDialogFragment dialog = new ConfirmDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt("providerType", Constants.TYPE_SELLER);
+        args.putString("provider", providerEditText.getText());
+        args.putString("store", storeSpinner.getSelectedItem().getItemReadableDescription());
+        args.putBoolean("freight", freightCheckBox.isChecked());
+        args.putString("type", itemsSpinner.getSelectedItem().getItemReadableDescription());
+        args.putString("amount", amountEditText.getText());
+        args.putString("price", priceEditText.getText());
+        args.putString("dispatch_by", dispatcherEditText.getText());
+        args.putString("observation", observationsEditText.getText());
+
+        List<DescriptionAndValueModel> descriptionAndValueModelList = new ArrayList<>();
+
+        for (BaseEditableModel model : puritiesAdapter.getValues()) {
+            if (!model.getInputValue().isEmpty()) {
+                descriptionAndValueModelList.add(new DescriptionAndValueModel(model.getReadableDescription(), model.getInputValue()));
+            }
+        }
+        args.putSerializable("descriptions", (Serializable) descriptionAndValueModelList);
+
+        dialog.setArguments(args);
+        dialog.show(getSupportFragmentManager(), "confirm");
     }
 
     @DebugLog
@@ -327,15 +377,20 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         mPresenter.onProviderSelected(provider);
     }
 
+    @DebugLog
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                if (data.getStringExtra("provider") != null) {
-                    Provider provider = new Gson().fromJson(data.getStringExtra("provider"), Provider.class);
-                    mPresenter.onProviderSelected(provider);
-                }
+        if (requestCode == Constants.REQUEST_CODE_PROVIDER_CREATION && resultCode == RESULT_OK) {
+            if (data.getStringExtra("provider") != null) {
+                showMessage(getResources().getString(R.string.provider_saved));
+                Provider provider = new Gson().fromJson(data.getStringExtra("provider"), Provider.class);
+                mPresenter.onProviderSelected(provider);
             }
         }
+    }
+
+    @Override
+    public void onAcceptConfirm() {
+        mPresenter.onSaveConfirmedInDialog();
     }
 }

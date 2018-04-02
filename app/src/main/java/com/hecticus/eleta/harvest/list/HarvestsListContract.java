@@ -1,10 +1,14 @@
 package com.hecticus.eleta.harvest.list;
 
+import android.support.annotation.NonNull;
+
 import com.hecticus.eleta.base.BaseListContract;
 import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.response.Pager;
 import com.hecticus.eleta.model.response.invoice.Invoice;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
+import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 
 import java.util.List;
 
@@ -14,7 +18,7 @@ import java.util.List;
 
 public class HarvestsListContract extends BaseListContract {
 
-    public interface View {
+    public interface View extends BaseListContract.View {
 
         void showWorkingIndicator();
 
@@ -34,18 +38,26 @@ public class HarvestsListContract extends BaseListContract {
 
         void refreshList();
 
-        void printHarvest(String text);
+        void showHarvestPrintPreview(String textToPrint, String textToShow);
+
+        void showDeleteConfirmation(BaseModel model);
     }
 
-    public interface Actions extends BaseListContract.Actions{
+    public interface Actions extends BaseListContract.Actions {
 
         void getInitialData();
 
         void refreshHarvestsList();
 
-        void handleSuccessfulHarvestsRequest(List<Invoice> invoicesList);
+        void handleSuccessfulSortedHarvestsRequest(List<Invoice> invoicesList);
+
+        void handleSuccessfulMixedHarvestsRequest(List<Invoice> invoicesList);
 
         void updatePager(Pager pager);
+
+        void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults);
+
+        void deleteHarvest(BaseModel model);
 
         void onHarvestDeleted();
 
@@ -54,16 +66,30 @@ public class HarvestsListContract extends BaseListContract {
         void onError(String error);
 
         boolean canLoadMore();
+
+        void getReceiptOfInvoiceForPrinting(Invoice invoiceParam);
+
+        void onGetReceiptSuccess(ReceiptResponse receiptResponse);
+
+        void onGetReceiptDetailsSuccess(InvoiceDetailsResponse invoiceDetailsResponse);
     }
 
     public interface Repository {
 
         void onError(String error);
 
-        void harvestsRequest(int index);
+        void getHarvestsRequest(int index);
 
-        void deleteHarvest(int harvestId);
+        void deleteHarvest(Invoice invoice);
 
         void onGetHarvestsSuccess(InvoiceListResponse invoicesList);
+
+        void getReceiptDetails(Invoice invoiceParam);
+
+        void onGetReceiptDetailsSuccess(InvoiceDetailsResponse detailsResponse);
+
+        void getReceiptOfInvoiceForPrinting(Invoice invoiceParam);
+
+        void onGetReceiptSuccess(ReceiptResponse receiptResponse);
     }
 }

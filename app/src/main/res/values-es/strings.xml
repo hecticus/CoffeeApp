@@ -2,7 +2,9 @@
     <string name="address">Dirección</string>
     <string name="DNI">DNI</string>
     <string name="RUC">RUC</string>
-    <string name="action_settings">Configuración</string>
+    <string name="action_logout">Cerrar sesión</string>
+    <string name="action_sync">Sincronizar</string>
+
     <string name="bluetooth_not_supported">¡Bluetooth no soportado!</string>
     <string name="camera">Cámara</string>
     <string name="type">Tipo</string>
@@ -26,11 +28,11 @@
     <string name="gallery">Galería</string>
     <string name="camera_and_storage_permission_needed">Se necesitan los permisos de Cámara y Almacenamiento para esta funcionalidad</string>
     <string name="cannot_establish_connection">No se puede establecer la conexión</string>
-    <string name="connecting_to">Conectando a</string>
+    <string name="connecting_to">"Conectando a "</string>
     <string name="contact">Contacto</string>
     <string name="image_updated_correctly">Imagen actualizada correctamente</string>
     <string name="home">Inicio</string>
-    <string name="getting_all_available_bluetooth_devices">Obteniendo todos los Dispositovos Bluetooth disponibles</string>
+    <string name="getting_all_available_bluetooth_devices">Obteniendo todos los dispositovos Bluetooth disponibles</string>
     <string name="harvest">Cosecha</string>
     <string name="login_successful">Inicio de sesión exitoso</string>
     <string name="old_provider">PROVEEDOR</string>
@@ -46,10 +48,10 @@
     <string name="email">Email</string>
     <string name="error_during_operation">Error durante la operación. Por favor intente nuevamente.</string>
     <string name="error_deleting_provider">Error borrando proveedor</string>
-    <string name="provider_with_invoices">No puede eliminar este proveedor. Tiene facturas aun no cerradas</string>
+    <string name="cant_delete_provider_has_open_invoices">No puede eliminar este proveedor. Tiene facturas aun no cerradas</string>
 
     <string name="hello_blank_fragment">Hola fragmento vacío</string>
-    <string name="login_error">¡Error iniciando sesión!</string>
+    <string name="login_error">Error iniciando sesión</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
     <string name="no_gallery_app">¡No hay aplicación de galería!</string>
     <string name="providers">Proveedores</string>
@@ -72,6 +74,7 @@
     <string name="harvester">Cosechador</string>
     <string name="make_purchase">CERRAR COMPRA</string>
     <string name="name">Nombre</string>
+    <string name="user">Usuario</string>
     <string name="new_harvest">NUEVA COSECHA</string>
     <string name="new_provider">NUEVO PROVEEDOR</string>
     <string name="error_deleting_harvest">Error eliminando cosecha</string>
@@ -84,6 +87,7 @@
     <string name="harvests">Cosechas</string>
     <string name="farm">Granja</string>
     <string name="lot">Lote</string>
+    <string name="error_getting_stores">Error obteniendo almacenes</string>
     <string name="error_getting_farms">Error obteniendo las granjas</string>
     <string name="error_getting_lots">Error obteniendo los lotes</string>
     <string name="error_getting_items">Error obteniendo los items</string>
@@ -97,24 +101,25 @@
 
     <string name="no_changes">¡No hay cambios!</string>
     <string name="ruc_or_name">RUC o Nombre</string>
+    <string name="operator">Operador</string>
 
     <string name="gathering">Acopio</string>
     <string name="freight">Flete</string>
 
     <string name="insufficient_data">Información insuficiente</string>
     <string name="you_must_select_a_harvester">Debe seleccionar un cosechero</string>
-    <string name="you_must_select_a_valid_lot">Debe seleccionar un lote valido</string>
-    <string name="you_must_enter_some_weight">Debe ingresar algun peso</string>
-    <string name="you_must_enter_some_price">Debe ingresar algun precio</string>
+    <string name="you_must_select_a_valid_lot">Debe seleccionar un lote válido</string>
+    <string name="you_must_enter_some_weight">Debe ingresar algún peso</string>
+    <string name="you_must_enter_some_price">Debe ingresar algún precio</string>
     <string name="you_must_enter_some_purity">Debe ingresar alguna pureza</string>
     <string name="you_must_select_a_provider">Debe seleccionar un proveedor</string>
-    <string name="you_must_select_a_valid_store">Debe seleccionar un acopio valido</string>
-    <string name="you_must_select_a_valid_item">Debe seleccionar un café valido</string>
+    <string name="you_must_select_a_valid_store">Debe seleccionar un acopio válido</string>
+    <string name="you_must_select_a_valid_item">Debe seleccionar un café válido</string>
     <string name="you_must_enter_dispatcher_name">Debe ingresar un nombre de despachador</string>
 
     <string name="amount">Peso</string>
     <string name="price">Precio</string>
-    <string name="dispatch_by">Entregado por</string>
+    <string name="dispatched_by">Entregado por</string>
     <string name="already_exists">¡Ya existe!</string>
 
     <string-array name="providers_type">
@@ -130,5 +135,28 @@
     <string name="email_empty">El correo no puede estar vacío</string>
     <string name="contact_empty">El nombre de contacto no puede estar vacío</string>
     <string name="email_invalid">El correo ingresado no tiene un formato válido</string>
+
+    <string name="error_getting_information_to_print">Error obteniendo información para imprimir</string>
+
+    <string name="receipt">Recibo</string>
+    <string name="proof_of_delivery">Constancia de entrega</string>
+    <string name="date">Fecha</string>
+    <string name="delete">Eliminar</string>
+    <string name="want_to_delete_harvest">¿Desea eliminar esta cosecha?</string>
+    <string name="want_to_delete_purchase">¿Desea eliminar esta compra?</string>
+    <string name="want_to_delete_provider">¿Desea eliminar este proveedor?</string>
+    <string name="provider_saved">Proveedor guardado</string>
+    <string name="no_internet_connection">No hay conexión a Internet</string>
+    <string name="location_permission_needed_for_correct_bluetooth_scan">El permision de Ubicación es necesario para un correcto escaneo bluetooth</string>
+    <string name="device_not_ready_yet">Dispositivo no preparado todavía, intente nuevamente</string>
+    <string name="logout_request_failed">¡Falló la petición de cierre de sesión!</string>
+
+    <string name="dni_already_exists">DNI ya existe</string>
+    <string name="ruc_already_exists">RUC ya existe</string>
+    <string name="name_already_exists">Nombre ya existe</string>
+
+    <string name="everything_is_synced">Todo está sincronizado</string>
+
+    <string name="provider_info_not_yet_loaded">La información de este proveedor no ha cargado todavía</string>
 
 </resources>

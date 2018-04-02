@@ -7,23 +7,26 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.HarvestModel;
-import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
-import com.hecticus.eleta.model.response.Message;
+import com.hecticus.eleta.model.response.farm.Farm;
 import com.hecticus.eleta.model.response.farm.FarmsListResponse;
+import com.hecticus.eleta.model.response.invoice.CreateInvoiceResponse;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
+import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
+import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.lot.LotsListResponse;
 import com.hecticus.eleta.model.retrofit_interface.HarvestRetrofitInterface;
 import com.hecticus.eleta.model.retrofit_interface.InvoiceRetrofitInterface;
-import com.hecticus.eleta.provider.detail.ProviderDetailsPresenter;
 import com.hecticus.eleta.util.Constants;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.List;
 
 import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
@@ -39,7 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by roselyn545 on 16/9/17.
  */
 
-public class HarvestDetailsRepository implements HarvestDetailsContract.Repository{
+public class HarvestDetailsRepository implements HarvestDetailsContract.Repository {
 
     private final HarvestDetailsPresenter mPresenter;
     private final InvoiceRetrofitInterface invoiceApi;
@@ -54,7 +57,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                             @Override
                             public okhttp3.Response intercept(Chain chain) throws IOException {
                                 Request request = chain.request().newBuilder()
-                                        .addHeader("Authorization", Session.getAccessToken(mPresenter.context))
+                                        .addHeader("Authorization", SessionManager.getAccessToken(mPresenter.context))
                                         .addHeader("Content-Type", "application/json").build();
                                 return chain.proceed(request);
                             }
@@ -81,158 +84,306 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     }
 
     @DebugLog
-    @Override
-    public void saveHarvestResquest(InvoicePost invoicePost, boolean isAdd) {
-        Call<Message> call;
-        if (isAdd){
-            call = invoiceApi.newInvoiceDetail(invoicePost);
-        }else{
-            call = invoiceApi.updateInvoiceDetail(invoicePost);
+    private void manageError(Response response) {
+        try {
+            if (response != null && response.code() == 400) {
+                SessionManager.clearPreferences(mPresenter.context);
+                mPresenter.invalidToken();
+                return;
+            }
+            onError();
+        } catch (Exception e) {
+            e.printStackTrace();
+            onError();
         }
-        call.enqueue(new Callback<Message>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<Message> call, @NonNull Response<Message> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        onSuccessUpdateHarvest();
-                    } else {
-                        Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                        onError();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+    }
+
+    @DebugLog
+    private void manageError(String error, Response response) {
+        try {
+            if (response != null && response.code() == 400) {
+                SessionManager.clearPreferences(mPresenter.context);
+                mPresenter.invalidToken();
+                return;
+            }
+            onError(error);
+        } catch (Exception e) {
+            e.printStackTrace();
+            onError(error);
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd) {
+        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,isAdd)) {
+            if (isAdd) {
+                if (ManagerDB.saveNewInvoice(Constants.TYPE_HARVESTER, invoicePost)) {
+                    onHarvestUpdated();
+                } else {
                     onError();
                 }
-
+            } else {
+                Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
+                if (ManagerDB.updateInvoiceDetails(invoicePost, null))
+                    onHarvestUpdated();
+                else
+                    onError();
             }
+        } else {
+            Call<CreateInvoiceResponse> call;
+            if (isAdd) {
+                call = invoiceApi.newInvoiceDetail(invoicePost);
+            } else {
+                call = invoiceApi.updateInvoiceDetail(invoicePost);
+            }
+            call.enqueue(new Callback<CreateInvoiceResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
+                    try {
+                            Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
+                        Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
+                    }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    try {
+                        if (response.isSuccessful()) {
+                            //onHarvestUpdated();
+                            getDetails(response.body().getResult().getInvoiceId());
+                        } else {
+                            Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
+                            manageError(response);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onError();
+                    }
+
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                    t.printStackTrace();
+                    Log.e("RETRO", "--->ERROR");
+                    onError();
+                }
+            });
+        }
+    }
+
+    private void getDetails(final int invoiceId){
+        Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceId);
+
+        call.enqueue(new Callback<InvoiceDetailsResponse>() {
             @DebugLog
             @Override
-            public void onFailure(Call<Message> call, Throwable t) {
+            public void onResponse(@NonNull Call<InvoiceDetailsResponse> call,
+                                   @NonNull Response<InvoiceDetailsResponse> response) {
+
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests());
+                        ManagerDB.saveDetailsOfInvoice(response.body().getDetails());
+                        onHarvestUpdated();
+                    } else
+                        //manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
+                        onHarvestUpdated();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                    onHarvestUpdated();
+
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
-                Log.e("RETRO", "--->ERROR");
-                onError();
+                //onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                onHarvestUpdated();
             }
         });
     }
 
+    @DebugLog
     @Override
     public void onError() {
         mPresenter.onUpdateError();
     }
 
+    @DebugLog
     @Override
     public void onError(String error) {
         mPresenter.onError(error);
     }
 
+    @DebugLog
     @Override
-    public void onSuccessUpdateHarvest() {
-        mPresenter.onUpdateHarvest();
+    public void onHarvestUpdated() {
+        mPresenter.onHarvestUpdated();
     }
 
     @DebugLog
     @Override
     public void getItemTypesRequest() {
-        Call<ItemTypesListResponse> call = harvestApi.getItemsType(Constants.TYPE_HARVESTER);
-
-        call.enqueue(new Callback<ItemTypesListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ItemTypesListResponse> call,
-                                   @NonNull Response<ItemTypesListResponse> response) {
-
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        onItemTypesSuccess(response.body());
-                    } else
-                        onError(mPresenter.context.getString(R.string.error_getting_items));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_items));
-                }
-            }
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ItemTypesListResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            List<ItemType> itemTypeList = ManagerDB.getAllItemsType(Constants.TYPE_HARVESTER);
+            if (itemTypeList != null) {
+                mPresenter.loadSortedItems(itemTypeList);
+            } else {
                 onError(mPresenter.context.getString(R.string.error_getting_items));
             }
-        });
+        } else {
+            Call<ItemTypesListResponse> call = harvestApi.getItemsType(Constants.TYPE_HARVESTER);
+
+            call.enqueue(new Callback<ItemTypesListResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ItemTypesListResponse> call,
+                                       @NonNull Response<ItemTypesListResponse> response) {
+
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            onItemTypesSuccess(response.body());
+
+                        } else
+                            manageError(mPresenter.context.getString(R.string.error_getting_items), response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onError(mPresenter.context.getString(R.string.error_getting_items));
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ItemTypesListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    onError(mPresenter.context.getString(R.string.error_getting_items));
+                }
+            });
+        }
     }
 
+    @DebugLog
     @Override
     public void onItemTypesSuccess(ItemTypesListResponse response) {
+        ManagerDB.saveNewItemsType(Constants.TYPE_HARVESTER, response.getResult());
         mPresenter.loadItems(response.getResult());
     }
 
     @DebugLog
     @Override
     public void getFarmsRequest() {
-        Call<FarmsListResponse> call = harvestApi.getFarms();
-
-        call.enqueue(new Callback<FarmsListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<FarmsListResponse> call,
-                                   @NonNull Response<FarmsListResponse> response) {
-
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        onFarmsSuccess(response.body());
-                    } else
-                        onError(mPresenter.context.getString(R.string.error_getting_farms));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_farms));
-                }
-            }
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<FarmsListResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            List<Farm> farmList = ManagerDB.getAllFarms();
+            if (farmList != null) {
+                mPresenter.loadFarms(farmList);
+            } else {
                 onError(mPresenter.context.getString(R.string.error_getting_farms));
             }
-        });
+        } else {
+            Call<FarmsListResponse> call = harvestApi.getFarms();
+
+            call.enqueue(new Callback<FarmsListResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<FarmsListResponse> call,
+                                       @NonNull Response<FarmsListResponse> response) {
+
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            onFarmsSuccess(response.body());
+                        } else
+                            manageError(mPresenter.context.getString(R.string.error_getting_farms), response);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onError(mPresenter.context.getString(R.string.error_getting_farms));
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<FarmsListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    onError(mPresenter.context.getString(R.string.error_getting_farms));
+                }
+            });
+        }
     }
 
+    @DebugLog
     @Override
     public void onFarmsSuccess(FarmsListResponse response) {
+        ManagerDB.saveNewFarms(response.getResult());
         mPresenter.loadFarms(response.getResult());
     }
 
     @DebugLog
     @Override
     public void getLotsByFarmRequest(int idFarm) {
-        Call<LotsListResponse> call = harvestApi.getLotsByFarm(idFarm);
-
-        call.enqueue(new Callback<LotsListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<LotsListResponse> call,
-                                   @NonNull Response<LotsListResponse> response) {
-
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        onLotsSuccess(response.body());
-                    } else
-                        onError(mPresenter.context.getString(R.string.error_getting_lots));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_lots));
-                }
-            }
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<LotsListResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            List<Lot> lotList = ManagerDB.getAllLotsByFarm(idFarm);
+            if (lotList != null) {
+                mPresenter.loadLots(lotList);
+            } else {
                 onError(mPresenter.context.getString(R.string.error_getting_lots));
             }
-        });
+        } else {
+            Call<LotsListResponse> call = harvestApi.getLotsByFarm(idFarm);
+
+            call.enqueue(new Callback<LotsListResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<LotsListResponse> call,
+                                       @NonNull Response<LotsListResponse> response) {
+
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            ManagerDB.saveNewLots(response.body().getResult());
+                            onLotsSuccess(response.body());
+                        } else
+                            manageError(mPresenter.context.getString(R.string.error_getting_lots), response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onError(mPresenter.context.getString(R.string.error_getting_lots));
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<LotsListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    onError(mPresenter.context.getString(R.string.error_getting_lots));
+                }
+            });
+        }
     }
 
+    @DebugLog
     @Override
     public void onLotsSuccess(LotsListResponse response) {
         mPresenter.loadLots(response.getResult());
     }
+
+    @DebugLog
+    @Override
+    public Lot getLotById(int id) {
+        return ManagerDB.getLotById(id);
+    }
+
+    @DebugLog
+    @Override
+    public ItemType getItemTypeById(int id) {
+        return ManagerDB.getItemTypeById(id);
+    }
+
 }

@@ -1,9 +1,12 @@
 package com.hecticus.eleta.search_dialog;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
@@ -27,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by roselyn545 on 22/9/17.
  */
 
-public class SearchRepository implements SearchContract.Repository{
+public class SearchRepository implements SearchContract.Repository {
 
     private final ProviderRetrofitInterface providersApi;
     private final SearchPresenter mPresenter;
@@ -44,7 +47,7 @@ public class SearchRepository implements SearchContract.Repository{
                             @Override
                             public okhttp3.Response intercept(Chain chain) throws IOException {
                                 Request request = chain.request().newBuilder()
-                                        .addHeader("Authorization", Session.getAccessToken(mPresenter.context))
+                                        .addHeader("Authorization", SessionManager.getAccessToken(mPresenter.context))
                                         .addHeader("Content-Type", "application/json").build();
                                 return chain.proceed(request);
                             }
@@ -57,34 +60,47 @@ public class SearchRepository implements SearchContract.Repository{
 
         providersApi = retrofit.create(ProviderRetrofitInterface.class);
     }
+
+    @DebugLog
     @Override
-    public void getProviders(int type) {
-        Call<ProvidersListResponse> call = providersApi.providersByType(type);
+    public void getAllProvidersByType(final int type) {
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            currentProviders = ManagerDB.getAllProvidersByType(type);
+            Log.d("TEST", "current providers " + currentProviders);
+            mPresenter.handleSuccessfulSortedProvidersRequest(currentProviders);
+        } else {
+            Call<ProvidersListResponse> call = providersApi.providersByType(type);
 
-        call.enqueue(new Callback<ProvidersListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ProvidersListResponse> call,
-                                   @NonNull Response<ProvidersListResponse> response) {
+            call.enqueue(new Callback<ProvidersListResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProvidersListResponse> call,
+                                       @NonNull Response<ProvidersListResponse> response) {
 
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        currentProviders = response.body().getResult();
-                        onGetProvidersSuccess(response.body());
-                    } else
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            //currentProviders = response.body().getResult();
+                            //onGetProvidersSuccess(response.body());
+                            ManagerDB.updateProviders(response.body().getResult());
+                            List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult());
+                            currentProviders = finalList;
+                            onGetProvidersSuccess(finalList);
+                        } else
+                            onError(mPresenter.context.getString(R.string.error_getting_providers));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                         onError(mPresenter.context.getString(R.string.error_getting_providers));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
                     onError(mPresenter.context.getString(R.string.error_getting_providers));
                 }
-            }
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                onError(mPresenter.context.getString(R.string.error_getting_providers));
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -93,37 +109,44 @@ public class SearchRepository implements SearchContract.Repository{
     }
 
     @Override
-    public void onGetProvidersSuccess(ProvidersListResponse providersListResponse) {
-        mPresenter.handleSuccessfulProvidersRequest(providersListResponse.getResult());
+    public void onGetProvidersSuccess(List<Provider> providersList) {
+        mPresenter.handleSuccessfulProvidersRequest(providersList);
     }
 
     @Override
-    public void searchProvidersByTypeByName(int type, String name) {
-        Call<ProvidersListResponse> call = providersApi.searchProviders(type,name);
+    public void searchProvidersByTypeByName(final int type, final String name) {
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            mPresenter.handleSuccessfulSortedProvidersRequest(ManagerDB.searchProvidersByTypeAndText(type, name));
+        } else {
+            Call<ProvidersListResponse> call = providersApi.searchProviders(type, name);
 
-        call.enqueue(new Callback<ProvidersListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ProvidersListResponse> call,
-                                   @NonNull Response<ProvidersListResponse> response) {
+            call.enqueue(new Callback<ProvidersListResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProvidersListResponse> call,
+                                       @NonNull Response<ProvidersListResponse> response) {
 
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        onGetProvidersSuccess(response.body());
-                    } else
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            //onGetProvidersSuccess(response.body());
+                            List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult(), name);
+                            onGetProvidersSuccess(finalList);
+                        } else
+                            onError(mPresenter.context.getString(R.string.error_getting_providers));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                         onError(mPresenter.context.getString(R.string.error_getting_providers));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
                     onError(mPresenter.context.getString(R.string.error_getting_providers));
                 }
-            }
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                onError(mPresenter.context.getString(R.string.error_getting_providers));
-            }
-        });
+            });
+        }
     }
 
     @Override

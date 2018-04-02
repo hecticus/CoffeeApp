@@ -24,7 +24,7 @@ public interface PurchaseRetrofitInterface {
     Call<HarvestsListResponse> searchHarvest();
 
     @DELETE(HARVEST_DELETE_URL)
-    Call<Message> deleteHarvest(@Path("idHarvest") int idHarvest);*/
+    Call<Message> deleteHarvestInvoice(@Path("idHarvest") int idHarvest);*/
 
     @GET(STORES_URL)
     Call<StoresListResponse> getStores();

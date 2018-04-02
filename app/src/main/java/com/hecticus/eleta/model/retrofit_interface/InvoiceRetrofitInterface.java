@@ -3,8 +3,10 @@ package com.hecticus.eleta.model.retrofit_interface;
 import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.Message;
+import com.hecticus.eleta.model.response.invoice.CreateInvoiceResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
+import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,6 +27,8 @@ public interface InvoiceRetrofitInterface {
     static final String INVOICE_DELETE_URL = "invoice/{idInvoice}";
     static final String INVOICE_DETAIL_DELETE_URL = "invoiceDetail/deleteAllByIdInvoiceAndDate/{idInvoice}/{date}";
     static final String INVOICE_DETAIL_NEW_URL = "invoice/buyHarvestsAndCoffe";
+    static final String CREATE_RECEIPT_URL = "invoice/createReceipt/{idInvoice}";
+
     static final String INVOICE_CLOSE_URL = "invoice";
 
 
@@ -41,10 +45,13 @@ public interface InvoiceRetrofitInterface {
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("idInvoice") int idInvoice,@Path("date") String date);
 
     @POST(INVOICE_DETAIL_NEW_URL)
-    Call<Message> newInvoiceDetail(@Body InvoicePost post);
+    Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post);
 
     @PUT(INVOICE_DETAIL_NEW_URL)
-    Call<Message> updateInvoiceDetail(@Body InvoicePost post);
+    Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);
+
+    @GET(CREATE_RECEIPT_URL)
+    Call<ReceiptResponse> getReceipt(@Path("idInvoice") int invoiceId);
 
     @PUT(INVOICE_CLOSE_URL)
     Call<Message> closeInvoice(@Body CloseInvoicePost post);

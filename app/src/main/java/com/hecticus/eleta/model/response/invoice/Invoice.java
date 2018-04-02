@@ -1,30 +1,40 @@
 package com.hecticus.eleta.model.response.invoice;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseModel;
+import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.providers.Provider;
 
-import java.io.Serializable;
-import java.util.List;
+import java.lang.reflect.Type;
+
+import hugo.weaving.DebugLog;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by roselyn545 on 18/9/17.
  */
 
-public class Invoice  extends BaseModel implements Serializable {
+public class Invoice extends RealmObject implements BaseModel, JsonSerializer<Invoice> {
 
     @SerializedName("idInvoice")
     @Expose
     private int invoiceId = -1;
 
+    @Ignore
     @SerializedName("provider")
     @Expose
     private Provider provider;
 
     @SerializedName("statusInvoice")
     @Expose
-    private int invoiceStatus =-1;
+    private int invoiceStatus = -1;
 
     @SerializedName("startDateInvoice")
     @Expose
@@ -36,20 +46,54 @@ public class Invoice  extends BaseModel implements Serializable {
 
     @SerializedName("totalInvoice")
     @Expose
-    private float invoiceTotal =-1;
+    private float invoiceTotal = -1;
+    
+    private int type = -1;
 
+    private String providerName = "";
+
+    private String identificationDocProvider = "";
+
+    private Integer providerId = -1;
+
+    private int localId = -1;
+
+    @PrimaryKey
+    private String id = "";
+
+    private String date = "";
+
+    private boolean addOffline;
+    private boolean deleteOffline;
+    private boolean editOffline;
+    private boolean isClosed;
+
+    public Invoice() {
+    }
+
+    public Invoice(InvoicePost invoicePost) {
+        invoiceStatus = 1;
+        invoiceStartDate = invoicePost.getStartDate();
+        invoiceClosedDate = invoicePost.getStartDate();
+        invoiceTotal = invoicePost.getTotal();
+        type = invoicePost.getType();
+        providerName = invoicePost.getProviderName();
+        identificationDocProvider = invoicePost.getIdentificationDocProvider();
+        providerId = invoicePost.getProviderId();
+        date = invoiceStartDate.split(" ")[0];
+    }
 
     @Override
     public String getReadableDescription() {
-        if (provider!=null){
+        if (provider != null) {
             return provider.getFullNameProvider();
         }
-        return "";
+        return providerName;
     }
 
     @Override
     public boolean canDelete() {
-        return invoiceStatus<3;
+        return invoiceStatus < 3;
     }
 
     public int getInvoiceId() {
@@ -99,4 +143,148 @@ public class Invoice  extends BaseModel implements Serializable {
     public void setInvoiceTotal(float invoiceTotal) {
         this.invoiceTotal = invoiceTotal;
     }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public Integer getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Integer providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getIdentificationDocProvider() {
+        return identificationDocProvider;
+    }
+
+    public void setIdentificationDocProvider(String identificationDocProvider) {
+        this.identificationDocProvider = identificationDocProvider;
+    }
+
+    public boolean isAddOffline() {
+        return addOffline;
+    }
+
+    public void setAddOffline(boolean addOffline) {
+        this.addOffline = addOffline;
+    }
+
+    public boolean isDeleteOffline() {
+        return deleteOffline;
+    }
+
+    public void setDeleteOffline(boolean deleteOffline) {
+        this.deleteOffline = deleteOffline;
+    }
+
+    public boolean isEditOffline() {
+        return editOffline;
+    }
+
+    @DebugLog
+    public void setEditOffline(boolean editOffline) {
+        this.editOffline = editOffline;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
+
+    public int getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(int localId) {
+        this.localId = localId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getBestAvailableProviderName() {
+        if (provider != null && provider.getFullNameProvider() != null)
+            return provider.getFullNameProvider();
+        else
+            return providerName;
+    }
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId=" + invoiceId +
+                ", provider=" + provider +
+                ", invoiceStatus=" + invoiceStatus +
+                ", invoiceStartDate='" + invoiceStartDate + '\'' +
+                ", invoiceClosedDate='" + invoiceClosedDate + '\'' +
+                ", invoiceTotal=" + invoiceTotal +
+                ", type=" + type +
+                ", providerName='" + providerName + '\'' +
+                ", identificationDocProvider='" + identificationDocProvider + '\'' +
+                ", providerId=" + providerId +
+                ", localId=" + localId +
+                ", id='" + id + '\'' +
+                ", date='" + date + '\'' +
+                ", addOffline=" + addOffline +
+                ", deleteOffline=" + deleteOffline +
+                ", editOffline=" + editOffline +
+                ", isClosed=" + isClosed +
+                '}';
+    }
+
+    @Override
+    public JsonElement serialize(Invoice src, Type typeOfSrc, JsonSerializationContext context) {
+        final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("idInvoice", src.getInvoiceId());
+        jsonObject.addProperty("statusInvoice", src.getInvoiceStatus());
+        jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
+        jsonObject.addProperty("startDateInvoice", src.getInvoiceStartDate());
+        jsonObject.addProperty("closedDateInvoice", src.getInvoiceClosedDate());
+        jsonObject.addProperty("totalInvoice", src.getInvoiceTotal());
+        jsonObject.addProperty("type", src.getType());
+        jsonObject.addProperty("providerName", src.getProviderName());
+        jsonObject.addProperty("providerId", src.getProviderId());
+        jsonObject.addProperty("addOffline", src.isAddOffline());
+        jsonObject.addProperty("deleteOffline", src.isDeleteOffline());
+        jsonObject.addProperty("editOffline", src.isEditOffline());
+        jsonObject.addProperty("localId", src.getLocalId());
+        jsonObject.addProperty("date", src.getDate());
+        jsonObject.addProperty("isClosed", src.isClosed());
+        jsonObject.addProperty("id", src.getId());
+
+        return jsonObject;
+    }
+
 }
+

@@ -4,15 +4,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model.persistence.ManagerDB;
+import com.hecticus.eleta.model.persistence.ManagerServices;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                             @Override
                             public okhttp3.Response intercept(Chain chain) throws IOException {
                                 Request request = chain.request().newBuilder()
-                                        .addHeader("Authorization", Session.getAccessToken(mPresenter.context))
+                                        .addHeader("Authorization", SessionManager.getAccessToken(mPresenter.context))
                                         .addHeader("Content-Type", "application/json").build();
                                 return chain.proceed(request);
                             }
@@ -62,6 +62,21 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                 .client(httpClient).build();
 
         providersApi = retrofit.create(ProviderRetrofitInterface.class);
+    }
+
+    @DebugLog
+    private void manageError(String error, Response response) {
+        try {
+            if (response!=null && response.code() == 400) {
+                SessionManager.clearPreferences(mPresenter.context);
+                mPresenter.invalidToken();
+                return;
+            }
+            onError(error);
+        } catch (Exception e) {
+            e.printStackTrace();
+            onError(error);
+        }
     }
 
     @DebugLog
@@ -79,113 +94,129 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
 
     @DebugLog
     @Override
-    public void getProvidersOfType(int providerType) {
-        Call<ProvidersListResponse> call = providersApi.providersByType(providerType);
-
-        call.enqueue(new Callback<ProvidersListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ProvidersListResponse> call,
-                                   @NonNull Response<ProvidersListResponse> response) {
-
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        currentProviders = response.body().getResult();
-                        onGetProvidersSuccess(response.body());
-                        return;
-                    } else
-                        onError(mPresenter.context.getString(R.string.error_getting_providers));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_providers));
-                }
-                try {
-                    Log.d("RETRO", "--->getProvidersOfType unsuccess (" + response.code() + ") body: " + response.body());
-                    Log.d("RETRO", "--->getProvidersOfType unsuccess (" + response.code() + ") error body: " + new JSONObject(response.errorBody().string()));
-                } catch (JSONException | IOException e) {
-                    Log.d("RETRO", "--->getProvidersOfType error error (" + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
-                Log.d("RETRO", "--->getProvidersOfType onFailure: " + t.getMessage());
-                t.printStackTrace();
-                onError(mPresenter.context.getString(R.string.error_getting_providers));
-            }
-        });
-    }
-
-    @DebugLog
-    @Override
-    public void onGetProvidersSuccess(ProvidersListResponse providersListResponse) {
-        //mPresenter.updatePager(providersListResponse.getPager());
-        mPresenter.handleSuccessfulProvidersRequest(providersListResponse.getResult());
-    }
-
-    @Override
-    public void searchProvidersByTypeByName(int type, String name) {
-        Call<ProvidersListResponse> call = providersApi.searchProviders(type, name);
-
-        call.enqueue(new Callback<ProvidersListResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ProvidersListResponse> call,
-                                   @NonNull Response<ProvidersListResponse> response) {
-
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        onGetProvidersSuccess(response.body());
-                    } else
-                        onError(mPresenter.context.getString(R.string.error_getting_providers));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_providers));
-                }
-            }
-
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                onError(mPresenter.context.getString(R.string.error_getting_providers));
-            }
-        });
-    }
-
-    @DebugLog
-    @Override
-    public void deleteProvider(final int providerId) {
-        Call<Message> call = providersApi.deleteProvider(providerId);
-        call.enqueue(new Callback<Message>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<Message> call, @NonNull Response<Message> response) {
-                try {
-                    if (response.isSuccessful() && response.body().getMessage().equals("Successful deleted")) {
-                        mPresenter.onProviderDeleted();
-                    } else {
-                        JSONObject object = new JSONObject(response.errorBody().string());
-                        if (object.optInt("error") == 409) {
-                            onError(mPresenter.context.getString(R.string.provider_with_invoices));
-                        } else {
-                            onError(mPresenter.context.getString(R.string.error_deleting_provider));
-                        }
+    public void getProvidersOfType(final int providerType) {
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            currentProviders = ManagerDB.getAllProvidersByType(providerType);
+            Log.d("TEST", "--->current providers " + currentProviders);
+            mPresenter.handleSuccessfulMixedProvidersRequest(currentProviders);
+        } else {
+            Call<ProvidersListResponse> call = providersApi.providersByType(providerType);
+            new ManagerServices<>(call, new ManagerServices.ServiceListener<ProvidersListResponse>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<ProvidersListResponse> response) {
+                    try {
+                        ManagerDB.updateProviders(response.body().getResult());
+                        List<Provider> finalList = ManagerDB.mixAndGetValids(providerType, response.body().getResult());
+                        currentProviders = finalList;
+                        onGetProvidersSuccess(finalList);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        manageError(mPresenter.context.getString(R.string.error_getting_providers), response);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_deleting_provider));
                 }
-            }
 
-            @DebugLog
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-                t.printStackTrace();
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<ProvidersListResponse> response, String errorMessage) {
+                    manageError(mPresenter.context.getString(R.string.error_getting_providers), response);
+                }
+
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                    SessionManager.clearPreferences(mPresenter.context);
+                    mPresenter.invalidToken();
+                }
+            });
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void onGetProvidersSuccess(List<Provider> providersList) {
+        //mPresenter.updatePager(providersListResponse.getPager());
+        mPresenter.handleSuccessfulMixedProvidersRequest(providersList);
+    }
+
+    @DebugLog
+    @Override
+    public void searchProvidersByTypeByName(final int type, final String name) {
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            mPresenter.handleSuccessfulSortedProvidersRequest(ManagerDB.searchProvidersByTypeAndText(type, name));
+        } else {
+            Call<ProvidersListResponse> call = providersApi.searchProviders(type, name);
+
+            call.enqueue(new Callback<ProvidersListResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProvidersListResponse> call,
+                                       @NonNull Response<ProvidersListResponse> response) {
+
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult(), name);
+                            onGetProvidersSuccess(finalList);
+                        } else
+                            manageError(mPresenter.context.getString(R.string.error_getting_providers), response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onError(mPresenter.context.getString(R.string.error_getting_providers));
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    onError(mPresenter.context.getString(R.string.error_getting_providers));
+                }
+            });
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void deleteProvider(Provider provider) {
+        if (!InternetManager.isConnected(mPresenter.context) || provider.getIdProvider() <0 || ManagerDB.providerHasOfflineOperation(provider)) {
+            //TODO check if has invoices
+
+            if (ManagerDB.deleteProvider(provider)) {
+                mPresenter.onProviderDeleted();
+            } else {
                 onError(mPresenter.context.getString(R.string.error_deleting_provider));
             }
-        });
+        } else {
+            Call<Message> call = providersApi.deleteProvider(provider.getIdProvider());
+            new ManagerServices<>(call, new ManagerServices.ServiceListener<Message>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<Message> response) {
+                    try {
+                        mPresenter.onProviderDeleted();
+                    } catch (Exception e) {
+                        manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<Message> response, String errorMessage) {
+                    if (fail || code != 409) {
+                        manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
+                    } else {
+                        manageError(mPresenter.context.getString(R.string.cant_delete_provider_has_open_invoices), response);
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                    SessionManager.clearPreferences(mPresenter.context);
+                    mPresenter.invalidToken();
+                }
+            });
+        }
+
     }
 }

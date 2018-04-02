@@ -1,10 +1,11 @@
 package com.hecticus.eleta.harvest.detail;
 
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,23 +16,32 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.hecticus.eleta.LoggedInActivity;
+import com.google.gson.reflect.TypeToken;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
+import com.hecticus.eleta.base.BaseEditableModel;
+import com.hecticus.eleta.base.DescriptionAndValueModel;
 import com.hecticus.eleta.base.item.EditListAdapter;
+import com.hecticus.eleta.confirm_purchase.ConfirmDialogFragment;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.custom_views.CustomSpinner;
+import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.model.callback.AcceptConfirmInterface;
 import com.hecticus.eleta.model.callback.SelectedProviderInterface;
 import com.hecticus.eleta.model.response.farm.Farm;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.of_day.HarvestsOfDayListActivity;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
 import com.hecticus.eleta.search_dialog.SearchDialogFragment;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.GlideApp;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,7 +49,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
-public class HarvestDetailsActivity extends BaseActivity implements HarvestDetailsContract.View, SelectedProviderInterface {
+public class HarvestDetailsActivity extends BaseActivity implements HarvestDetailsContract.View, SelectedProviderInterface, AcceptConfirmInterface {
 
     @BindView(R.id.harvest_detail_harvester_linear_layour)
     LinearLayout harvesterLinearLayout;
@@ -92,6 +102,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     private HarvestDetailsContract.Actions mPresenter;
     private EditListAdapter mAdapter;
 
+    @DebugLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,12 +110,14 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
         ButterKnife.bind(this);
 
-        boolean isAdd = getIntent().getBooleanExtra("isAdd",false);
-        boolean canEdit = getIntent().getBooleanExtra("canEdit",false);
+        boolean isAdd = getIntent().getBooleanExtra("isAdd", false);
+        boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
 
         List<InvoiceDetails> details = null;
         if (getIntent().getSerializableExtra("details") != null) {
-            details = (List<InvoiceDetails>) getIntent().getSerializableExtra("details");
+            Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
+            }.getType();
+            details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
         }
 
         Provider provider = null;
@@ -122,7 +135,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     public void initViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        harvesterEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT,getString(R.string.harvester));
+        harvesterEditText.initWithTypeAndDescription(CustomEditText.Type.TEXT, getString(R.string.harvester));
         harvesterEditText.getEditText().setFocusable(false);
         harvesterEditText.setHint(getString(R.string.dni_or_name));
         harvesterEditText.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -133,12 +146,12 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
             }
         });
 
-        observationsEditText.initWithTypeAndDescription(CustomEditText.Type.MULTILINE,getString(R.string.observations));
+        observationsEditText.initWithTypeAndDescription(CustomEditText.Type.MULTILINE, getString(R.string.observations));
 
-        if (mPresenter.isAdd()){
+        if (mPresenter.isAdd()) {
             profileHeaderLinearLayour.setVisibility(View.GONE);
             imageViewInDescriptionHeader.setImageResource(R.mipmap.icon_grano);
-        }else {
+        } else {
             harvesterLinearLayout.setVisibility(View.GONE);
             simpleHeaderLinearLayour.setVisibility(View.GONE);
             addImageButton.setVisibility(View.GONE);
@@ -152,7 +165,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {}
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
 
         });
 
@@ -179,7 +193,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         if (mPresenter.isAdd()) {
             titleTextViewInDescriptionHeader.setText(getString(R.string.new_harvest));
             descriptionTextViewInDescriptionHeader.setText(getString(R.string.create));
-        }else{
+        } else {
             titleTextViewInProfileHeader.setText(getString(R.string.harvest_of_day));
             fullNameTextViewInProfileHeader.setText("");//TODO
         }
@@ -199,22 +213,25 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         progressBar.setVisibility(View.GONE);
     }
 
+    @DebugLog
     @Override
     public void handleSuccessfulUpdate() {
-        if (mPresenter.isAdd()){
-            Intent mIntent = new Intent(HarvestDetailsActivity.this, LoggedInActivity.class);
+        if (mPresenter.isAdd()) {
+            Intent mIntent = new Intent(HarvestDetailsActivity.this, HomeActivity.class);
             mIntent.putExtra("reloadHarvests", true);
             startActivity(mIntent);
         } else {
-            Intent intent = new Intent();
+            Intent intent = new Intent(this, HarvestsOfDayListActivity.class);
             intent.putExtra("reload", true);
             setResult(RESULT_OK, intent);
+            startActivity(intent);
         }
+        Log.d("OFFLINE", "--->handleSuccessfulUpdate isAdd:" + mPresenter.isAdd());
         finish();
     }
 
     @Override
-    public void showUpdateMessage(String message) {
+    public void showMessage(String message) {
         Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
@@ -224,12 +241,18 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         observationsEditText.setEnable(enabled);
     }
 
+    @DebugLog
     @OnClick(R.id.custom_send_button)
     @Override
     public void onClickSaveChangesButton() {
-        mPresenter.onSaveChanges(lotSpinner.getSelectedItem().getItemId(),mAdapter.getItemsValues(),observationsEditText.getText());
+        mPresenter.onSaveChanges(
+                (Lot) lotSpinner.getSelectedItem(),
+                mAdapter.getItemsValues(),
+                observationsEditText.getText());
+
     }
 
+    @DebugLog
     @OnClick(R.id.harvest_detail_button_add)
     @Override
     public void onClickAddHarvesterButton() {
@@ -238,22 +261,22 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         intent.putExtra("canEdit", true);
         intent.putExtra("isHarvester", true);
         intent.putExtra("fromProvidersList", false);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, Constants.REQUEST_CODE_PROVIDER_CREATION);
     }
 
     @Override
     public void updateFarms(List<Farm> farmsList, int selectedId) {
-        farmSpinner.setValuesAndSelect(farmsList,selectedId);
+        farmSpinner.setValuesAndSelect(farmsList, selectedId);
     }
 
     @Override
     public void updateLots(List<Lot> lotsList, int selectedId) {
-        lotSpinner.setValuesAndSelect(lotsList,selectedId);
+        lotSpinner.setValuesAndSelect(lotsList, selectedId);
     }
 
     @Override
     public void updateItems(List<ItemType> itemTypeList) {
-        if (itemTypeList != null && itemTypeList.size()%2!=0)
+        if (itemTypeList != null && itemTypeList.size() % 2 != 0)
             observationsEditText.setBackground();
 
         mAdapter.showNewDataSet(itemTypeList);
@@ -267,7 +290,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void loadHeader(String providerName, String imageUrl) {
         fullNameTextViewInProfileHeader.setText(providerName);
-        if (imageUrl != null){
+        if (imageUrl != null) {
             GlideApp
                     .with(this)
                     .load(imageUrl)
@@ -282,6 +305,38 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void loadObservation(String observation) {
         observationsEditText.setText(observation);
+    }
+
+    @Override
+    public void invalidToken() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("invalidToken", true);
+        startActivity(intent);
+        finish();
+    }
+
+    @DebugLog
+    @Override
+    public void showDialogConfirmation() {
+        Bundle args = new Bundle();
+        args.putInt("providerType", Constants.TYPE_HARVESTER);
+        args.putString("provider", harvesterEditText.getText());
+        args.putString("farm", farmSpinner.getSelectedItem().getItemReadableDescription());
+        args.putString("lot", lotSpinner.getSelectedItem().getItemReadableDescription());
+        args.putString("observation", observationsEditText.getText());
+
+        List<DescriptionAndValueModel> descriptionAndValueModelList = new ArrayList<>();
+        for (BaseEditableModel model : mAdapter.getValues()) {
+            if (!model.getInputValue().isEmpty()) {
+                descriptionAndValueModelList.add(new DescriptionAndValueModel(model.getReadableDescription(), model.getInputValue()));
+            }
+        }
+        args.putSerializable("descriptions", (Serializable) descriptionAndValueModelList);
+
+        ConfirmDialogFragment mConfirmDialogFragment = new ConfirmDialogFragment();
+
+        mConfirmDialogFragment.setArguments(args);
+        mConfirmDialogFragment.show(getSupportFragmentManager(), "confirm");
     }
 
     @DebugLog
@@ -302,15 +357,21 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         mPresenter.onProviderSelected(provider);
     }
 
+    @DebugLog
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                if (data.getStringExtra("provider") != null) {
-                    Provider provider = new Gson().fromJson(data.getStringExtra("provider"), Provider.class);
-                    mPresenter.onProviderSelected(provider);
-                }
+        if (requestCode == Constants.REQUEST_CODE_PROVIDER_CREATION && resultCode == RESULT_OK) {
+            if (data.getStringExtra("provider") != null) {
+                showMessage(getResources().getString(R.string.provider_saved));
+                Provider provider = new Gson().fromJson(data.getStringExtra("provider"), Provider.class);
+                mPresenter.onProviderSelected(provider);
             }
         }
+    }
+
+    @DebugLog
+    @Override
+    public void onAcceptConfirm() {
+        mPresenter.acceptSave();
     }
 }

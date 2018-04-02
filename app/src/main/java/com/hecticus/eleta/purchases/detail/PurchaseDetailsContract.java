@@ -1,17 +1,15 @@
 package com.hecticus.eleta.purchases.detail;
 
-import com.hecticus.eleta.model.PurchaseModel;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
-import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
-import com.hecticus.eleta.model.response.purity.Purity;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetailPurity;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.purity.PurityListResponse;
 import com.hecticus.eleta.model.response.store.Store;
 import com.hecticus.eleta.model.response.store.StoresListResponse;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,7 +26,7 @@ public class PurchaseDetailsContract {
 
         void handleSuccessfulUpdate();
 
-        void showUpdateMessage(String message);
+        void showMessage(String message);
 
         void enableEdition(boolean enabled);
 
@@ -47,6 +45,11 @@ public class PurchaseDetailsContract {
         void loadHeader(String providerName, String imageUrl);
 
         void loadFields(boolean freight, String amount, String price, String dispatcher, String observation);
+
+        void invalidToken();
+
+        void showDialogConfirmation();
+
     }
 
     public interface Actions {
@@ -57,7 +60,7 @@ public class PurchaseDetailsContract {
 
         boolean isAdd();
 
-        void onSaveChanges(int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations);
+        void onSaveChanges(Store selectedStore, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations);
 
         InvoicePost getChanges(int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations);
 
@@ -65,27 +68,34 @@ public class PurchaseDetailsContract {
 
         void onError(String error);
 
-        void onUpdatePurchase();
+        void onPurchaseUpdated();
 
         void loadStores(List<Store> storesList);
+
+        void loadSortedStores(List<Store> storesList);
 
         void loadItems(List<ItemType> itemTypeList);
 
         void loadPurities(List<Purity> purityList);
 
+        void loadSortedPurities(List<Purity> purityList);
+
         void onProviderSelected(Provider provider);
 
+        void invalidToken();
+
+        void onSaveConfirmedInDialog();
     }
 
     public interface Repository {
 
-        void savePurchaseResquest(InvoicePost invoicePost, boolean isAdd);
+        void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd);
 
         void onError();
 
         void onError(String error);
 
-        void onSuccessUpdatePurchase();
+        void onPurchaseUpdated();
 
         void getItemTypesRequest();
 
@@ -95,9 +105,20 @@ public class PurchaseDetailsContract {
 
         void onStoresSuccess(StoresListResponse response);
 
-        void getPuritiesRequest();
+        void getPuritiesRequest(boolean purchaseHasOfflineOperation);
 
         void onPuritiesSuccess(PurityListResponse response);
 
+        ItemType getItemTypeById(int id);
+
+        Store getStoreById(int id);
+
+        List<InvoiceDetailPurity> getPuritiesByLocalDetailId(String idDetail);
+
+        /*Store getStoreById(int id);
+
+        ItemType getItemTypeById(int id);
+
+        List<InvoiceDetailPurity> getDetailPuritiesByIdDetail(int id);*/
     }
 }

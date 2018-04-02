@@ -2,10 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:background="@mipmap/background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:padding="@dimen/padding_main_layout">
 
     <LinearLayout
@@ -13,74 +12,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_rounded"
-        android:padding="@dimen/padding_main_linear_layout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/padding_main_linear_layout">
+
+        <include layout="@layout/custom_header_w_description_and_select_picture" />
 
         <include
-            layout="@layout/custom_header_w_description_and_select_picture" />
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/provider_detail_text_edit_dni"
             layout="@layout/custom_edit_text"
-            android:id="@+id/provider_detail_text_edit_dni"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/provider_detail_text_edit_name"
             layout="@layout/custom_edit_text"
-            android:id="@+id/provider_detail_text_edit_name"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/provider_detail_text_edit_address"
             layout="@layout/custom_edit_text"
-            android:id="@+id/provider_detail_text_edit_address"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/provider_detail_text_edit_phone"
             layout="@layout/custom_edit_text"
-            android:id="@+id/provider_detail_text_edit_phone"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <include
+            android:id="@+id/provider_detail_text_edit_email"
+            layout="@layout/custom_edit_text_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/provider_detail_text_edit_contact"
             layout="@layout/custom_edit_text"
-            android:id="@+id/provider_detail_text_edit_email"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <include
+            layout="@layout/custom_send_button_w_border"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/custom_edit_text"
-            android:id="@+id/provider_detail_text_edit_contact"/>
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/custom_send_button_w_border"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-    <!--<android.support.design.widget.FloatingActionButton
-        android:id="@+id/provider_detail_button_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:backgroundTint="@color/colorPrimary"
-        android:tint="@color/colorAccent"
-        android:src="@android:drawable/ic_menu_camera"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp" />-->
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/colorPrimary"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/colorPrimary"
         android:visibility="invisible" />
 
 </FrameLayout>

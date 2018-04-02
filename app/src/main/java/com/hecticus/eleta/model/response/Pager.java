@@ -84,4 +84,16 @@ public class Pager {
         this.endIndex = endIndex;
     }
 
+    @Override
+    public String toString() {
+        return "Pager{" +
+                "totalEntitiesPerPage=" + totalEntitiesPerPage +
+                ", totalEntities=" + totalEntities +
+                ", pageIndex=" + pageIndex +
+                ", pageSize=" + pageSize +
+                ", pages=" + pages +
+                ", startIndex=" + startIndex +
+                ", endIndex=" + endIndex +
+                '}';
+    }
 }

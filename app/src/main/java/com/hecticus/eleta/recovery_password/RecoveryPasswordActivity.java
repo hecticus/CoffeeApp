@@ -1,10 +1,8 @@
 package com.hecticus.eleta.recovery_password;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +10,6 @@ import android.widget.Button;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
-import com.hecticus.eleta.login.LoginPresenter;
-import com.hecticus.eleta.model.Session;
-import com.hecticus.eleta.model.request.LoginPost;
-import com.hecticus.eleta.model.response.LoginResponse;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.retrofit_interface.UserRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
@@ -61,13 +55,13 @@ public class RecoveryPasswordActivity extends BaseActivity {
     @Override
     public void initViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        emailEditText.initWithTypeAndDescription(CustomEditText.Type.EMAIL,getString(R.string.email));
+        emailEditText.initWithTypeAndDescription(CustomEditText.Type.EMAIL, getString(R.string.email));
         initString();
     }
 
     @Override
     public void initString() {
-        if (emailInLogin!=null)
+        if (emailInLogin != null)
             emailEditText.setText(emailInLogin);
 
         recoveryButton.setText(getString(R.string.recovery));
@@ -95,7 +89,7 @@ public class RecoveryPasswordActivity extends BaseActivity {
 
     @OnClick(R.id.custom_send_button)
     public void clickOnLoginButton() {
-        recoveryPasswordRequest(emailEditText.getText());
+        recoverPasswordRequest(emailEditText.getText());
     }
 
     public void handleSuccessfulLogin() {
@@ -127,8 +121,9 @@ public class RecoveryPasswordActivity extends BaseActivity {
         userApi = retrofit.create(UserRetrofitInterface.class);
     }
 
-    public void recoveryPasswordRequest(String email) {
-        Call<Message> call = userApi.recoverPassword(email);
+    @DebugLog
+    public void recoverPasswordRequest(String email) {
+        Call<Message> call = userApi.recoverPasswordRequest(email);
         call.enqueue(new Callback<Message>() {
             @DebugLog
             @Override
@@ -137,14 +132,14 @@ public class RecoveryPasswordActivity extends BaseActivity {
                     try {
                         if ("Sent".equals(response.body().getMessage())) {
                             handleSuccessfulLogin();
-                        }else{
+                        } else {
                             showErrorMessage();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         showErrorMessage();
                     }
-                }else
+                } else
                     showErrorMessage();
             }
 
@@ -152,7 +147,7 @@ public class RecoveryPasswordActivity extends BaseActivity {
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 t.printStackTrace();
-                Log.e("RETRO", "--->ERROR");
+                Log.e("RETRO", "--->" + RecoveryPasswordActivity.class.getSimpleName() + " onFailure +" + call + " + " + t);
                 showErrorMessage();
             }
         });

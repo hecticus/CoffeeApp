@@ -1,9 +1,14 @@
 package com.hecticus.eleta.purchases.list;
 
+import android.support.annotation.NonNull;
+
 import com.hecticus.eleta.base.BaseListContract;
+import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.response.Pager;
 import com.hecticus.eleta.model.response.invoice.Invoice;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
+import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 
 import java.util.List;
 
@@ -12,8 +17,8 @@ import java.util.List;
  */
 
 public class PurchasesListContract {
-    
-    public interface View {
+
+    public interface View extends BaseListContract.View {
 
         void showWorkingIndicator();
 
@@ -33,10 +38,12 @@ public class PurchasesListContract {
 
         void refreshList();
 
-        void printPurchase(String text);
+        void printPurchase(String textToShow, String textToPrint);
+
+        void showDeleteConfirmation(BaseModel model);
     }
 
-    public interface Actions extends BaseListContract.Actions{
+    public interface Actions extends BaseListContract.Actions {
 
         void getInitialData();
 
@@ -46,24 +53,44 @@ public class PurchasesListContract {
 
         void updatePager(Pager pager);
 
+        void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults);
+
         void onPurchaseDeleted();
 
         void getMorePurchases();
 
         void onError(String error);
 
+        void onError(String error, String cause);
+
         boolean canLoadMore();
 
+        void getReceiptOfInvoiceForPrinting(Invoice invoiceParam);
+
+        void onGetReceiptSuccess(ReceiptResponse receiptResponse);
+
+        void onGetReceiptDetailsSuccess(InvoiceDetailsResponse invoiceDetailsResponse);
+
+        void deletePurchase(BaseModel model);
     }
 
     public interface Repository {
 
-        void onError(String error);
+        void onError(String error, String cause);
 
-        void purchasesRequest(int index);
+        void getPurchasesRequest(int index);
 
-        void deletePurchase(int purchaseId);
+        void deletePurchase(int remoteInvoiceId, int localInvoiceId);
 
         void onGetPurchasesSuccess(InvoiceListResponse invoicesList);
+
+        void getReceiptDetails(Invoice invoiceParam);
+
+        void onGetReceiptDetailsSuccess(InvoiceDetailsResponse detailsResponse);
+
+        void getReceiptOfInvoiceForPrinting(Invoice invoiceParam);
+
+        void onGetReceiptSuccess(ReceiptResponse receiptResponse);
+
     }
 }

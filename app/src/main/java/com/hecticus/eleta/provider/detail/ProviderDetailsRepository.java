@@ -7,11 +7,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model.persistence.ManagerDB;
+import com.hecticus.eleta.model.persistence.ManagerServices;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
 import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
-import com.hecticus.eleta.model.retrofit_interface.ProviderDetailsRetrofitInterface;
+import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.FileUtils;
 
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,8 +41,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProviderDetailsRepository implements ProviderDetailsContract.Repository {
 
-    private final ProviderDetailsRetrofitInterface providerDetailsDataApi;
-    private final ProviderDetailsRetrofitInterface providerImageApi;
+    private final ProviderRetrofitInterface providerDetailsDataApi;
+    private final ProviderRetrofitInterface providerImageApi;
     private final ProviderDetailsPresenter mPresenter;
     private final Context mContext;
 
@@ -54,7 +58,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                             @Override
                             public okhttp3.Response intercept(Chain chain) throws IOException {
                                 Request request = chain.request().newBuilder()
-                                        .addHeader("Authorization", Session.getAccessToken(mPresenter.context))
+                                        .addHeader("Authorization", SessionManager.getAccessToken(mPresenter.context))
                                         .addHeader("Content-Type", "application/json").build();
                                 return chain.proceed(request);
                             }
@@ -66,12 +70,12 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                             @Override
                             public okhttp3.Response intercept(Chain chain) throws IOException {
                                 Request request = chain.request().newBuilder()
-                                        .addHeader("Authorization", Session.getAccessToken(mPresenter.context))
+                                        .addHeader("Authorization", SessionManager.getAccessToken(mPresenter.context))
                                         .addHeader("Content-Type", "application/json").build();
                                 return chain.proceed(request);
                             }
                         })
-                .readTimeout(30, TimeUnit.SECONDS)
+                //.readTimeout(30, TimeUnit.SECONDS)
                 .build();
 
         Retrofit retrofitWithNormalTimeout = new Retrofit.Builder()
@@ -86,8 +90,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 .client(httpClientWithLongTimeout)
                 .build();
 
-        providerDetailsDataApi = retrofitWithNormalTimeout.create(ProviderDetailsRetrofitInterface.class);
-        providerImageApi = retrofitWithLongTimeout.create(ProviderDetailsRetrofitInterface.class);
+        providerDetailsDataApi = retrofitWithNormalTimeout.create(ProviderRetrofitInterface.class);
+        providerImageApi = retrofitWithLongTimeout.create(ProviderRetrofitInterface.class);
 
         mPresenter = presenterParam;
         mContext = context;
@@ -101,114 +105,195 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
     @Override
     public void createProviderRequest(Provider providerParam, final String imagePath) {
 
-        if (providerParam.getIdProviderType() == null) {
+        if (providerParam.getIdProviderType() == -1) {
             Log.d("DETAILS", "--->Populating provider type: " + providerParam.getProviderType().getIdProviderType());
-            providerParam.setIdProviderType(providerParam.getProviderType().getIdProviderType());
+
         } else
             Log.d("DETAILS", "--->Using provider type: " + providerParam.getIdProviderType());
 
-        Log.d("DETAILS", "--->Sent provider: " + providerParam);
+        if (!InternetManager.isConnected(mContext)) {
+            if (providerIdDocExistsInLocalStorageX(providerParam)) {
+                Log.w("OFFLINE", "--->Can't create provider ("
+                        + providerParam.getIdentificationDocProvider()
+                        + "). Id doc already exists in local storage // Full provider: " + providerParam);
+                if (providerParam.isHarvester())
+                    onCreateError(mPresenter.context.getString(R.string.dni_already_exists));
+                else
+                    onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
+            } else if (isSellerAndNameExistsInLocalStorage(providerParam)) {
+                Log.w("OFFLINE", "--->Can't create seller ("
+                        + providerParam.getFullNameProvider()
+                        + "). Name already exists in local storage // Full seller: " + providerParam);
+                onCreateError(mPresenter.context.getString(R.string.name_already_exists));
+            } else {
+                providerParam.setAddOffline(true);
+                providerParam.setUnixtime(System.currentTimeMillis() / 1000L);
 
-        Call<ProviderCreationResponse> call = providerDetailsDataApi.createProvider(providerParam);
-        call.enqueue(new Callback<ProviderCreationResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ProviderCreationResponse> call, @NonNull Response<ProviderCreationResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        mPresenter.uploadImage(response.body().getProvider(), imagePath);
-                        onSuccessSaveProvider(response.body().getProvider());
-                        Log.d("DETAILS", "--->Success " + response.body());
-                    } catch (Exception e) {
-                        Log.d("DETAILS", "--->createProviderRequest Error (" + response.code() + "):" + response.body());
-                        e.printStackTrace();
-                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                    }
+                if (imagePath != null)
+                    providerParam.setPhotoProvider(imagePath);
+
+                Log.d("OFFLINE", "--->Saved offline provider: " + providerParam);
+
+                if (ManagerDB.saveNewProvider(providerParam)) {
+                    Log.d("DETAILS", "--->Success saved local");
+                    onProviderSaved(providerParam);
                 } else {
-
-                    try {
-                        JSONObject object = new JSONObject(response.errorBody().string());
-
-                        if (object.optInt("error") == 409) {
-                            Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + response.code() + "):" + response.body());
-
-                            onCreateError(mPresenter.context.getString(R.string.already_exists));
-                        } else {
-                            Log.d("DETAILS", "--->createProviderRequest Error 1b No Existia (" + response.code() + "):" + response.body());
-
-                            onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                        }
-                    } catch (JSONException | IOException e) {
-                        Log.d("DETAILS", "--->createProviderRequest Error 2 (" + response.code() + "):" + response.body());
-                        e.printStackTrace();
-                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                    }
+                    onCreateError(mPresenter.context.getString(R.string.error_during_operation));
                 }
             }
 
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                Log.d("RETRO", "--->ERROR: " + t.getMessage());
-                onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-            }
-        });
+        } else {
+            Log.d("DETAILS", "--->Sent provider: " + providerParam);
+
+            Call<ProviderCreationResponse> call = providerDetailsDataApi.createProvider(providerParam);
+
+            new ManagerServices<>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<ProviderCreationResponse> response) {
+                    try {
+                        mPresenter.uploadImage(response.body().getProvider(), imagePath);
+                        onProviderSaved(response.body().getProvider());
+                        Log.d("DETAILS", "--->Success createProviderRequest:" + response.body());
+                    } catch (Exception e) {
+                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<ProviderCreationResponse> response, String errorMessage) {
+                    if (fail || code != 409) {
+                        Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
+                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                    } else {
+                        Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + code + "):" + response.body());
+                        onCreateError(mPresenter.context.getString(R.string.already_exists));
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                    /*Session.clearPreferences(mPresenter.context);
+                    mPresenter.invalidToken();*/
+                }
+            });
+        }
     }
 
     @DebugLog
     @Override
-    public void updateProviderRequest(Provider providerParam) {
-        if (providerParam.getIdProviderType() == null) {
+    public void updateProviderRequest(final Provider providerParam) {
+        if (providerParam.getIdProviderType() == -1) {
             Log.d("DETAILS", "--->Populating provider type: " + providerParam.getProviderType().getIdProviderType());
             providerParam.setIdProviderType(providerParam.getProviderType().getIdProviderType());
         } else
             Log.d("DETAILS", "--->Using provider type: " + providerParam.getIdProviderType());
 
-        Log.d("DETAILS", "--->Sent provider: " + providerParam);
 
-        Call<ProviderCreationResponse> call = providerDetailsDataApi.updateProviderData(providerParam);
-        call.enqueue(new Callback<ProviderCreationResponse>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<ProviderCreationResponse> call, @NonNull Response<ProviderCreationResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        Log.d("DETAILS", "--->Success " + response.body());
-                        onSuccessSaveProvider(response.body().getProvider());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        onDataUpdateError(false);
-                    }
+        if (!InternetManager.isConnected(mContext) || providerParam.getIdProvider() < 0 || ManagerDB.providerHasOfflineOperation(providerParam)) {
+            if (providerHasChangedIdDoc(providerParam) &&
+                    providerIdDocExistsInLocalStorageX(providerParam)) {
+                Log.w("OFFLINE", "--->Can't update provider ("
+                        + providerParam.getIdentificationDocProvider()
+                        + "). Id doc already exists in local storage. Full provider: " + providerParam);
+                if (providerParam.isHarvester())
+                    onDataUpdateError(Constants.ErrorType.DNI_EXISTING);
+                else
+                    onDataUpdateError(Constants.ErrorType.RUC_EXISTING);
+            } else if (isSellerAndNameExistsInLocalStorage(providerParam)) {
+                Log.w("OFFLINE", "--->Can't update seller ("
+                        + providerParam.getFullNameProvider()
+                        + "). Name already exists in local storage. Full seller: " + providerParam);
+                onDataUpdateError(Constants.ErrorType.NAME_EXISTING);
+            } else {
+                Log.d("DETAILS", "--->Provider a actualizar: " + providerParam);
+
+                providerParam.setAddOffline(providerParam.getIdProvider() < 0);
+                providerParam.setEditOffline(true);
+                if (providerParam.getUnixtime() == -1)
+                    providerParam.setUnixtime(System.currentTimeMillis() / 1000L);
+
+                if (ManagerDB.updateExistingProvider(providerParam)) {
+                    Log.d("OFFLINE", "--->Success saved offline: " + providerParam);
+                    onProviderSaved(providerParam);
                 } else {
-                    try {
-                        JSONObject object = new JSONObject(response.errorBody().string());
-
-                        if (object.optInt("error") == 409) {
-                            Log.d("DETAILS", "--->updateProviderRequest Error 1a Existe (" + response.code() + "):" + response.body());
-
-                            onDataUpdateError(true);
-                        } else {
-                            Log.d("DETAILS", "--->updateProviderRequest Error 1b No Existia (" + response.code() + "):" + response.body());
-
-                            onDataUpdateError(false);
-                        }
-                    } catch (JSONException | IOException e) {
-                        Log.d("DETAILS", "--->updateProviderRequest Error 2 (" + response.code() + "):" + response.body());
-                        e.printStackTrace();
-                        onDataUpdateError(false);
-                    }
+                    onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
                 }
             }
+        } else {
+            Log.d("DETAILS", "--->Sent provider: " + providerParam);
+            Call<ProviderCreationResponse> call = providerDetailsDataApi.updateProviderData(providerParam);
+            ManagerServices service = new ManagerServices<ProviderCreationResponse>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<ProviderCreationResponse> response) {
+                    try {
+                        onProviderSaved(response.body().getProvider());
+                        Log.d("DETAILS", "--->Success updateProviderRequest:" + response.body());
+                    } catch (Exception e) {
+                        onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
+                    }
+                }
 
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                Log.d("RETRO", "--->ERROR: " + t.getMessage());
-                onDataUpdateError(false);
-            }
-        });
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<ProviderCreationResponse> response, String errorMessage) {
+                    if (fail || code != 409) {
+                        Log.d("DETAILS", "--->updateProviderRequest Error 2 (" + code + "):" + (response != null ? response.body() : ""));
+                        onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
+                    } else {
+                        if (errorMessage != null && errorMessage.equals("registered [fullNameProvider]")) {
+                            Log.d("DETAILS", "--->updateProviderRequest Error 2 fullNameProvider (" + code + "):" + (response != null ? response.body() : ""));
+                            onDataUpdateError(Constants.ErrorType.NAME_EXISTING);
+                        } else {
+                            Log.d("DETAILS", "--->updateProviderRequest Error DNI/RUC (" + response.code() + "):" + response.body());
+                            if (providerParam.isHarvester())
+                                onDataUpdateError(Constants.ErrorType.DNI_EXISTING);
+                            else
+                                onDataUpdateError(Constants.ErrorType.RUC_EXISTING);
+                        }
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                    SessionManager.clearPreferences(mPresenter.context);
+                    mPresenter.invalidToken();
+                }
+            });
+        }
+    }
+
+    @DebugLog
+    private boolean providerIdDocExistsInLocalStorageX(Provider providerParam) {
+        Provider savedWithSameIdDoc = Realm.getDefaultInstance()
+                .where(Provider.class)
+                .equalTo("identificationDocProvider", providerParam.getIdentificationDocProvider())
+                .findFirst();
+        return (savedWithSameIdDoc != null);
+    }
+
+    @DebugLog
+    private boolean isSellerAndNameExistsInLocalStorage(Provider providerParam) {
+
+        if (providerParam.isHarvester()) // This rule is only for sellers
+            return false;
+
+        Provider sellerWithSameName = Realm.getDefaultInstance()
+                .where(Provider.class)
+                .equalTo("idProviderType", Constants.TYPE_SELLER)
+                .equalTo("fullNameProvider", providerParam.getFullNameProvider())
+                .findFirst();
+        return (sellerWithSameName != null);
+    }
+
+    @DebugLog
+    private boolean providerHasChangedIdDoc(Provider providerParam) {
+        return !providerParam.getIdentificationDocProvider()
+                .equals(providerParam.getIdentificationDocProviderChange());
     }
 
     @DebugLog
@@ -217,18 +302,17 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         mPresenter.onCreateError(message);
     }
 
+    @DebugLog
     @Override
-    public void onDataUpdateError(boolean isAlreadyExists) {
-        if (isAlreadyExists)
-            mPresenter.onUpdateError(2);
-        else
-            mPresenter.onUpdateError(0);
+    public void onDataUpdateError(Constants.ErrorType errorType) {
+        mPresenter.onUpdateError(errorType, null);
     }
 
+    @DebugLog
     @Override
-    public void onImageUpdateError(Provider provider, String previousImageString) {
+    public void onImageUpdateError(Provider provider, String previousImageString, String errorMessage) {
         provider.setPhotoProvider(previousImageString);
-        mPresenter.onUpdateError(1);
+        mPresenter.onUpdateError(Constants.ErrorType.ERROR_UPDATING_IMAGE, errorMessage);
     }
 
     @DebugLog
@@ -239,8 +323,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
     @DebugLog
     @Override
-    public void onSuccessSaveProvider(Provider provider) {
-        mPresenter.onSavedProvider(provider);
+    public void onProviderSaved(Provider provider) {
+        mPresenter.onProviderSaved(provider);
     }
 
     @DebugLog
@@ -267,16 +351,20 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onImageUpdateError(provider, previousProviderImageString);
+                        onImageUpdateError(provider, previousProviderImageString, null);
                     }
                 } else {
+
+                    String errorMessage = null;
+
                     try {
-                        Log.e("DETAILS", "--->uploadImageRequest Error " + new JSONObject(response.errorBody().string()));
+                        errorMessage = new JSONObject(response.errorBody().string()) + "";
+                        Log.e("DETAILS", "--->uploadImageRequest Error " + errorMessage);
                     } catch (JSONException | IOException e) {
                         Log.e("DETAILS", "--->uploadImageRequest Error with error");
                         e.printStackTrace();
                     }
-                    onImageUpdateError(provider, previousProviderImageString);
+                    onImageUpdateError(provider, previousProviderImageString, errorMessage);
                 }
             }
 
@@ -285,7 +373,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             public void onFailure(@NonNull Call<ProviderImageUpdateResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.d("RETRO", "--->ERROR: " + t.getMessage());
-                onImageUpdateError(provider, previousProviderImageString);
+                onImageUpdateError(provider, previousProviderImageString, null);
             }
         });
     }

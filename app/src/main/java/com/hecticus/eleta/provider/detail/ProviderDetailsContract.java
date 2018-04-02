@@ -1,6 +1,9 @@
 package com.hecticus.eleta.provider.detail;
 
+import android.support.annotation.Nullable;
+
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.util.Constants;
 
 import java.util.HashMap;
 
@@ -16,7 +19,7 @@ public class ProviderDetailsContract {
 
         void hideWorkingIndicator();
 
-        void onSavedProvider(Provider providerParam);
+        void onProviderSaved(Provider providerParam);
 
         void showMessage(String message);
 
@@ -33,6 +36,8 @@ public class ProviderDetailsContract {
         void onClickSelectImage();
 
         void returnProvider(Provider provider);
+
+        void invalidToken();
 
     }
 
@@ -52,9 +57,9 @@ public class ProviderDetailsContract {
 
         void onCancelChangesButtonClicked();
 
-        void onUpdateError(int type);
+        void onUpdateError(Constants.ErrorType errorType, @Nullable String customErrorString);
 
-        void onSavedProvider(Provider providerModel);
+        void onProviderSaved(Provider providerModel);
 
         void undoChanges();
 
@@ -63,6 +68,10 @@ public class ProviderDetailsContract {
         void onImageUpdateSuccess(String newImageString);
 
         void onCreateError(String message);
+
+        void invalidToken();
+
+        String getNextProviderImagePath();
     }
 
     public interface Repository {
@@ -73,13 +82,13 @@ public class ProviderDetailsContract {
 
         void onCreateError(String message);
 
-        void onDataUpdateError(boolean isAlreadyExists);
+        void onDataUpdateError(Constants.ErrorType errorType);
 
-        void onImageUpdateError(Provider provider, String previousImageString);
+        void onImageUpdateError(Provider provider, String previousImageString, @Nullable String errorMessage);
 
         void onImageUpdateSuccess(String newImageString);
 
-        void onSuccessSaveProvider(Provider provider);
+        void onProviderSaved(Provider provider);
 
         void uploadImageRequest(Provider provider, String newImagePath);
 

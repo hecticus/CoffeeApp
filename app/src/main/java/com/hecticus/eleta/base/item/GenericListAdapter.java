@@ -43,9 +43,9 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
     public void onBindViewHolder(final GenericItemViewHolder genericItemViewHolder, final int position) {
 
         genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());
-        if (position % 2 == 0){
+        if (position % 2 == 0) {
             genericItemViewHolder.getItemWholeLinearLayout().setBackgroundResource(R.color.colorBackgroundPairItem);
-        }else{
+        } else {
             genericItemViewHolder.getItemWholeLinearLayout().setBackgroundResource(R.color.colorBackgroundOddItem);
         }
 
@@ -61,10 +61,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
         } else {
             if (isDialog) {
                 genericItemViewHolder.getContainerButtonsView().setVisibility(View.GONE);
-            }else {
+            } else {
                 genericItemViewHolder.getPrintImageButton().setVisibility(View.VISIBLE);
                 genericItemViewHolder.getEditImageButton().setVisibility(View.GONE);
                 genericItemViewHolder.getPrintImageButton().setOnClickListener(new View.OnClickListener() {
+                    @DebugLog
                     @Override
                     public void onClick(View view) {
                         mPresenter.onClickPrintButton(list.get(position));
@@ -73,8 +74,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
             }
         }
 
-        if (list.get(position).canDelete())
-        {
+        if (list.get(position).canDelete()) {
             genericItemViewHolder.getDeleteImageButton().setVisibility(View.VISIBLE);
             genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -113,16 +113,10 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
     }
 
     @DebugLog
-    public void showMoreDataSet(List<? extends BaseModel> listParam) {
+    public void showMoreDataSetX(List<? extends BaseModel> listParam) {
         List aux = new ArrayList<>();
         aux.addAll(listParam);
         list.addAll(aux);
-        notifyDataSetChanged();
-    }
-
-    @DebugLog
-    public void clearDataSet() {
-        list = new ArrayList<>();
         notifyDataSetChanged();
     }
 }

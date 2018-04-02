@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,15 +23,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.hecticus.eleta.LoggedInActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
+import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderType;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.FileUtils;
 import com.hecticus.eleta.util.GlideApp;
+import com.hecticus.eleta.util.PermissionUtil;
 import com.hecticus.eleta.util.Util;
 
 import java.io.File;
@@ -78,11 +77,6 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
     private String takenOrPickedImagePath = null;
     private ProviderDetailsContract.Actions mPresenter;
-
-    private static final int CAMERA_AND_STORAGE_PERMISSION_REQUEST_CODE = 3477;
-    private static final int STORAGE_PERMISSION_REQUEST_CODE = 5465;
-    private static final int TAKE_PHOTO_REQUEST_CODE = 6421;
-    private static final int GALLERY_IMAGE_REQUEST_CODE = 8617;
 
     private boolean isForProviderCreation;
     private boolean fromProvidersList;
@@ -134,7 +128,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             contactEditText.init();
             contactEditText.setVisibility(View.GONE);
         } else {
-            dniEditText.initWithTypeAndDescription(CustomEditText.Type.DNI, getString(R.string.RUC));
+            dniEditText.initWithTypeAndDescription(CustomEditText.Type.RUC, getString(R.string.RUC));
             nameEditText.initWithDescription(getString(R.string.name));
             contactEditText.initWithDescription(getString(R.string.contact));
         }
@@ -174,12 +168,11 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
     @DebugLog
     @Override
-    public void onSavedProvider(Provider providerParam) {
-        showMessage(getString(R.string.saved));
-
+    public void onProviderSaved(Provider providerParam) {
         if (isForProviderCreation)
             returnProvider(providerParam);
         else {
+            showMessage(getString(R.string.provider_saved));
             updateFields(providerParam);
             hideWorkingIndicator();
             updateMenuOptions();
@@ -188,7 +181,8 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @DebugLog
@@ -225,8 +219,10 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         if (mPresenter.isHarvester()) {
             maybeModifiedProvider.setContactNameProvider(maybeModifiedProvider.getFullNameProvider());
             maybeModifiedProvider.setProviderType(new ProviderType(Constants.TYPE_HARVESTER));
+            maybeModifiedProvider.setIdProviderType(Constants.TYPE_HARVESTER);
         } else {
             maybeModifiedProvider.setProviderType(new ProviderType(Constants.TYPE_SELLER));
+            maybeModifiedProvider.setIdProviderType(Constants.TYPE_SELLER);
             maybeModifiedProvider.setContactNameProvider(contactEditText.getText().trim());
         }
 
@@ -264,45 +260,45 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     @DebugLog
     private boolean validFields() {
 
-        if (dniEditText.getText().trim().isEmpty()){
+        if (dniEditText.getText().trim().isEmpty()) {
             if (mPresenter.isHarvester()) {
                 showMessage(getString(R.string.dni_empty));
-            }else {
+            } else {
                 showMessage(getString(R.string.ruc_empty));
             }
             return false;
         }
 
 
-        if (nameEditText.getText().trim().isEmpty()){
+        if (nameEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.name_empty));
             return false;
         }
 
 
-        if (addressEditText.getText().trim().isEmpty()){
+        if (addressEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.address_empty));
             return false;
         }
 
 
-        if (phoneEditText.getText().trim().isEmpty()){
+        if (phoneEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.phone_empty));
             return false;
         }
 
 
-        if (emailEditText.getText().trim().isEmpty()){
+        if (emailEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.email_empty));
             return false;
         }
 
-        if (!mPresenter.isHarvester() && contactEditText.getText().trim().isEmpty()){
+        if (!mPresenter.isHarvester() && contactEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.contact_empty));
             return false;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText()).matches()){
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText()).matches()) {
             showMessage(getString(R.string.email_invalid));
             return false;
         }
@@ -324,20 +320,21 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (isPermissionGranted(Manifest.permission.CAMERA) && isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        if (PermissionUtil.isPermissionGranted(ProviderDetailsActivity.this, Manifest.permission.CAMERA) &&
+                                PermissionUtil.isPermissionGranted(ProviderDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                             takePicture();
                         } else {
-                            requestCameraAndStoragePermissions();
+                            PermissionUtil.requestCameraAndStoragePermissions(ProviderDetailsActivity.this);
                         }
                     } else {
                         takePicture();
                     }
                 } else if (which == 1) {
                     if (Build.VERSION.SDK_INT >= 23) {
-                        if (isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        if (PermissionUtil.isPermissionGranted(ProviderDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                             pickGalleryImage();
                         } else {
-                            requestStoragePermission();
+                            PermissionUtil.requestStoragePermission(ProviderDetailsActivity.this);
                         }
                     } else {
                         pickGalleryImage();
@@ -353,7 +350,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
         try {
-            startActivityForResult(galleryIntent, GALLERY_IMAGE_REQUEST_CODE);
+            startActivityForResult(galleryIntent, PermissionUtil.GALLERY_IMAGE_REQUEST_CODE);
         } catch (ActivityNotFoundException anfe) {
             showMessage(getString(R.string.no_gallery_app));
             anfe.printStackTrace();
@@ -366,13 +363,16 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         File tempFolder = FileUtils.getTempFolder();
 
         if (tempFolder.exists() || tempFolder.mkdirs()) {
-            Uri output = FileProvider.getUriForFile(ProviderDetailsActivity.this, getPackageName() + ".provider", new File(FileUtils.getTempImagePath()));
+            Uri output =
+                    FileProvider.getUriForFile(
+                            ProviderDetailsActivity.this,
+                            getPackageName() + ".provider", new File(mPresenter.getNextProviderImagePath()/*FileUtils.getTempImagePath()*/));
 
             takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, output);
             takePhotoIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
 
             try {
-                startActivityForResult(takePhotoIntent, TAKE_PHOTO_REQUEST_CODE);
+                startActivityForResult(takePhotoIntent, PermissionUtil.TAKE_PHOTO_REQUEST_CODE);
             } catch (ActivityNotFoundException anfe) {
                 showMessage(getString(R.string.no_camera_app));
                 anfe.printStackTrace();
@@ -383,24 +383,10 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         }
     }
 
-    private boolean isPermissionGranted(String wantedPermission) {
-        int camera = ContextCompat.checkSelfPermission(this, wantedPermission);
-        return camera == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-    private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST_CODE);
-    }
-
-    private void requestCameraAndStoragePermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_AND_STORAGE_PERMISSION_REQUEST_CODE);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case CAMERA_AND_STORAGE_PERMISSION_REQUEST_CODE:
+            case PermissionUtil.CAMERA_AND_STORAGE_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 &&
                         grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                         grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -409,7 +395,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
                     showMessage(getString(R.string.camera_and_storage_permission_needed));
                 }
                 break;
-            case STORAGE_PERMISSION_REQUEST_CODE:
+            case PermissionUtil.STORAGE_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickGalleryImage();
                 } else {
@@ -423,14 +409,13 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent receivedIntent) {
 
-        if ((requestCode == GALLERY_IMAGE_REQUEST_CODE || requestCode == TAKE_PHOTO_REQUEST_CODE)
+        if ((requestCode == PermissionUtil.GALLERY_IMAGE_REQUEST_CODE || requestCode == PermissionUtil.TAKE_PHOTO_REQUEST_CODE)
                 && resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == TAKE_PHOTO_REQUEST_CODE) {
-                Log.d("PHOTO", "--->Photo taken");
-                takenOrPickedImagePath = FileUtils.getTempImagePath();
+            if (requestCode == PermissionUtil.TAKE_PHOTO_REQUEST_CODE) {
+                takenOrPickedImagePath = mPresenter.getNextProviderImagePath();//FileUtils.getTempImagePath();
+                Log.d("PHOTO", "--->Photo taken: " + takenOrPickedImagePath);
             } else {
-                Log.d("PHOTO", "--->Image picked from gallery");
                 Uri imgUri = receivedIntent.getData();
                 if (imgUri == null) {
                     Log.w("PHOTO", "--->No data from intent?");
@@ -438,6 +423,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
                     return;
                 }
                 takenOrPickedImagePath = FileUtils.getLocalPathGivenUriAndContext(imgUri, this);
+                Log.d("PHOTO", "--->Image picked from gallery: " + takenOrPickedImagePath);
             }
 
             GlideApp
@@ -467,30 +453,31 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     public void onBackPressed() {
         if (!fromProvidersList) {
             finish();
-        }else {
-            Intent intent = new Intent(ProviderDetailsActivity.this, LoggedInActivity.class);
+        } else {
+            Intent intent = new Intent(ProviderDetailsActivity.this, HomeActivity.class);
             intent.putExtra("reloadProviders", mPresenter.isUpdated());
             startActivity(intent);
             finish();
         }
     }
 
-    public void doBack(){
+    public void doBack() {
         if (!fromProvidersList) {
             finish();
-        }else {
-            Intent mIntent = new Intent(ProviderDetailsActivity.this, LoggedInActivity.class);
+        } else {
+            Intent mIntent = new Intent(ProviderDetailsActivity.this, HomeActivity.class);
             mIntent.putExtra("reloadProviders", mPresenter.isUpdated());
             startActivity(mIntent);
             finish();
         }
     }
 
+    @DebugLog
     @Override
-    public void returnProvider(Provider provider){
+    public void returnProvider(Provider provider) {
         if (!fromProvidersList) {
             try {
-                LoggedInActivity.reloadProviders = true;
+                HomeActivity.reloadProviders = true;
                 Intent intent = new Intent();
                 intent.putExtra("provider", Util.getGson().toJson(provider));
                 setResult(RESULT_OK, intent);
@@ -499,12 +486,21 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             } finally {
                 finish();
             }
-        }else {
-            Intent mIntent = new Intent(ProviderDetailsActivity.this, LoggedInActivity.class);
+        } else {
+            Intent mIntent = new Intent(ProviderDetailsActivity.this, HomeActivity.class);
             mIntent.putExtra("reloadProviders", mPresenter.isUpdated());
+            mIntent.putExtra("providerSaved", true);
             startActivity(mIntent);
             finish();
         }
+    }
+
+    @Override
+    public void invalidToken() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("invalidToken", true);
+        startActivity(intent);
+        finish();
     }
 
 }

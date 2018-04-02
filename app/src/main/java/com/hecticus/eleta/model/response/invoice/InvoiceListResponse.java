@@ -46,4 +46,13 @@ public class InvoiceListResponse {
     public void setPager(Pager pager) {
         this.pager = pager;
     }
+
+    @Override
+    public String toString() {
+        return "InvoiceListResponse{" +
+                "message='" + message + '\'' +
+                ", result=" + result +
+                ", pager=" + pager +
+                '}';
+    }
 }

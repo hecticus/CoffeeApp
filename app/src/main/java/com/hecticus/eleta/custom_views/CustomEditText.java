@@ -3,7 +3,10 @@ package com.hecticus.eleta.custom_views;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.EditText;
@@ -20,11 +23,13 @@ import com.hecticus.eleta.R;
 public class CustomEditText extends LinearLayout {
 
     public enum Type {
-        PASSWORD, TEXT, EMAIL, DATE, DNI, NUMERIC, PHONE, MULTILINE, DECIMAL
+        PASSWORD, TEXT, EMAIL, DATE, DNI, NUMERIC, PHONE, MULTILINE, DECIMAL, RUC
     }
 
     TextView descriptionTextView;
     EditText editText;
+    private int textlength = 0;
+    private boolean listenForChanges = true;
 
     public CustomEditText(Context context) {
         super(context);
@@ -41,6 +46,9 @@ public class CustomEditText extends LinearLayout {
     public void init(){
         descriptionTextView = (TextView) findViewById(R.id.custom_edit_text_description_text_view);
         editText = (EditText) findViewById(R.id.custom_edit_text_internal);
+
+        editText.setSingleLine(true);
+        editText.setMaxLines(1);
     }
 
     public void initWithType(Type type){
@@ -64,6 +72,10 @@ public class CustomEditText extends LinearLayout {
                 break;
             case DNI:
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case RUC:
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                initEditTextRuc();
                 break;
             case DECIMAL:
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -99,7 +111,9 @@ public class CustomEditText extends LinearLayout {
     }
 
     public void setText(String text){
+        listenForChanges = false;
         editText.setText(text);
+        listenForChanges = true;
     }
 
     public void setHint(String text){
@@ -128,5 +142,66 @@ public class CustomEditText extends LinearLayout {
 
     public void setSingleLine(){
         editText.setSingleLine();
+    }
+
+    private void initEditTextRuc(){
+        editText.setHint("XXXXX-Y-ZZZZ DV NN");
+        editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(18)});
+        editText.addTextChangedListener(new TextWatcher()
+        {
+
+            public void afterTextChanged(Editable s)
+            {
+                String text = editText.getText().toString();
+                int aux = textlength;
+                textlength = editText.getText().length();
+
+                if (!listenForChanges)
+                    return;
+
+                if (aux<=textlength) {
+                    if (text.endsWith(" ") || text.endsWith("-"))
+                        return;
+
+                    if (textlength == 5 || textlength == 7) {
+                        editText.setText(new StringBuilder(text).append("-").toString());
+                        editText.setSelection(editText.getText().length());
+                    } else if (textlength == 6 || textlength == 8) {
+                        editText.setText(new StringBuilder(text).insert(textlength-1,"-").toString());
+                        editText.setSelection(editText.getText().length());
+                    } else if (textlength == 12) {
+                        editText.setText(new StringBuilder(text).append(" DV ").toString());
+                        editText.setSelection(editText.getText().length());
+                    } else if (textlength == 13) {
+                        editText.setText(new StringBuilder(text).insert(textlength-1," DV ").toString());
+                        editText.setSelection(editText.getText().length());
+                    }
+                } else {
+                    if (text.endsWith("-")) {
+                        listenForChanges = false;
+                        editText.setText(new StringBuilder(text).deleteCharAt(textlength-1).toString());
+                        listenForChanges = true;
+                        editText.setSelection(editText.getText().length());
+                    } else if (text.endsWith(" ")) {
+                        listenForChanges = false;
+                        editText.setText(new StringBuilder(text).delete(textlength-4,textlength).toString());
+                        listenForChanges = true;
+                        editText.setSelection(editText.getText().length());
+                    } else if (text.endsWith("V")) {
+                        listenForChanges = false;
+                        editText.setText(new StringBuilder(text).delete(textlength-3,textlength).toString());
+                        listenForChanges = true;
+                        editText.setSelection(editText.getText().length());
+                    }
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) { }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) { }
+
+        });
     }
 }

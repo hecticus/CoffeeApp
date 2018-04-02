@@ -7,12 +7,17 @@ import com.hecticus.eleta.model.response.farm.Farm;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by roselyn545 on 25/9/17.
  */
 
-public class Lot  extends ItemSpinnerInterface implements Serializable {
+public class Lot extends RealmObject implements ItemSpinnerInterface, Serializable {
 
+    @PrimaryKey
     @SerializedName("idLot")
     @Expose
     private int id = -1;
@@ -25,9 +30,12 @@ public class Lot  extends ItemSpinnerInterface implements Serializable {
     @Expose
     private float price = -1;
 
+    @Ignore
     @SerializedName("farm")
     @Expose
     private Farm farm = null;
+
+    private int farmId = -1;
 
 
     public int getId() {
@@ -70,6 +78,14 @@ public class Lot  extends ItemSpinnerInterface implements Serializable {
     @Override
     public int getItemId() {
         return id;
+    }
+
+    public int getFarmId() {
+        return farmId;
+    }
+
+    public void setFarmId(int farmId) {
+        this.farmId = farmId;
     }
 
     @Override

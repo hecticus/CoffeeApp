@@ -9,8 +9,11 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:padding="@dimen/padding_main_linear_layout"
+        android:padding="5dp"
+        android:scrollbars = "vertical"
+        style="?android:attr/textAppearanceSmall"
         android:background="@drawable/button_border"
+        android:maxLines = "50"
         android:textColor="@color/colorPrimary">
 
     </TextView>

@@ -4,9 +4,9 @@ package com.hecticus.eleta.base;
  * Created by roselyn545 on 15/9/17.
  */
 
-public abstract class BaseModel {
+public interface BaseModel {
 
-    public abstract String getReadableDescription();
+    public String getReadableDescription();
 
-    public abstract boolean canDelete();
+    public boolean canDelete();
 }

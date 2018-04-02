@@ -1,13 +1,14 @@
 package com.hecticus.eleta.provider.list;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseModel;
-import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.util.Constants;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -36,6 +37,7 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
         mRepository = new ProvidersListRepository(this);
     }
 
+    @DebugLog
     @Override
     public void onClickPrintButton(BaseModel model) {
         //TODO
@@ -51,25 +53,33 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
     @Override
     public void onClickItem(BaseModel clickedProvider) {
         //TODO
+        Log.d("TEST","current "+(Provider) clickedProvider);
     }
 
     @Override
     public void onClickDeleteButton(BaseModel model) {
+        mView.showDeleteConfirmation(model);
+    }
+
+    @Override
+    public void deleteProvider(BaseModel model) {
         mView.showWorkingIndicator();
-        Provider provider = (Provider) model;
-        mRepository.deleteProvider(provider.getIdProvider());
+        mRepository.deleteProvider((Provider) model);
+    }
+
+    @Override
+    public void invalidToken() {
+        mView.invalidToken();
     }
 
     @DebugLog
     @Override
     public void getInitialData() {
         mView.showWorkingIndicator();
-        //lastPage = Constants.INITIAL_PAGE_IN_PAGER;
-        //currentPage = Constants.INITIAL_PAGE_IN_PAGER;
-        //mRepository.getProviders(currentPage);//currentPage
         mRepository.getProvidersOfType(currentType);
     }
 
+    @DebugLog
     @Override
     public void getProvidersByType(int providerType) {
         currentType = providerType;
@@ -77,52 +87,59 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
         mRepository.getProvidersOfType(providerType);
     }
 
+    @DebugLog
     @Override
     public void refreshProvidersList() {
         getInitialData();
     }
 
+    @DebugLog
     @Override
     public void cancelSearch() {
         mView.updateProvidersList(mRepository.getCurrentProviders());
     }
 
+    @DebugLog
     @Override
-    public void handleSuccessfulProvidersRequest(List<Provider> providersList) {
-        Collections.sort(providersList, new Comparator<Provider>() {
-            @Override
-            public int compare(Provider o1, Provider o2) {
-                String string1 = o1.getFullNameProvider()!=null?o1.getFullNameProvider().toLowerCase():"";
-                String string2 = o2.getFullNameProvider()!=null?o2.getFullNameProvider().toLowerCase():"";
-                return string1.compareTo(string2);
-            }
-        });
-
-        //if (currentPage == Constants.INITIAL_PAGE_IN_PAGER) {
+    public void handleSuccessfulSortedProvidersRequest(List<Provider> providersList) {
         mView.updateProvidersList(providersList);
-        /*} else {
-            mView.addMoreProvidersToTheList(providersList);
-        }*/
-
         mView.hideWorkingIndicator();
-
     }
 
+    @DebugLog
+    @Override
+    public void handleSuccessfulMixedProvidersRequest(List<Provider> nonSortableProvidersList) {
+
+        //If nonSortableProvidersList comes from realm, it cannot be properly sorted, so we use a new list.
+
+        List<Provider> sortableProvidersList = new ArrayList<>();
+        sortableProvidersList.addAll(nonSortableProvidersList);
+
+        for (int i=0;i<sortableProvidersList.size()-1;i++) {
+            for (int j=i+1;j<sortableProvidersList.size();j++){
+                String string1 = sortableProvidersList.get(j).getFullNameProvider() != null ? sortableProvidersList.get(j).getFullNameProvider().toLowerCase() : "";
+                String string2 = sortableProvidersList.get(i).getFullNameProvider() != null ? sortableProvidersList.get(i).getFullNameProvider().toLowerCase() : "";
+
+                if (string1.compareTo(string2)<0) {
+                    Provider aux = sortableProvidersList.get(j);
+                    sortableProvidersList.set(j,sortableProvidersList.get(i));
+                    sortableProvidersList.set(i,aux);
+                }
+            }
+        }
+        handleSuccessfulSortedProvidersRequest(sortableProvidersList);
+    }
+
+    @DebugLog
     @Override
     public void searchProvidersByName(String name) {
-        if (name.isEmpty()){
+        if (name.isEmpty()) {
             mView.updateProvidersList(mRepository.getCurrentProviders());
-        }else {
+        } else {
             mView.showWorkingIndicator();
             mRepository.searchProvidersByTypeByName(currentType, name);
         }
     }
-
-    /*@Override
-    public void updatePager(Pager pager) {
-        lastPage = pager.getEndIndex();
-        currentPage = pager.getPageIndex();
-    }*/
 
     @DebugLog
     @Override
@@ -132,21 +149,10 @@ public class ProvidersListPresenter implements ProvidersListContract.Actions {
         refreshProvidersList();
     }
 
-    /*@Override
-    public void getMoreProviders() {
-        mView.showWorkingIndicator();
-        mRepository.getProviders(++currentPage);
-    }*/
-
     @DebugLog
     @Override
     public void onError(String error) {
         mView.hideWorkingIndicator();
         mView.showError(error);
     }
-
-    /*@Override
-    public boolean canLoadMore() {
-        return currentPage + 1 <= lastPage;
-    }*/
 }

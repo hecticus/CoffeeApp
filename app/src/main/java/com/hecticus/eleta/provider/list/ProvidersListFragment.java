@@ -1,8 +1,11 @@
 package com.hecticus.eleta.provider.list;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +20,10 @@ import android.widget.TextView;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseFragment;
+import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomEditText;
+import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
 import com.hecticus.eleta.util.Constants;
@@ -105,18 +110,6 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
 
         mAdapter = new GenericListAdapter(mPresenter, true, false);
         providersRecyclerView.setAdapter(mAdapter);
-
-        /*providersRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int totalItemCount = linearLayoutManager.getItemCount();
-                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition() + 1;
-                if (totalItemCount != 0 && progressBar.getVisibility() == View.GONE && mPresenter.canLoadMore() && totalItemCount <= lastVisibleItem + Constants.ITEMS_BEFORE_LOAD_MORE) {
-                    mPresenter.getMoreProviders();
-                }
-            }
-        });*/
     }
 
     @Override
@@ -128,28 +121,38 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
 
     @Override
     public void showWorkingIndicator() {
-        providersRecyclerView.setEnabled(false);
-        providersRecyclerView.setAlpha(0.5f);
-        progressBar.setVisibility(View.VISIBLE);
+        if (isAdded()) {
+            providersRecyclerView.setEnabled(false);
+            providersRecyclerView.setClickable(false);
+            providersRecyclerView.setAlpha(0.5f);
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideWorkingIndicator() {
-        providersRecyclerView.setEnabled(true);
-        providersRecyclerView.setAlpha(1f);
-        progressBar.setVisibility(View.GONE);
+        if (isAdded()) {
+            providersRecyclerView.setEnabled(true);
+            providersRecyclerView.setClickable(true);
+            providersRecyclerView.setAlpha(1f);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
+    @DebugLog
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
     public void showError(String error) {
-        Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
+    @DebugLog
     @OnClick(R.id.custom_header_w_add_action_button)
     @Override
     public void onClickAddProvider() {
@@ -157,7 +160,7 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
         intent.putExtra("isForProviderCreation", true);
         intent.putExtra("canEdit", true);
         intent.putExtra("isHarvester", typeSpinner.getSelectedItemPosition() == 0);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.REQUEST_CODE_PROVIDER_CREATION);
     }
 
     @OnClick(R.id.provider_list_search_image_button)
@@ -165,7 +168,7 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
     public void onClickSearchProvider() {
         if (!providerEditText.getText().trim().isEmpty()) {
             cancelSearchImageView.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             cancelSearchImageView.setVisibility(View.GONE);
         }
         mPresenter.searchProvidersByName(providerEditText.getText().trim());
@@ -203,18 +206,56 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
 
     }
 
+    @DebugLog
     @Override
     public void updateProvidersList(List<Provider> providersList) {
         mAdapter.showNewDataSet(providersList);
     }
 
-    /*@Override
-    public void addMoreProvidersToTheList(List<Provider> providersList) {
-        mAdapter.showMoreDataSet(providersList);
-    }*/
-
+    @DebugLog
     @Override
     public void refreshList() {
         mPresenter.getInitialData();
+    }
+
+    @Override
+    public void showDeleteConfirmation(final BaseModel model) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.delete)
+                .setMessage(R.string.want_to_delete_provider)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mPresenter.deleteProvider(model);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    public void invalidToken() {
+        ((HomeActivity) getActivity()).goToLoginActivity();
+    }
+
+    @DebugLog
+    @Override
+    public boolean hasLocationPermissions() {
+        //TODO EDWIN
+        return false;
+    }
+
+    @DebugLog
+    @Override
+    public void requestLocationPermissions() {
+        //TODO EDWIN
+    }
+
+    @DebugLog
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constants.REQUEST_CODE_PROVIDER_CREATION &&
+                resultCode == Activity.RESULT_OK) {
+            showMessage(getString(R.string.provider_saved));
+        }
     }
 }

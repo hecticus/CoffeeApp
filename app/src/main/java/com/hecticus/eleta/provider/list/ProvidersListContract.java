@@ -1,7 +1,7 @@
 package com.hecticus.eleta.provider.list;
 
 import com.hecticus.eleta.base.BaseListContract;
-import com.hecticus.eleta.model.response.Pager;
+import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProvidersListContract extends BaseListContract {
 
-    public interface View {
+    public interface View extends BaseListContract.View {
 
         void showWorkingIndicator();
 
@@ -35,9 +35,9 @@ public class ProvidersListContract extends BaseListContract {
 
         void onClickCancelSearchProvider();
 
-        //void addMoreProvidersToTheList(List<Provider> providersList);
-
         void refreshList();
+
+        void showDeleteConfirmation(BaseModel model);
     }
 
     public interface Actions extends BaseListContract.Actions {
@@ -50,30 +50,28 @@ public class ProvidersListContract extends BaseListContract {
 
         void cancelSearch();
 
-        void handleSuccessfulProvidersRequest(List<Provider> providersList);
+        void handleSuccessfulSortedProvidersRequest(List<Provider> providersList);
+
+        void handleSuccessfulMixedProvidersRequest(List<Provider> providersList);
 
         void searchProvidersByName(String name);
 
-        //void updatePager(Pager pager);
-
         void onProviderDeleted();
-
-        //void getMoreProviders();
 
         void onError(String error);
 
-        //boolean canLoadMore();
+        void deleteProvider(BaseModel model);
     }
 
     public interface Repository {
 
         void getProvidersOfType(int providerType);
 
-        void onGetProvidersSuccess(ProvidersListResponse providersListResponse);
+        void onGetProvidersSuccess(List<Provider> providersList);
 
         void searchProvidersByTypeByName(int type, String name);
 
-        void deleteProvider(int providerId);
+        void deleteProvider(Provider provider);
 
         void onError(String error);
 

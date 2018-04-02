@@ -1,18 +1,24 @@
 package com.hecticus.eleta.model.response.purity;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseEditableModel;
 
 import java.io.Serializable;
-import java.util.List;
+
+import hugo.weaving.DebugLog;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by roselyn545 on 28/9/17.
  */
 
-public class Purity implements Serializable, BaseEditableModel {
+public class Purity extends RealmObject implements Serializable, BaseEditableModel {
 
+    @PrimaryKey
     @SerializedName("idPurity")
     @Expose
     private int id = -1;
@@ -43,9 +49,46 @@ public class Purity implements Serializable, BaseEditableModel {
         return rateValue;
     }
 
-    public void setRateValue(float rateValue) {
-        this.rateValue = rateValue;
+    public String getWeightString() {
+        return weightString;
     }
+
+    public Float getWeightStringAsFloat() {
+        try {
+            return Float.parseFloat(weightString);
+        } catch (Exception e) {
+            Log.e("PURITIES", "--->getWeightStringAsFloat Exception: " + e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @DebugLog
+    public void setRateValueAndWeightString(float rateValueFloatParam) {
+        this.rateValue = rateValueFloatParam;
+        this.weightString = rateValueFloatParam + "";
+    }
+
+    @DebugLog
+    public void setRateValueAndWeightString(String rateValueStringParam) {
+
+        if (rateValueStringParam == null) {
+            this.rateValue = 0;
+            this.weightString = "";
+        } else {
+            try {
+                this.rateValue = Float.parseFloat(rateValueStringParam);
+                this.weightString = rateValueStringParam;
+            } catch (Exception e) {
+                Log.e("PURITIES", "--->setRateValueAndWeightString Exception: " + e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*public void setWeightString(String weightString) {
+        this.weightString = weightString;
+    }*/
 
     public String getName() {
         return name;
@@ -63,14 +106,6 @@ public class Purity implements Serializable, BaseEditableModel {
         this.discountRate = discountRate;
     }
 
-    public String getWeightString() {
-        return weightString;
-    }
-
-    public void setWeightString(String weightString) {
-        this.weightString = weightString;
-    }
-
     @Override
     public String getReadableDescription() {
         return name;
@@ -84,5 +119,16 @@ public class Purity implements Serializable, BaseEditableModel {
     @Override
     public void setInputValue(String value) {
         weightString = value;
+    }
+
+    @Override
+    public String toString() {
+        return "Purity{" +
+                "id=" + id +
+                ", rateValue=" + rateValue +
+                ", name='" + name + '\'' +
+                ", discountRate=" + discountRate +
+                ", weightString='" + weightString + '\'' +
+                '}';
     }
 }

@@ -6,6 +6,15 @@ package com.hecticus.eleta.base;
 
 public abstract class BaseListContract {
 
+    public interface View {
+
+        void invalidToken();
+
+        boolean hasLocationPermissions();
+
+        void requestLocationPermissions();
+    }
+
     public interface Actions {
 
         void onClickPrintButton(BaseModel model);
@@ -15,5 +24,7 @@ public abstract class BaseListContract {
         void onClickItem(BaseModel model);
 
         void onClickDeleteButton(BaseModel model);
+
+        void invalidToken();
     }
 }

@@ -151,6 +151,21 @@ public class LoginResponse {
         public void setToken(String token) {
             this.token = token;
         }
+
+        @Override
+        public String toString() {
+            return "Result{" +
+                    "userId=" + userId +
+                    ", name='" + name + '\'' +
+                    ", password='" + password + '\'' +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    ", emailValidated=" + emailValidated +
+                    ", token='" + token + '\'' +
+                    ", role=" + role +
+                    '}';
+        }
     }
 
     private class Role {
@@ -190,5 +205,13 @@ public class LoginResponse {
         public void setDescription(String description) {
             this.description = description;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "LoginResponse{" +
+                "message='" + message + '\'' +
+                ", result=" + result +
+                '}';
     }
 }

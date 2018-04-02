@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.model.response.harvest.Harvest;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,31 +44,68 @@ public class InvoiceDetailsResponse {
     public List<HarvestOfDay> getHarvests() {
         return result.getHarvests();
     }
+
+    public void setHarvestsList(List<HarvestOfDay> harvestsList){
+        result.setHarvests(harvestsList);
+    }
+
+    public void setDetailsList(List<InvoiceDetails> invoiceDetailsList){
+        result.setDetails(invoiceDetailsList);
+    }
+
+    public InvoiceDetailsResponse(){
+        result = new Result();
+        result.setDetails(new ArrayList<InvoiceDetails>());
+        result.setHarvests(new ArrayList<HarvestOfDay>());
+    }
+
+    public InvoiceDetailsResponse(List<InvoiceDetails> detailsList){
+        Result result = new Result();
+        result.setDetails(detailsList);
+        setResult(result);
+    }
+
+    class Result {
+
+        @SerializedName("summary")
+        @Expose
+        private List<HarvestOfDay> harvests = null;
+
+        @SerializedName("deatils")
+        @Expose
+        private List<InvoiceDetails> details = null;
+
+        public List<InvoiceDetails> getDetails() {
+            return details;
+        }
+
+        public void setDetails(List<InvoiceDetails> details) {
+            this.details = details;
+        }
+
+        public List<HarvestOfDay> getHarvests() {
+            return harvests;
+        }
+
+        public void setHarvests(List<HarvestOfDay> harvests) {
+            this.harvests = harvests;
+        }
+
+        @Override
+        public String toString() {
+            return "Result{" +
+                    "harvests=" + harvests +
+                    ", details=" + details +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "InvoiceDetailsResponse{" +
+                "message='" + message + '\'' +
+                ", result=" + result +
+                '}';
+    }
 }
 
-class Result {
-
-    @SerializedName("summary")
-    @Expose
-    private List<HarvestOfDay> harvests = null;
-
-    @SerializedName("deatils")
-    @Expose
-    private List<InvoiceDetails> details = null;
-
-    public List<InvoiceDetails> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<InvoiceDetails> details) {
-        this.details = details;
-    }
-
-    public List<HarvestOfDay> getHarvests() {
-        return harvests;
-    }
-
-    public void setHarvests(List<HarvestOfDay> harvests) {
-        this.harvests = harvests;
-    }
-}

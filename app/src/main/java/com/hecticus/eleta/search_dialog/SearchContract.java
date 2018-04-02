@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SearchContract extends BaseListContract {
 
-    public interface View {
+    public interface View  extends BaseListContract.View{
 
         void showWorkingIndicator();
 
@@ -28,7 +28,7 @@ public class SearchContract extends BaseListContract {
 
         void onClickDismissDialog();
 
-        void selectedProvider(Provider provider);
+        void onProviderSelected(Provider provider);
 
         void updateProvidersList(List<Provider> providersList);
     }
@@ -45,16 +45,19 @@ public class SearchContract extends BaseListContract {
 
         void handleSuccessfulProvidersRequest(List<Provider> providersList);
 
+        void handleSuccessfulSortedProvidersRequest(List<Provider> providersList);
+
+
         void onError(String error);
     }
 
     public interface Repository {
 
-        void getProviders(int type);
+        void getAllProvidersByType(int type);
 
         List<Provider> getCurrentProviders();
 
-        void onGetProvidersSuccess(ProvidersListResponse providersListResponse);
+        void onGetProvidersSuccess(List<Provider> providersList);
 
         void searchProvidersByTypeByName(int type, String name);
 

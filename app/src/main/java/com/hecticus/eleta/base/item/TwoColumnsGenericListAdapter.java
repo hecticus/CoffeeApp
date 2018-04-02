@@ -56,6 +56,7 @@ public class TwoColumnsGenericListAdapter extends RecyclerView.Adapter<TwoColumn
             genericItemViewHolder.getButtonsLinearLayout().setVisibility(View.VISIBLE);
 
             genericItemViewHolder.getEditImageButton().setOnClickListener(new View.OnClickListener() {
+                @DebugLog
                 @Override
                 public void onClick(View view) {
                     mPresenter.onClickEditButton(list.get(position));

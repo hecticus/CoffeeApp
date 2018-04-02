@@ -38,7 +38,7 @@ public class LoginContract {
 
         void onRecoveryPasswordSuccess();
 
-        void onLoginError();
+        void onLoginError(String errorMessageFromServer);
 
     }
 
@@ -50,7 +50,7 @@ public class LoginContract {
 
         void onLoginSuccess(LoginResponse response);
 
-        void onLoginError();
+        void onLoginError(String errorMessageFromServer);
 
         void saveTokens(LoginResponse response);
 

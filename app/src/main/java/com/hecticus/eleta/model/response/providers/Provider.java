@@ -1,26 +1,41 @@
 
 package com.hecticus.eleta.model.response.providers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.util.Constants;
 
-import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import hugo.weaving.DebugLog;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
-public class Provider extends BaseModel implements Serializable {
+public class Provider extends RealmObject implements BaseModel, JsonSerializer<Provider> {
 
+    // Important: Negative ids are used for local storage (before sync). Starting with -1.
     @SerializedName("idProvider")
     @Expose
     private Integer idProvider;
+
+    private long unixtime = -1;
+
     @SerializedName("statusDelete")
     @Expose
-    private Integer statusDelete;
+    private int statusDelete;
+
+    @PrimaryKey
     @SerializedName("identificationDocProvider")
     @Expose
     private String identificationDocProvider;
+
     @SerializedName("fullNameProvider")
     @Expose
     private String fullNameProvider;
@@ -38,6 +53,7 @@ public class Provider extends BaseModel implements Serializable {
     @Expose
     private String photoProvider;
 
+    @Ignore
     @SerializedName("providerType")
     @Expose
     private ProviderType providerType;
@@ -46,7 +62,11 @@ public class Provider extends BaseModel implements Serializable {
     private String contactNameProvider;
     @SerializedName("statusProvider")
     @Expose
-    private Integer statusProvider;
+    private int statusProvider;
+
+    private boolean addOffline;
+    private boolean deleteOffline;
+    private boolean editOffline;
 
     public String getIdentificationDocProviderChange() {
         return identificationDocProviderChange;
@@ -63,7 +83,7 @@ public class Provider extends BaseModel implements Serializable {
 
     @SerializedName("id_ProviderType")
     @Expose
-    private Integer idProviderType;
+    private int idProviderType = -1;
 
     public Integer getIdProvider() {
         return idProvider;
@@ -73,12 +93,12 @@ public class Provider extends BaseModel implements Serializable {
         this.idProvider = idProvider;
     }
 
-    public Integer getStatusDelete() {
-        return statusDelete;
+    public long getUnixtime() {
+        return unixtime;
     }
 
-    public void setStatusDelete(Integer statusDelete) {
-        this.statusDelete = statusDelete;
+    public void setUnixtime(long unixtime) {
+        this.unixtime = unixtime;
     }
 
     public String getIdentificationDocProvider() {
@@ -146,11 +166,11 @@ public class Provider extends BaseModel implements Serializable {
         this.contactNameProvider = contactNameProvider;
     }
 
-    public Integer getStatusProvider() {
+    public int getStatusProvider() {
         return statusProvider;
     }
 
-    public void setStatusProvider(Integer statusProvider) {
+    public void setStatusProvider(int statusProvider) {
         this.statusProvider = statusProvider;
     }
 
@@ -164,19 +184,56 @@ public class Provider extends BaseModel implements Serializable {
         return true;
     }
 
-    public Integer getIdProviderType() {
+    public int getIdProviderType() {
         return idProviderType;
     }
 
-    public void setIdProviderType(Integer idProviderType) {
+    public void setIdProviderType(int idProviderType) {
         this.idProviderType = idProviderType;
+    }
+
+    public int getStatusDelete() {
+        return statusDelete;
+    }
+
+    public void setStatusDelete(int statusDelete) {
+        this.statusDelete = statusDelete;
+    }
+
+    public boolean isAddOffline() {
+        return addOffline;
+    }
+
+    public void setAddOffline(boolean addOffline) {
+        this.addOffline = addOffline;
+    }
+
+    public boolean isDeleteOffline() {
+        return deleteOffline;
+    }
+
+    public void setDeleteOffline(boolean deleteOffline) {
+        this.deleteOffline = deleteOffline;
+    }
+
+    public boolean isEditOffline() {
+        return editOffline;
+    }
+
+    public void setEditOffline(boolean editOffline) {
+        this.editOffline = editOffline;
     }
 
     @Override
     public String toString() {
         return "Provider{" +
                 "idProvider=" + idProvider +
+                ", unixtime=" + unixtime +
+                ", status=" + statusProvider +
                 ", statusDelete=" + statusDelete +
+                ", addOffline=" + addOffline +
+                ", editOffline=" + editOffline +
+                ", deleteOffline=" + deleteOffline +
                 ", identificationDocProvider='" + identificationDocProvider + '\'' +
                 ", fullNameProvider='" + fullNameProvider + '\'' +
                 ", addressProvider='" + addressProvider + '\'' +
@@ -193,6 +250,62 @@ public class Provider extends BaseModel implements Serializable {
 
     @DebugLog
     public boolean isHarvester() {
+        if (getProviderType() == null) {
+            return getIdProviderType() == Constants.TYPE_HARVESTER;
+        }
         return (getProviderType().getIdProviderType() == Constants.TYPE_HARVESTER);
+    }
+
+    @Override
+    public JsonElement serialize(Provider src, Type typeOfSrc, JsonSerializationContext context) {
+        final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("idProvider", src.getIdProvider());
+        jsonObject.addProperty("unixtime", src.getUnixtime());
+        jsonObject.addProperty("statusDelete", src.getStatusDelete());
+        jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
+        jsonObject.addProperty("identificationDocProviderChange", src.getIdentificationDocProviderChange());
+        jsonObject.addProperty("fullNameProvider", src.getFullNameProvider());
+        jsonObject.addProperty("addressProvider", src.getAddressProvider());
+        jsonObject.addProperty("phoneNumberProvider", src.getPhoneNumberProvider());
+        jsonObject.addProperty("emailProvider", src.getEmailProvider());
+        jsonObject.addProperty("photoProvider", src.getPhotoProvider());
+        jsonObject.addProperty("contactNameProvider", src.getContactNameProvider());
+        jsonObject.addProperty("statusProvider", src.getStatusProvider());
+        jsonObject.addProperty("addOffline", src.isAddOffline());
+        jsonObject.addProperty("editOffline", src.isEditOffline());
+        jsonObject.addProperty("deleteOffline", src.isDeleteOffline());
+        jsonObject.addProperty("id_ProviderType", src.getIdProviderType());
+
+        return jsonObject;
+    }
+
+    public int indexIn(final List<Provider> list) {
+        for (int i = 0; i < list.size(); i++) {
+            Provider provider = list.get(i);
+            if (provider != null && provider.getIdentificationDocProvider().equals(getIdentificationDocProvider())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int indexByIdIn(final List<Provider> list) {
+        for (int i = 0; i < list.size(); i++) {
+            Provider provider = list.get(i);
+            if (provider != null && provider.getIdProvider() == getIdProvider()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int indexByUnixtimeIn(final List<Provider> list) {
+        for (int i = 0; i < list.size(); i++) {
+            Provider provider = list.get(i);
+            if (provider != null && provider.getUnixtime() == getUnixtime()) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

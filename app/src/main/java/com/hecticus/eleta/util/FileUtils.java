@@ -27,7 +27,7 @@ import hugo.weaving.DebugLog;
  */
 
 public class FileUtils {
-    private static final int MAX_IMAGE_DIMENSION = 400;
+    private static final int MAX_IMAGE_DIMENSION = 100;
 
     static String nopath = "Select Video Only";
 
@@ -175,35 +175,8 @@ public class FileUtils {
     }
 
     @DebugLog
-    private static String getTempFolderPath() {
+    public static String getTempFolderPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/.eleta_tmp/";
-    }
-
-    @DebugLog
-    public static String getTempImagePath() {
-        return getTempFolderPath() + "temp.jpg";
-    }
-
-    public static String writeTempImageAndReturnUri(Bitmap bitmapParam) {
-        File tempFolder = getTempFolder();
-
-        if (tempFolder.exists() || tempFolder.mkdirs()) {
-            try {
-                clearTempImages();
-
-                File tempAvatarFile = new File(tempFolder, "tempavatar.jpg");
-
-                FileOutputStream fos = new FileOutputStream(tempAvatarFile);
-                bitmapParam.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-                fos.flush();
-                fos.close();
-                return tempAvatarFile.getAbsolutePath();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
     }
 
     public static void deleteFileRecursive(File fileOrDirectory, boolean isTopLevel) {
@@ -215,6 +188,7 @@ public class FileUtils {
             fileOrDirectory.delete();
     }
 
+    @DebugLog
     public static void clearTempImages() {
         deleteFileRecursive(getTempFolder(), true);
     }
@@ -244,7 +218,7 @@ public class FileUtils {
         bmpFactoryOptions.inJustDecodeBounds = false;
 
         bitmap = BitmapFactory.decodeFile(takenOrPickedImagePath, bmpFactoryOptions);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
 
         Log.d("PHOTO", "--->Converting image to text");
 

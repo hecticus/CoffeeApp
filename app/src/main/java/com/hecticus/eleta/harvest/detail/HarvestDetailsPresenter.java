@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.model.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.response.farm.Farm;
@@ -12,7 +12,6 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
-import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
 
@@ -27,7 +26,7 @@ import hugo.weaving.DebugLog;
  * Created by roselyn545 on 16/9/17.
  */
 
-public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
+public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     Context context;
     private HarvestDetailsContract.View mView;
@@ -43,18 +42,22 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
     private boolean initializedLot = false;
     private boolean initializedItems = false;
 
+    private InvoicePost invoicePost = null;
+
     @DebugLog
     public HarvestDetailsPresenter(Context context, HarvestDetailsContract.View mView, //HarvestModel currentHarvestParam,
-                                    boolean isAddParam, boolean canEditParam, Provider provider, List<InvoiceDetails> details) {
+                                   boolean isAddParam, boolean canEditParam, Provider provider, List<InvoiceDetails> details) {
         this.context = context;
         this.mView = mView;
         mRepository = new HarvestDetailsRepository(this);
         isAdd = isAddParam;
         canEdit = canEditParam;
         currentProvider = provider;
+        Log.d("BUG", "--->currentProvider onCreate: " + currentProvider);
         currentDetailsList = details;
     }
 
+    @DebugLog
     @Override
     public void initFields() {
         mView.showWorkingIndicator();
@@ -63,15 +66,20 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
         mRepository.getItemTypesRequest();
 
         if (!isAdd) {
-            if (currentProvider!=null) {
-                mView.loadHeader(currentProvider.getFullNameProvider(),currentProvider.getPhotoProvider());
-                if (currentDetailsList != null && currentDetailsList.size()>0) {
+            if (currentProvider != null) {
+                Log.d("BUG", "--->currentProvider initFields: " + currentProvider);
+
+                mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getPhotoProvider());
+                if (currentDetailsList != null && currentDetailsList.size() > 0) {
                     mView.loadObservation(currentDetailsList.get(0).getObservation());
                 }
+            } else {
+                Log.d("BUG", "--->currentProvider init fields NULL");
             }
         }
     }
 
+    @DebugLog
     @Override
     public boolean isCanEdit() {
         return canEdit;
@@ -82,150 +90,141 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
         return isAdd;
     }
 
+    @DebugLog
     @Override
-    public void onSaveChanges(int lotId, List<ItemType> items, String observations) {
+    public void onSaveChanges(Lot selectedLot, List<ItemType> items, String observations) {
         mView.showWorkingIndicator();
 
         if (currentProvider == null) {
             mView.hideWorkingIndicator();
-            mView.showUpdateMessage(context.getString(R.string.you_must_select_a_harvester));
+            mView.showMessage(context.getString(R.string.you_must_select_a_harvester));
             return;
         }
 
-        if (lotId == -1) {
+        if (selectedLot == null) {
             mView.hideWorkingIndicator();
-            mView.showUpdateMessage(context.getString(R.string.you_must_select_a_valid_lot));
+            mView.showMessage(context.getString(R.string.you_must_select_a_valid_lot));
             return;
         }
 
         if (items == null || items.size() == 0) {
             mView.hideWorkingIndicator();
-            mView.showUpdateMessage(context.getString(R.string.you_must_enter_some_weight));
+            mView.showMessage(context.getString(R.string.you_must_enter_some_weight));
             return;
         }
 
-        InvoicePost invoice = new InvoicePost();
+        Log.d("OFFLINE", "--->invoicePost BEFORE1 getChanges(): " + invoicePost);
+
+        invoicePost = new InvoicePost();
+
+        invoicePost.setPriceByLot(selectedLot.getPrice());
 
         if (isAdd()) {
+            invoicePost.setItems(getItems(items));
 
-            invoice.setItems(getItems(items));
-
-            if (invoice.getItems().size() == 0) {
+            if (invoicePost.getItems().size() == 0) {
                 mView.hideWorkingIndicator();
-                mView.showUpdateMessage(context.getString(R.string.you_must_enter_some_weight));
+                mView.showMessage(context.getString(R.string.you_must_enter_some_weight));
                 return;
             }
 
-            invoice.setProviderId(currentProvider.getIdProvider());
-            invoice.setLotId(lotId);
-            invoice.setDispatcherName(currentProvider.getFullNameProvider());
-            invoice.setReceiverName(Session.getUserName(context));
-            invoice.setObservations(observations);
-            invoice.setStartDate(Util.getCurrentDateForInvoice());
-            invoice.setBuyOption(Constants.TYPE_HARVEST);
-
-            Log.d("TEST","getCurrentDateForInvoice "+invoice.getStartDate());
-
-            mRepository.saveHarvestResquest(invoice, true);
+            invoicePost.setLotId(selectedLot.getId());
+            invoicePost.setObservations(observations);
         } else {
-            invoice = getChanges(lotId,items,observations);
-            if (invoice==null){
+            Log.d("OFFLINE", "--->invoicePost BEFORE2 getChanges()" + invoicePost);
+            invoicePost = getChanges(selectedLot.getId(), items, observations);
+            Log.d("OFFLINE", "--->invoicePost AFTER getChanges()" + invoicePost);
+            if (invoicePost == null) {
                 mView.hideWorkingIndicator();
                 return;
             }
-            invoice.setId(currentDetailsList.get(0).getInvoice().getInvoiceId());
-            invoice.setProviderId(currentProvider.getIdProvider());
-            invoice.setDispatcherName(currentProvider.getFullNameProvider());
-            invoice.setReceiverName(currentDetailsList.get(0).getReceiverName());
-            invoice.setStartDate(currentDetailsList.get(0).getStartDate());
-            invoice.setBuyOption(Constants.TYPE_HARVEST);
-
-            if (invoice.getLotId()==-1 && currentDetailsList.get(0).getLot() != null){
-                invoice.setLotId(currentDetailsList.get(0).getLot().getId());
-            }
-            if (invoice.getObservations()==null){
-                invoice.setObservations(currentDetailsList.get(0).getObservation());
-            }
-            if (invoice.getItems()==null){
-                invoice.setItems(new ArrayList<ItemPost>());
-            }
-
-            mRepository.saveHarvestResquest(invoice, false);
         }
+
+        mView.hideWorkingIndicator();
+        mView.showDialogConfirmation();
     }
 
+    @DebugLog
     private List<ItemPost> getItems(List<ItemType> items) {
-        List<ItemPost> post = new ArrayList<ItemPost>();
-        for (ItemType item: items) {
-            if (!item.getWeightString().trim().isEmpty()){
+        List<ItemPost> post = new ArrayList<>();
+        for (ItemType item : items) {
+            if (!item.getWeightString().trim().isEmpty()) {
                 post.add(new ItemPost(item.getId(), Float.parseFloat(item.getWeightString().trim())));
             }
         }
         return post;
     }
 
+    @DebugLog
     @Override
-    public InvoicePost getChanges(int lotId, List<ItemType> items, String observations) {
-        InvoicePost invoice = null;
+    public InvoicePost getChanges(int lotId, List<ItemType> itemsTypesList, String observations) {
+        InvoicePost invoicePostWithChanges = null;
 
-        if (currentDetailsList == null || currentDetailsList.size()<=0)
-            return invoice;
+        if (currentDetailsList == null || currentDetailsList.size() <= 0)
+            return invoicePostWithChanges;
 
-        if (currentDetailsList.get(0).getLot() != null && currentDetailsList.get(0).getLot().getId()!=lotId){
-            invoice = new InvoicePost();
-            invoice.setLotId(lotId);
+        if (currentDetailsList.get(0).getLot() != null && currentDetailsList.get(0).getLot().getId() != lotId) {
+            invoicePostWithChanges = new InvoicePost();
+            invoicePostWithChanges.setLotId(lotId);
         }
 
-        if (currentDetailsList.get(0).getObservation()!=null && !currentDetailsList.get(0).getObservation().equals(observations)){
-            if (invoice == null){
-                invoice = new InvoicePost();
+        if (currentDetailsList.get(0).getObservation() != null && !currentDetailsList.get(0).getObservation().equals(observations)) {
+            if (invoicePostWithChanges == null) {
+                invoicePostWithChanges = new InvoicePost();
             }
-            invoice.setObservations(observations);
+            invoicePostWithChanges.setObservations(observations);
         }
 
-        List<ItemPost> postItems = new ArrayList<ItemPost>();
-        for (ItemType item: items) {
-            InvoiceDetails details = InvoiceDetails.findItem(currentDetailsList,item.getId());
-            if (details != null){
-                if (!item.getWeightString().trim().equals(details.getAmount()+"")){
-                    postItems.add(new ItemPost(item.getId(), Float.parseFloat(item.getWeightString().trim()), details.getId()));
+        List<ItemPost> postItems = new ArrayList<>();
+        for (ItemType currentItemType : itemsTypesList) {
+            InvoiceDetails details = InvoiceDetails.findItem(currentDetailsList, currentItemType.getId());
+            if (details != null) {
+                if (!currentItemType.getWeightString().trim().equals(details.getAmount() + "")) {
+                    postItems.add(new ItemPost(
+                            currentItemType.getId(),
+                            currentItemType.getWeightString().trim().isEmpty() ? 0 : Float.parseFloat(currentItemType.getWeightString().trim()),
+                            details.getId() == -1 ? details.getLocalId() : details.getId()));
                 }
-            }else{
-                if (!item.getWeightString().trim().isEmpty()) {
-                    postItems.add(new ItemPost(item.getId(), Float.parseFloat(item.getWeightString().trim())));
+            } else {
+                if (!currentItemType.getWeightString().trim().isEmpty()) {
+                    postItems.add(new ItemPost(currentItemType.getId(), Float.parseFloat(currentItemType.getWeightString().trim())));
                 }
             }
         }
 
-        if (postItems.size()>0){
-            if (invoice == null){
-                invoice = new InvoicePost();
+        if (postItems.size() > 0) {
+            if (invoicePostWithChanges == null) {
+                invoicePostWithChanges = new InvoicePost();
             }
-            invoice.setItems(postItems);
+            invoicePostWithChanges.setItems(postItems);
         }
 
-        return invoice;
+        return invoicePostWithChanges;
     }
 
+    @DebugLog
     @Override
     public void onUpdateError() {
         mView.hideWorkingIndicator();
-        mView.showUpdateMessage(context.getString(R.string.error_saving_changes));
+        mView.showMessage(context.getString(R.string.error_saving_changes));
     }
 
+    @DebugLog
     @Override
     public void onError(String error) {
         mView.hideWorkingIndicator();
-        mView.showUpdateMessage(error);
+        mView.showMessage(error);
     }
 
+    @DebugLog
     @Override
-    public void onUpdateHarvest() {
+    public void onHarvestUpdated() {
         mView.hideWorkingIndicator();
-        mView.showUpdateMessage(context.getString(R.string.data_updated_correctly));
+        mView.showMessage(context.getString(R.string.data_updated_correctly));
         mView.handleSuccessfulUpdate();
     }
 
+    @DebugLog
     @Override
     public void loadFarms(List<Farm> farmsList) {
         /*Collections.sort(farmsList, new Comparator<Farm>() {
@@ -237,14 +236,23 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
         if (!isAdd && !initializedFarm) {
             initializedFarm = true;
-            if (currentDetailsList.size()<=0){
+            if (currentDetailsList.size() <= 0) {
                 mView.updateFarms(farmsList, -1);
                 return;
             }
             Lot lot = currentDetailsList.get(0).getLot();
-            if (lot!=null && lot.getFarm()!=null){
+            if (lot != null && lot.getFarm() != null) {
                 mView.updateFarms(farmsList, lot.getFarm().getId());
                 return;
+            } else if (currentDetailsList.get(0).getLotId() != -1) {
+                Lot lotAux = mRepository.getLotById(currentDetailsList.get(0).getLotId());
+                if (lotAux != null) {
+                    currentDetailsList.get(0).setLot(lotAux);
+                    if (lotAux.getFarmId() != -1) {
+                        mView.updateFarms(farmsList, lotAux.getFarmId());
+                        return;
+                    }
+                }
             }
         }
 
@@ -252,6 +260,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
     }
 
+    @DebugLog
     @Override
     public void loadLots(List<Lot> lotsList) {
         /*Collections.sort(lotsList, new Comparator<Lot>() {
@@ -263,25 +272,45 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
         if (!isAdd && !initializedLot) {
             initializedLot = true;
-            if (currentDetailsList.size()<=0){
+            if (currentDetailsList.size() <= 0) {
                 mView.updateLots(lotsList, -1);
                 return;
             }
-            if (currentDetailsList.get(0).getLot()!=null) {
+            if (currentDetailsList.get(0).getLot() != null) {
                 mView.updateLots(lotsList, currentDetailsList.get(0).getLot().getId());
                 return;
+            } else if (currentDetailsList.get(0).getLotId() != -1) {
+                Lot lotAux = mRepository.getLotById(currentDetailsList.get(0).getLotId());
+                if (lotAux != null) {
+                    currentDetailsList.get(0).setLot(lotAux);
+                    mView.updateLots(lotsList, lotAux.getId());
+                    return;
+                }
             }
         }
         mView.updateLots(lotsList, -1);
     }
 
+    @DebugLog
+    private void initItems() {
+        for (InvoiceDetails detail : currentDetailsList) {
+            if (detail.getItemType() == null && detail.getItemTypeId() != -1) {
+                ItemType item = mRepository.getItemTypeById(detail.getItemTypeId());
+                if (item != null) {
+                    detail.setItemType(item);
+                }
+            }
+        }
+    }
+
+    @DebugLog
     @Override
     public void loadItems(List<ItemType> itemTypeList) {
         Collections.sort(itemTypeList, new Comparator<ItemType>() {
             @Override
             public int compare(ItemType o1, ItemType o2) {
-                String string1 = o1.getName()!=null?o1.getName().toLowerCase():"";
-                String string2 = o2.getName()!=null?o2.getName().toLowerCase():"";
+                String string1 = o1.getName() != null ? o1.getName().toLowerCase() : "";
+                String string2 = o2.getName() != null ? o2.getName().toLowerCase() : "";
                 return string1.compareTo(string2);
             }
         });
@@ -289,10 +318,14 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
         if (!isAdd && !initializedItems) {
             initializedItems = true;
 
-            for (ItemType item: itemTypeList) {
-                InvoiceDetails invoice = InvoiceDetails.findItem(currentDetailsList,item.getId());
-                if (invoice != null){
-                    item.setWeightString(invoice.getAmount()+"");
+            if (currentDetailsList.get(0).getItemType() == null) {
+                initItems();
+            }
+
+            for (ItemType item : itemTypeList) {
+                InvoiceDetails invoice = InvoiceDetails.findItem(currentDetailsList, item.getId());
+                if (invoice != null) {
+                    item.setWeightString(invoice.getAmount() + "");
                 }
             }
         }
@@ -302,14 +335,96 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions{
 
     }
 
+    @DebugLog
+    @Override
+    public void loadSortedItems(List<ItemType> itemTypeList) {
+        if (!isAdd && !initializedItems) {
+            initializedItems = true;
+
+            if (currentDetailsList.get(0).getItemType() == null) {
+                initItems();
+            }
+
+            for (ItemType item : itemTypeList) {
+                InvoiceDetails invoice = InvoiceDetails.findItem(currentDetailsList, item.getId());
+                if (invoice != null) {
+                    item.setWeightString(invoice.getAmount() + "");
+                }
+            }
+        }
+        mView.updateItems(itemTypeList);
+
+        mView.hideWorkingIndicator();
+    }
+
+    @DebugLog
     @Override
     public void getLotsByFarm(int idFarm) {
         mRepository.getLotsByFarmRequest(idFarm);
     }
 
+    @DebugLog
     @Override
     public void onProviderSelected(Provider provider) {
         currentProvider = provider;
+        Log.d("BUG", "--->currentProvider onProviderSelected: " + currentProvider);
         mView.updateProvider(provider.getFullNameProvider());
+    }
+
+    @DebugLog
+    @Override
+    public void invalidToken() {
+        mView.invalidToken();
+    }
+
+    @DebugLog
+    @Override
+    public void acceptSave() {
+        Log.d("BUG", "--->currentProvider onSaveConfirmedInDialog: " + currentProvider);
+
+        mView.showWorkingIndicator();
+        invoicePost.setIdentificationDocProvider(currentProvider.getIdentificationDocProvider());
+        invoicePost.setProviderName(currentProvider.getFullNameProvider());
+        invoicePost.setType(Constants.TYPE_HARVESTER);
+
+        if (isAdd()) {
+            invoicePost.setProviderId(currentProvider.getIdProvider());
+            invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
+            invoicePost.setReceiverName(SessionManager.getUserName(context));
+            invoicePost.setStartDate(Util.getCurrentDateForInvoice());
+            invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
+            invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
+
+            Log.d("TEST", "--->getCurrentDateForInvoice " + invoicePost.getStartDate());
+
+            mRepository.saveHarvestRequest(invoicePost, true);
+        } else {
+            boolean createdOffline = false;
+            if (currentDetailsList.get(0).getInvoice() == null) {
+                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
+                createdOffline = true;
+            } else {
+                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
+            }
+            invoicePost.setProviderId(currentProvider.getIdProvider());
+            invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
+            invoicePost.setReceiverName(currentDetailsList.get(0).getReceiverName());
+            invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());
+            invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
+
+            if (invoicePost.getLotId() == -1 && currentDetailsList.get(0).getLot() != null) {
+                invoicePost.setLotId(currentDetailsList.get(0).getLot().getId());
+            }
+            if (invoicePost.getObservations() == null) {
+                invoicePost.setObservations(currentDetailsList.get(0).getObservation());
+            }
+            if (invoicePost.getItems() == null) {
+                invoicePost.setItems(new ArrayList<ItemPost>());
+            }
+
+            invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
+
+            mRepository.saveHarvestRequest(invoicePost, false);
+        }
     }
 }

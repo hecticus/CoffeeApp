@@ -12,11 +12,12 @@ import hugo.weaving.DebugLog;
  * Created by roselyn545 on 15/9/17.
  */
 
-public class Session {
+public class SessionManager {
 
     private static String SESSION_PREFERENCE = "SESSION_PREFERENCE";
     private static String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static String USER_NAME = "USER_NAME";
+    private static String USER_EMAIL = "USER_EMAIL";
 
 
     @DebugLog
@@ -30,15 +31,21 @@ public class Session {
 
     @DebugLog
     public static String getAccessToken(Context context) {
-        //SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
-        //return sharedPreferences.getString(ACCESS_TOKEN, "");
-        return Constants.FAKE_TOKEN;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(ACCESS_TOKEN, "");
+        //return Constants.FAKE_TOKEN;
     }
 
     @DebugLog
     public static String getUserName(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         return sharedPreferences.getString(USER_NAME, "");
+    }
+
+    @DebugLog
+    public static String getUserEmail(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(USER_EMAIL, "");
     }
 
     @DebugLog
@@ -54,16 +61,8 @@ public class Session {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ACCESS_TOKEN, response.getToken());
+        editor.putString(USER_EMAIL, response.getEmail());
         editor.putString(USER_NAME, response.getName());
         editor.commit();
     }
-
-    @DebugLog
-    public static void saveUserData(Context context, String name) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(USER_NAME, name);
-        editor.commit();
-    }
-
 }

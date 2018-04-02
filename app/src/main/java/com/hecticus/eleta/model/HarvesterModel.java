@@ -6,7 +6,7 @@ import com.hecticus.eleta.base.BaseModel;
  * Created by roselyn545 on 15/9/17.
  */
 
-public class HarvesterModel extends BaseModel {
+public class HarvesterModel implements BaseModel {
 
     @Override
     public String getReadableDescription() {

@@ -6,12 +6,16 @@ import com.hecticus.eleta.model.ItemSpinnerInterface;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by roselyn545 on 26/9/17.
  */
 
-public class Store extends ItemSpinnerInterface implements Serializable {
+public class Store extends RealmObject implements ItemSpinnerInterface, Serializable {
 
+    @PrimaryKey
     @SerializedName("idStore")
     @Expose
     private int id = -1;

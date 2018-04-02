@@ -1,15 +1,23 @@
 package com.hecticus.eleta.of_day;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
+import com.hecticus.eleta.model.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
+import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
+import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.PermissionUtil;
 import com.hecticus.eleta.util.Util;
 
 import java.util.ArrayList;
@@ -27,34 +35,48 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     private InvoicesOfDayListContract.View mView;
     private InvoicesOfDayListContract.Repository mRepository;
 
-    //private int lastPage = Constants.INITIAL_PAGE_IN_PAGER;
-    //private int currentPage = Constants.INITIAL_PAGE_IN_PAGER;
-
-
     private Invoice currentInvoice = null;
-    private List<HarvestOfDay> harvestList = null;
+    private List<HarvestOfDay> harvestsOrPurchasesOfDayList = null;
     private List<InvoiceDetails> detailsList = null;
     private boolean needReloadMainList = false;
 
     @DebugLog
-    public InvoicesOfDayListPresenter(Context context, InvoicesOfDayListContract.View mView, Invoice currentInvoiceParam) {
+    public InvoicesOfDayListPresenter(Context context, InvoicesOfDayListContract.View mView, Invoice currentInvoiceParam, boolean isForHarvest) {
         this.context = context;
         this.mView = mView;
         currentInvoice = currentInvoiceParam;
-        mRepository = new InvoicesOfDayListRepository(this);
+        mRepository = new InvoicesOfDayListRepository(this, isForHarvest);
     }
 
-
+    @DebugLog
     @Override
     public void onClickEditButton(BaseDetailModel model) {
-        List<InvoiceDetails> detailsOfHarvest = new ArrayList<InvoiceDetails>();
+
+        List<InvoiceDetails> detailsOfHarvest = new ArrayList<>();
+
         HarvestOfDay harvestOfDay = (HarvestOfDay) model;
         for (InvoiceDetails detail : detailsList) {
             if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
-                detailsOfHarvest.add(detail);
-            }
+                Log.d("OFFLINE", "--->onClickEditButton adding detail (" + detail.getItemType() + ") to next view: " + detail);
+
+                //FIXME: We use a clone and remove these as they will be properly populated when creating the view
+                try {
+                    InvoiceDetails detailClone = detail.clone();
+                    // For harvests:
+                    detailClone.setLot(null);
+                    // For purchases:
+                    detailClone.setItemType(null);
+                    detailClone.setDetailPurities(null);
+                    detailClone.setStore(null);
+
+                    detailsOfHarvest.add(detailClone);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            } else
+                Log.d("OFFLINE", "--->onClickEditButton NOT adding detail (" + detail.getItemType() + ")to next view: " + detail);
         }
-        mView.goToHarvestDetail(currentInvoice.getProvider(), detailsOfHarvest);
+        mView.goToHarvestOrPurchaseDetailsView(currentInvoice.getProvider(), detailsOfHarvest, ManagerDB.invoiceHasOfflineOperation(currentInvoice));
     }
 
     @Override
@@ -63,23 +85,64 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @Override
     public void onClickDeleteButton(BaseDetailModel model) {
-        mView.showWorkingIndicator();
-        HarvestOfDay harvest = (HarvestOfDay) model;
-        mRepository.deleteHarvest(currentInvoice.getInvoiceId(), harvest.getStartDate());
+        mView.showDeleteConfirmation(model);
     }
 
+    @DebugLog
+    @Override
+    public void deleteHarvestOrPurchase(BaseDetailModel model) {
+        mView.showWorkingIndicator();
+        HarvestOfDay harvest = (HarvestOfDay) model;
+        mRepository.deleteHarvestOrPurchase(currentInvoice, harvest.getStartDate(), harvest.getId());
+    }
+
+    @DebugLog
+    @Override
+    public void invalidToken() {
+        mView.invalidToken();
+    }
+
+    @DebugLog
     @Override
     public void getInitialData() {
-        mView.showWorkingIndicator();
-        //lastPage = Constants.INITIAL_PAGE_IN_PAGER;
-        //currentPage = Constants.INITIAL_PAGE_IN_PAGER;
-        if (currentInvoice != null) {
-            Log.d("TEST", "provider invoice " + currentInvoice.getProvider());
-            mView.initHeader(currentInvoice.getProvider().getFullNameProvider(), currentInvoice.getProvider().getPhotoProvider());
-            mRepository.harvestsRequest(currentInvoice.getInvoiceId());
+        try {
+            mView.showWorkingIndicator();
+
+            if (currentInvoice != null) {
+
+                Log.d("BUG", "--->Invoice to request harvests of day" + currentInvoice);
+
+                Log.d("BUG", "--->Provider of invoice to request HOD: " + currentInvoice.getProvider());
+                if (currentInvoice.getProvider() == null) {
+                    if (currentInvoice.getProviderId() == -1) {
+                        currentInvoice.setProvider(mRepository.getProviderByIdentificationDoc(currentInvoice.getIdentificationDocProvider()));
+                    } else {
+                        Provider provider = mRepository.getProviderById(currentInvoice.getProviderId());
+                        Log.d("TEST", "--->getProviderId " + currentInvoice.getProviderId() + " - getIdentificationDocProvider:" + currentInvoice.getIdentificationDocProvider());
+                        Log.d("TEST", "--->provider: " + provider);
+
+                        currentInvoice.setProvider(provider);
+                    }
+                }
+
+                if (currentInvoice.getProvider() != null) {
+                    mView.initHeader(currentInvoice.getProvider().getFullNameProvider(), currentInvoice.getProvider().getPhotoProvider());
+                    mRepository.getHarvestsOrPurchasesOfInvoiceRequest(currentInvoice);
+                } else {
+                    mView.finishWithErrorMessage(context.getString(R.string.provider_info_not_yet_loaded));
+                }
+            } else {
+                Log.e("BUG", "--->No invoice to request harvests of day");
+                mView.finishWithErrorMessage(context.getString(R.string.error));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (mView != null)
+                mView.finishWithErrorMessage(context.getString(R.string.error_during_operation));
         }
     }
 
+    @DebugLog
     @Override
     public void refreshHarvestsList() {
         getInitialData();
@@ -90,37 +153,36 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         return currentInvoice.getInvoiceStatus() == 3;
     }
 
+    @DebugLog
     @Override
-    public void handleSuccessfulHarvestsRequest(InvoiceDetailsResponse invoiceDetailsResponse) {
+    public void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse) {
+
+        Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());
+
         detailsList = invoiceDetailsResponse.getDetails();
-        harvestList = invoiceDetailsResponse.getHarvests();
+        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();
         mView.hideWorkingIndicator();
         /*if (currentPage == Constants.INITIAL_PAGE_IN_PAGER) {
-            mView.updateHarvestsList(harvestsList);
+            mView.updateHarvestsOrPurchasesList(harvestsList);
         } else {
             mView.addMoreHarvestsToTheList(harvestsList);
         }*/
-        if (harvestList != null) {
-            mView.updateHarvestsList(harvestList);
+        if (harvestsOrPurchasesOfDayList != null) {
+            mView.updateHarvestsOrPurchasesList(harvestsOrPurchasesOfDayList);
         }
     }
 
-    /*@Override
-    public void updatePager(Pager pager) {
-        lastPage = pager.getEndIndex();
-        currentPage = pager.getPageIndex();
-    }*/
-
+    @DebugLog
     @Override
     public void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse) {
         detailsList = invoiceDetailsResponse.getDetails();
-        harvestList = invoiceDetailsResponse.getHarvests();
+        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();
         mView.hideWorkingIndicator();
         mView.showMessage(context.getString(R.string.harvest_deleted_successful));
 
-        if (harvestList != null && harvestList.size() > 0) {
-            if (harvestList != null) {
-                mView.updateHarvestsList(harvestList);
+        if (harvestsOrPurchasesOfDayList != null && harvestsOrPurchasesOfDayList.size() > 0) {
+            if (harvestsOrPurchasesOfDayList != null) {
+                mView.updateHarvestsOrPurchasesList(harvestsOrPurchasesOfDayList);
             }
         } else {
             needReloadMainList = true;
@@ -128,6 +190,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         }
     }
 
+    @DebugLog
     @Override
     public void closeInvoice() {
         mView.showWorkingIndicator();
@@ -146,24 +209,83 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @DebugLog
     @Override
+    public void onClickPrintButton() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (mView.hasLocationPermissions()) {
+                getReceiptOfCurrentInvoiceForPrinting();
+            } else {
+                mView.requestLocationPermissions();
+            }
+        } else {
+            getReceiptOfCurrentInvoiceForPrinting();
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtil.LOCATION_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getReceiptOfCurrentInvoiceForPrinting();
+                } else {
+                    mView.showError(context.getString(R.string.location_permission_needed_for_correct_bluetooth_scan));
+                }
+                break;
+        }
+    }
+
+    @DebugLog
+    @Override
+    public void getReceiptOfCurrentInvoiceForPrinting() {
+        mView.showWorkingIndicator();
+        mRepository.getReceiptOfInvoiceForPrinting(currentInvoice);
+    }
+
+    @DebugLog
+    @Override
+    public void onGetReceiptSuccess(ReceiptResponse receiptResponse) {
+        mView.hideWorkingIndicator();
+
+        boolean isHarvest;
+
+        if (receiptResponse.getInvoice().getProvider() != null) {
+            //Remote invoice
+            isHarvest = receiptResponse.getInvoice().getProvider().isHarvester();
+        } else {
+            //Local invoice
+            isHarvest = receiptResponse.getInvoice().getType() == Constants.TYPE_HARVESTER;
+        }
+
+        InvoiceDetailsResponse invoiceDetailsResponse = new InvoiceDetailsResponse(detailsList);
+
+        float totalOfInvoiceIncludingLocalOperations = 0;
+
+        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getDetails()) {
+            if (isHarvest)
+                totalOfInvoiceIncludingLocalOperations += (currentDetail.getPriceByLot() * currentDetail.getAmount());
+            else
+                totalOfInvoiceIncludingLocalOperations += (currentDetail.getPriceItem() * currentDetail.getAmount());
+        }
+
+        receiptResponse.getInvoice().setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
+
+        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse);
+
+        String textToPrint = Util.formatTextForPrinting(textToShow);
+
+        mView.showHarvestPrintPreview(textToPrint, textToShow);
+    }
+
+    @DebugLog
+    @Override
     public boolean needReloadMainList() {
         return needReloadMainList;
     }
-
-    /*@Override
-    public void getMoreHarvests() {
-        mView.showWorkingIndicator();
-        mRepository.harvestsRequest(++currentPage);
-    }*/
 
     @Override
     public void onError(String error) {
         mView.hideWorkingIndicator();
         mView.showError(error);
     }
-
-    /*@Override
-    public boolean canLoadMore() {
-        return currentPage + 1 <= lastPage;
-    }*/
 }

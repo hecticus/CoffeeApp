@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.hecticus.eleta.model.Session;
+import com.hecticus.eleta.model.SessionManager;
 import com.hecticus.eleta.model.request.LoginPost;
 import com.hecticus.eleta.model.response.LoginResponse;
 import com.hecticus.eleta.model.retrofit_interface.UserRetrofitInterface;
@@ -64,7 +64,6 @@ public class LoginRepository implements LoginContract.Repository {
         LoginPost post = new LoginPost();
         post.setEmail(email);
         post.setPassword(password);
-        Log.d("TEST", post.toString());
 
         Call<LoginResponse> call = userApi.loginRequest(post);
         call.enqueue(new Callback<LoginResponse>() {
@@ -76,15 +75,17 @@ public class LoginRepository implements LoginContract.Repository {
                         onLoginSuccess(response.body());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onLoginError();
+                        onLoginError(null);
                     }
                 } else {
                     try {
-                        Log.d("LOGIN", "--->Error " + new JSONObject(response.errorBody().string()));
+                        JSONObject errorJsonObject = new JSONObject(response.errorBody().string());
+                        Log.d("LOGIN", "--->loginErrorResponse: " + errorJsonObject);
+                        onLoginError(errorJsonObject.optString("message", null));
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();
+                        onLoginError(null);
                     }
-                    onLoginError();
                 }
             }
 
@@ -92,8 +93,8 @@ public class LoginRepository implements LoginContract.Repository {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 t.printStackTrace();
-                Log.e("RETRO", "--->ERROR");
-                onLoginError();
+                Log.e("RETRO", "--->Login Repository onFailure");
+                onLoginError(null);
             }
         });
     }
@@ -112,15 +113,15 @@ public class LoginRepository implements LoginContract.Repository {
 
     @DebugLog
     @Override
-    public void onLoginError() {
-        mPresenter.onLoginError();
+    public void onLoginError(String errorMessageFromServer) {
+        mPresenter.onLoginError(errorMessageFromServer);
     }
 
     @DebugLog
     @Override
     public void saveTokens(LoginResponse response) {
         Context context = mPresenter.context;
-        Session.updateSession(context, response);
+        SessionManager.updateSession(context, response);
     }
 
 }

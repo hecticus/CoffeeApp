@@ -1,8 +1,12 @@
 package com.hecticus.eleta.purchases.list;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +17,15 @@ import android.widget.TextView;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseFragment;
+import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.base.item.GenericListAdapter;
+import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.of_day.PurchasesOfDayListActivity;
+import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.purchases.detail.PurchaseDetailsActivity;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.PermissionUtil;
 import com.hecticus.eleta.util.Util;
 
 import java.util.List;
@@ -96,34 +104,42 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
 
     @Override
     public void showWorkingIndicator() {
-        purchasesRecyclerView.setEnabled(false);
-        purchasesRecyclerView.setAlpha(0.5f);
-        progressBar.setVisibility(View.VISIBLE);
+        if (isAdded()) {
+            purchasesRecyclerView.setEnabled(false);
+            purchasesRecyclerView.setClickable(false);
+            purchasesRecyclerView.setAlpha(0.5f);
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideWorkingIndicator() {
-        purchasesRecyclerView.setEnabled(true);
-        purchasesRecyclerView.setAlpha(1f);
-        progressBar.setVisibility(View.GONE);
+        if (isAdded()) {
+            purchasesRecyclerView.setEnabled(true);
+            purchasesRecyclerView.setClickable(true);
+            purchasesRecyclerView.setAlpha(1f);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
     public void showError(String error) {
-        Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @OnClick(R.id.custom_header_w_add_action_button)
     @Override
     public void onClickAddPurchase() {
         Intent intent = new Intent(getActivity(), PurchaseDetailsActivity.class);
-        intent.putExtra("isAdd",true);
-        intent.putExtra("canEdit",true);
+        intent.putExtra("isAdd", true);
+        intent.putExtra("canEdit", true);
         startActivity(intent);
     }
 
@@ -138,14 +154,20 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
         }
     }
 
+    @DebugLog
     @Override
     public void updatePurchasesList(List<Invoice> invoicesList) {
-        mAdapter.showNewDataSet(invoicesList);
+        if (isAdded()) {
+            mAdapter.showNewDataSet(invoicesList);
+        }
     }
 
+    @DebugLog
     @Override
     public void addMorePurchasesToTheList(List<Invoice> invoicesList) {
-        mAdapter.showMoreDataSet(invoicesList);
+        if (isAdded()) {
+            mAdapter.showMoreDataSetX(invoicesList);
+        }
     }
 
     @DebugLog
@@ -155,11 +177,47 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
     }
 
     @Override
-    public void printPurchase(String text) {
-        //TODO
-        showMessage("DISABLED");
-        /*Intent intent = new Intent(getActivity(), PrintActivity.class);
-        intent.putExtra("text", text);
-        startActivity(intent);*/
+    public void printPurchase(String textToPrint, String textToShow) {
+        Intent intent = new Intent(getActivity(), PrintPreviewActivity.class);
+        intent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, textToPrint);
+        intent.putExtra(Constants.PRINT_TEXT_FOR_PREVIEW, textToShow);
+        startActivity(intent);
+    }
+
+    @DebugLog
+    @Override
+    public void showDeleteConfirmation(final BaseModel model) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.delete)
+                .setMessage(R.string.want_to_delete_purchase)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mPresenter.deletePurchase(model);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+
+    }
+
+    public void invalidToken() {
+        ((HomeActivity) getActivity()).goToLoginActivity();
+    }
+
+    @DebugLog
+    @Override
+    public boolean hasLocationPermissions() {
+        return PermissionUtil.isPermissionGranted(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
+
+    @DebugLog
+    @Override
+    public void requestLocationPermissions() {
+        PermissionUtil.requestLocationPermission(this);
+    }
+
+    @DebugLog
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

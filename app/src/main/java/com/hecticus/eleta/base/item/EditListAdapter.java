@@ -65,15 +65,17 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
         if (canEdit) {
             genericItemViewHolder.getValueEditText().addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    list.get(position).setInputValue(charSequence+"");
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 }
 
                 @Override
-                public void afterTextChanged(Editable editable) {}
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    list.get(position).setInputValue(charSequence + "");
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
             });
         }
     }
@@ -100,11 +102,11 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
     }
 
     public List<ItemType> getItemsValues() {
-        return (List<ItemType>)(Object)list;
+        return (List<ItemType>) list;
     }
 
     public List<Purity> getPuritiesValues() {
-        return (List<Purity>)(Object)list;
+        return (List<Purity>) list;
     }
 
 }

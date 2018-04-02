@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_rounded"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/custom_dialog_descriptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/custom_doble_text_view_name_provider"
+            layout="@layout/custom_doble_text_view" />
+
+        <LinearLayout
+            android:id="@+id/dialog_confirm_linear_layout_harvester"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/custom_doble_text_view_farm"
+                layout="@layout/custom_doble_text_view" />
+
+            <include
+                android:id="@+id/custom_doble_text_view_lot"
+                layout="@layout/custom_doble_text_view" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dialog_confirm_linear_layout_provider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/custom_doble_text_view_store"
+                layout="@layout/custom_doble_text_view" />
+
+            <include
+                android:id="@+id/custom_doble_text_view_freight"
+                layout="@layout/custom_doble_text_view" />
+
+            <include
+                android:id="@+id/custom_doble_text_view_type"
+                layout="@layout/custom_doble_text_view" />
+
+            <include
+                android:id="@+id/custom_doble_text_view_amount"
+                layout="@layout/custom_doble_text_view" />
+
+            <include
+                android:id="@+id/custom_doble_text_view_price"
+                layout="@layout/custom_doble_text_view" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dialog_confirm_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/custom_dialog_descriptions" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_confirm_recycler_view"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/custom_doble_text_view_dispatch_by"
+            layout="@layout/custom_doble_text_view" />
+
+        <include
+            android:id="@+id/custom_doble_text_view_observation"
+            layout="@layout/custom_doble_text_view" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/dialog_confirm_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/linear_layout1"
+        android:layout_gravity="end"
+        android:background="#fff"
+        android:text="@string/cancel"
+        android:textColor="@color/colorEletaGreen" />
+
+    <Button
+        android:id="@+id/dialog_confirm_accept_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout1"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:background="#fff"
+        android:text="@string/save"
+        android:textColor="@color/colorEletaGreen" />
+
+</RelativeLayout>

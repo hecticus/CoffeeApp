@@ -1,32 +1,39 @@
 package com.hecticus.eleta.of_day;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.hecticus.eleta.LoggedInActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
+import com.hecticus.eleta.base.BaseDetailModel;
 import com.hecticus.eleta.base.item.TwoColumnsGenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomButtonWBorderAndImage;
-import com.hecticus.eleta.harvest.detail.HarvestDetailsActivity;
+import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.purchases.detail.PurchaseDetailsActivity;
+import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.GlideApp;
+import com.hecticus.eleta.util.PermissionUtil;
 import com.hecticus.eleta.util.Util;
 
-import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
@@ -62,6 +69,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
     private TwoColumnsGenericListAdapter mAdapter;
 
+    @DebugLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +80,14 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         if (getIntent().getStringExtra("invoice") != null) {
             initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
         }
-        mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice);
+        mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice, false);
         initViews();
+    }
+
+    @DebugLog
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         mPresenter.getInitialData();
     }
 
@@ -96,19 +110,22 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
     @DebugLog
     @Override
     public void showMessage(String message) {
-        Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @DebugLog
     @Override
     public void showError(String error) {
-        Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        if (mainLinearLayout != null)
+            Snackbar.make(mainLinearLayout, error, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
+    @DebugLog
     @OnClick(R.id.harvests_of_day_print_invoice)
     @Override
-    public void onClickPrintInvoice() {
-        doBack();
+    public void onClickPrintButton() {
+        mPresenter.onClickPrintButton();
     }
 
     @OnClick(R.id.harvests_of_day_make_puchase)
@@ -124,30 +141,29 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         makePurchaseButtom.setVisibility(View.INVISIBLE);
     }
 
+    @DebugLog
     @Override
-    public void goToHarvestDetail(Provider provider, List<InvoiceDetails> detailsList) {
+    public void goToHarvestOrPurchaseDetailsView(Provider provider, List<InvoiceDetails> detailsList, boolean invoiceHasOfflineOperation) {
         try {
             Intent intent = new Intent(this, PurchaseDetailsActivity.class);
-            intent.putExtra("details", (Serializable) detailsList);
+            intent.putExtra("details", Util.getGson().toJson(detailsList));
             intent.putExtra("provider", Util.getGson().toJson(provider));
-            intent.putExtra("isAdd",false);
-            intent.putExtra("canEdit",true);
+            intent.putExtra("isAdd", false);
+            intent.putExtra("canEdit", true);
+            intent.putExtra("invoiceHasOfflineOperation", invoiceHasOfflineOperation);
             startActivityForResult(intent, 1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    @DebugLog
     @Override
-    public void updateHarvestsList(List<HarvestOfDay> harvestsList) {
+    public void updateHarvestsOrPurchasesList(List<HarvestOfDay> harvestsList) {
         mAdapter.showNewDataSet(harvestsList);
     }
 
-    @Override
-    public void refreshList() {
-        mPresenter.getInitialData();
-    }
-
+    @DebugLog
     @Override
     public void initHeader(String name, String imageUrl) {
         headerNameTextView.setText(name);
@@ -155,7 +171,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
             GlideApp
                     .with(this)
                     .load(imageUrl)
-                    .error(R.mipmap.picture)
+                    .error(R.mipmap.placeholder_avatar)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .centerCrop()
@@ -163,6 +179,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         }
     }
 
+    @DebugLog
     @Override
     public void initViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -171,7 +188,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         printInvoiceButton.initWithTypeAndText(CustomButtonWBorderAndImage.Type.PRINT, getString(R.string.print_invoice));
         makePurchaseButtom.initWithTypeAndText(CustomButtonWBorderAndImage.Type.CHECK, getString(R.string.make_purchase));
 
-        if (mPresenter.isCurrentClosedInvoice()){
+        if (mPresenter.isCurrentClosedInvoice()) {
             makePurchaseButtom.setVisibility(View.INVISIBLE);
         }
 
@@ -202,11 +219,12 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         return true;
     }
 
+    @DebugLog
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                if (data.getBooleanExtra("reload",false)) {
+            if (resultCode == RESULT_OK) {
+                if (data.getBooleanExtra("reload", false)) {
                     mPresenter.refreshHarvestsList();
                 }
             }
@@ -215,9 +233,9 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
     @DebugLog
     @Override
-    public void doBack(){
+    public void doBack() {
         if (mPresenter.needReloadMainList()) {
-            Intent mIntent = new Intent(PurchasesOfDayListActivity.this, LoggedInActivity.class);
+            Intent mIntent = new Intent(PurchasesOfDayListActivity.this, HomeActivity.class);
             mIntent.putExtra("reloadPurchases", true);
             startActivity(mIntent);
         }
@@ -226,14 +244,70 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
     @DebugLog
     @Override
+    public void showHarvestPrintPreview(String textToPrint, String textToShow) {
+        Intent intent = new Intent(this, PrintPreviewActivity.class);
+        intent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, textToPrint);
+        intent.putExtra(Constants.PRINT_TEXT_FOR_PREVIEW, textToShow);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showDeleteConfirmation(final BaseDetailModel model) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete)
+                .setMessage(R.string.want_to_delete_harvest)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mPresenter.deleteHarvestOrPurchase(model);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    @DebugLog
+    @Override
     public void onBackPressed() {
         if (mPresenter.needReloadMainList()) {
-            Intent mIntent = new Intent(PurchasesOfDayListActivity.this, LoggedInActivity.class);
+            Intent mIntent = new Intent(PurchasesOfDayListActivity.this, HomeActivity.class);
             mIntent.putExtra("reloadPurchases", true);
             startActivity(mIntent);
             finish();
-        }
-        else
+        } else
             super.onBackPressed();
+    }
+
+    @DebugLog
+    @Override
+    public void invalidToken() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("invalidToken", true);
+        startActivity(intent);
+        finish();
+    }
+
+    @DebugLog
+    @Override
+    public void finishWithErrorMessage(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+
+    @DebugLog
+    @Override
+    public boolean hasLocationPermissions() {
+        return PermissionUtil.isPermissionGranted(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
+
+    @DebugLog
+    @Override
+    public void requestLocationPermissions() {
+        PermissionUtil.requestLocationPermission(this);
+    }
+
+    @DebugLog
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

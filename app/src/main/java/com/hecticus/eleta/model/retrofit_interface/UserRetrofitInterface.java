@@ -16,13 +16,16 @@ import retrofit2.http.Path;
 
 public interface UserRetrofitInterface {
 
-    static final String loginURL = "user/login";
-    static final String recoverPasswordURL = "user/reset/{email}";
+    String loginUrl = "user/login";
+    String logoutUrl = "user/logout";
+    String recoverPasswordUrl = "user/reset/{email}";
 
-    @POST(loginURL)
+    @POST(loginUrl)
     Call<LoginResponse> loginRequest(@Body LoginPost post);
 
-    @GET(recoverPasswordURL)
-    Call<Message> recoverPassword(@Path("email") String email);
+    @GET(logoutUrl)
+    Call<Message> logOutRequest();
 
+    @GET(recoverPasswordUrl)
+    Call<Message> recoverPasswordRequest(@Path("email") String email);
 }

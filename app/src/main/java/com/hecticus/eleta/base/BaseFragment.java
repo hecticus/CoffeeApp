@@ -1,6 +1,5 @@
 package com.hecticus.eleta.base;
 
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -34,5 +33,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public abstract void initViews();
+
     public abstract void initString();
 }

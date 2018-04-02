@@ -30,8 +30,8 @@ public class LoginPresenter implements LoginContract.Actions {
     public void onLogin(String email, String password) {
         if (validateLoginFields(email, password)) {
             mView.showWorkingIndicator();
-            mRepository.loginRequest(email,password);
-        }else {
+            mRepository.loginRequest(email, password);
+        } else {
             mView.showErrorMessage(context.getString(R.string.invalid_email_or_password));
         }
     }
@@ -52,9 +52,14 @@ public class LoginPresenter implements LoginContract.Actions {
 
     }
 
+    @DebugLog
     @Override
-    public void onLoginError() {
+    public void onLoginError(String errorMessageFromServer) {
         mView.hideWorkingIndicator();
-        mView.showErrorMessage(context.getString(R.string.login_error));
+
+        if (errorMessageFromServer != null && !errorMessageFromServer.trim().isEmpty())
+            mView.showErrorMessage(context.getString(R.string.login_error) + ": " + errorMessageFromServer);
+        else
+            mView.showErrorMessage(context.getString(R.string.login_error));
     }
 }

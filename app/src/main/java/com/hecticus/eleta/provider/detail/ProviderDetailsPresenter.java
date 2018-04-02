@@ -1,14 +1,20 @@
 package com.hecticus.eleta.provider.detail;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.hecticus.eleta.R;
+import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.FileUtils;
 
 import java.util.HashMap;
 
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 
 /**
  * Created by roselyn545 on 16/9/17.
@@ -25,6 +31,7 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
     private boolean canEdit = false;
     private boolean isHarvester = false;
     private boolean updated = false;
+    private boolean errorUpdatingImage = false;
 
     @DebugLog
     public ProviderDetailsPresenter(Context context, ProviderDetailsContract.View mView, Provider currentProviderParam,
@@ -68,6 +75,8 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         if (providerParam != null) {
             if (isForProviderCreation) {
                 unsavedChangesCount++;
+                providerParam.setIdProvider(null);
+                providerParam.setIdentificationDocProviderChange(providerParam.getIdentificationDocProvider());
                 mRepository.createProviderRequest(providerParam, imagePath);
             } else {
                 HashMap<String, Object> changes = getChanges(providerParam);
@@ -75,14 +84,27 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
                 if (changes.isEmpty() && imagePath == null) {
                     mView.showMessage(context.getString(R.string.no_changes));
                 } else {
-                    if (changes.size() > 0) {
-                        unsavedChangesCount++;
-                        mView.showWorkingIndicator();
-                        providerParam.setIdProvider(currentProvider.getIdProvider());
-                        providerParam.setIdentificationDocProviderChange(currentProvider.getIdentificationDocProvider());
-                        mRepository.updateProviderRequest(providerParam);
+                    if (!InternetManager.isConnected(context) ||
+                            currentProvider.getIdProvider() < 0 ||
+                            ManagerDB.providerHasOfflineOperation(currentProvider)) {
+                        if ((changes.size() > 0) || imagePath != null) {
+                            if (imagePath != null)
+                                providerParam.setPhotoProvider(imagePath);
+                            providerParam.setIdProvider(currentProvider.getIdProvider());
+                            providerParam.setIdentificationDocProviderChange(currentProvider.getIdentificationDocProvider());
+                            mRepository.updateProviderRequest(providerParam);
+                        }
+
+                    } else {
+                        if (changes.size() > 0) {
+                            unsavedChangesCount++;
+                            mView.showWorkingIndicator();
+                            providerParam.setIdProvider(currentProvider.getIdProvider());
+                            providerParam.setIdentificationDocProviderChange(currentProvider.getIdentificationDocProvider());
+                            mRepository.updateProviderRequest(providerParam);
+                        }
+                        uploadImage(providerParam, imagePath);
                     }
-                    uploadImage(providerParam, imagePath);
                 }
             }
         }
@@ -134,30 +156,60 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         mView.showMessage(message);
     }
 
+    @DebugLog
     @Override
-    public void onUpdateError(int type) {
+    public void invalidToken() {
+        mView.invalidToken();
+    }
+
+    // A negative number (id) is used. i.e: -2.jpg, -3.jpg.
+    // If this provider is created offline, this number will match his local id.
+    // If provider is created online, this file will be discarded and it the number will not decrease
+    // for the next provider.
+    @DebugLog
+    public String getNextProviderImagePath() {
+
+        Number minExistingProviderLocalId = Realm.getDefaultInstance().where(Provider.class).min("idProvider");
+
+        int nextExistingImageNumber =
+                (minExistingProviderLocalId == null || minExistingProviderLocalId.intValue() >= 0) ? -1 :
+                        minExistingProviderLocalId.intValue() - 1;
+
+        return FileUtils.getTempFolderPath() + nextExistingImageNumber + ".jpg";
+    }
+
+    @Override
+    public void onUpdateError(Constants.ErrorType errorType, @Nullable String customErrorString) {
         unsavedChangesCount--;
-        if (unsavedChangesCount == 0) {
-            mView.hideWorkingIndicator();
+
+        if (errorType == Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION) {
+            mView.showMessage(context.getString(R.string.error_saving_changes) + (customErrorString == null ? "" : "->" + customErrorString));
+        } else if (errorType == Constants.ErrorType.ERROR_UPDATING_IMAGE) {
+            errorUpdatingImage = true;
+            mView.showMessage(context.getString(R.string.error_updating_image) + (customErrorString == null ? "" : "->" + customErrorString));
+        } else if (errorType == Constants.ErrorType.DNI_EXISTING) {
+            mView.showMessage(context.getString(R.string.dni_already_exists) + (customErrorString == null ? "" : "->" + customErrorString));
+        } else if (errorType == Constants.ErrorType.RUC_EXISTING) {
+            mView.showMessage(context.getString(R.string.ruc_already_exists) + (customErrorString == null ? "" : "->" + customErrorString));
+        } else if (errorType == Constants.ErrorType.NAME_EXISTING) {
+            mView.showMessage(context.getString(R.string.name_already_exists) + (customErrorString == null ? "" : "->" + customErrorString));
         }
 
-        switch (type) {
-            case 0:
-                mView.showMessage(context.getString(R.string.error_saving_changes));
-                break;
-            case 1:
-                mView.showMessage(context.getString(R.string.error_updating_image));
-                break;
-            case 2:
-                mView.showMessage(context.getString(R.string.already_exists));
-                break;
+        if (unsavedChangesCount == 0) {
+            mView.hideWorkingIndicator();
+
+            if (errorUpdatingImage && isForProviderCreation) {
+                //We keep the screen open, but now as an edition
+                isForProviderCreation = false;
+                errorUpdatingImage = false;
+            }
         }
 
     }
 
     @DebugLog
     @Override
-    public void onSavedProvider(Provider providerParam) {
+    public void onProviderSaved(Provider providerParam) {
         updated = true;
         if (unsavedChangesCount > 0)
             unsavedChangesCount--;
@@ -171,8 +223,8 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
 
             currentProvider = providerParam;
 
-            Log.d("DETAILS", "--->No changes left (onSavedProvider)");
-            mView.onSavedProvider(providerParam);
+            Log.d("DETAILS", "--->No changes left (onProviderSaved)");
+            mView.onProviderSaved(providerParam);
         } else {
 
             //An image update is pending, so we can replace all fields
@@ -182,6 +234,7 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         }
     }
 
+    @DebugLog
     @Override
     public void onImageUpdateSuccess(String newImageString) {
         updated = true;
@@ -193,7 +246,7 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         unsavedChangesCount--;
         if (unsavedChangesCount == 0) {
             Log.d("DETAILS", "--->No changes left");
-            mView.onSavedProvider(currentProvider);
+            mView.onProviderSaved(currentProvider);
         } else
             Log.d("DETAILS", "--->Changes left: " + unsavedChangesCount);
     }

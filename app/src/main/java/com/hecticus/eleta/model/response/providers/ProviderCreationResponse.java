@@ -13,9 +13,14 @@ public class ProviderCreationResponse {
     @SerializedName("message")
     @Expose
     private String message;
+
     @SerializedName("result")
     @Expose
     private Provider provider;
+
+    @SerializedName("error")
+    @Expose
+    private String error;
 
     public String getMessage() {
         return message;
@@ -33,11 +38,20 @@ public class ProviderCreationResponse {
         this.provider = provider;
     }
 
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
     @Override
     public String toString() {
         return "ProviderCreationResponse{" +
                 "message='" + message + '\'' +
                 ", provider=" + provider +
+                ", error='" + error + '\'' +
                 '}';
     }
 }
