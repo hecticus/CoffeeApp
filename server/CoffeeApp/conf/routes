@@ -139,3 +139,6 @@ GET     /user/verify                controllers.Users.verify
 #GET     /user/reset/:mailToken     controllers.PasswordReset.resetPassword(mailToken)
 #POST    /user/reset/:mailToken     controllers.PasswordReset.handleResetPassword(mailToken)
 GET     /user/find                  controllers.Users.findByEmail(email: String)
+
+
+

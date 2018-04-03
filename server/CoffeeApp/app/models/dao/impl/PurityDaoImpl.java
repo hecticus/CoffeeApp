@@ -1,10 +1,10 @@
 package models.dao.impl;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.Ebean;
+import io.ebean.ExpressionList;
+import io.ebean.SqlQuery;
+import io.ebean.SqlRow;
+import io.ebean.text.PathProperties;
 import models.dao.PurityDao;
 import models.dao.utils.ListPagerCollection;
 import models.domain.Purity;
@@ -23,10 +23,10 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
 
     public int getExist(String name_purity)
     {
-        if(find.where().eq("name_purity",name_purity).eq("status_delete",0).findUnique()!=null) return 0;
+        if(find.query().where().eq("name_purity",name_purity).eq("status_delete",0).findUnique()!=null) return 0;
         else
         {
-            if(find.where().eq("name_purity",name_purity).eq("status_delete",1).findUnique()!=null)  return 1;
+            if(find.query().where().eq("name_purity",name_purity).eq("status_delete",1).findUnique()!=null)  return 1;
             else return 2;
 
         }
@@ -88,7 +88,7 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
 
     @Override
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = find.where().eq("status_delete",0);
+        ExpressionList expressionList = find.query().where().eq("status_delete",0);
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);
@@ -101,6 +101,6 @@ public class PurityDaoImpl  extends AbstractDaoImpl<Long,Purity> implements Puri
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
     }
 }

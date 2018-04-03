@@ -21,7 +21,7 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
 
     @Override
     public User findByEmail(String email){
-        List<User> users = find
+        List<User> users = find.query()
                 .where()
                 .eq("email", email)
                 .findList();
@@ -33,7 +33,7 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
 
     @Override
     public User findByTokenAndID(Long id, String token){
-        List<User> users = find
+        List<User> users = find.query()
                 .where()
                 .eq("token", token)
                 .eq("id", id)
@@ -61,14 +61,14 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
     }
 
     public User findUniqueByEmail(String email){
-        return find
+        return find.query()
                 .where()
                 .eq("email", email)
                 .findUnique();
     }
 
     public User findUniqueByEmail(String email, Long id){
-        return find
+        return find.query()
                 .where()
                 .ne("id", id)
                 .eq("email", email)

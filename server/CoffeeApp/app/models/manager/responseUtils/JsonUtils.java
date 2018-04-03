@@ -1,7 +1,7 @@
 package models.manager.responseUtils;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.Ebean;
+import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

@@ -1,10 +1,10 @@
 package models.dao.impl;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.Ebean;
+import io.ebean.ExpressionList;
+import io.ebean.SqlQuery;
+import io.ebean.SqlRow;
+import io.ebean.text.PathProperties;
 import models.dao.ItemTypeDao;
 import models.dao.UnitDao;
 import models.dao.utils.ListPagerCollection;
@@ -27,10 +27,10 @@ public class ItemTypeDaoImpl extends AbstractDaoImpl<Long, ItemType> implements 
 
     public int getExist(String name_itemtype)
     {
-       if(find.where().eq("name_itemtype",name_itemtype).eq("status_delete",0).findUnique()!=null) return 0;
+       if(find.query().where().eq("name_itemtype",name_itemtype).eq("status_delete",0).findUnique()!=null) return 0;
        else
        {
-           if(find.where().eq("name_itemtype",name_itemtype).eq("status_delete",1).findUnique()!=null)  return 1;
+           if(find.query().where().eq("name_itemtype",name_itemtype).eq("status_delete",1).findUnique()!=null)  return 1;
            else return 2;
 
        }
@@ -39,12 +39,12 @@ public class ItemTypeDaoImpl extends AbstractDaoImpl<Long, ItemType> implements 
 
     public List<ItemType> getOpenByUnitId(Long idUnit)
     {
-        return find.where().eq("id_unit",idUnit).eq("status_delete",0).findList();
+        return find.query().where().eq("id_unit",idUnit).eq("status_delete",0).findList();
     }
 
     public List<ItemType> getOpenByProviderTypeId(Long idProviderType)
     {
-        return find.where().eq("id_providertype",idProviderType).eq("status_delete",0).findList();
+        return find.query().where().eq("id_providertype",idProviderType).eq("status_delete",0).findList();
     }
 
     public List<ItemType> getByProviderTypeId(Long idProviderType, Integer status)
@@ -105,7 +105,7 @@ return toItemTypes(results);
 
     @Override
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = find.where().eq("status_delete",0);
+        ExpressionList expressionList = find.query().where().eq("status_delete",0);
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);
@@ -118,6 +118,6 @@ return toItemTypes(results);
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
     }
 }

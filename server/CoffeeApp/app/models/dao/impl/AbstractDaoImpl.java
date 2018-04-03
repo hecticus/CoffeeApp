@@ -1,8 +1,10 @@
 package models.dao.impl;
 
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Model;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.ExpressionList;
+import io.ebean.FetchPath;
+import io.ebean.Finder;
+import io.ebean.Model;
+import io.ebean.text.PathProperties;
 import models.dao.AbstractDao;
 import models.dao.utils.ListPager;
 import models.domain.AbstractEntity;
@@ -16,10 +18,10 @@ import java.util.List;
  */
 public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
 
-    public Model.Finder<K, E> find;
+    public Finder<K, E> find;
 
     public AbstractDaoImpl(Class<E> type){
-        find = new Model.Finder<K, E>(type);
+        find = new Finder<K, E>(type);
     }
 
     @Override
@@ -52,7 +54,7 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
     @Override
     public List<E> findAll(){
     //    List<E> entities =  find.all();
-          List<E> entities = find.where().eq("status_delete",0).findList();
+          List<E> entities = find.query().where().eq("status_delete",0).findList();
         return entities;
     }
 
@@ -60,11 +62,11 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
     public List<E> findAll(Integer pageIndex, Integer pageSize){
         List<E> entities;
         if(pageIndex != -1 && pageSize != -1)
-        //    entities = find.findPagedList(pageIndex, pageSize).getList();
-            entities = find.where().eq("status_delete",0).findPagedList(pageIndex, pageSize).getList();
+        //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+            entities = find.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
         else
             // entities =  find.all();
-            entities = find.where().eq("status_delete",0).findList();
+            entities = find.query().where().eq("status_delete",0).findList();
         return entities;
     }
 
@@ -72,15 +74,18 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
     @Override
     public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
         if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(find.where().eq("status_delete",0).orderBy(Sort(sort)).findList());
-        return new ListPagerCollection(find.where().eq("status_delete",0).orderBy(Sort(sort)).findPagedList(pageIndex, pageSize).getList(), find.findRowCount(), pageIndex, pageSize);
+            return new ListPagerCollection(find.query().where().eq("status_delete",0).orderBy(Sort(sort)).findList());
+        return new ListPagerCollection(
+                find.query().where().eq("status_delete",0).orderBy(Sort(sort)).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                find.query().findCount(),
+                pageIndex,
+                pageSize);
     }
 
-    @Override
     public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
-        ExpressionList expressionList = find.where();
+        ExpressionList expressionList = find.query().where();
 
-        if(pathProperties != null && !pathProperties.isEmpty())
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(sort != null)
@@ -88,7 +93,11 @@ public abstract class AbstractDaoImpl<K, E> implements AbstractDao<K, E> {
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
-        return new ListPagerCollection(expressionList.eq("status_delete",0).findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
     }
 
 

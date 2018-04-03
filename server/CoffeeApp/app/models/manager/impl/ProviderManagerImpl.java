@@ -6,8 +6,8 @@ package models.manager.impl;
 
 
 
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.ExpressionList;
+import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.InvoiceDao;

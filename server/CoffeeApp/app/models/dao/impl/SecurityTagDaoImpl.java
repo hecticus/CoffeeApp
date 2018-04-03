@@ -20,7 +20,7 @@ public class SecurityTagDaoImpl extends AbstractDaoImpl<Long, SecurityTag> imple
     @Override
     public SecurityTag GetTagByName(String name)
     {
-             List<SecurityTag> sroutes = find
+             List<SecurityTag> sroutes = find.query()
                 .where()
                 .eq("name", name)
                 .findList();
@@ -33,7 +33,7 @@ public class SecurityTagDaoImpl extends AbstractDaoImpl<Long, SecurityTag> imple
     @Override
     public SecurityTag CheckAndInsert(String resourceName)
     {
-        List<SecurityTag> sroutes = find
+        List<SecurityTag> sroutes = find.query()
                 .where()
                 .eq("name", resourceName)
                 .findList();

@@ -1,6 +1,6 @@
 package models.manager.impl;
 
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.InvoiceDetailDao;
 import models.dao.PurityDao;

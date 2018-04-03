@@ -1,6 +1,6 @@
 package models.dao;
 
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 import models.dao.utils.ListPagerCollection;
 import models.domain.Lot;
 

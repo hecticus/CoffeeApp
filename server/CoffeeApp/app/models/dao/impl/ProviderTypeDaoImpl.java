@@ -1,7 +1,7 @@
 package models.dao.impl;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.SqlRow;
+import io.ebean.Ebean;
+import io.ebean.SqlRow;
 import models.dao.ProviderTypeDao;
 import models.domain.ProviderType;
 
@@ -61,10 +61,10 @@ public class ProviderTypeDaoImpl extends AbstractDaoImpl<Long, ProviderType> imp
 
     public int getExist(String name_providertype)
     {
-        if(find.where().eq("name_providertype",name_providertype).eq("status_delete",0).findUnique()!=null) return 0;
+        if(find.query().where().eq("name_providertype",name_providertype).eq("status_delete",0).findUnique()!=null) return 0;
         else
         {
-            if(find.where().eq("name_providertype",name_providertype).eq("status_delete",1).findUnique()!=null)  return 1;
+            if(find.query().where().eq("name_providertype",name_providertype).eq("status_delete",1).findUnique()!=null)  return 1;
             else return 2;
 
         }

@@ -1,8 +1,8 @@
 package models.dao.impl;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
+import io.ebean.Ebean;
+import io.ebean.RawSql;
+import io.ebean.RawSqlBuilder;
 import models.dao.SecurityRouteDao;
 import models.dao.SecurityTagDao;
 import models.domain.Role;
@@ -25,7 +25,7 @@ public class SecurityRouteDaoImpl extends AbstractDaoImpl<Long, SecurityRoute> i
     @Override
     public SecurityRoute CheckAndInsert(String resourceName, int type)
     {
-        List<SecurityRoute> sroutes = find
+        List<SecurityRoute> sroutes = find.query()
                 .where()
                 .eq("name", resourceName)
                 .findList();

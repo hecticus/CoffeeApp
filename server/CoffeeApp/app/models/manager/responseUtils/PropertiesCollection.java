@@ -1,6 +1,6 @@
 package models.manager.responseUtils;
 
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 
 import java.util.HashMap;
 import java.util.Map;

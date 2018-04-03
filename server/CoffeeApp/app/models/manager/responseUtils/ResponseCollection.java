@@ -1,6 +1,6 @@
 package models.manager.responseUtils;
 
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -61,7 +61,7 @@ public class ResponseCollection {
     public static Result foundEntity(ListPagerCollection listPager, PathProperties pathProperties){
         return ok(buildExtendResponse(
                 "Successful search",
-                pathProperties != null && !pathProperties.isEmpty() ? JsonUtils.toJson(listPager.entities, pathProperties) :  Json.toJson(listPager.entities),
+                pathProperties != null && !pathProperties.getPathProps().isEmpty() ? JsonUtils.toJson(listPager.entities, pathProperties) :  Json.toJson(listPager.entities),
                 Json.toJson(listPager.pager)
         ));
     }

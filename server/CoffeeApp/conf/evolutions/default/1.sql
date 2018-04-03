@@ -3,6 +3,12 @@
 
 # --- !Ups
 
+create table car (
+  id                            integer auto_increment not null,
+  model                         varchar(255),
+  constraint pk_car primary key (id)
+);
+
 create table config (
   id_config                     bigint auto_increment not null,
   config_key                    varchar(50) not null,
@@ -45,7 +51,7 @@ create table invoice_details (
   cost_itemtype                 decimal(10,2) not null,
   duedate_invoicedetail         datetime(6) not null,
   amount_invoicedetail          integer,
-  isfreight_invoicedetail       tinyint(1) default 0,
+  isfreight_invoicedetail       tinyint(1) default 0 not null,
   note_invoicedetail            varchar(255),
   namereceived_invoicedetail    varchar(255) not null,
   namedelivered_invoicedetail   varchar(255) not null,
@@ -151,7 +157,7 @@ create table route (
   status_delete                 integer not null,
   name                          varchar(50) not null,
   description                   varchar(255) not null,
-  route_type                    integer,
+  route_type                    integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_route primary key (id_security_route)
@@ -347,6 +353,8 @@ drop index ix_tokens_id_user on tokens;
 
 alter table user drop foreign key fk_user_role_id_role;
 drop index ix_user_role_id_role on user;
+
+drop table if exists car;
 
 drop table if exists config;
 

@@ -1,6 +1,7 @@
 package models.domain;
 
-import com.avaje.ebean.Model;
+import io.ebean.Finder;
+import io.ebean.Model;
 import play.data.validation.Constraints;
 
 import javax.persistence.Column;
@@ -27,7 +28,7 @@ public class Config extends Model {
 
     private String description;
 
-    public static Model.Finder<Long, Config> finder = new Model.Finder<Long, Config>(Config.class);
+    public static Finder<Long, Config> finder = new Finder<Long, Config>(Config.class);
 
     public Long getIdConfig() {
         return idConfig;
@@ -62,12 +63,12 @@ public class Config extends Model {
     }
 
     public static String getString(String key){
-        Config config = finder.where().eq("configKey", key).findUnique();
+        Config config = finder.query().where().eq("configKey", key).findUnique();
         return config.getValue();
     }
 
     public static void setString(String key, String value){
-        Config config = finder.where().eq("configKey", key).findUnique();
+        Config config = finder.query().where().eq("configKey", key).findUnique();
         if(config != null){
             config.setValue(value);
             config.update();
@@ -80,7 +81,7 @@ public class Config extends Model {
     }
 
     public static void setString(String key, String value, String description){
-        Config config = finder.where().eq("configKey", key).findUnique();
+        Config config = finder.query().where().eq("configKey", key).findUnique();
         if(config != null){
             config.setValue(value);
             config.setDescription(description);

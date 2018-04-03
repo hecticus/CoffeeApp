@@ -16,7 +16,7 @@ public class TokenDaoImpl  extends AbstractDaoImpl<Long, Token> implements Token
 
     @Override
     public Token findByToken(String token){
-        List<Token> tokens = find
+        List<Token> tokens = find.query()
                 .where()
                 .eq("token", token)
                 .orderBy("created_at desc")

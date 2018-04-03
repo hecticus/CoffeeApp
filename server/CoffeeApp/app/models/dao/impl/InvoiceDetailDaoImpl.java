@@ -1,11 +1,11 @@
 package models.dao.impl;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlUpdate;
-import com.avaje.ebean.SqlRow;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.Ebean;
+import io.ebean.ExpressionList;
+import io.ebean.SqlQuery;
+import io.ebean.SqlUpdate;
+import io.ebean.SqlRow;
+import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.InvoiceDetailDao;
@@ -28,7 +28,7 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
     @Override
     public List<InvoiceDetail> findAllByIdInvoice(Long IdInvoice)
     {
-        return find
+        return find.query()
                 .where()
                 .eq("id_invoice", IdInvoice)
                 .eq("status_delete",0)
@@ -39,22 +39,22 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
 
     public    List<InvoiceDetail> getOpenByItemTypeId( Long idItemType)
     {
-        return find.where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
+        return find.query().where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
     }
 
     public    List<InvoiceDetail> getOpenByLotId( Long idLot)
     {
-        return find.where().eq("id_lot",idLot).eq("status_delete",0).findList();
+        return find.query().where().eq("id_lot",idLot).eq("status_delete",0).findList();
     }
 
     public    List<InvoiceDetail> getOpenByStoreId( Long idStore)
     {
-        return find.where().eq("id_store",idStore).eq("status_delete",0).findList();
+        return find.query().where().eq("id_store",idStore).eq("status_delete",0).findList();
     }
 
     @Override
     public ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = find.where().eq("status_delete",0);
+        ExpressionList expressionList = find.query().where().eq("status_delete",0);
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);
@@ -65,7 +65,7 @@ public class InvoiceDetailDaoImpl extends AbstractDaoImpl<Long, InvoiceDetail> i
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
     }
 
     @Override

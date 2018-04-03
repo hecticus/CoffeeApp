@@ -5,10 +5,10 @@ package models.dao.impl;
  */
 
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.SqlRow;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.Ebean;
+import io.ebean.ExpressionList;
+import io.ebean.SqlRow;
+import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -31,7 +31,7 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
     public Provider getByIdentificationDoc(String IdentificationDoc)
     {
-        return find.where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
+        return find.query().where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
     }
 
     public List<Provider> getProvidersByName(String fullname_provider, String order)
@@ -135,7 +135,7 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
     public List<Integer> getExist(String identificationdoc_provider)
     {
         List<Integer> aux = new ArrayList<Integer>();
-        Provider provider = find.where().eq("identificationdoc_provider",identificationdoc_provider).findUnique();
+        Provider provider = find.query().where().eq("identificationdoc_provider",identificationdoc_provider).findUnique();
         if(provider==null) aux.add(0,-1);
         else
         {
@@ -153,17 +153,17 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
         if(inside)
         {
-            if (all) expressionList = find.where();
-            else expressionList = find.where().eq("status_delete", 0);
+            if (all) expressionList = find.query().where();
+            else expressionList = find.query().where().eq("status_delete", 0);
         }
         else
         {
             if(listAll.equals(1))
             {
-                if(idProviderType.equals(-1)) expressionList = find.where().eq("status_delete",0);
-                else expressionList = find.where().eq("status_delete",0).eq("id_providertype",idProviderType);
+                if(idProviderType.equals(-1)) expressionList = find.query().where().eq("status_delete",0);
+                else expressionList = find.query().where().eq("status_delete",0).eq("id_providertype",idProviderType);
             }
-            else  expressionList = find.where().eq("status_delete",0).eq("status_provider",1);
+            else  expressionList = find.query().where().eq("status_delete",0).eq("status_provider",1);
         }
 
         if(pathProperties != null)
@@ -177,7 +177,7 @@ public class ProviderDaoImpl extends AbstractDaoImpl<Long, Provider> implements 
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.findPagedList(pageIndex, pageSize).getList(), expressionList.findRowCount(), pageIndex, pageSize);
+        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
     }
 
     public String uploadPhoto(String base64Photo, String ext) {

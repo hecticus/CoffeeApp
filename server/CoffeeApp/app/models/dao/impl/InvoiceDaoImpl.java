@@ -1,7 +1,7 @@
 package models.dao.impl;
 
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.ExpressionList;
+import io.ebean.text.PathProperties;
 import models.dao.InvoiceDao;
 import models.dao.InvoiceDetailDao;
 import models.dao.LotDao;
@@ -11,9 +11,9 @@ import models.domain.InvoiceDetail;
 import models.domain.Lot;
 import models.domain.Provider;
 import models.manager.requestUtils.Request;
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
+import io.ebean.Ebean;
+import io.ebean.SqlQuery;
+import io.ebean.SqlRow;
 import models.manager.responseUtils.Response;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
     @Override
     public List<Invoice> getByDateByProviderId(String date, Long providerId)
     {
-      return find.where().eq("id_provider",providerId).eq("dueDate_invoice",date).findList();
+      return find.query().where().eq("id_provider",providerId).eq("dueDate_invoice",date).findList();
 
     }
 
@@ -98,7 +98,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
     public    List<Invoice> getOpenByProviderId(Long providerId)
     {
-        return find.where().eq("id_provider",providerId)
+        return find.query().where().eq("id_provider",providerId)
                 .eq("status_delete",0)
                 .eq("status_invoice",1)
                 .orderBy("dueDate_invoice desc")
@@ -177,9 +177,9 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
            if(!id_provider.equals(-2))
            {
                //to invoices t1 provider
-              if(!id_provider.equals(-1)) expressionList = find.fetch("provider").where().eq("t0.status_delete", 0).eq("t0.id_provider",id_provider).between("t0.duedate_invoice",startDateTemp,endDateTemp);
+              if(!id_provider.equals(-1)) expressionList = find.query().fetch("provider").where().eq("t0.status_delete", 0).eq("t0.id_provider",id_provider).between("t0.duedate_invoice",startDateTemp,endDateTemp);
               else
-              { expressionList = find
+              { expressionList = find.query()
                       .fetch("provider")
                       .where()
                       .eq("t1.id_providertype",id_providertype)
@@ -200,7 +200,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
               //to invoices t1 provider
               int findRowCount = expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).findList().size();
 
-              return new ListPagerCollection(expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).findPagedList(pageIndex, pageSize).getList(), findRowCount, pageIndex, pageSize);
+              return new ListPagerCollection(expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(), findRowCount, pageIndex, pageSize);
            }
         }
         catch(Exception e)
@@ -210,7 +210,7 @@ public class InvoiceDaoImpl extends AbstractDaoImpl<Long, Invoice> implements In
 
         }
 
-        expressionList = find.where().eq("status_delete", -2);
+        expressionList = find.query().where().eq("status_delete", -2);
         return new ListPagerCollection(expressionList.findList());
 
     }

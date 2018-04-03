@@ -1,8 +1,8 @@
 package models.dao.impl;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
+import io.ebean.Ebean;
+import io.ebean.RawSql;
+import io.ebean.RawSqlBuilder;
 import models.dao.RoleDao;
 import models.domain.Role;
 import models.domain.SecurityRoute;
