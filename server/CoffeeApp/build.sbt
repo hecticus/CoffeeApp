@@ -17,9 +17,16 @@ libraryDependencies ++= Seq(
   javaJdbc,
   "be.objectify" %% "deadbolt-java" % "2.6.1",
   "org.pac4j" %% "play-pac4j" % "6.0.0-RC1",
+  "org.pac4j" % "pac4j-openid" % "2.3.1",
+  "org.pac4j" % "pac4j-config" % "2.3.1",
   "org.pac4j" % "pac4j-oauth" % "2.3.1",
-
+  "org.pac4j" % "pac4j-cas" % "2.3.1",
+  "org.pac4j" % "pac4j-jwt" % "2.3.1",
+  "org.pac4j" % "pac4j-http" % "2.3.1",
+  "org.pac4j" % "pac4j-saml" % "2.3.1",
+  "org.pac4j" % "pac4j-oidc" % "2.3.1",
   "org.avaje" % "ebean" % "2.7.3",
+
   "javax.persistence" % "persistence-api" % "1.0.2",
   //specs2 % Test,
   "mysql" % "mysql-connector-java" % "5.1.38",
