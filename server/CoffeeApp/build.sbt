@@ -40,3 +40,4 @@ libraryDependencies ++= Seq(
 
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
+
