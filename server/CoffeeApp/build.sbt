@@ -14,6 +14,9 @@ libraryDependencies ++= Seq(
   cache,
   javaWs,
   specs2 % Test,
+  "org.pac4j" % "play-pac4j" % "3.0.1",
+  "org.pac4j" % "pac4j-config" % "2.0.0",
+
   "mysql" % "mysql-connector-java" % "5.1.38",
   "org.modelmapper" % "modelmapper" % "0.7.7",
   "com.typesafe.play" % "play-mailer_2.11" % "5.0.0",
