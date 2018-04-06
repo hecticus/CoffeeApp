@@ -1,23 +1,25 @@
 package models.manager.impl;
 
-import io.ebean.text.PathProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.ebean.text.PathProperties;
 import models.dao.*;
 import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
 import models.domain.*;
-import models.manager.ProviderManager;
-import models.manager.responseUtils.*;
-import org.joda.time.DateTime;
-import com.fasterxml.jackson.databind.JsonNode;
 import models.manager.InvoiceManager;
+import models.manager.requestUtils.Request;
+import models.manager.responseUtils.ExceptionsUtils;
+import models.manager.responseUtils.PropertiesCollection;
+import models.manager.responseUtils.Response;
+import models.manager.responseUtils.ResponseCollection;
+import org.joda.time.DateTime;
 import play.libs.Json;
 import play.mvc.Result;
+
 import java.util.List;
-import models.domain.Config;
 
 import static play.mvc.Controller.request;
-import models.manager.requestUtils.Request;
 /**
  * Created by drocha on 25/04/17.
  */
@@ -376,7 +378,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 monto = monto+Discount;*/
             }
 
-            invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
+            invoiceDetail.setAmountInvoiceDetail(Amount.floatValue());
             invoiceDetail.setFreightInvoiceDetail(freigh.asBoolean());
             invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
             invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
@@ -563,7 +565,7 @@ public class InvoiceManagerImpl  implements InvoiceManager
                 monto = monto+Discount;*/
             }
 
-            invoiceDetail.setAmountInvoiceDetail(Amount.asInt());
+            invoiceDetail.setAmountInvoiceDetail(Amount.floatValue());
             invoiceDetail.setFreightInvoiceDetail(freigh.asBoolean());
             invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
             invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());

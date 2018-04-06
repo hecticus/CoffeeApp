@@ -1,16 +1,12 @@
 package models.manager.impl;
 
-import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.ebean.text.PathProperties;
 import models.dao.*;
 import models.dao.impl.*;
 import models.dao.utils.ListPagerCollection;
-import models.domain.Invoice;
-import models.domain.InvoiceDetail;
-import models.domain.ItemType;
-import models.domain.Lot;
-import models.domain.Store;
+import models.domain.*;
 import models.manager.InvoiceDetailManager;
 import models.manager.requestUtils.Request;
 import models.manager.responseUtils.ExceptionsUtils;
@@ -21,7 +17,6 @@ import org.joda.time.DateTime;
 import play.libs.Json;
 import play.mvc.Result;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -140,7 +135,7 @@ public class InvoiceDetailManagerImpl  implements InvoiceDetailManager {
 
             JsonNode amount = json.get("amountInvoiceDetail");
             if (amount!= null)
-                invoiceDetail.setAmountInvoiceDetail(amount.asInt());
+                invoiceDetail.setAmountInvoiceDetail(amount.floatValue());
 
             JsonNode freight = json.get("freightInvoiceDetail");
             if (freight!= null)

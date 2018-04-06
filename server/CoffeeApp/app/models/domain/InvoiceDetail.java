@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +56,9 @@ public class InvoiceDetail  extends AbstractEntity
     private DateTime startDateInvoiceDetail;
 
     @Constraints.Required
-    @Column(name = "amount_invoiceDetail")
-    private Integer amountInvoiceDetail;
+    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "amount_invoiceDetail")
+    //@Column(name = "amount_invoiceDetail")
+    private Float amountInvoiceDetail;
 
     @Column(name = "isFreight_invoiceDetail")
     private boolean freightInvoiceDetail=false;
@@ -147,11 +147,11 @@ public class InvoiceDetail  extends AbstractEntity
         this.startDateInvoiceDetail = startDateInvoiceDetail;
     }
 
-    public Integer getAmountInvoiceDetail() {
+    public Float getAmountInvoiceDetail() {
         return amountInvoiceDetail;
     }
 
-    public void setAmountInvoiceDetail(Integer amountInvoiceDetail) {
+    public void setAmountInvoiceDetail(Float amountInvoiceDetail) {
         this.amountInvoiceDetail = amountInvoiceDetail;
     }
 
