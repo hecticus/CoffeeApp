@@ -1,3 +1,4 @@
+# --- !Ups
 INSERT INTO `status` VALUES ('user',1,0,'active','2017-05-26 00:00:00','2017-05-26 00:00:00'),('role',2,0,'active','2017-05-26 00:00:00','2017-05-26 00:00:00');
 
 INSERT INTO `tag` VALUES (1,0,'SuperUsuario','negra','2017-05-02 04:30:00','2017-05-02 04:30:00'),(2,0,'basic','BasicLogin','2017-05-02 04:30:00','2015-05-02 04:30:00'),(3,0,'Reportes','AUTOMATIC ADD','2017-06-01 05:09:52','2017-06-01 05:09:52'),(4,0,'Ordenes','AUTOMATIC ADD','2017-06-01 05:09:54','2017-06-01 05:09:54');
@@ -22,3 +23,4 @@ INSERT INTO `user` VALUES
 (7,0,'Max','12345','Orlando','Carvallo','orlando@hecticus.com',1,0,NULL,2,'2017-10-11 14:50:07','2017-10-11 12:56:44'),
 (9,0,'joha','johanna','Johanna','Chan','johanna.chan@hecticus.com',1,0,NULL,2,'2017-10-19 19:56:03','2017-10-19 17:19:32');
 
+# --- !Downs

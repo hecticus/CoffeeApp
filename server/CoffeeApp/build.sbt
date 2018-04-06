@@ -15,6 +15,10 @@ libraryDependencies ++= Seq(
   ehcache,
   ws,
   javaJdbc,
+  "be.objectify" %% "deadbolt-java" % "2.6.1",
+  "org.pac4j" %% "play-pac4j" % "6.0.0-RC1",
+  "org.pac4j" % "pac4j-oauth" % "2.3.1",
+
   "org.avaje" % "ebean" % "2.7.3",
   "javax.persistence" % "persistence-api" % "1.0.2",
   //specs2 % Test,

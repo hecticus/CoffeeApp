@@ -37,7 +37,7 @@ public class HecticusSecurity extends Action<HSecurity> {
     private Configuration appConfiguration;
 
     public CompletionStage<Result> call(Http.Context ctx)  {
-        if(Config.getString("SecurityEnabled").toString().equalsIgnoreCase("disabled"))
+        if(Config.getString("SecurityEnabled").equalsIgnoreCase("disabled"))
             return delegate.call(ctx);
         //Zona para fillear
 
