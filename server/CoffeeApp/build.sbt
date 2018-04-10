@@ -11,6 +11,7 @@ scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   guice,
+  //evolutions,
   jdbc,
   ehcache,
   ws,
