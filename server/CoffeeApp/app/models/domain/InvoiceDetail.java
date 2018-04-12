@@ -56,7 +56,7 @@ public class InvoiceDetail  extends AbstractEntity
     private DateTime startDateInvoiceDetail;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "amount_invoiceDetail")
+    @Column(nullable = false, columnDefinition = "FLOAT(10,2)", name = "amount_invoiceDetail")
     //@Column(name = "amount_invoiceDetail")
     private Float amountInvoiceDetail;
 

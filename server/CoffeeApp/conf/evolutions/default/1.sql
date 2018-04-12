@@ -50,7 +50,7 @@ create table invoice_details (
   price_itemtypebylot           decimal(10,2) not null,
   cost_itemtype                 decimal(10,2) not null,
   duedate_invoicedetail         datetime(6) not null,
-  amount_invoicedetail          decimal(10,2) not null,
+  amount_invoicedetail          float(10,2) not null,
   isfreight_invoicedetail       tinyint(1) default 0 not null,
   note_invoicedetail            varchar(255),
   namereceived_invoicedetail    varchar(255) not null,
