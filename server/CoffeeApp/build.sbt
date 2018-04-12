@@ -11,21 +11,17 @@ scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   guice,
-  //evolutions,
+  evolutions,
   jdbc,
   ehcache,
   ws,
   javaJdbc,
   "be.objectify" %% "deadbolt-java" % "2.6.1",
+
   "org.pac4j" %% "play-pac4j" % "6.0.0-RC1",
-  "org.pac4j" % "pac4j-openid" % "2.3.1",
-  "org.pac4j" % "pac4j-config" % "2.3.1",
+
   "org.pac4j" % "pac4j-oauth" % "2.3.1",
-  "org.pac4j" % "pac4j-cas" % "2.3.1",
-  "org.pac4j" % "pac4j-jwt" % "2.3.1",
   "org.pac4j" % "pac4j-http" % "2.3.1",
-  "org.pac4j" % "pac4j-saml" % "2.3.1",
-  "org.pac4j" % "pac4j-oidc" % "2.3.1",
   "org.avaje" % "ebean" % "2.7.3",
 
   "javax.persistence" % "persistence-api" % "1.0.2",
@@ -42,3 +38,6 @@ libraryDependencies ++= Seq(
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
+resolvers += "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
+//routesGenerator := InjectedRoutesGenerator

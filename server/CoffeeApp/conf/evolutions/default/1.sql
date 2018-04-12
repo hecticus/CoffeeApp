@@ -3,12 +3,6 @@
 
 # --- !Ups
 
-create table car (
-  id                            integer auto_increment not null,
-  model                         varchar(255),
-  constraint pk_car primary key (id)
-);
-
 create table config (
   id_config                     bigint auto_increment not null,
   config_key                    varchar(50) not null,
@@ -353,8 +347,6 @@ drop index ix_tokens_id_user on tokens;
 
 alter table user drop foreign key fk_user_role_id_role;
 drop index ix_user_role_id_role on user;
-
-drop table if exists car;
 
 drop table if exists config;
 

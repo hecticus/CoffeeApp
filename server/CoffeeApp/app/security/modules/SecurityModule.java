@@ -1,9 +1,12 @@
-package security;
+/*
+package security.modules;
 
 import be.objectify.deadbolt.java.cache.HandlerCache;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
+import controllers.CustomAuthorizer;
+import controllers.DemoHttpActionAdapter;
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.cas.client.CasProxyReceptor;
 import org.pac4j.cas.config.CasConfiguration;
@@ -11,15 +14,23 @@ import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.direct.AnonymousClient;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.credentials.UsernamePasswordCredentials;
+import org.pac4j.core.credentials.authenticator.Authenticator;
+import org.pac4j.core.matching.PathMatcher;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.http.client.direct.DirectBasicAuthClient;
-import org.pac4j.http.client.direct.DirectFormClient;
 import org.pac4j.http.client.direct.ParameterClient;
 import org.pac4j.http.client.indirect.FormClient;
 import org.pac4j.http.client.indirect.IndirectBasicAuthClient;
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator;
+import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
+import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.pac4j.oauth.client.FacebookClient;
 import org.pac4j.oauth.client.TwitterClient;
-import org.pac4j.oidc.client.OidcClient;
+*/
+/*import org.pac4j.oidc.client.OidcClient;
+import org.pac4j.oidc.config.OidcConfiguration;*//*
+
 import org.pac4j.play.CallbackController;
 import org.pac4j.play.LogoutController;
 import org.pac4j.play.deadbolt2.Pac4jHandlerCache;
@@ -30,12 +41,12 @@ import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.client.SAML2ClientConfiguration;
 import play.Configuration;
 import play.Environment;
-import play.cache.SyncCacheApi;
 
 import java.io.File;
 
-//import controllers.CustomAuthorizer;
-//import controllers.DemoHttpActionAdapter;
+import org.pac4j.http.client.direct.DirectFormClient;
+import play.cache.SyncCacheApi;
+import util.Utils;
 
 public class SecurityModule extends AbstractModule {
 
@@ -120,8 +131,9 @@ public class SecurityModule extends AbstractModule {
         cfg.setServiceProviderMetadataPath(new File("target", "sp-metadata.xml").getAbsolutePath());
         return new SAML2Client(cfg);
     }
-    /*
-    @Provides
+
+    */
+/*@Provides
     protected OidcClient provideOidcClient() {
         final OidcConfiguration oidcConfiguration = new OidcConfiguration();
         oidcConfiguration.setClientId("343992089165-i1es0qvej18asl33mvlbeq750i3ko32k.apps.googleusercontent.com");
@@ -131,7 +143,8 @@ public class SecurityModule extends AbstractModule {
         final OidcClient oidcClient = new OidcClient(oidcConfiguration);
         oidcClient.addAuthorizationGenerator((ctx, profile) -> { profile.addRole("ROLE_ADMIN"); return profile; });
         return oidcClient;
-    }
+    }*//*
+
 
     @Provides
     protected ParameterClient provideParameterClient() {
@@ -155,7 +168,7 @@ public class SecurityModule extends AbstractModule {
             }
         };
         return new DirectFormClient(blockingAuthenticator);
-    }*/
+    }
 
     @Provides
     protected DirectBasicAuthClient provideDirectBasicAuthClient() {
@@ -165,20 +178,21 @@ public class SecurityModule extends AbstractModule {
     @Provides
     protected Config provideConfig(FacebookClient facebookClient, TwitterClient twitterClient, FormClient formClient,
                                    IndirectBasicAuthClient indirectBasicAuthClient, CasClient casClient, SAML2Client saml2Client,
-                                   OidcClient oidcClient, ParameterClient parameterClient, DirectBasicAuthClient directBasicAuthClient,
+                                   ParameterClient parameterClient, DirectBasicAuthClient directBasicAuthClient,
                                    CasProxyReceptor casProxyReceptor, DirectFormClient directFormClient) {
 
         //casClient.getConfiguration().setProxyReceptor(casProxyReceptor);
 
         final Clients clients = new Clients(baseUrl + "/callback", facebookClient, twitterClient, formClient,
-                indirectBasicAuthClient, casClient, saml2Client, oidcClient, parameterClient, directBasicAuthClient,
+                indirectBasicAuthClient, casClient, saml2Client, parameterClient, directBasicAuthClient,
                 new AnonymousClient(), directFormClient);
 
         final Config config = new Config(clients);
         config.addAuthorizer("admin", new RequireAnyRoleAuthorizer<>("ROLE_ADMIN"));
-        //config.addAuthorizer("custom", new CustomAuthorizer());
-        //config.addMatcher("excludedPath", new PathMatcher().excludeRegex("^/facebook/notprotected\\.html$"));
-        //config.setHttpActionAdapter(new DemoHttpActionAdapter());
+        config.addAuthorizer("custom", new CustomAuthorizer());
+        config.addMatcher("excludedPath", new PathMatcher().excludeRegex("^/facebook/notprotected\\.html$"));
+        config.setHttpActionAdapter(new DemoHttpActionAdapter());
         return config;
     }
 }
+*/
