@@ -1,6 +1,5 @@
 package controllers;
 
-import models.Security.HSecurity;
 import models.domain.User;
 import models.manager.UserManager;
 import models.manager.impl.UserManagerImpl;

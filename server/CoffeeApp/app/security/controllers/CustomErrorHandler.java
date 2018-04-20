@@ -1,16 +1,13 @@
 package security.controllers;
 
-import play.*;
+import play.Configuration;
+import play.Environment;
 import play.api.OptionalSourceMapper;
-import play.api.UsefulException;
 import play.api.routing.Router;
 import play.http.DefaultHttpErrorHandler;
-import play.mvc.Http.*;
-import play.mvc.*;
 
-import javax.inject.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class CustomErrorHandler extends DefaultHttpErrorHandler {
 
@@ -19,12 +16,12 @@ public class CustomErrorHandler extends DefaultHttpErrorHandler {
                         OptionalSourceMapper sourceMapper, Provider<Router> routes) {
         super(configuration, environment, sourceMapper, routes);
     }
-
+/*
     protected CompletionStage<Result> onDevServerError(RequestHeader var1, UsefulException var2) {
         return CompletableFuture.completedFuture(Results.status(500, views.html.error500.render()));
     }
 
     protected CompletionStage<Result> onProdServerError(RequestHeader var1, UsefulException var2) {
         return CompletableFuture.completedFuture(Results.status(500, views.html.error500.render()));
-    }
+    }*/
 }

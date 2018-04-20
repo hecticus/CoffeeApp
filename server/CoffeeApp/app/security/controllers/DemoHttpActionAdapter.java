@@ -1,15 +1,10 @@
 package security.controllers;
 
-import org.pac4j.core.context.HttpConstants;
-import org.pac4j.play.PlayWebContext;
-import org.pac4j.play.http.DefaultHttpActionAdapter;
-import play.mvc.Result;
-
-import static play.mvc.Results.*;
+        import org.pac4j.play.http.DefaultHttpActionAdapter;
 
 public class DemoHttpActionAdapter extends DefaultHttpActionAdapter {
 
-    @Override
+   /* @Override
     public Result adapt(int code, PlayWebContext context) {
         if (code == HttpConstants.UNAUTHORIZED) {
             return unauthorized(views.html.error401.render().toString()).as((HttpConstants.HTML_CONTENT_TYPE));
@@ -18,5 +13,5 @@ public class DemoHttpActionAdapter extends DefaultHttpActionAdapter {
         } else {
             return super.adapt(code, context);
         }
-    }
+    }*/
 }

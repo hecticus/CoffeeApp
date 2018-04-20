@@ -10,6 +10,7 @@ import models.dao.TokenDao;
 import models.dao.UserDao;
 import models.dao.impl.TokenDaoImpl;
 import models.dao.impl.UserDaoImpl;
+import models.domain.Config;
 import models.domain.Token;
 import models.domain.User;
 import models.manager.RoleManager;
@@ -21,13 +22,13 @@ import play.Configuration;
 import play.libs.Json;
 import play.libs.mailer.MailerClient;
 import play.mvc.Result;
-import java.util.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static play.mvc.Controller.request;
 import static play.mvc.Results.*;
-import models.domain.Config;
 
 /**
  * Created by yenny on 10/3/16.
