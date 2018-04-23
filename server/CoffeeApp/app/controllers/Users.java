@@ -1,9 +1,9 @@
 package controllers;
 
+import com.typesafe.config.Config;
 import models.domain.User;
 import models.manager.UserManager;
 import models.manager.impl.UserManagerImpl;
-import play.Configuration;
 import play.api.libs.mailer.MailerClient;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -19,7 +19,8 @@ public class Users extends Controller {
     MailerClient mailerClient;
 
     @Inject
-    private Configuration configuration;
+    private Config config;
+    //private Configuration configuration;
 
     private UserManager userManager = new UserManagerImpl();
 
@@ -32,13 +33,13 @@ public class Users extends Controller {
 
     //public Result uploadPhoto() {return userManager.uploadPhoto();}
 
-    public Result login(){  return userManager.login(this.configuration);  }
+    public Result login(){  return userManager.login(this.config);  }
 
-    public Result authorize(String path){ return userManager.authorize(this.configuration, path);  }
+    public Result authorize(String path){ return userManager.authorize(this.config, path);  }
 
-    public Result verify(){  return userManager.verify(this.configuration);  }
+    public Result verify(){  return userManager.verify(this.config);  }
 
-    public Result startResetPassword(String email){  return userManager.startResetPassword(email,this.mailerClient, this.configuration);  }
+    public Result startResetPassword(String email){  return userManager.startResetPassword(email,this.mailerClient, this.config);  }
 
     public Result handleStartResetPassword(){  return userManager.handleStartResetPassword();  }
 

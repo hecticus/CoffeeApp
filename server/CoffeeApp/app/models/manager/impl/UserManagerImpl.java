@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.hecticus.auth.AuthJWT;
 import com.hecticus.utils.basic.Notify;
+import com.typesafe.config.Config;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import models.dao.TokenDao;
 import models.dao.UserDao;
 import models.dao.impl.TokenDaoImpl;
 import models.dao.impl.UserDaoImpl;
-import models.domain.Config;
 import models.domain.Token;
 import models.domain.User;
 import models.manager.RoleManager;
@@ -18,7 +18,6 @@ import models.manager.UserManager;
 import models.manager.responseUtils.ExceptionsUtils;
 import models.manager.responseUtils.JsonUtils;
 import models.manager.responseUtils.Response;
-import play.Configuration;
 import play.libs.Json;
 import play.libs.mailer.MailerClient;
 import play.mvc.Result;
@@ -29,6 +28,8 @@ import java.util.List;
 
 import static play.mvc.Controller.request;
 import static play.mvc.Results.*;
+
+//import models.domain.Config;
 
 /**
  * Created by yenny on 10/3/16.
@@ -50,7 +51,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Inject
-    public UserManagerImpl(Configuration configuration) {
+    public UserManagerImpl(Config configuration) {
         this.secret_key = configuration.getString("play.crypto.secret");
     }
 
@@ -93,7 +94,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public Result login(Configuration config) {
+    public Result login(Config config) {
         try {
 
             JsonNode request = request().body().asJson();
@@ -129,7 +130,7 @@ public class UserManagerImpl implements UserManager {
                     token.setUser(USER);
                     token.setToken(jwt);
                     tokens = USER.getTokens();
-                    if(tokens.size() >= Integer.parseInt(Config.getString("MaxConnectionsAllowed")))
+                    if(tokens.size() >= Integer.parseInt(models.domain.Config.getString("MaxConnectionsAllowed")))
                     {
                         return Response.messagebadRequest("Ha alcanzado el Maximo de conexiones",935);
                     }
@@ -163,7 +164,7 @@ public class UserManagerImpl implements UserManager {
 
 
     @Override
-    public Result authorize(Configuration config, String path) {
+    public Result authorize(Config config, String path) {
         try {
             this.secret_key = config.getString("play.crypto.secret");
 
@@ -215,7 +216,7 @@ public class UserManagerImpl implements UserManager {
 
 
     @Override
-    public Result verify(Configuration config) {
+    public Result verify(Config config) {
         try {
 
             this.secret_key = config.getString("play.crypto.secret");
@@ -273,7 +274,7 @@ public class UserManagerImpl implements UserManager {
 
 
     @Override
-    public Result startResetPassword(String to_email, MailerClient mailerClient, Configuration config) {
+    public Result startResetPassword(String to_email, MailerClient mailerClient, Config config) {
         try {
 
             this.secret_key = config.getString("play.crypto.secret");

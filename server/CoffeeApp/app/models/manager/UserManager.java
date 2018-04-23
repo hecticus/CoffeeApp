@@ -1,10 +1,9 @@
 package models.manager;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import play.Configuration;
+import com.typesafe.config.Config;
 import play.libs.mailer.MailerClient;
 import play.mvc.Result;
-
 /**
  * Created by yenny on 10/3/16.
  */
@@ -14,15 +13,15 @@ public interface UserManager {
 
     Result uploadPhoto(JsonNode request);
 
-    Result login(Configuration config);
+    Result login(Config config);
 
     Result logout();
 
-    Result authorize(Configuration config, String path);
+    Result authorize(Config config, String path);
 
-    Result verify(Configuration config);
+    Result verify(Config config);
 
-    Result startResetPassword(String email, MailerClient mailerClient, Configuration config);
+    Result startResetPassword(String email, MailerClient mailerClient, Config config);
 
     Result handleStartResetPassword();
 
