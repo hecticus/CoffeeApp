@@ -52,7 +52,8 @@ public class UserManagerImpl implements UserManager {
 
     @Inject
     public UserManagerImpl(Config configuration) {
-        this.secret_key = configuration.getString("play.crypto.secret");
+        this.secret_key = configuration.atPath("play.crypto.secret").toString();
+//        this.secret_key = configuration.getString("play.crypto.secret");
     }
 
     @Override
@@ -81,7 +82,8 @@ public class UserManagerImpl implements UserManager {
     {
         try
         {
-             String token = request().getHeader("Authorization");
+             String token = request().getHeaders().get("Authorization").toString();
+//             String token = request().getHeader("Authorization");
             if(token!=null)  tokenDao.deletedByToken(token);
             else return Response.message("pagina DE LOGIN CARGADA"); //cuanoo carga la pagina DE LOGIN
         }
