@@ -3,7 +3,6 @@ package models.domain;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 
 /**
  * Created by darwin on 31/10/17.
@@ -17,9 +16,12 @@ public class Token extends AbstractEntity
     @Column(name = "id_token")
     private Long idToken;
 
+    @Constraints.Required
     @Constraints.MaxLength(500)
     @Column(nullable = true, length = 500)
     protected String token;
+
+
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)

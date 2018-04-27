@@ -1,4 +1,4 @@
-package security.util;
+package security;
 
 public class Utils {
 

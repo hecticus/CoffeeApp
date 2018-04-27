@@ -1,31 +1,21 @@
 package models.manager.impl;
 
 import io.ebean.text.PathProperties;
-import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.FarmDao;
 import models.dao.impl.FarmDaoImpl;
 import models.dao.utils.ListPagerCollection;
 import models.domain.Farm;
-import models.manager.requestUtils.Request;
+import models.manager.FarmManager;
 import models.manager.responseUtils.ExceptionsUtils;
 import models.manager.responseUtils.PropertiesCollection;
 import models.manager.responseUtils.Response;
 import models.manager.responseUtils.ResponseCollection;
-import play.libs.Json;
-import models.manager.FarmManager;
 import play.mvc.Result;
-
-import java.util.List;
-
-import static play.mvc.Controller.request;
 
 /**
  * Created by darwin on 30/08/17.
  */
 public class FarmManagerImpl implements FarmManager {
-
-
-
 
     private static FarmDao farmDao = new FarmDaoImpl();
 

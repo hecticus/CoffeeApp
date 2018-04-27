@@ -1,7 +1,5 @@
 package models.Security;
 
-import com.hecticus.auth.AuthJWT;
-import io.jsonwebtoken.SignatureException;
 import models.dao.RoleDao;
 import models.dao.SecurityRouteDao;
 import models.dao.SecurityTagDao;
@@ -11,9 +9,6 @@ import models.dao.impl.SecurityRouteDaoImpl;
 import models.dao.impl.SecurityTagDaoImpl;
 import models.dao.impl.UserDaoImpl;
 import models.domain.Config;
-import models.domain.SecurityRoute;
-import models.domain.SecurityTag;
-import models.domain.User;
 import models.manager.responseUtils.Response;
 import play.Configuration;
 import play.mvc.Action;
@@ -21,8 +16,6 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -36,15 +29,15 @@ public class HecticusSecurity extends Action<HSecurity> {
     @Inject
     private Configuration appConfiguration;
 
-    public CompletionStage<Result> call(Http.Context ctx)  {
-        if(Config.getString("SecurityEnabled").equalsIgnoreCase("disabled"))
+    public CompletionStage<Result> call(Http.Context ctx) {
+        if (Config.getString("SecurityEnabled").equalsIgnoreCase("disabled"))
             return delegate.call(ctx);
         //Zona para fillear
 
-        String route  = configuration.value().split("@")[0];
+        String route = configuration.value().split("@")[0];
         String token = getTokenFromHeader(ctx);
         try {
-            if (token != null) {
+            /*if (token != null) {
                 User user = userDao.findByToken(token);
                 if (user != null) {
                     SecurityRoute sc = securityRouteDao.CheckAndInsert(route, 0);
@@ -64,16 +57,33 @@ public class HecticusSecurity extends Action<HSecurity> {
                         return delegate.call(ctx);
                     }
                 }
-            }
-        }catch(java.lang.NullPointerException exception){
+            }*/
+        } catch (java.lang.NullPointerException exception) {
             return CompletableFuture.completedFuture(Response.accessDenied());
         }
-        return CompletableFuture.completedFuture(Response.accessDenied());
+        //return CompletableFuture.completedFuture(Response.accessDenied());
+        return delegate.call(ctx);
     }
 
 
-   private String getTokenFromHeader(Http.Context ctx) {
-       String[] authTokenHeaderValues = ctx.request().headers().get("Authorization");
+  /* private String getTokenFromHeader(Http.Context ctx) {
+
+       System.out.printf("pase ****************        \\n   ");
+       //System.out.printf(" imprimo http--- "+ ctx.toString());
+       //System.out.printf("");
+       //String authorization =  ctx.request().getQueryString("Authorization");
+       //System.out.printf("pase ---------------- \n authorization "  +authorization +"  IMPRIMO CTX:  "+ ctx.toString() );
+       //System.out.printf("    -- au ---   ");
+       String authTokenHeaderValues = ctx.request().getHeaders().get("Authorization").get();
+       System.out.printf(" --> authToken     " + authTokenHeaderValues);
+
+       *//*if (authTokenHeaderValues != null) {
+           System.out.printf(" --> authToken     " + authTokenHeaderValues.toString() );
+       }else {
+           System.out.printf(" authToken   SOY NULL NOSE   " );
+
+       }
+
        if ((authTokenHeaderValues != null) && (authTokenHeaderValues.length == 1) && (authTokenHeaderValues[0] != null)) {
            String token = authTokenHeaderValues[0];
 
@@ -87,7 +97,28 @@ public class HecticusSecurity extends Action<HSecurity> {
                return null;
            }
 
-       }
+       }*//*
        return null;
-   }
+   }*/
+
+    private static String getTokenFromHeader(Http.Context ctx) {
+        try {
+            String authorization = ctx.request().getHeaders().get("Authorization").get();
+            System.out.println(" auto //////// "+authorization);
+            if (!authorization.isEmpty()) {
+                String token[] = authorization.split(" ");
+                System.out.println(" t0 "+ token[0].toString() + " t1 "+ token[1].toString()+ " length "+ token.length);
+
+                if (token.length > 1 && token[0].equals("Bearer")) {
+                    System.out.println("aasss{}");
+                    return token[1];
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+
+    }
 }

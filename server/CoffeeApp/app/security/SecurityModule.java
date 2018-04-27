@@ -1,5 +1,5 @@
 
-package security.modules;
+package security;
 
 import be.objectify.deadbolt.java.cache.HandlerCache;
 import com.google.inject.AbstractModule;
@@ -29,7 +29,6 @@ import play.Environment;
 import play.cache.SyncCacheApi;
 import security.controllers.CustomAuthorizer;
 import security.controllers.DemoHttpActionAdapter;
-import security.util.Utils;
 
 public class SecurityModule extends AbstractModule {
 
