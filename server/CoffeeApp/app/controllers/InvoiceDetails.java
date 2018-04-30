@@ -1,6 +1,5 @@
 package controllers;
 
-import models.Security.HSecurity;
 import models.manager.InvoiceDetailManager;
 import models.manager.impl.InvoiceDetailManagerImpl;
 import models.manager.requestUtils.queryStringBindable.Pager;
@@ -40,7 +39,7 @@ public class InvoiceDetails {
     //@HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAllByIdInvoice(Long IdInvoice){ return invoiceDetailManager.findAllByIdInvoice(IdInvoice);}
 
-    @HSecurity
+//    @HSecurity
     public Result findAll(Pager pager, String sort, String collection) {
         return invoiceDetailManager.findAll(pager.index, pager.size, sort, collection);
     }

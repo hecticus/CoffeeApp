@@ -1,6 +1,6 @@
 package controllers.utils;
 
-import com.avaje.ebean.PagedList;
+import io.ebean.PagedList;
 
 /**
  * Created by nisa on 16/05/17.
@@ -16,7 +16,7 @@ public class Pager {
 
     public Pager(PagedList pagedList) {
         this.totalEntitiesPerPage = pagedList.getList().size();
-        this.totalEntities = pagedList.getTotalRowCount();
+        this.totalEntities = pagedList.getTotalCount();
         this.pageIndex = pagedList.getPageIndex();
         this.pageSize = pagedList.getPageSize();
         this.pages = pagedList.getTotalPageCount();

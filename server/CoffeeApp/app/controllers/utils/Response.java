@@ -1,11 +1,14 @@
 package controllers.utils;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.text.*;
+//import com.avaje.ebean.Ebean;
+//import com.avaje.ebean.text.*;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.ebean.*;
+import io.ebean.Ebean;
+import io.ebean.PagedList;
+import io.ebean.text.PathProperties;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -60,8 +63,7 @@ public class Response{
 
         if (pathProperties != null) {
             try {
-                jsonEntities = new ObjectMapper().readTree(Ebean.createJsonContext(). json().toJson(pagedList.getList(), pathProperties));
-//                jsonEntities = new ObjectMapper().readTree(Ebean.json().toJson(pagedList.getList(), pathProperties));
+                jsonEntities = new ObjectMapper().readTree(Ebean.json().toJson(pagedList.getList(), pathProperties));
                 jsonEntities = Json.toJson(jsonEntities);
             } catch (IOException e) {
                 e.printStackTrace();
