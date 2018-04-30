@@ -123,23 +123,22 @@ DELETE  /store/:id                      controllers.Stores.delete(id : Long)
 
 
 # parte de seguridad y manejo de user
-
-#Zona de Seguridad
-POST    /role/getmenu               controllers.Roles.getMenu()
-POST    /route/checkngroute         controllers.SecurityRoutes.CheckNgRoute()
-
-# User
-GET     /user/findByEmail/:email    controllers.Users.findByEmail(email: String)
-#POST   /user/uploadPhoto           controllers.Users.uploadPhoto()
-POST    /user/login                 controllers.Users.login()
-GET    /user/logout                 controllers.Users.logout()
-POST    /user/auth/:path            controllers.Users.authorize(path: String)
-GET     /user/reset/:email          controllers.Users.startResetPassword(email: String)
-PUT     /user/reset                 controllers.Users.handleStartResetPassword()
-GET     /user/verify                controllers.Users.verify
-#GET     /user/reset/:mailToken     controllers.PasswordReset.resetPassword(mailToken)
-#POST    /user/reset/:mailToken     controllers.PasswordReset.handleResetPassword(mailToken)
-GET     /user/find                  controllers.Users.findByEmail(email: String)
-
+##Zona de Seguridad
+#POST    /role/getmenu               controllers.Roles.getMenu()
+#POST    /route/checkngroute         controllers.SecurityRoutes.CheckNgRoute()
+#
+## User
+#GET     /user/findByEmail/:email    controllers.Users.findByEmail(email: String)
+##POST   /user/uploadPhoto           controllers.Users.uploadPhoto()
+#POST    /user/login                 controllers.Users.login()
+#GET    /user/logout                 controllers.Users.logout()
+#POST    /user/auth/:path            controllers.Users.authorize(path: String)
+#GET     /user/reset/:email          controllers.Users.startResetPassword(email: String)
+#PUT     /user/reset                 controllers.Users.handleStartResetPassword()
+#GET     /user/verify                controllers.Users.verify
+##GET     /user/reset/:mailToken     controllers.PasswordReset.resetPassword(mailToken)
+##POST    /user/reset/:mailToken     controllers.PasswordReset.handleResetPassword(mailToken)
+#GET     /user/find                  controllers.Users.findByEmail(email: String)
+#
 
 

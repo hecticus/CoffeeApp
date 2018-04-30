@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
-import java.util.*;
+import security.models.Role;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bean for users registered in system.

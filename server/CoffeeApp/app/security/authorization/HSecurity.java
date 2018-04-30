@@ -1,4 +1,4 @@
-package models.Security;
+package security.authorization;
 
 import play.mvc.With;
 

@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "pac4j-oauth" % "2.3.1",
   "org.pac4j" % "pac4j-http" % "2.3.1",
   "org.avaje" % "ebean" % "2.7.3",
+
   "javax.persistence" % "persistence-api" % "1.0.2",
   "mysql" % "mysql-connector-java" % "5.1.38",
   "org.modelmapper" % "modelmapper" % "0.7.7",

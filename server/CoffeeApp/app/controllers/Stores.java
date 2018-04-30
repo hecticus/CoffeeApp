@@ -13,22 +13,18 @@ public class Stores {
 
     private static StoreManager storeManager = new StoreManagerImpl();
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result create() {
         return storeManager.create();
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result update() {
         return storeManager.update();
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result delete(Long id) {
         return storeManager.delete(id);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findById(Long id) {
         return storeManager.findById(id);
     }
@@ -40,22 +36,18 @@ public class Stores {
 
 
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result getByStatusStore(String StatusPurity, String order) {
         return storeManager.getByStatusStore(StatusPurity, order);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAll(Pager pager, String sort, String collection) {
         return storeManager.findAll(pager.index, pager.size, sort, collection);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAllSearch(String name, Pager pager, String sort, String collection) {
         return storeManager.findAllSearch(name, pager.index, pager.size, sort, collection);
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result preCreate() {
         return storeManager.preCreate();
     }
