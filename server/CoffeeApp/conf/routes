@@ -9,19 +9,26 @@ GET     /                           controllers.HomeController.index
 GET     /message                    controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
-#GET     /assets/*file               controllers.Assets.at(path="/public", file)
+#GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # GET
 # POST
 # PUT
 # DELETE
 
+
+###############################################################################
+#·······                                                           ··········#
+###############################################################################
 GET     /providerType/getProviderTypesByName/:name/:order  controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 GET     /providerType/findAll/:index/:size     controllers.ProviderTypes.findAll(index: Integer, size: Integer)
 GET     /providerType/:id                      controllers.ProviderTypes.findById(id : Long)
 
 
+###############################################################################
+#·······                                                           ··········#
+###############################################################################
 GET     /provider                          controllers.Providers.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /provider/search                   controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
 GET     /provider/new                      controllers.Providers.preCreate()

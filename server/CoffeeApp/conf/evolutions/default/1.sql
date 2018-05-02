@@ -277,21 +277,16 @@ create table units (
 );
 
 create table user (
-  id_user                       bigint auto_increment not null,
+  id                            bigint auto_increment not null,
   status_delete                 integer not null,
-  name                          varchar(100),
-  password                      varchar(100),
+  auth_user_id                  bigint not null,
   first_name                    varchar(100) not null,
   last_name                     varchar(100) not null,
-  email                         varchar(255) not null,
-  email_validated               smallint,
-  archived                      tinyint default 0 not null,
-  last_login                    datetime,
-  role_id                       varchar(50),
+  last_login                    datetime not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  constraint uq_user_email unique (email),
-  constraint pk_user primary key (id_user)
+  constraint uq_user_auth_user_id unique (auth_user_id),
+  constraint pk_user primary key (id)
 );
 
 alter table auth_user_auth_role add constraint fk_auth_user_auth_role_auth_user foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
@@ -356,11 +351,10 @@ alter table auth_pin add constraint fk_auth_pin_auth_user_id foreign key (auth_u
 alter table auth_token add constraint fk_auth_token_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 create index ix_auth_token_auth_user_id on auth_token (auth_user_id);
 
-alter table tokens add constraint fk_tokens_id_user foreign key (id_user) references user (id_user) on delete restrict on update restrict;
+alter table tokens add constraint fk_tokens_id_user foreign key (id_user) references user (id) on delete restrict on update restrict;
 create index ix_tokens_id_user on tokens (id_user);
 
-alter table user add constraint fk_user_role_id foreign key (role_id) references auth_role (id) on delete restrict on update restrict;
-create index ix_user_role_id on user (role_id);
+alter table user add constraint fk_user_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 
 
 # --- !Downs
@@ -430,8 +424,7 @@ drop index ix_auth_token_auth_user_id on auth_token;
 alter table tokens drop foreign key fk_tokens_id_user;
 drop index ix_tokens_id_user on tokens;
 
-alter table user drop foreign key fk_user_role_id;
-drop index ix_user_role_id on user;
+alter table user drop foreign key fk_user_auth_user_id;
 
 drop table if exists auth_user;
 

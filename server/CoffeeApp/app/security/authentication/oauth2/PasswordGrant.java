@@ -20,6 +20,7 @@ public class PasswordGrant extends Controller {
 
     public static final String GRANT_TYPE_PASSWORD = "password";
     public static final String GRANT_TYPE_REFRESH_ACCESS_TOKEN = "refresh_token";
+
     @Inject
     public BaseGrant baseGrant;
 

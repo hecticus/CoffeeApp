@@ -188,3 +188,4 @@ public class AuthUser extends AbstractEntity{
         this.securityTokens = securityTokens;
     }
 }
+

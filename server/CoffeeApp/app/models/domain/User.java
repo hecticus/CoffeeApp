@@ -1,41 +1,47 @@
+
 package models.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+import io.ebean.Finder;
+import io.ebean.annotation.Formula;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
-import security.models.Role;
+import security.models.AuthUser;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
+
+
+/*
  * Bean for users registered in system.
  *
  * @author Yenny Fung
  * @since 2016
  */
+
 @Entity
 @Table(name = "user")
 public class User extends AbstractEntity {
 
 
     @Id
-    private Long idUser;
-    /**
-     * Username. This attribute is'nt used, email attribute is used in your place.
-     */
-    @Constraints.MaxLength(100)
-    @Column(length = 100)
-    protected String name;
+    private Long id;
 
-    /**
-     * Password.
-     */
-    @Constraints.MaxLength(100)
-    @Column(length = 100)
-    private String password;
+    @Constraints.Required
+    @OneToOne(optional = false)
+    @JoinColumn(name = "auth_user_id", referencedColumnName = "id", updatable = false) // se debe especificar "name" y "referencedColumnName" para que "updatable" funcione
+    @PrimaryKeyJoinColumn
+    private AuthUser authUser;
+
+    @Formula(select="(select concat(first_name,' ',last_name) from user u where u.id = ${ta}.id) ")
+    private String name;;
+
+//    @Constraints.MaxLength(100)
+//    @Column(length = 100)
+//    private String password;
 
     @Constraints.MaxLength(100)
     @Constraints.Required
@@ -47,46 +53,71 @@ public class User extends AbstractEntity {
     @Column(length = 100, nullable = false)
     protected String lastName;
 
-    /**
+
+    /*
      * Email to send the confirmation of register. This email is used like username for login in sytem.
-     */
+     *//*
+
     @Constraints.Required
     @Column(unique = true, nullable = false)
     protected String email;
 
-    /**
-     * Check if user confirm your register via email
-     */
-    //@Constraints.Required
-    //@Column(nullable = false)
-    protected Short emailValidated;
 
-    /**
-     * Status in system: enable or disable
-     */
-    @Constraints.Required
-    @Column(columnDefinition = "tinyint default 0", nullable = false)
-    protected Boolean archived = false;
-
-    /**
+    /*
      * Last login in system
      */
-    //@Constraints.Required
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(columnDefinition = "datetime"/*, nullable = false*/)
-    protected DateTime lastLogin;
-
-
-    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL)
-    private List<Token> tokens = new ArrayList<>();
-
-    @Transient
-    private String token;
 
     @Constraints.Required
-    @ManyToOne
-    @Column(nullable = false, name = "id_role")
-    private Role role;
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(columnDefinition = "datetime", nullable = false)
+    protected DateTime lastLogin;
+
+    private static Finder<Long, User> finder = new Finder<>(User.class);
+
+    @PrePersist
+    public void createAuthUser() throws MySQLIntegrityConstraintViolationException {
+        if(this.authUser != null) {
+            this.authUser.setPassword(this.authUser.getPassword()); //TODO ENCRYP
+            this.authUser.insert();
+            this.id = this.authUser.getId();
+        }else{
+            throw new MySQLIntegrityConstraintViolationException("Violation constrain: Cannot add or update a child row: a foreign key constraint fails");
+        }
+    }
+
+    @PreUpdate
+    public void updateAuthUser(){
+        if(this.id != null) {
+            AuthUser authUser = User.findById(this.id).getAuthUser();
+            authUser.setEmail(this.authUser.getEmail());
+            authUser.update();
+            this.authUser = authUser;
+        }
+    }
+
+    public static User findById(Long id){
+        return finder.byId(id);
+    }
+
+    public static User findByMediaProfileId(Long mediaProfileId){
+        return finder.query().where().eq("mediaProfile.id", mediaProfileId).findUnique();
+    }
+
+    public static User findByEmail(String email){
+        return finder
+                .query()
+                .where()
+                .eq("authUser.email", email)
+                .findUnique();
+    }
+
+    public AuthUser getAuthUser() {
+        return authUser;
+    }
+
+    public void setAuthUser(AuthUser authUser) {
+        this.authUser = authUser;
+    }
 
     public String getName() {
         return name;
@@ -94,14 +125,6 @@ public class User extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -120,29 +143,13 @@ public class User extends AbstractEntity {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Short getEmailValidated() {
-        return emailValidated;
-    }
-
-    public void setEmailValidated(Short emailValidated) {
-        this.emailValidated = emailValidated;
-    }
-
-    public Boolean getArchived() {
-        return archived;
-    }
-
-    public void setArchived(Boolean archived) {
-        this.archived = archived;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public DateTime getLastLogin() {
         return lastLogin;
@@ -152,37 +159,6 @@ public class User extends AbstractEntity {
         this.lastLogin = lastLogin;
     }
 
-    @JsonIgnore
-    public List<Token> getTokens() {
-        return tokens;
-    }
 
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Long getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
-
-    @Transient
-    public String getToken() {
-        return token;
-    }
-    @Transient
-    public void setToken(String token) {
-        this.token = token;
-    }
 }
+
