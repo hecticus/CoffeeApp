@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import play.libs.mailer.MailerClient;
 import security.authentication.oauth2.BaseGrant;
 import security.SecurityUtils;
-import security.authorization.HecticusSecurity;
+import security.authorization.CoffeeSecurity;
 import security.models.AuthUser;
 import security.models.SecurityPin;
 import org.apache.commons.mail.EmailException;
@@ -64,7 +64,7 @@ public class UpdatePasswordManager extends Controller { //TODO USE OWN RESPONSE
 
     public Result resetPassword() {
         try {
-            String token = HecticusSecurity.getTokenFromHeader(request());
+            String token = CoffeeSecurity.getTokenFromHeader(request());
 
             AuthUser authUser = baseGrant.verifyAccessToken(token);
             if(authUser == null)

@@ -1,14 +1,18 @@
+
 package security.authorization;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.typesafe.config.Config;
 import play.Configuration;
+import scala.collection.immutable.List;
+import scala.math.Ordering;
 import security.models.Group;
 import security.models.Permission;
 import security.models.Role;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 /**
  * Created by nisa on 26/10/17.
@@ -16,6 +20,7 @@ import java.util.List;
  * reference: https://www.playframework.com/documentation/2.5.x/ScalaDependencyInjection
  *
  */
+
 @Singleton
 public class OnLoadRBAC {
 
@@ -25,7 +30,7 @@ public class OnLoadRBAC {
         Group.deleteAll();
         Role.deleteAll();
         Permission.deleteAll();
-        buildRolesManyPermission(config.getConfig("play.rbac.roles"));
+        //buildRolesManyPermission(config.getConfig("play.rbac.roles"));
         buildGroupsManyRoles(config.getConfig("play.rbac.groups"));
         System.out.println("*** Complete control access tables...");
     }
@@ -37,16 +42,16 @@ public class OnLoadRBAC {
             if(group == null){
                 group = new Group();
                 group.setId(groupKey);
-                group.setRoles(buildRoles(config.getList(groupKey)));
+               // group.setRoles(buildRoles(config.getList(groupKey)));
                 group.insert();
             }else{
-                group.setRoles(buildRoles(config.getList(groupKey)));
+                //group.setRoles(buildRoles(config.getList(groupKey)));
                 group.update();
             }
         }
     }
 
-    private List<Role> buildRoles(List<Object> roleKeys){
+/*    private List<Role> buildRoles(List<Object> roleKeys){
         List<Role> roles = new ArrayList<>();
         for(Object roleKey : roleKeys) {
             Role role = Role.findById(roleKey.toString());
@@ -61,7 +66,7 @@ public class OnLoadRBAC {
     }
 
     private void buildRolesManyPermission(Configuration config){
-        for(String roleKey : config.subKeys()) {
+        for(Ordering.String roleKey : config.subKeys()) {
             //System.out.println(roleKey);
             Role role = Role.findById(roleKey);
             if(role == null){
@@ -89,5 +94,5 @@ public class OnLoadRBAC {
             permissions.add(permission);
         }
         return permissions;
-    }
+    }*/
 }

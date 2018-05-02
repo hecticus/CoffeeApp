@@ -1,12 +1,8 @@
 package controllers;
 
 import com.typesafe.config.Config;
-import models.domain.User;
-import models.manager.UserManager;
-import models.manager.impl.UserManagerImpl;
 import play.api.libs.mailer.MailerClient;
 import play.mvc.Controller;
-import play.mvc.Result;
 
 import javax.inject.Inject;
 
@@ -22,26 +18,26 @@ public class Users extends Controller {
     private Config config;
     //private Configuration configuration;
 
-    private UserManager userManager = new UserManagerImpl();
+    //private UserManager userManager = new UserManagerImpl();
 
     //@With(HecticusSecurity.class)
   //  @HSecurity("/user/findByEmail/@potato,nigga,chuleta,basic")
-    public Result findByEmail(String email) {
-        User CurrentUser = (User) ctx().args.get("CurrentUser");
-        return userManager.findByEmail(email);
-    }
+//    public Result findByEmail(String email) {
+//        User CurrentUser = (User) ctx().args.get("CurrentUser");
+//        return userManager.findByEmail(email);
+//    }
 
     //public Result uploadPhoto() {return userManager.uploadPhoto();}
 
-    public Result login(){  return userManager.login(this.config);  }
-
-    public Result authorize(String path){ return userManager.authorize(this.config, path);  }
-
-    public Result verify(){  return userManager.verify(this.config);  }
-
-    public Result startResetPassword(String email){  return userManager.startResetPassword(email,this.mailerClient, this.config);  }
-
-    public Result handleStartResetPassword(){  return userManager.handleStartResetPassword();  }
-
-    public Result  logout(){  return userManager.logout(); }
+//    public Result login(){  return userManager.login(this.config);  }
+//
+//    public Result authorize(String path){ return userManager.authorize(this.config, path);  }
+//
+//    public Result verify(){  return userManager.verify(this.config);  }
+//
+//    public Result startResetPassword(String email){  return userManager.startResetPassword(email,this.mailerClient, this.config);  }
+//
+//    public Result handleStartResetPassword(){  return userManager.handleStartResetPassword();  }
+//
+//    public Result  logout(){  return userManager.logout(); }
 }
