@@ -1,11 +1,10 @@
 package security.authorization;
 
 
+import com.typesafe.config.Config;
+import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
-import com.typesafe.config.Config;
-import play.Configuration;
-import play.mvc.Action;
 import security.authentication.oauth2.BaseGrant;
 import security.authentication.oauth2.Response;
 import security.models.AuthUser;
@@ -29,7 +28,7 @@ public class CoffeeSecurity  extends Action<CoffeeSecurity>{
     @Inject
         CoffeeSecurity(Config config){
         //enabled = config.getBoolean("play.rbac.enabled");
-        enabled = false;
+        enabled = true;
     }
 
     public CompletionStage<Result> call(Http.Context ctx)  {
@@ -45,9 +44,11 @@ public class CoffeeSecurity  extends Action<CoffeeSecurity>{
         try {
             if (enabled) {
                 String permission =  ctx.args.get("ROUTE_CONTROLLER") + "." + ctx.args.get("ROUTE_ACTION_METHOD");
-                //System.out.println(permission);
+                System.out.println(permission);
+
 
                 String accessToken = getTokenFromHeader(ctx);
+                System.out.println(accessToken);
                 if (accessToken == null)
                     return CompletableFuture.completedFuture(Response.invalidRequest());
 

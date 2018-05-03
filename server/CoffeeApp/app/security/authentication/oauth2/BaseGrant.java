@@ -1,7 +1,7 @@
 package security.authentication.oauth2;
 
 import com.hecticus.auth.AuthJWT;
-import play.Configuration;
+import com.typesafe.config.Config;
 import security.models.AuthUser;
 import security.models.ClientCredential;
 import security.models.SecurityToken;
@@ -24,14 +24,16 @@ public class BaseGrant {
     private AuthJWT authJWT;
 
     @Inject
-    public BaseGrant(Configuration config){
+//    public BaseGrant(Configuration config){
+    public BaseGrant(Config config){
         //ClassLoader classLoader = Thread.currentThread().getContextClassLoader(); TODO intentar esto en vez de injectar
         //ConfigFactory.load(classLoader,"conf/application.conf");
 
-        secret = config.getString("play.crypto.secret");
+//        secret = config.getString("play.crypto.secret");
+        secret = config.getString("play.http.secret.key");
         authJWT = new AuthJWT(secret);
 
-        Configuration configToken = config.getConfig("play.token");
+        Config configToken = config.getConfig("play.token");
         issuer = configToken.getString("issuer");
         expiresInAccessToken = configToken.getLong("refresh.ttlMillis");
         expiresInRefreshToken = configToken.getLong("access.ttlMillis");

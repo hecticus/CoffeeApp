@@ -9,13 +9,22 @@ GET     /                           controllers.HomeController.index
 GET     /message                    controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-#GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+#GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # GET
 # POST
 # PUT
 # DELETE
+
+
+###############################################################################
+#·······                 Authentication                             ··········#
+###############################################################################
+POST    /oauth/token                security.authentication.oauth2.PasswordGrant.token()
+POST    /oauth/revokeToken          security.authentication.oauth2.PasswordGrant.revokeToken()
+#POST    /oauth/auth                security.authentication.oauth2.ImplicitGrant.auth()
+
 
 
 ###############################################################################

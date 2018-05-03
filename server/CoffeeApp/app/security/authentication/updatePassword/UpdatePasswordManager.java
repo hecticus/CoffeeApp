@@ -1,20 +1,19 @@
 package security.authentication.updatePassword;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.Config;
+import org.apache.commons.mail.EmailException;
+import play.libs.Json;
 import play.libs.mailer.MailerClient;
-import security.authentication.oauth2.BaseGrant;
+import play.mvc.Controller;
+import play.mvc.Result;
 import security.SecurityUtils;
+import security.authentication.oauth2.BaseGrant;
 import security.authorization.CoffeeSecurity;
 import security.models.AuthUser;
 import security.models.SecurityPin;
-import org.apache.commons.mail.EmailException;
-import play.Configuration;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
 
 import javax.inject.Inject;
-
 import java.time.ZonedDateTime;
 
 /**
@@ -49,13 +48,13 @@ public class UpdatePasswordManager extends Controller { //TODO USE OWN RESPONSE
     private static BaseGrant baseGrant;
 
     @Inject
-    UpdatePasswordManager(Configuration config){
-        Configuration configRecoverPass = config.getConfig("play.recoverpass.pin");
+    UpdatePasswordManager(Config config){
+        Config configRecoverPass = config.getConfig("play.recoverpass.pin");
         Pin.length = configRecoverPass.getInt("length");
         Pin.expiresIn = configRecoverPass.getInt("expiresIn");
         Pin.tries = configRecoverPass.getInt("tries");
 
-        Configuration configMailer = config.getConfig("play.mailer");
+        Config configMailer = config.getConfig("play.mailer");
         Mailer.issuer = configMailer.getString("issuer");
         Mailer.email = configMailer.getString("user");
 

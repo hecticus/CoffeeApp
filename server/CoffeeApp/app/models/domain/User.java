@@ -39,10 +39,6 @@ public class User extends AbstractEntity {
     @Formula(select="(select concat(first_name,' ',last_name) from user u where u.id = ${ta}.id) ")
     private String name;;
 
-//    @Constraints.MaxLength(100)
-//    @Column(length = 100)
-//    private String password;
-
     @Constraints.MaxLength(100)
     @Constraints.Required
     @Column(length = 100, nullable = false)
@@ -95,6 +91,7 @@ public class User extends AbstractEntity {
         }
     }
 
+    //No clear
     public static User findById(Long id){
         return finder.byId(id);
     }
@@ -103,12 +100,12 @@ public class User extends AbstractEntity {
         return finder.query().where().eq("mediaProfile.id", mediaProfileId).findUnique();
     }
 
-    public static User findByEmail(String email){
-        return finder
-                .query()
-                .where()
-                .eq("authUser.email", email)
-                .findUnique();
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public AuthUser getAuthUser() {
@@ -142,14 +139,6 @@ public class User extends AbstractEntity {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
 
     public DateTime getLastLogin() {
         return lastLogin;

@@ -1,6 +1,6 @@
 package security.authentication.oauth2;
 
-import play.Configuration;
+import com.typesafe.config.Config;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -38,7 +38,7 @@ public class ImplicitGrant extends Controller{
     }
 
     @Inject
-    ImplicitGrant(Configuration config){
+    ImplicitGrant(Config config){
         baseGrant = new BaseGrant(config);
     }
 

@@ -63,6 +63,40 @@ INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id)VALUES
   ('11','SuperUser');
 
 
+id                            bigint auto_increment not null,
+created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  client_id                     varchar(50) not null,
+client_secret                 varchar(100),
+name                          varchar(100) not null,
+icon                          text,
+home_page_url                 text,
+privacy_policy_url            text,
+auth_callback_uri             text,
+description                   varchar(255),
+constraint uq_auth_client_credential_client_id unique (client_id),
+constraint pk_auth_client_credential primary key (id)
+create table auth_client_credential (
+  id                            integer auto_increment not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  client_id                     varchar(50) not null,
+  client_secret                 varchar(100),
+  name                          varchar(100) not null,
+  icon                          text,
+  home_page_url                 text,
+  privacy_policy_url            text,
+  auth_callback_uri             text,
+  description                   varchar(255),
+  constraint uq_auth_client_credential_client_id unique (client_id),
+  constraint pk_auth_client_credential primary key (id)
+);
+
+INSERT INTO `auth_client_credential` (id, created_at, updated_at, client_id,
+                                      client_secret , name, icon, home_page_url,
+                                      privacy_policy_url, auth_callback_uri, description ) VALUES
+  (1,'2017-05-02 00:00:00','2015-05-02 00:00:00','web_site',NULL,'web site',NULL,NULL,NULL,NULL,NULL),
+  (2,'2017-05-02 00:00:00','2015-05-02 00:00:00','android_app',NULL,'android app',NULL,NULL,NULL,NULL,NULL);
 
 
 # --- !Downs
@@ -78,6 +112,8 @@ TRUNCATE auth_user_auth_role;
 TRUNCATE auth_group;
 
 TRUNCATE auth_user_auth_group;
+
+TRUNCATE auth_client_credential;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
