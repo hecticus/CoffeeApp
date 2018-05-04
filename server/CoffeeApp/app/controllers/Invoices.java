@@ -30,7 +30,7 @@ public class Invoices {
    /* @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
     public Result findAll(Integer index, Integer size) {
         return invoiceManager.findAll(index, size);
-    }*/
+    } */
 
     public Result getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){return invoiceManager.getByDateByTypeProvider(date,typeProvider,pageIndex,pagesize);}
 

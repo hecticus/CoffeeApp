@@ -20,12 +20,12 @@ public class Permission extends AbstractEntity  {
     private Long id;
 
     @Constraints.MaxLength(50)
-    @Column(length = 50, unique = true)
+    @Column(length = 70)//, unique = false)
     private String name; //TODO evaluar para poner name como primarykey y no depender de un id autogenerado para representar el permiso
 
     @Constraints.Required
     @Constraints.MaxLength(100)
-    @Column(length = 100, unique = true, nullable = false)
+    @Column(length = 100, nullable = false) //, unique = true
     private String route;
 
     private String description;

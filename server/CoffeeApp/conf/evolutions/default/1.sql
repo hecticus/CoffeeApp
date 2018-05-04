@@ -148,11 +148,9 @@ create table auth_permission (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  name                          varchar(50),
+  name                          varchar(70),
   route                         varchar(100) not null,
   description                   varchar(255),
-  constraint uq_auth_permission_name unique (name),
-  constraint uq_auth_permission_route unique (route),
   constraint pk_auth_permission primary key (id)
 );
 
