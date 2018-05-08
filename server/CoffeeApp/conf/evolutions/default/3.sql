@@ -473,9 +473,10 @@ INSERT INTO `auth_role_auth_group` (auth_role_id, auth_group_id) VALUES
   #('invoiceDetail_u', 'basic'),
 
   #store
-  ('store_r', 'basic');
   #('store_g', 'basic'),
-  #('store_u', 'basic');
+  #('store_u', 'basic'),
+  ('store_r', 'basic');
+
 
 --
 -- Dumping data for table `user_auth_group`
@@ -488,9 +489,6 @@ INSERT INTO `auth_user_auth_role` (auth_user_id,auth_role_id) VALUES
   ('6','farm_r'),
   ('11','farm_u'),
   ('11','purity_r'),
-  ('11','purity_r'),
-  ('5','lot_r'),
-  ('6','farm_u'),
   ('9','farm_r'),
   ('5','farm_u');
 
