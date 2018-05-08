@@ -486,7 +486,13 @@ INSERT INTO `auth_user_auth_role` (auth_user_id,auth_role_id) VALUES
   ('5','lot_r'),
   ('6','farm_u'),
   ('6','farm_r'),
-  ('11','farm_u');
+  ('11','farm_u'),
+  ('11','purity_r'),
+  ('11','purity_r'),
+  ('5','lot_r'),
+  ('6','farm_u'),
+  ('9','farm_r'),
+  ('5','farm_u');
 
 
 INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id)VALUES
