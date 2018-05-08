@@ -16,6 +16,7 @@ public class Users extends Controller {
 
 
 
+    //@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             User user = User.findById(id);
@@ -27,6 +28,7 @@ public class Users extends Controller {
     }
 
 /*  //Se puede ampliar agregando un email de recuperacion
+    //@CoffeAppsecurity
     public Result findByEmail(String email) {
         try {
             User user = User.findByEmail(email);
@@ -37,6 +39,7 @@ public class Users extends Controller {
         }
     }*/
 
+    //@CoffeAppsecurity
     public Result updatePassword(Long id) {
         try {
             JsonNode request = request().body().asJson();

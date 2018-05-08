@@ -44,7 +44,7 @@ public class CoffeeSecurity  extends Action<CoffeeSecurity>{
         try {
             if (enabled) {
                 String permission =  ctx.args.get("ROUTE_CONTROLLER") + "." + ctx.args.get("ROUTE_ACTION_METHOD");
-                System.out.println(permission);
+                System.out.println("---------------------********************"+permission);
 
 
                 String accessToken = getTokenFromHeader(ctx);
@@ -53,10 +53,13 @@ public class CoffeeSecurity  extends Action<CoffeeSecurity>{
                     return CompletableFuture.completedFuture(Response.invalidRequest());
 
                 AuthUser authUser = baseGrant.verifyAccessToken(accessToken);
+                //System.out.println("-------------------------------"+ authUser.getId());
+
                 if (authUser == null)
                     return CompletableFuture.completedFuture(Response.invalidToken());
 
                 if (!Permission.hasPermmission(permission, authUser.getId())) {
+
                     return CompletableFuture.completedFuture(Response.insufficientScope());
                 }
             }

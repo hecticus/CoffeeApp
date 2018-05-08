@@ -1,105 +1,212 @@
+
+
+
+INSERT INTO `auth_role` (id, created_at, updated_at, description) VALUES
 #providerType
-  (4,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType ', 'controllers.ProviderTypes.findById', NULL),
-  (5,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType ', 'controllers.ProviderTypes.findAllByAll', NULL),
-  (6,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType ', 'controllers.ProviderTypes.getProviderTypesByName', NULL),
+('providerType_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType read '),
+('providerType_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType get '),
+('providerType_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType cup '),
 
-  #provider
-  (7,  findById', NULL),
-  (8,  findAll', NULL),
-  (9,   findAllSearch', NULL),
-  (11,  getByIdentificationDoc', NULL),
-  (12,  getProvidersByName', NULL),
-  (13,  getByTypeProvider', NULL),
-  (14,  getByNameDocByTypeProvider', NULL),
-  (15,' create', NULL),
-  (16,  update', NULL),
-  (17,  delete', NULL),   #TODO CHECK HAVE TWO
-  (10,  deletes', NULL),
-  (18,  uploadPhotoProvider', NULL),
+#provider
+('provider_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider read '),
+('provider_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider get '),
+('provider_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider cup '),
 
-  #invoice
-  (19,   'controllers.Invooices.findAll', NULL),
-  (20,   'controllers.Invices.findAllSearch', NULL), #TODO CHECK HAVE TWO
-  (21,   'controllers.Invoices.getByDateByTypeProvider', NULL),
-  (22,   'controllers.Invoices.getByDateByProviderId', NULL),
-  (23,   'controllers.Invoices.getOpenByProviderId', NULL),
-  (24,   'controllers.Invoices.createReceipt', NULL),
-  (25,   'controllers.Invoices.create', NULL),
-  (26,   'controllers.Invoices.buyHarvestsAndCoffe', NULL),
-  (27,   'controllers.Invoices.updateBuyHarvestsAndCoffe', NULL),
-  (28,   'controllers.Invoices.update', NULL),
-  (29,   'controllers.Invoices.delete', NULL),
+#invoice
+('invoice_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice read '),
+('invoice_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice get '),
+('invoice_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice cup '),
 
-  #unit
-  (30,  findById', NULL),
-  (31,  findAll', NULL), #TODO CHECK HAVE TWO
-  (311,  create', NULL),
-  (32,  update', NULL),
-  (33,  delete', NULL),
+#unit
+('unit_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit read '),
+('unit_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit get '),
+('unit_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit cup '),
 
-  #itemType
-  (34,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.findAll', NULL),
-  (35,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.findAllSearch', NULL), #TODO CHECK HAVE TWO
-  (36,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.preCreate', NULL),
-  (37,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.findById', NULL),
-  (38,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.getByProviderTypeId', NULL),
-  (39,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.getByNameItemType', NULL),
-  (40,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.create', NULL),
-  (41,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.update', NULL),
-  (42,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType', 'controllers.ItemTypes.delete', NULL),
+#itemType
+('itemType_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType read '),
+('itemType_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType get '),
+('itemType_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType cup '),
 
-  #lot
-  (43,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.findAll', NULL),
-  (44,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.findAllSearch', NULL), #TODO CHECK HAVE TWO
-  (45,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.preCreate', NULL),
-  (46,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.create', NULL),
-  (47,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.update', NULL),
-  (48,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.delete', NULL),
-  (49,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.getByNameLot', NULL),
-  (50,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.getByStatusLot', NULL),
-  (51,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.getByIdFarm', NULL),
-  (52,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot', 'controllers.Lots.deletes', NULL),
+#lot
+('lot_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot read '),
+('lot_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot get '),
+('lot_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot cup '),
 
-  #farm
-  (53,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm', 'controllers.Farms.findById', NULL),
-  (54,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm', 'controllers.Farms.findByAll', NULL),
-  (55,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm', 'controllers.Farms.findAllSearch', NULL),
+#farm
+('farm_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm read '),
+('farm_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm get '),
+('farm_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm cup '),
 
-  #purity
-  (56,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.findAll', NULL),
-  (57,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.findAllSearch', NULL), #TODO CHECK HAVE TWO
-  (58,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', ' controllers.Purities.preCreate', NULL),
-  (59,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.findById', NULL),
-  (60,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.getByNamePurity', NULL),
-  (61,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.getByStatusPurity', NULL),
-  (62,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.create', NULL),
-  (63,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.update', NULL),
-  (64,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity', 'controllers.Purities.delete', NULL),
+#purity
+('purity_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity read '),
+('purity_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity get '),
+('purity_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity cup '),
 
-  #invoiceDetailPurity
-  (65,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity', 'controllers.InvoiceDetailPurities.findAll', NULL), #TODO CHECK HAVE TWO
-  (651,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity', 'controllers.InvoiceDetailPurities.findById', NULL),
-  (66,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity', 'controllers.InvoiceDetailPurities.create', NULL),
-  (67,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity', 'controllers.InvoiceDetailPurities.update', NULL),
-  (68,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity', 'controllers.InvoiceDetailPurities.delete', NULL),
+#invoiceDetailPurity
+('invoiceDetailPurity_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity read '),
+('invoiceDetailPurity_','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity get '),
+('invoiceDetailPurity_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity cup '),
 
-  #invoiceDetail
-  (69,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.findAll', NULL),
-  (70,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.findAllSearch', NULL), #TODO CHECK HAVE TWO
-  (71,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.preCreate', NULL),
-  (72,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.create', NULL),
-  (73,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.findById', NULL),
-  (74,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.findAllByIdInvoice', NULL),
-  (75,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.update', NULL),
-  (751,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.delete', NULL),
-  (76,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail', 'controllers.InvoiceDetails.deleteAllByIdInvoiceAndDate', NULL),
+#invoiceDetail
+('invoiceDetail_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail read '),
+('invoiceDetail_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail get '),
+('invoiceDetail_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail cup '),
 
-  #store
-  (77,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.findAll', NULL),
-  (78,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'Controllers.Stores.findAllSearch', NULL), #TODO CHECK HAVE TWO
-  (79,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.preCreate', NULL),
-  (80,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.findById', NULL),
-  (81,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.getByStatusStore', NULL),
-  (82,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.create', NULL),
-  (83,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.update', NULL),
-  (85,'2017-06-22 22:27:17','2017-06-22 22:27:17', 'store', 'controllers.Stores.delete', NULL);
+#store
+('store_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store read '),
+('store_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store get '),
+('store_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store cup ');
+
+
+#providerType_type
+
+('4','providerType_r'),
+('5','providerType_r'),
+('6','providerType_g'),
+('7','provider_r'),
+('8','provider_r'),
+('9','provider_r'),
+('11','provider_g'),
+('12','provider_g'),
+('13','provider_g'),
+('14','provider_g'),
+('18','provider_g'),
+('10','provider_u'),
+('15','provider_u'),
+('16','provider_u'),
+('17','provider_u'),
+
+#invoice
+('19','invoice_r'),
+('20','invoice_r'),
+('22','invoice_g'),
+('23','invoice_g'),
+('24','invoice_g'),
+('21','invoice_g'),
+('26','invoice_g'),
+('27','invoice_g'),
+('25','invoice_u'),
+('28','invoice_u'),
+('29','invoice_u'),
+
+#unit
+('30','unit_r'),
+('31','unit_r'),
+('311','unit_u'),
+('32','unit_u'),
+('33','unit_u'),
+
+
+#itemType
+('34','itemType_r'),
+('35','itemType_r'),
+('37','itemType_r'),
+('38','itemType_g'),
+('39','itemType_g'),
+('36','itemType_u'),
+('40','itemType_u'),
+('41','itemType_u'),
+('42','itemType_u'),
+
+
+#lot
+('43','lot_r'),
+('44','lot_r'),
+('49','lot_g'),
+('50','lot_g'),
+('51','lot_g'),
+('45','lot_u'),
+('46','lot_u'),
+('47','lot_u'),
+('48','lot_u'),
+('52','lot_u'),
+
+#farm
+('53','farm_r'),
+('54','farm_r'),
+('55','farm_r'),
+
+#purity
+('56','purity_r'),
+('57','purity_r'),
+('59','purity_r'),
+('60','purity_g'),
+('61','purity_g'),
+('58','purity_u'),
+('62','purity_u'),
+('63','purity_u'),
+('64','purity_u'),
+
+#invoiceDetailPurity
+('65','invoiceDetailPurity_r'),
+('651','invoiceDetailPurity_r'),
+('66','invoiceDetailPurity_u'),
+('67','invoiceDetailPurity_u'),
+('68','invoiceDetailPurity_u'),
+
+#invoiceDetail
+('69','invoiceDetail_r'),
+('70','invoiceDetail_r'),
+('73','invoiceDetail_r'),
+('74','invoiceDetail_r'),
+('71','invoiceDetail_u'),
+('72','invoiceDetail_u'),
+('75','invoiceDetail_u'),
+('751','invoiceDetail_u'),
+('76','invoiceDetail_u'),
+
+#store
+('77','store_r'),
+('78','store_r'),
+('80','store_r'),
+('81','store_g'),
+('79','store_u'),
+('82','store_u'),
+('83','store_u'),
+('85','store_u');
+
+('providerType_r',),
+('providerType_g',),
+
+('provider_r',),
+('provider_g',),
+('provider_u',),,
+
+
+#invoi,ce
+('invoice_r',),
+('invoice_g',),
+('invoice_u',),,
+
+
+('unit_r',),
+('unit_u',),,
+
+
+('itemType_r',),
+('itemType_g',),
+('itemType_u',),
+
+('lot_r',),
+('lot_g',),
+('lot_u',),
+
+('farm_r',),
+
+#puri,ty
+('purity_r',),
+('purity_g',),
+('purity_u',),
+
+#invoiceDetailPuri,ty
+('invoiceDetailPurity_r',),
+('invoiceDetailPurity_u',),
+
+#invoiceDeta,il
+('invoiceDetail_r',),
+('invoiceDetail_u',),
+
+#sto,re
+('store_r',),
+('store_g',),
+('store_u',),

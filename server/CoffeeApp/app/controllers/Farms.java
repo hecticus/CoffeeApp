@@ -18,12 +18,12 @@ public class Farms {
         return farmManager.findById(id);
     }
 
-    //@HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    @CoffeAppsecurity
     public Result findAll(Pager pager, String sort, String collection) {
         return farmManager.findAll(pager.index, pager.size, sort, collection);
     }
 
-    //@HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    @CoffeAppsecurity
     public Result findAllSearch(String name, Pager pager, String sort, String collection) {
         return farmManager.findAllSearch(name, pager.index, pager.size, sort, collection);
     }
