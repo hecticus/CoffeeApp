@@ -86,7 +86,7 @@ public class InvoiceDetail  extends AbstractEntity{
     @Column(nullable = false, name = "status_invoiceDetail")
     private Integer statusInvoiceDetail=1;
 
-        private static Finder<Long, InvoiceDetail> finder = new Finder<>(InvoiceDetail.class);
+    private static Finder<Long, InvoiceDetail> finder = new Finder<>(InvoiceDetail.class);
 
     public Long getIdInvoiceDetail() {
         return idInvoiceDetail;
@@ -210,8 +210,7 @@ public class InvoiceDetail  extends AbstractEntity{
 
 
 
-    public List<InvoiceDetail> finderAllByIdInvoice(Long IdInvoice)
-    {
+    public static List<InvoiceDetail> finderAllByIdInvoice(Long IdInvoice)    {
         return finder.query()
                 .where()
                 .eq("id_invoice", IdInvoice)

@@ -16,9 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="purities")
-public class Purity extends AbstractEntity
-{
-
+public class Purity extends AbstractEntity{
 
     @Id
     @Column(name = "id_purity")
@@ -36,11 +34,10 @@ public class Purity extends AbstractEntity
     @Column(nullable = false, name = "discountRate_purity")
     private Integer DiscountRatePurity=0;
 
-    private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
-
-
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurities = new ArrayList<>();
+
+    private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
 
     public Long getIdPurity() {
         return idPurity;
@@ -84,20 +81,15 @@ public class Purity extends AbstractEntity
     }
 
 
-    public int getExist(String name_purity)
-    {
+    public int getExist(String name_purity){
         if(finder.query().where().eq("name_purity",name_purity).eq("status_delete",0).findUnique()!=null) return 0;
-        else
-        {
+        else{
             if(finder.query().where().eq("name_purity",name_purity).eq("status_delete",1).findUnique()!=null)  return 1;
             else return 2;
-
         }
-
     }
 
-    public List<Purity> getByNamePurity(String NamePurity, String order)
-    {
+    public List<Purity> getByNamePurity(String NamePurity, String order){
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3," +
                 " t0.discountrate_purity c4, t0.created_at c5, t0.updated_at c6 " +
                 "from purities t0" +
@@ -111,8 +103,7 @@ public class Purity extends AbstractEntity
         return toPuritys(results);
     }
 
-    public List<Purity> getByStatusPurity(String StatusPurity, String order)
-    {
+    public List<Purity> getByStatusPurity(String StatusPurity, String order){
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3, " +
                 " t0.discountrate_purity c4, t0.created_at c5, t0.updated_at c6 " +
                 " from purities t0 "+
@@ -149,7 +140,6 @@ public class Purity extends AbstractEntity
         return purities;
     }
 
-    @Override
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
         ExpressionList expressionList = finder.query().where().eq("status_delete",0);
 
@@ -166,4 +156,7 @@ public class Purity extends AbstractEntity
             return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
     }
+
+
+
 }

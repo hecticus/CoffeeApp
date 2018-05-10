@@ -35,7 +35,7 @@ public class ProviderType  extends AbstractEntity {
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
     private List<ItemType> itemTypes = new ArrayList<>();
 
-    private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
+    private static Finder<Long, ProviderType> finder = new Finder<>(ProviderType.class);
 
 
     public Long getIdProviderType() {
@@ -79,6 +79,9 @@ public class ProviderType  extends AbstractEntity {
         this.itemTypes = itemTypes;
     }
 
+    public static ProviderType findById(Long id){
+        return finder.byId(id);
+    }
 
     public List<ProviderType> getProviderTypesByName(String name_providertype, String order)
     {

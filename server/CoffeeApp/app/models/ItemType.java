@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import models.dao.UnitDao;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -188,7 +187,6 @@ public class ItemType extends AbstractEntity
         return itemTypes;
     }
 
-    @Override
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
         ExpressionList expressionList = finder.query().where().eq("status_delete",0);
 

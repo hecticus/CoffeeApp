@@ -119,6 +119,10 @@ public class Lot extends AbstractEntity{
 
     private static Farm farmDao = new Farm();
 
+    public static Lot findById(Long id){
+        return finder.byId(id);
+    }
+
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
 /*    public LotDaoImpl(){

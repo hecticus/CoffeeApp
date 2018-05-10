@@ -116,11 +116,11 @@ public class Invoice extends AbstractEntity{
         this.totalInvoice = totalInvoice;
     }
 
-    public ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize)
-    {
+    public static Invoice findById(Long id){
+        return finder.byId(id);
+    }
 
-
-
+    public ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
 
         String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
                 " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
@@ -294,7 +294,7 @@ public class Invoice extends AbstractEntity{
 
     public double calcularTotalInvoice(Long idInvioce)
     {
-        List<InvoiceDetail> invoiceDetails = InvoiceDetail.findAllByIdInvoice(idInvioce);
+        List<InvoiceDetail> invoiceDetails = InvoiceDetail.finderAllByIdInvoice(idInvioce);
         Lot lot;
         Invoice invoice = this.findById(idInvioce);
         double total = 0;

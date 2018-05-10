@@ -67,6 +67,10 @@ public class Unit extends AbstractEntity
         this.itemTypes = itemTypes;
     }
 
+    public static Unit findById(Long id){
+        return finder.byId(id);
+    }
+
     public int getExist(String name_unit){
         if(finder.query().where().eq("name_unit",name_unit).eq("status_delete",0).findUnique()!=null) return 0;
         else{
