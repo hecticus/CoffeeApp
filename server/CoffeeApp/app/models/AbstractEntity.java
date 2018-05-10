@@ -1,21 +1,18 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import io.ebean.Model;
 import io.ebean.annotation.CreatedTimestamp;
-import io.ebean.annotation.JsonIgnore;
 import io.ebean.annotation.UpdatedTimestamp;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import play.data.format.Formats;
-import play.data.validation.Constraints;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
 
 /**

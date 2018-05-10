@@ -5,23 +5,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.*;
 import io.ebean.Ebean;
 import models.Farm;
-import models.manager.requestUtils.queryStringBindable.Pager;
-import models.manager.responseUtils.ExceptionsUtils;
-import models.manager.responseUtils.ResponseCollection;
+import models.requestUtils.queryStringBindable.Pager;
+import models.responseUtils.ExceptionsUtils;
+import models.responseUtils.ResponseCollection;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
 
-import static play.mvc.Controller.request;
-
 /**
  * Created by darwin on 30/08/17.
  */
-public class Farms {
+public class Farms extends Controller {
 
     @Inject
     private FormFactory formFactory;

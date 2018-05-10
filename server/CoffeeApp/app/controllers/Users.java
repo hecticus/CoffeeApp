@@ -3,20 +3,21 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
-import models.domain.User;
+import models.User;
+import models.responseUtils.ExceptionsUtils;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.models.AuthUser;
+import security.authorization.CoffeAppsecurity;
 
 /**
  * Created by yenny on 10/3/16.
  */
 public class Users extends Controller {
 
+    private static User userDao = new User();
 
-
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             User user = User.findById(id);
@@ -27,36 +28,28 @@ public class Users extends Controller {
         }
     }
 
-/*  //Se puede ampliar agregando un email de recuperacion
-    //@CoffeAppsecurity
+
+    @CoffeAppsecurity
     public Result findByEmail(String email) {
-        try {
-            User user = User.findByEmail(email);
 
-            return Response.foundEntity(Json.toJson(user));
+        try {
+            User user = userDao.findByEmail(email);
+            return models.responseUtils.Response.foundEntity(Json.toJson(user));
         } catch (Exception e) {
-            return NsExceptionsUtils.find(e);
-        }
-    }*/
-
-    //@CoffeAppsecurity
-    public Result updatePassword(Long id) {
-        try {
-            JsonNode request = request().body().asJson();
-            if (request == null)
-                return Response.requiredJson();
-
-            AuthUser authUser = AuthUser.findById(id);
-            if(authUser == null)
-                return Response.notFoundEntity("id[" + id + "]");
-
-            JsonNode password = request.get("password");
-            authUser.setPassword(password == null ? null : password.textValue()); //TODO encriptar
-            authUser.update();
-
-            return Response.updatedEntity(Json.toJson(authUser));
-        }catch(Exception e){
-            return NsExceptionsUtils.update(e);
+            return ExceptionsUtils.find(e);
         }
     }
+
+    @CoffeAppsecurity
+    public Result uploadPhoto(JsonNode request) {
+        try {
+            JsonNode jracksPhoto = userDao.uploadPhoto(request);
+            return models.responseUtils.Response.foundEntity(Json.toJson(jracksPhoto));
+        } catch (Exception e) {
+            return ExceptionsUtils.update(e);
+        }
+    }
+
+
+
 }

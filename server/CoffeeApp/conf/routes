@@ -36,8 +36,8 @@ GET     /providerType/:id                                                       
 ###############################################################################
 #·······                    Provider                                ··········#
 ###############################################################################
-GET     /provider                                                               controllers.Providers.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /provider/search                                                        controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
+GET     /provider                                                               controllers.Providers.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /provider/search                                                        controllers.Providers.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
 #GET     /provider/new                                                           controllers.Providers.findAllSearch()
 GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
 #GET     /provider/findAll/:index/:size                                         controllers.Providers.findAll(index: Integer, size: Integer)
@@ -55,9 +55,9 @@ POST    /provider/uploadPhotoProvider                                           
 ###############################################################################
 #·······                      Invoice                               ··········#
 ###############################################################################
-GET     /invoice                                                                controllers.Invoices.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /invoice                                                                controllers.Invoices.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long )
-GET     /invoice/search                                                         controllers.Invoices.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null,id_provider: Integer ?= -2, idProviderType: Integer ?= 2, startDate: String ?= null, endDate: String ?= null)
+GET     /invoice/search                                                         controllers.Invoices.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null,id_provider: Integer ?= -2, idProviderType: Integer ?= 2, startDate: String ?= null, endDate: String ?= null)
 GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize  controllers.Invoices.getByDateByTypeProvider(date: String, typeProvider: Integer,pageindex: Integer, pagesize: Integer)
 GET     /invoice/getByDateByProviderId/:date/:ProviderId                        controllers.Invoices.getByDateByProviderId(date: String, ProviderId: Long)
 GET     /invoice/getOpenByProviderId/:ProviderId                                controllers.Invoices.getOpenByProviderId(ProviderId : Long)
@@ -82,8 +82,8 @@ DELETE  /unit/:id                                                               
 ###############################################################################
 #·······                       ItemType                             ··········#
 ###############################################################################
-GET     /itemType                                                               controllers.ItemTypes.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /itemType/search                                                        controllers.ItemTypes.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /itemType                                                               controllers.ItemTypes.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /itemType/search                                                        controllers.ItemTypes.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /itemType/new                                                           controllers.ItemTypes.preCreate()
 GET     /itemType/:id                                                           controllers.ItemTypes.findById(id : Long)
 GET     /itemType/getByProviderTypeId/:id_ProviderType/:status                  controllers.ItemTypes.getByProviderTypeId(id_ProviderType: Long, status:Integer )
@@ -95,8 +95,8 @@ DELETE  /itemType/:id                                                           
 ###############################################################################
 #·······                          lot                               ··········#
 ###############################################################################
-GET     /lot                                                                    controllers.Lots.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /lot/search                                                             controllers.Lots.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm: Integer ?= -1 )
+GET     /lot                                                                    controllers.Lots.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /lot/search                                                             controllers.Lots.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm: Integer ?= -1 )
 GET     /lot/new                                                                controllers.Lots.preCreate()
 POST    /lot                                                                    controllers.Lots.create()
 GET     /lot/:id                                                                controllers.Lots.findById(id : Long)
@@ -104,22 +104,22 @@ PUT     /lot                                                                    
 DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
 GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.getByNameLot(NameLot: String, order:String )
 GET     /lot/getByStatusLot/:StatusLot/:order                                   controllers.Lots.getByStatusLot(StatusLot: String, order:String )
-GET     /lot/getByIdFarm/:idFarm                                                controllers.Lots.getByIdFarm(idFarm: Long, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /lot/getByIdFarm/:idFarm                                                controllers.Lots.getByIdFarm(idFarm: Long, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 POST  /lot/deletes                                                              controllers.Lots.deletes()
 
 
 ###############################################################################
 #·······                Farm                                        ··········#
 ###############################################################################
-GET     /farm                                                                   controllers.Farms.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /farm/search                                                            controllers.Farms.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm                                                                   controllers.Farms.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm/search                                                            controllers.Farms.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /farm/:id                                                               controllers.Farms.findById(id : Long)
 
 ###############################################################################
 #·······                Purity                                      ··········#
 ###############################################################################
-GET     /purity                                                                 controllers.Purities.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /purity                                                                 controllers.Purities.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /purity/new                                                             controllers.Purities.preCreate()
 GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
 GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.getByNamePurity(NamePurity: String, order:String )
@@ -140,8 +140,8 @@ DELETE  /invoiceDetailPurity/:id                                                
 ###############################################################################
 #·······            InvoiceDetail                                   ··········#
 ###############################################################################
-GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /invoiceDetail/search                                                   controllers.InvoiceDetails.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /invoiceDetail/search                                                   controllers.InvoiceDetails.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /invoiceDetail/new                                                      controllers.InvoiceDetails.preCreate()
 POST    /invoiceDetail                                                          controllers.InvoiceDetails.create()
 GET     /invoiceDetail/:id                                                      controllers.InvoiceDetails.findById(id : Long)
@@ -153,8 +153,8 @@ DELETE  /invoiceDetail/deleteAllByIdInvoiceAndDate/:idInvoice/:date             
 ###############################################################################
 #·······                     Store                                  ··········#
 ###############################################################################
-GET     /store                                                                  controllers.Stores.findAll(pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /store                                                                  controllers.Stores.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /store/new                                                              controllers.Stores.preCreate()
 GET     /store/:id                                                              controllers.Stores.findById(id : Long)
 GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )

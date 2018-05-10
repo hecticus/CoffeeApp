@@ -1,11 +1,12 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.text.PathProperties;
-import controllers.utils.ListPagerCollection;
-import models.domain.Lot;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -17,21 +18,26 @@ import java.util.List;
  */
 @Entity
 @Table(name="farms")
-public class Farm extends AbstractEntity
-{
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = Farm.class)
+//@JsonIgnoreProperties({"proposals", "machines", "partRequests"}) //va os metodos que quiero que me ignore el metodo
+public class Farm extends AbstractEntity{
+
     @Id
-    @Column(name = "id_farm")
+    @Constraints.Required
+    @Constraints.MaxLength(100)
+    @Column(name = "id_farm", length = 100, nullable = false)
     private Long idFarm;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_farm")
+    @Column(nullable = false, name = "name_farm", length = 100)
     private String NameFarm;
 
     @Constraints.Required
-    @Column(nullable = false, name = "status_farm")
+    @Column(nullable = false, name = "status_farm", length = 100)
     private Integer statusFarm=1;
 
     @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
+    @JsonIgnore
     private List<Lot> lots = new ArrayList<>();
 
     private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
@@ -39,8 +45,6 @@ public class Farm extends AbstractEntity
     public static Farm findById(Long id){
         return finder.byId(id);
     }
-
-
 
     public Long getIdFarm() {
         return idFarm;
@@ -92,6 +96,7 @@ public class Farm extends AbstractEntity
             return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.query().findCount(), pageIndex, pageSize);
     }
+
 
 
 
