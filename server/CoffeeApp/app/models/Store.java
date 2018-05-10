@@ -15,8 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="stores")
-public class Store extends AbstractEntity
-{
+public class Store extends AbstractEntity{
 
 
     @Id
@@ -69,20 +68,38 @@ public class Store extends AbstractEntity
         this.invoiceDetails = invoiceDetails;
     }
 
-    public int getExist(String name_store)
-    {
+    public int getExist(String name_store){
         if(finder.query().where().eq("name_store",name_store).eq("status_delete",0).findUnique()!=null) return 0;
-        else
-        {
+        else{
             if(finder.query().where().eq("name_store",name_store).eq("status_delete",1).findUnique()!=null)  return 1;
             else return 2;
 
         }
-
     }
 
-    public List<Store> getByStatusStore(String StatusStore, String order)
-    {
+    public static Store findById(Long id){
+        return finder.byId(id);
+    }
+
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
+    }
+
+    public List<Store> getByStatusStore(String StatusStore, String order){
         String sql="select t0.id_store c0, t0.status_delete c1, t0.name_store c2, t0.status_store c3, " +
                 " t0.created_at c5, t0.updated_at c6 " +
                 " from stores t0 "+

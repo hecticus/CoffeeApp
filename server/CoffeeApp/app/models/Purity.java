@@ -37,7 +37,7 @@ public class Purity extends AbstractEntity{
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurities = new ArrayList<>();
 
-    private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
+    private static Finder<Long, Purity> finder = new Finder<>(Purity.class);
 
     public Long getIdPurity() {
         return idPurity;
@@ -75,6 +75,11 @@ public class Purity extends AbstractEntity{
     public List<InvoiceDetailPurity> getInvoiceDetailPurities() {
         return invoiceDetailPurities;
     }
+
+    public static Purity findById(Long id){
+        return finder.byId(id);
+    }
+
 
     public void setInvoiceDetailPurities(List<InvoiceDetailPurity> invoiceDetailPurities) {
         this.invoiceDetailPurities = invoiceDetailPurities;

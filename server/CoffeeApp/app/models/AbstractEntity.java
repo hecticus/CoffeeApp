@@ -9,6 +9,7 @@ import io.ebean.Model;
 import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.UpdatedTimestamp;
 import play.data.format.Formats;
+import play.data.validation.Constraints;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -52,6 +53,19 @@ public abstract class AbstractEntity extends Model {
             return sort.substring(1) + " desc";
         return sort + " asc";
     }
+
+    @Constraints.Required
+    @Column(nullable = false)
+    private Integer statusDelete=0;
+
+    public Integer getStatusDelete() {
+        return statusDelete;
+    }
+
+    public void setStatusDelete(Integer statusDelete) {
+        this.statusDelete = statusDelete;
+    }
+
 
     public Long getId() {
         return id;

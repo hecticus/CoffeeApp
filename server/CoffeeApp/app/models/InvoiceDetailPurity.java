@@ -1,7 +1,10 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import controllers.utils.ListPagerCollection;
+import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -103,9 +106,30 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         this.statusInvoiceDetailPurity = statusInvoiceDetailPurity;
     }
 
-    public InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity)
-    {
+    public InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
         return finder.query().where().eq("id_invoicedetail",IdInvopiceDetail).eq("id_purity",IdPurity).eq("status_delete",0).findUnique();
+    }
+
+    public static  InvoiceDetailPurity findById(Long id){
+        return finder.byId(id);
+    }
+
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
     }
 
 

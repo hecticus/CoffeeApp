@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
-import io.ebean.text.PathProperties;
+import com.avaje.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -97,7 +97,33 @@ public class Farm extends AbstractEntity{
         return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.query().findCount(), pageIndex, pageSize);
     }
 
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
 
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
+    }
+
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).findList());
+        return new ListPagerCollection(
+                finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                finder.query().findCount(),
+                pageIndex,
+                pageSize);
+    }
 
 
 }

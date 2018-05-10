@@ -10,7 +10,6 @@ import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
-import models.dao.ProviderTypeDao;
 import models.multimediaUtils.Multimedia;
 import play.data.validation.Constraints;
 

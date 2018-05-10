@@ -1,6 +1,8 @@
 package controllers;
 
+
 import com.avaje.ebean.text.PathProperties;
+//import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.*;
 import io.ebean.Ebean;
@@ -124,7 +126,7 @@ public class Farms extends Controller {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
 
-            ListPagerCollection listPager = Farm.findAllSearch(pager.index, pager.size, sort, pathProperties);
+            ListPagerCollection listPager = Farm.findAll(pager.index, pager.size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

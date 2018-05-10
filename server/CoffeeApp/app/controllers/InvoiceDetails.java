@@ -39,7 +39,7 @@ public class InvoiceDetails extends Controller {
     private static Store storeDao = new Store();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public InvoiceDetail(){
+    public InvoiceDetails(){
         propertiesCollection.putPropertiesCollection("s", "(*)");
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }

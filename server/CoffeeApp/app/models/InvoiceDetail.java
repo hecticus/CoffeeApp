@@ -208,6 +208,9 @@ public class InvoiceDetail  extends AbstractEntity{
         this.statusInvoiceDetail = statusInvoiceDetail;
     }
 
+    public static InvoiceDetail findById(Long id){
+        return finder.byId(id);
+    }
 
 
     public static List<InvoiceDetail> finderAllByIdInvoice(Long IdInvoice)    {

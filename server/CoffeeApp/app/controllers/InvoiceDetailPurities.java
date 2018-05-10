@@ -24,7 +24,7 @@ public class InvoiceDetailPurities  extends Controller {
     private static InvoiceDetail invoiceDetailDao = new InvoiceDetail();
 
     @CoffeAppsecurity
-    public Result create() {
+    public  Result create() {
         try
         {
             JsonNode json = request().body().asJson();
