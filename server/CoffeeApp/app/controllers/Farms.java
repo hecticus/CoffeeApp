@@ -1,18 +1,14 @@
 package controllers;
 
 
+import controllers.utils.ListPagerCollection;
 import com.avaje.ebean.text.PathProperties;
-//import io.ebean.text.PathProperties;
-import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.*;
-import io.ebean.Ebean;
 import models.Farm;
-import models.requestUtils.queryStringBindable.Pager;
 import models.responseUtils.ExceptionsUtils;
+import models.responseUtils.PropertiesCollection;
+import models.responseUtils.Response;
 import models.responseUtils.ResponseCollection;
-import play.data.Form;
 import play.data.FormFactory;
-import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
@@ -26,6 +22,7 @@ public class Farms extends Controller {
 
     @Inject
     private FormFactory formFactory;
+    private static Farm farmDao = new Farm();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public Farms(){
@@ -34,6 +31,85 @@ public class Farms extends Controller {
     }
 
     @CoffeAppsecurity
+    public Result create() {
+        try
+        {
+            return null;
+
+        }catch(Exception e){
+            return Response.responseExceptionCreated(e);
+        }
+    }
+
+    @CoffeAppsecurity
+    public Result update() {
+        try
+        {
+            return null;
+
+        }catch(Exception e){
+            return Response.responseExceptionUpdated(e);
+        }
+    }
+
+    @CoffeAppsecurity
+    public Result delete(Long id) {
+        try{
+            return null;
+        } catch (Exception e) {
+            return Response.responseExceptionDeleted(e);
+        }
+    }
+
+    @CoffeAppsecurity
+    public Result findById(Long id) {
+        try {
+            Farm farm = farmDao.findById(id);
+            return Response.foundEntity(Response.toJson(farm, Farm.class));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+
+    @CoffeAppsecurity
+    public Result findAll(Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = farmDao.findAll(index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @CoffeAppsecurity
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = farmDao.findAllSearch(name, index, size, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @CoffeAppsecurity
+    public Result preCreate() {
+        try {
+
+            return  null;
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+
+/*    @CoffeAppsecurity
     public Result preCreate() {
         try {
 
@@ -145,7 +221,7 @@ public class Farms extends Controller {
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
-    }
+    }*/
 
 
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;

@@ -13,8 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="units")
-public class Unit extends AbstractEntity
-{
+public class Unit extends AbstractEntity{
 
     @Id
     @Column(name = "id_unit")
@@ -78,5 +77,8 @@ public class Unit extends AbstractEntity
             else return 2;
         }
     }
+
+
+
 
 }
