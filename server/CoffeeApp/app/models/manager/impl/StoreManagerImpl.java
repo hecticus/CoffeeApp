@@ -4,15 +4,13 @@ import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.dao.StoreDao;
 import models.dao.impl.StoreDaoImpl;
-import models.dao.utils.ListPagerCollection;
-import models.domain.Purity;
+import controllers.utils.ListPagerCollection;
 import models.domain.Store;
 import models.manager.StoreManager;
 import models.manager.responseUtils.ExceptionsUtils;
 import models.manager.responseUtils.PropertiesCollection;
 import models.manager.responseUtils.Response;
 import models.manager.responseUtils.ResponseCollection;
-import models.manager.responseUtils.responseObject.StoreResponse;
 import play.libs.Json;
 import play.mvc.Result;
 

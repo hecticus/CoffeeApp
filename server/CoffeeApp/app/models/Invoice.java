@@ -1,13 +1,14 @@
-package models.domain;
+package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import models.domain.InvoiceDetail;
+import models.domain.Provider;
 import models.manager.responseUtils.CustomDateTimeSerializer;
 import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="invoices")
-public class Invoice extends AbstractEntity
-{
+public class Invoice extends AbstractEntity{
 
     @Id
     @Column(name = "id_invoice")

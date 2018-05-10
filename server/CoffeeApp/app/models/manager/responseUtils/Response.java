@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysql.jdbc.MysqlDataTruncation;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import models.dao.utils.ListPager;
+import controllers.utils.ListPager;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -14,7 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.CONFLICT;
 import static play.mvc.Http.Status.PRECONDITION_FAILED;
 import static play.mvc.Results.*;
@@ -22,7 +21,6 @@ import static play.mvc.Results.*;
 import org.modelmapper.ModelMapper;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by yenny on 9/7/16.

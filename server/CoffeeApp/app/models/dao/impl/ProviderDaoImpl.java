@@ -13,11 +13,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.ProviderTypeDao;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.Provider;
 import models.dao.ProviderDao;
 import models.manager.multimediaUtils.Multimedia;
-import models.manager.requestUtils.Request;
 
 import java.util.ArrayList;
 import java.util.List;

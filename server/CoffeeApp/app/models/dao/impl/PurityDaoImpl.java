@@ -6,7 +6,7 @@ import io.ebean.SqlQuery;
 import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
 import models.dao.PurityDao;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.Purity;
 
 import java.util.ArrayList;

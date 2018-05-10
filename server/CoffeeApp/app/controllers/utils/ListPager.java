@@ -1,4 +1,4 @@
-package models.dao.utils;
+package controllers.utils;
 
 import java.util.List;
 

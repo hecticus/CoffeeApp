@@ -7,9 +7,8 @@ import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
 import models.dao.ItemTypeDao;
 import models.dao.UnitDao;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.ItemType;
-import models.manager.requestUtils.Request;
 
 import java.util.ArrayList;
 import java.util.List;

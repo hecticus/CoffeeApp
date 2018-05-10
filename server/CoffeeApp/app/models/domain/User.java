@@ -6,6 +6,7 @@ package models.domain;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import io.ebean.Finder;
 import io.ebean.annotation.Formula;
+import models.AbstractEntity;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;

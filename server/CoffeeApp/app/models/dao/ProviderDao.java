@@ -5,10 +5,9 @@ package models.dao;
  */
 
 import io.ebean.text.PathProperties;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.Provider;
 
-import java.util.List;
 import java.util.List;
 
 public interface ProviderDao extends AbstractDao<Long, Provider>{

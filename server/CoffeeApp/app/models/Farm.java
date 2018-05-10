@@ -1,6 +1,11 @@
-package models.domain;
+package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.ebean.ExpressionList;
+import io.ebean.Finder;
+import io.ebean.text.PathProperties;
+import controllers.utils.ListPagerCollection;
+import models.domain.Lot;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -28,6 +33,14 @@ public class Farm extends AbstractEntity
 
     @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
     private List<Lot> lots = new ArrayList<>();
+
+    private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
+
+    public static Farm findById(Long id){
+        return finder.byId(id);
+    }
+
+
 
     public Long getIdFarm() {
         return idFarm;
@@ -61,4 +74,25 @@ public class Farm extends AbstractEntity
     public void setNameFarm(String nameFarm) {
         NameFarm = nameFarm;
     }
+
+
+    public static ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+        ExpressionList expressionList = finder.query().where().eq("status_delete",0);
+
+        if(pathProperties != null)
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.icontains("name", name);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractEntity.sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.query().findCount(), pageIndex, pageSize);
+    }
+
+
+
 }

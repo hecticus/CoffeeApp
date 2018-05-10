@@ -1,6 +1,8 @@
 package models.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import models.AbstractEntity;
+import models.Invoice;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;

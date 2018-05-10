@@ -9,7 +9,7 @@ import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.InvoiceDetailDao;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 import play.libs.Json;
 

@@ -5,8 +5,8 @@ package models.dao;
  */
 
 import io.ebean.text.PathProperties;
-import models.dao.utils.ListPagerCollection;
-import models.domain.Invoice;
+import controllers.utils.ListPagerCollection;
+import models.Invoice;
 
 import java.util.List;
 

@@ -2,6 +2,8 @@ package models.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import models.AbstractEntity;
+import models.Invoice;
 import models.manager.responseUtils.CustomDateTimeSerializer;
 import org.joda.time.DateTime;
 import play.data.validation.Constraints;

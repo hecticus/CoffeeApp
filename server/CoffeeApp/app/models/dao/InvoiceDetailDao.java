@@ -2,10 +2,9 @@ package models.dao;
 
 import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.InvoiceDetail;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

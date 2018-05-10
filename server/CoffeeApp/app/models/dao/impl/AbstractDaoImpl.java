@@ -1,15 +1,12 @@
 package models.dao.impl;
 
 import io.ebean.ExpressionList;
-import io.ebean.FetchPath;
 import io.ebean.Finder;
 import io.ebean.Model;
 import io.ebean.text.PathProperties;
 import models.dao.AbstractDao;
-import models.dao.utils.ListPager;
-import models.domain.AbstractEntity;
 
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 
 import java.util.List;
 

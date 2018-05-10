@@ -1,7 +1,7 @@
 package models.dao;
 
 import io.ebean.text.PathProperties;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.Lot;
 
 import java.util.List;

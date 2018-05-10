@@ -1,6 +1,5 @@
 package models.manager;
 
-import models.domain.Invoice;
 import play.mvc.Result;
 
 /**

@@ -5,9 +5,8 @@ import io.ebean.ExpressionList;
 import io.ebean.SqlQuery;
 import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
-import models.dao.FarmDao;
 import models.dao.LotDao;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.domain.Lot;
 import models.manager.responseUtils.PropertiesCollection;
 

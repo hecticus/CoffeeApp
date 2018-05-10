@@ -6,13 +6,12 @@ package models.manager.impl;
 
 
 
-import io.ebean.ExpressionList;
 import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.dao.InvoiceDao;
 import models.dao.impl.InvoiceDaoImpl;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import models.manager.responseUtils.*;
 import play.libs.Json;
 import play.mvc.Result;
@@ -22,14 +21,11 @@ import models.dao.impl.ProviderDaoImpl;
 import models.dao.ProviderTypeDao;
 import models.dao.impl.ProviderTypeDaoImpl;
 import models.domain.Provider;
-import models.domain.Invoice;
+import models.Invoice;
 import static play.mvc.Controller.request;
-import models.manager.responseUtils.responseObject.ProviderResponse;
-import models.manager.responseUtils.responseObject.providerExtendResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import models.domain.ProviderType;
 

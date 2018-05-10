@@ -1,5 +1,6 @@
 package models.domain;
 
+import models.AbstractEntity;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysql.jdbc.MysqlDataTruncation;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import models.dao.utils.ListPagerCollection;
+import controllers.utils.ListPagerCollection;
 import play.libs.Json;
 import play.mvc.Result;
 

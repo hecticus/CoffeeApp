@@ -10,17 +10,14 @@ import models.dao.impl.ItemTypeDaoImpl;
 import models.dao.UnitDao;
 import models.dao.impl.ProviderTypeDaoImpl;
 import models.dao.impl.UnitDaoImpl;
-import models.dao.utils.ListPagerCollection;
-import models.domain.Invoice;
+import controllers.utils.ListPagerCollection;
 import models.domain.ItemType;
 import models.domain.InvoiceDetail;
-import models.domain.Provider;
 import models.manager.ItemTypeManager;
 import models.manager.responseUtils.ExceptionsUtils;
 import models.manager.responseUtils.PropertiesCollection;
 import models.manager.responseUtils.Response;
 import models.manager.responseUtils.ResponseCollection;
-import models.manager.responseUtils.responseObject.ItemTypeResponse;
 import play.libs.Json;
 import play.mvc.Result;
 

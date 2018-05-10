@@ -1,8 +1,7 @@
 package models.dao;
 
 import io.ebean.text.PathProperties;
-import models.dao.utils.ListPagerCollection;
-import play.mvc.Result;
+import controllers.utils.ListPagerCollection;
 
 import java.util.List;
 
