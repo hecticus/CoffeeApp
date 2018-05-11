@@ -12,7 +12,6 @@ import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
 
@@ -24,9 +23,6 @@ import java.time.ZonedDateTime;
  */
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
-
-    @Id
-    protected Long id;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
@@ -46,7 +42,7 @@ public abstract class AbstractEntity extends Model {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
 
-    protected static String sort(String sort) {
+    public static String sort(String sort) {
         if (sort == null)
             return "";
         if (sort.startsWith("-"))
@@ -64,15 +60,6 @@ public abstract class AbstractEntity extends Model {
 
     public void setStatusDelete(Integer statusDelete) {
         this.statusDelete = statusDelete;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public ZonedDateTime getCreatedAt() {

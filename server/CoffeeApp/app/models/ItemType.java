@@ -45,6 +45,8 @@ public class ItemType extends AbstractEntity
     @OneToMany(mappedBy = "itemType", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
+
+
     private static Finder<Long, ItemType> finder = new Finder<>(ItemType.class);
 
 

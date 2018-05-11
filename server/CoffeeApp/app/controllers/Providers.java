@@ -207,19 +207,22 @@ public class Providers extends Controller {
         }
     }
 
-    /*  @CoffeAppsecurity
-      public Result findAll(Integer index, Integer size) {
-          try {
-              List<Provider> providers = providerDao.findAll(index, size);
-              return Response.foundEntity(Json.toJson(providers));
-          }catch(Exception e){
-              return Response.internalServerErrorLF();
-          }
-      }
-  */
     @CoffeAppsecurity
-    public Result  getByIdentificationDoc(String IdentificationDoc)
-    {
+    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {
+        try {
+
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties,false, listAll, false, idProviderType);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @CoffeAppsecurity
+    public Result  getByIdentificationDoc(String IdentificationDoc){
         try {
             Provider provider = providerDao.getByIdentificationDoc(IdentificationDoc);
             return Response.foundEntity(Json.toJson(provider));
@@ -228,8 +231,7 @@ public class Providers extends Controller {
         }
     }
 
-    public Result  getProvidersByName(String name, String order)
-    {
+    public Result  getProvidersByName(String name, String order){
 
 
         String strOrder = "ASC";
@@ -292,16 +294,18 @@ public class Providers extends Controller {
     }
 
     @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+    public static Result findAll(Pager pager, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = providerDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = providerDao.findAll(pager.pageIndex, pager.pageSize, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
     }
+
+
 
     @CoffeAppsecurity
     public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {

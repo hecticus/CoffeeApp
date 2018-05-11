@@ -166,6 +166,17 @@ public class Provider extends AbstractEntity
         return finder.byId(id);
     }
 
+
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).findList());
+        return new ListPagerCollection(
+                finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                finder.query().findCount(),
+                pageIndex,
+                pageSize);
+    }
+
     public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
         ExpressionList expressionList = finder.query().where();
 
@@ -173,7 +184,7 @@ public class Provider extends AbstractEntity
             expressionList.apply(pathProperties);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(AbstractEntity.sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
@@ -208,31 +219,6 @@ public class Provider extends AbstractEntity
 
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-                .findList();
-
-
-
-        return toProviders(sqlRows);
-
-    }
-
-    public List<Provider> getByTypeProvider(Long id_providertype, String order)
-    {
-        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
-                " t0.fullname_provider full_name, " +
-                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
-                " t0.photo_provider photo," +
-                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
-                " from providers t0" +
-                " where t0.status_delete=0 ";
-
-        if(id_providertype!=-1) sql += "and id_providertype = :id_providertype ";
-
-        sql +=  "  order by fullname_provider  "+order+"";
-
-
-        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-                .setParameter("id_providertype",id_providertype)
                 .findList();
 
 
@@ -354,6 +340,18 @@ public class Provider extends AbstractEntity
 
     }
 
+    public List<Provider> findAll(Integer pageIndex, Integer pageSize){
+        List<Provider> entities;
+        if(pageIndex != -1 && pageSize != -1)
+            //    entities = finder.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+        else
+            // entities =  finder.all();
+            entities = finder.query().where().eq("status_delete",0).findList();
+        return entities;
+    }
+    
+    
 
     
 }

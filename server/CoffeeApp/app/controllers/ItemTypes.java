@@ -213,6 +213,14 @@ public class ItemTypes extends Controller {
         }
     }
 
+/*
+    @CoffeAppsecurity
+    public Result findAll(Pager pager, String sort, String collection) {
+        return ItemType.findAll(pager.pageIndex, pager.pageSize, sort, collection);
+    }
+*/
+
+
     @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String sort, String collection) {
         try {

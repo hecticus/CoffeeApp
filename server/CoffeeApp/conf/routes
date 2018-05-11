@@ -36,15 +36,23 @@ GET     /providerType/:id                                                       
 ###############################################################################
 #·······                    Provider                                ··········#
 ###############################################################################
-GET     /provider                                                               controllers.Providers.findAll(pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /provider/search                                                        controllers.Providers.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
+GET     /provider                                                               controllers.Providers.findAll(id: java.lang.Long ?= null, identificationDoc: String ?= null, fullName: String ?= null, providerType: java.lang.Long ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+
+GET     /provider/search                                                        controllers.Providers.findAll(id: java.lang.Long ?= null, name: String ?= null, fullName: String ?= null, idProviderType: java.lang.Long ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+#GET     /provider/search                                                        controllers.Providers.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
+
 #GET     /provider/new                                                           controllers.Providers.findAllSearch()
 GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
-#GET     /provider/findAll/:index/:size                                         controllers.Providers.findAll(index: Integer, size: Integer)
+#GET     /provider/findAll/:index/:size                                          controllers.Providers.findAll(index: Integer, size: Integer)
 GET     /provider/getByIdentificationDoc/:IdentificationDoc                     controllers.Providers.getByIdentificationDoc(IdentificationDoc: String)
 GET     /provider/getProvidersByName/:name/:order                               controllers.Providers.getProvidersByName(name:String,order:String)
-GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)
-GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order   controllers.Providers.getByNameDocByTypeProvider(nameDoc: String, id_providertype: Long,order: String)
+
+GET     /provider/getByTypeProvider/:providerType/:fullName                     controllers.Providers.findAll(id: java.lang.Long ?= null, identificationDoc: String ?= null, fullName: String ?= null, providerType: java.lang.Long ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+#GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)
+
+GET     /provider/getByNameDocByTypeProvider/:identificationDoc/:id/:fullName   controllers.Providers.findAll(id: java.lang.Long ?= null, identificationDoc: String ?= null, fullName: String ?= null, providerType: java.lang.Long ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+#GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order   controllers.Providers.getByNameDocByTypeProvider(nameDoc: String, id_providertype: Long,order: String)
+
 POST    /provider                                                               controllers.Providers.create()
 PUT     /provider                                                               controllers.Providers.update()
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
