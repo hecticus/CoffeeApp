@@ -6,9 +6,6 @@ import io.ebean.text.PathProperties;
 import models.Farm;
 import models.InvoiceDetail;
 import models.Lot;
-import models.dao.impl.LotDaoImpl;
-import models.manager.LotManager;
-import models.manager.impl.LotManagerImpl;
 import models.requestUtils.Request;
 import models.responseUtils.*;
 import play.libs.Json;
@@ -86,9 +83,9 @@ public class Lots extends Controller {
             if(registered.get(0)==1)
             {   lot.setStatusDelete(0);
                 lot.setIdLot(registered.get(1).longValue());
-                lot = lotDao.update(lot);
+                lot.update();// = lotDao.update(lot);
             }
-            else lot = lotDao.create(lot);
+            else lot.save();// = lotDao.create(lot);
 
             return Response.createdEntity(Json.toJson(lot));
 
@@ -150,7 +147,7 @@ public class Lots extends Controller {
 
             lot.setFarm(farmDao.findById(farm.asLong()));
 
-            lot = lotDao.update(lot);
+            lot.update();// = lotDao.update(lot);
             return Response.updatedEntity(Json.toJson(lot));
 
         }catch(Exception e){
@@ -167,7 +164,7 @@ public class Lots extends Controller {
             if(lot != null  && invoiceDetails.size()==0) {
 
                 lot.setStatusDelete(1);
-                lot = lotDao.update(lot);
+                lot.update();// = lotDao.update(lot);
 
                 return Response.deletedEntity();
             } else {
@@ -316,7 +313,7 @@ public class Lots extends Controller {
                 if(lot != null  && invoiceDetails.size()==0) {
 
                     lot.setStatusDelete(1);
-                    lot = lotDao.update(lot);
+                    lot.update();// = lotDao.update(lot);
 
                     return Response.deletedEntity();
                 } else {

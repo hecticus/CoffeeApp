@@ -3,8 +3,6 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.ItemType;
 import models.ProviderType;
-import models.manager.ProviderTypeManager;
-import models.manager.impl.ProviderTypeManagerImpl;
 import models.responseUtils.Response;
 import play.libs.Json;
 import play.mvc.Result;
@@ -44,7 +42,7 @@ public class ProviderTypes {
             ProviderType providerType = Json.fromJson(json, ProviderType.class);
 
 
-            providerType = providerTypeDao.create(providerType);
+            providerType.save();
             return Response.createdEntity(Json.toJson(providerType));
 
         }catch(Exception e){
@@ -77,7 +75,7 @@ public class ProviderTypes {
             }
 
 
-            providerType = providerTypeDao.update(providerType);
+            providerType.update();
             return Response.updatedEntity(Json.toJson(providerType));
 
         }catch(Exception e){
@@ -93,7 +91,7 @@ public class ProviderTypes {
             if(providerType != null  && itemTypes.size()==0) {
 
                 providerType.setStatusDelete(1);
-                providerType = providerTypeDao.update(providerType);
+                providerType.update();
 
                 return Response.deletedEntity();
             } else {

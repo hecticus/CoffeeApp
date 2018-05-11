@@ -3,8 +3,6 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.ItemType;
 import models.Unit;
-import models.manager.UnitManager;
-import models.manager.impl.UnitManagerImpl;
 import models.responseUtils.Response;
 import play.libs.Json;
 import play.mvc.Result;
@@ -50,7 +48,7 @@ public class Units {
             Unit unit = Json.fromJson(json, Unit.class);
 
 
-            unit = unitDao.create(unit);
+            unit.save();// = unitDao.create(unit);
             return Response.createdEntity(Json.toJson(unit));
 
         }catch(Exception e){
@@ -82,7 +80,7 @@ public class Units {
                 unit.setNameUnit(Name.asText().toUpperCase());
             }
 
-            unit = unitDao.update(unit);
+            unit.update();// = unitDao.update(unit);
             return Response.updatedEntity(Json.toJson(unit));
 
         }catch(Exception e){
@@ -98,7 +96,7 @@ public class Units {
             if(unit != null  && itemTypes.size()==0) {
 
                 unit.setStatusDelete(1);
-                unit = unitDao.update(unit);
+                unit.update();// = unitDao.update(unit);
 
                 return Response.deletedEntity();
             } else {

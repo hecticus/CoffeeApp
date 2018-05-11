@@ -74,7 +74,7 @@ public class ItemTypes extends Controller {
             itemType.setUnit(unitDao.findById(id_unit.asLong()));
             itemType.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
 
-            itemType = itemTypeDao.create(itemType);
+            itemType.save();// = itemTypeDao.create(itemType);
             return Response.createdEntity(Json.toJson(itemType));
 
         }catch(Exception e){
@@ -114,7 +114,7 @@ public class ItemTypes extends Controller {
             if (typeProvider != null)
                 itemType.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
 
-            itemType = itemTypeDao.update(itemType);
+            itemType.update();// = itemTypeDao.update(itemType);
             return Response.updatedEntity(Json.toJson(itemType));
 
         }catch(Exception e){
@@ -130,7 +130,7 @@ public class ItemTypes extends Controller {
             if(itemType != null  && invoiceDetails.size()==0) {
 
                 itemType.setStatusDelete(1);
-                itemType = itemTypeDao.update(itemType);
+                itemType.update();// = itemTypeDao.update(itemType);
 
                 return Response.deletedEntity();
             } else {

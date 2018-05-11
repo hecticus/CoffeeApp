@@ -5,8 +5,6 @@ import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
 import models.Purity;
-import models.manager.PurityManager;
-import models.manager.impl.PurityManagerImpl;
 import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.PropertiesCollection;
 import models.responseUtils.Response;
@@ -66,7 +64,7 @@ public class Purities extends Controller{
             Purity purity = Json.fromJson(json, Purity.class);
 
 
-            purity = purityDao.create(purity);
+            purity.save();
             return Response.createdEntity(Json.toJson(purity));
 
         }catch(Exception e){
@@ -99,7 +97,7 @@ public class Purities extends Controller{
             }
 
 
-            purity = purityDao.update(purity);
+            purity.update();
             return Response.updatedEntity(Json.toJson(purity));
 
         }catch(Exception e){
@@ -115,7 +113,7 @@ public class Purities extends Controller{
             if(purity != null  && invoiceDetails.size()==0) {
 
                 purity.setStatusDelete(1);
-                purity = purityDao.update(purity);
+                purity.update();
 
                 return Response.deletedEntity();
             } else {

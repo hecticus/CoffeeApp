@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.Store;
-import models.manager.StoreManager;
-import models.manager.impl.StoreManagerImpl;
 import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.PropertiesCollection;
 import models.responseUtils.Response;
@@ -59,7 +57,7 @@ public class Stores {
             Store store = Json.fromJson(json, Store.class);
 
 
-            store = storeDao.create(store);
+            store.save();
             return Response.createdEntity(Json.toJson(store));
 
         }catch(Exception e){
@@ -92,7 +90,7 @@ public class Stores {
             }
 
 
-            store = storeDao.update(store);
+            store.update();
             return Response.updatedEntity(Json.toJson(store));
 
         }catch(Exception e){
@@ -107,7 +105,7 @@ public class Stores {
             if(store != null) {
 
                 store.setStatusDelete(1);
-                store = storeDao.update(store);
+                store.update();
 
                 return Response.deletedEntity();
             } else {

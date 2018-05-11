@@ -6,10 +6,7 @@ import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Provider;
-import models.dao.ProviderTypeDao;
 import models.ProviderType;
-import models.manager.ProviderManager;
-import models.manager.impl.ProviderManagerImpl;
 import models.responseUtils.*;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -88,9 +85,9 @@ public class Providers extends Controller {
             if(registered.get(0)==1)
             {   provider.setStatusDelete(0);
                 provider.setIdProvider(registered.get(1).longValue());
-                provider = providerDao.update(provider);
+                provider.update();
             }
-            else provider = providerDao.create(provider);
+            else provider.save();
             return Response.createdEntity(Json.toJson(provider));
 
         }catch(Exception e){
@@ -160,7 +157,7 @@ public class Providers extends Controller {
             if (contactName == null || contactName.asText().equals("null") || contactName.asText().equals(""))
                 return Response.requiredParameter("contactNameProvider","contacto");
 
-            provider = providerDao.update(provider);
+            provider.update();
             return Response.updatedEntity(Json.toJson(provider));
 
         }catch(Exception e){
@@ -177,7 +174,7 @@ public class Providers extends Controller {
 
                 provider.setStatusDelete(1);
 
-                provider = providerDao.update(provider);
+                provider.update();
 
                 return Response.deletedEntity();
             } else {
@@ -356,7 +353,7 @@ public class Providers extends Controller {
                 if(provider != null && invoices.size()==0) {
 
                     provider.setStatusDelete(1);
-                    provider = providerDao.update(provider);
+                    provider.update();
 
 
                 }
@@ -422,7 +419,7 @@ public class Providers extends Controller {
 
             provider.setPhotoProvider(url);
 
-            provider = providerDao.update(provider);
+            provider.update();
 
             ObjectNode response = Json.newObject();
             response.put("urlPhoto", url);

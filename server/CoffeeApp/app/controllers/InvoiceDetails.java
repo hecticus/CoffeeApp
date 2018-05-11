@@ -1,21 +1,15 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
-import models.Invoice;
-import models.InvoiceDetail;
-import models.ItemType;
-import models.Lot;
-import models.Store;
-import models.manager.InvoiceDetailManager;
-import models.manager.impl.InvoiceDetailManagerImpl;
+import models.*;
 import models.requestUtils.Request;
 import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.PropertiesCollection;
 import models.responseUtils.Response;
 import models.responseUtils.ResponseCollection;
+import models.responseUtils.responseObject.InvoiceDetailShortResponse;
 import org.joda.time.DateTime;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -109,7 +103,7 @@ public class InvoiceDetails extends Controller {
 
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
-            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+            invoiceDetail.save();// = invoiceDetailDao.create(invoiceDetail);
             //  return Response.createdEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
             return  Response.createdEntity(Json.toJson(invoiceDetail));
 
@@ -174,7 +168,7 @@ public class InvoiceDetails extends Controller {
             if (id_store != null)
                 invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
 
-            invoiceDetail = invoiceDetailDao.update(invoiceDetail);
+            invoiceDetail.update();// = invoiceDetailDao.update(invoiceDetail);
             // return Response.updatedEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
             return  Response.updatedEntity(Json.toJson(invoiceDetail));
 
@@ -192,7 +186,7 @@ public class InvoiceDetails extends Controller {
             {
 
                 invoiceDetail.setStatusDelete(1);
-                invoiceDetail = invoiceDetailDao.update(invoiceDetail);
+                invoiceDetail.update();// = invoiceDetailDao.update(invoiceDetail);
 
                 List<InvoiceDetail> invoicesDetailsOpen= invoiceDetailDao.findAllByIdInvoice(invoiceDetail.getInvoice().getIdInvoice());
                 invoice = invoiceDetail.getInvoice();
@@ -204,7 +198,7 @@ public class InvoiceDetails extends Controller {
                 }
                 double  newTotal = invoiceDao.calcularTotalInvoice(invoice.getIdInvoice());
                 invoice.setTotalInvoice(newTotal);
-                invoice = invoiceDao.update(invoice);
+                invoice.update();// = invoiceDao.update(invoice);
 
                 return Response.deletedEntity();
             } else {
@@ -250,6 +244,14 @@ public class InvoiceDetails extends Controller {
     @CoffeAppsecurity
     public Result findAllByIdInvoice(Long IdInvoice) {
         try {
+            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAllByIdInvoice(IdInvoice);
+            return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetailShortResponse.class));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+/*    public Result findAllByIdInvoice(Long IdInvoice) {
+        try {
             ObjectNode result;
             JsonNode aux1;
             List<InvoiceDetail> aux2;
@@ -264,7 +266,7 @@ public class InvoiceDetails extends Controller {
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
+    }*/
 
     @CoffeAppsecurity
     public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date)
@@ -285,7 +287,7 @@ public class InvoiceDetails extends Controller {
             }
             newTotal = invoiceDao.calcularTotalInvoice(IdInvoice);
             invoice.setTotalInvoice(newTotal);
-            invoice = invoiceDao.update(invoice);
+            invoice.update();// = invoiceDao.update(invoice);
             return this.findAllByIdInvoice(IdInvoice);
 
         }catch(Exception e){
@@ -309,7 +311,7 @@ public class InvoiceDetails extends Controller {
     public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDetailDao.findAllSearch(index, size, sort, pathProperties);
+            ListPagerCollection listPager = invoiceDetailDao.findAll(index, size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

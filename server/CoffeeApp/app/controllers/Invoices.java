@@ -5,11 +5,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.*;
-import models.manager.InvoiceManager;
-import models.manager.impl.InvoiceManagerImpl;
 import models.requestUtils.Request;
 import models.requestUtils.queryStringBindable.Pager;
 import models.responseUtils.ExceptionsUtils;
+import models.responseUtils.PropertiesCollection;
 import models.responseUtils.Response;
 import models.responseUtils.ResponseCollection;
 import org.joda.time.DateTime;
@@ -24,14 +23,13 @@ import java.util.List;
  * Created by sm21 on 10/05/18.
  */
 public class Invoices extends Controller {
-    private static InvoiceManager invoiceManager = new InvoiceManagerImpl();
 
     private static Invoice invoiceDao = new Invoice();
-    private static InvoiceDetai invoiceDetailDao = new InvoiceDetail();
+    private static InvoiceDetail invoiceDetailDao = new InvoiceDetail();
     private static InvoiceDetailPurity invoiceDetailPurityDao = new InvoiceDetailPurity();
     private static Purity purityDao = new Purity();
     private static Provider providerDao = new Provider();
-    private static LotDao lotDao = new LotDaoImpl();
+    private static Lot lotDao = new Lot();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
     private static ItemType itemTypeDao = new ItemType();
     private static Store storeDao = new Store();
@@ -83,7 +81,7 @@ public class Invoices extends Controller {
             invoice.setStartDateInvoice(startDatetime);
             invoice.setClosedDateInvoice(closedDatetime);
 
-            invoice = invoiceDao.create(invoice);
+            invoice.save();// = invoiceDao.create(invoice);
             //  return Response.createdEntity(Response.toJson(invoice, InvoiceResponse.class));
             return  Response.createdEntity(Json.toJson(invoice));
 
@@ -125,7 +123,7 @@ public class Invoices extends Controller {
                 invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime((closedDate.asText())));
             }
 
-            invoice = invoiceDao.update(invoice);
+            invoice.update();// = invoiceDao.update(invoice);
             //  return Response.updatedEntity(Response.toJson(invoice, InvoiceResponse.class));
             return  Response.updatedEntity(Json.toJson(invoice));
 
@@ -143,7 +141,7 @@ public class Invoices extends Controller {
 
                 invoice.setStatusDelete(1);
                 invoice.setStatusInvoice(3);
-                invoice = invoiceDao.update(invoice);
+                invoice.update();// = invoiceDao.update(invoice);
 
                 if(invoiceDao.deletedInvoice(id))
                     return  Response.message("Fallo ejecucion del store procedure");
@@ -209,7 +207,7 @@ public class Invoices extends Controller {
     public  Result findAll(Pager pager, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = invoiceDao.findAll(pager.index, pager.size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -221,7 +219,7 @@ public class Invoices extends Controller {
     public  Result findAllSearch(String name, Pager pager, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDao.findAllSearch( index, size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
+            ListPagerCollection listPager = invoiceDao.findAllSearch( pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -387,15 +385,15 @@ public class Invoices extends Controller {
 
             if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd").equals(startDatetime.toString("yyyy-MM-dd")))
             {
-                openInvoice = invoiceDao.update(openInvoice);
+                openInvoice.update();// = invoiceDao.update(openInvoice);
             }
             else
             {
-                openInvoice = invoiceDao.create(openInvoice);
+                openInvoice.save();// = invoiceDao.create(openInvoice);
             }
 
             invoiceDetail.setInvoice(openInvoice);
-            invoiceDetail = invoiceDetailDao.create(invoiceDetail);
+            invoiceDetail.save();// = invoiceDetailDao.create(invoiceDetail);
 
             if(buyOption.asInt() == 2)
             {
@@ -419,14 +417,15 @@ public class Invoices extends Controller {
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-                    invoiceDetailPurityDao.create(invoiceDetailPurity);
+                    invoiceDetailPurityDao.save();//.create(invoiceDetailPurity);
                 }
             }
 
         }
 
         openInvoice.setTotalInvoice(invoiceDao.calcularTotalInvoice(openInvoice.getIdInvoice()));
-        invoiceDao.update(openInvoice);
+        openInvoice.update();
+//        invoiceDao.update(openInvoice);
         return Response.createdEntity(Json.toJson(openInvoice));
     }
 
@@ -559,10 +558,10 @@ public class Invoices extends Controller {
             invoiceDetails.add(invoiceDetail);
             openInvoice.setInvoiceDetails(invoiceDetails);
 
-            openInvoice = invoiceDao.update(openInvoice);
+            openInvoice.update();// = invoiceDao.update(openInvoice);
 
             invoiceDetail.setInvoice(openInvoice);
-            invoiceDetail = invoiceDetailDao.update(invoiceDetail);
+            invoiceDetail.update();// = invoiceDetailDao.update(invoiceDetail);
 
             if(buyOption.asInt() == 2)
             {
@@ -592,8 +591,8 @@ public class Invoices extends Controller {
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-                    if(auxCreate) invoiceDetailPurityDao.create(invoiceDetailPurity);
-                    else invoiceDetailPurityDao.update(invoiceDetailPurity);
+                    if(auxCreate) invoiceDetailPurity.save();//invoiceDetailPurityDao.create(invoiceDetailPurity);
+                    else invoiceDetailPurity.update();//invoiceDetailPurityDao.update(invoiceDetailPurity);
                 }
 
             }
@@ -601,7 +600,8 @@ public class Invoices extends Controller {
         }
 
         openInvoice.setTotalInvoice(invoiceDao.calcularTotalInvoice(openInvoice.getIdInvoice()));
-        invoiceDao.update(openInvoice);
+        openInvoice.update();
+//        invoiceDao.update(openInvoice);
         return Response.updatedEntity(Json.toJson(openInvoice));
     }
 

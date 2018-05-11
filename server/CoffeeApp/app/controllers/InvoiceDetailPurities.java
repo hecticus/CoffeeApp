@@ -57,7 +57,8 @@ public class InvoiceDetailPurities  extends Controller {
             invoiceDetailPurity.setPurity(purityDao.findById(id_purity.asLong()));
             invoiceDetailPurity.setInvoiceDetail(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
 
-            invoiceDetailPurity = invoiceDetailPurityDao.create(invoiceDetailPurity);
+            //invoiceDetailPurity = invoiceDetailPurityDao.save();//.create(invoiceDetailPurity);
+            invoiceDetailPurity.save();
             return Response.createdEntity(Json.toJson(invoiceDetailPurity));
 
         }catch(Exception e){
@@ -88,7 +89,7 @@ public class InvoiceDetailPurities  extends Controller {
             if (id_invoiceDetail != null)
                 invoiceDetailPurity.setInvoiceDetail(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
 
-            invoiceDetailPurity = invoiceDetailPurityDao.update(invoiceDetailPurity);
+            invoiceDetailPurity.update();// = invoiceDetailPurityDao.update(invoiceDetailPurity);
             return Response.updatedEntity(Json.toJson(invoiceDetailPurity));
 
         }catch(Exception e){
@@ -103,8 +104,8 @@ public class InvoiceDetailPurities  extends Controller {
             if(invoiceDetailPurity != null) {
 
                 invoiceDetailPurity.setStatusDelete(1);
-                invoiceDetailPurity = invoiceDetailPurityDao.update(invoiceDetailPurity);
-
+//                invoiceDetailPurity = invoiceDetailPurityDao.update(invoiceDetailPurity);
+                invoiceDetailPurity.update();
                 return Response.deletedEntity();
             } else {
                 return  Response.message("Successful no existe el registro a eliminar");

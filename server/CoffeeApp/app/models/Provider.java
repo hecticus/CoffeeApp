@@ -160,8 +160,29 @@ public class Provider extends AbstractEntity
     public void setInvoices(List<Invoice> invoices) {
         this.invoices = invoices;
     }
-    
-    
+
+
+    public static Provider findById(Long id) {
+        return finder.byId(id);
+    }
+
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
+    }
 
     private static ProviderType providerTypeDao = new ProviderType();
 
@@ -332,5 +353,7 @@ public class Provider extends AbstractEntity
         return result.get("url").asText();
 
     }
+
+
     
 }

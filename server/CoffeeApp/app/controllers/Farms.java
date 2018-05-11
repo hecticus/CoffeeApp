@@ -2,7 +2,7 @@ package controllers;
 
 
 import controllers.utils.ListPagerCollection;
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 import models.Farm;
 import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.PropertiesCollection;

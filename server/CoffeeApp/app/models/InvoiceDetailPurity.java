@@ -8,7 +8,7 @@ import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-
+import java.util.List;
 
 
 /**
@@ -130,6 +130,17 @@ public class InvoiceDetailPurity  extends AbstractEntity{
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
                 pageIndex,
                 pageSize);
+    }
+
+    public List<InvoiceDetailPurity> findAll(Integer pageIndex, Integer pageSize){
+        List<InvoiceDetailPurity> entities;
+        if(pageIndex != -1 && pageSize != -1)
+            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+        else
+            // entities =  find.all();
+            entities = finder.query().where().eq("status_delete",0).findList();
+        return entities;
     }
 
 

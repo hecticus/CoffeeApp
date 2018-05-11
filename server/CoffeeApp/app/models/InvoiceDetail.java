@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 import play.libs.Json;
 
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -289,8 +290,7 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public int deleteAllByIdInvoiceAndDate(Long idInvoice, String date)
-    {
+    public int deleteAllByIdInvoiceAndDate(Long idInvoice, String date){
 
         date = "'"+date+"'";
 
@@ -301,9 +301,34 @@ public class InvoiceDetail  extends AbstractEntity{
         SqlUpdate query = Ebean.createSqlUpdate(sql);
 
         return query.execute();
-
     }
 
+    public List<InvoiceDetail> findAllByIdInvoice(Long IdInvoice){
+        return finder
+                .query()
+                .where()
+                .eq("id_invoice", IdInvoice)
+                .findList();
+    }
+
+
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
+    }
 
 
 }
