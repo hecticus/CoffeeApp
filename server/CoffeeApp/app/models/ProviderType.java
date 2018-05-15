@@ -1,9 +1,7 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.ebean.Ebean;
-import io.ebean.Finder;
-import io.ebean.SqlRow;
+import io.ebean.*;
+import io.ebean.annotation.JsonIgnore;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -17,11 +15,13 @@ import java.util.List;
 @Table(name="provider_type")
 public class ProviderType  extends AbstractEntity {
     @Id
-    @Column(name = "id_ProviderType")
+    @Constraints.Required
+    @Constraints.MaxLength(100)
+    @Column(name = "id_ProviderType", length = 100, nullable = false)
     private Long idProviderType;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_ProviderType")
+    @Column(nullable = false, name = "name_ProviderType", length = 100)
     private String nameProviderType;
 
 
@@ -29,14 +29,20 @@ public class ProviderType  extends AbstractEntity {
     @Column(nullable = false, name = "status_ProviderType")
     private Integer statusProviderType = 1;
 
-    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
-    private List<Provider> providers = new ArrayList<>();
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Provider> providers = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ItemType> itemTypes = new ArrayList<>();
 
     private static Finder<Long, ProviderType> finder = new Finder<>(ProviderType.class);
 
+
+    //Setter and Getter
 
     public Long getIdProviderType() {
         return idProviderType;
@@ -62,7 +68,6 @@ public class ProviderType  extends AbstractEntity {
         this.statusProviderType = statusProviderType;
     }
 
-    @JsonIgnore
     public List<Provider> getProviders() {
         return providers;
     }
@@ -79,8 +84,19 @@ public class ProviderType  extends AbstractEntity {
         this.itemTypes = itemTypes;
     }
 
+
+    //Metodos Definidos
+
     public static ProviderType findById(Long id){
         return finder.byId(id);
+    }
+
+    public static ProviderType findByName(String name) {
+        return finder
+                .query()
+                .where()
+                .eq("nameProviderType", name)
+                .findUnique();
     }
 
     public List<ProviderType> getProviderTypesByName(String name_providertype, String order)
@@ -128,24 +144,31 @@ public class ProviderType  extends AbstractEntity {
     public int getExist(String name_providertype)
     {
         if(finder.query().where().eq("name_providertype",name_providertype).eq("status_delete",0).findUnique()!=null) return 0;
-        else
-        {
+        else{
             if(finder.query().where().eq("name_providertype",name_providertype).eq("status_delete",1).findUnique()!=null)  return 1;
             else return 2;
-
         }
 
     }
+//
+//    public List<ProviderType> findAll(Integer pageIndex, Integer pageSize){
+//        List<ProviderType> entities;
+//        if(pageIndex != -1 && pageSize != -1)
+//            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+//            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+//        else
+//            // entities =  find.all();
+//            entities = finder.query().where().eq("status_delete",0).findList();
+//        return entities;
+//
+//    }
+    public static PagedList findAll(Integer pageIndex, Integer pageSize){
+        ExpressionList expressionList = finder.query().where();
 
-    public List<ProviderType> findAll(Integer pageIndex, Integer pageSize){
-        List<ProviderType> entities;
         if(pageIndex != -1 && pageSize != -1)
-            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
+            return expressionList.eq("status_delete",0).findPagedList();
         else
-            // entities =  find.all();
-            entities = finder.query().where().eq("status_delete",0).findList();
-        return entities;
+            return expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findPagedList();
     }
 
 }

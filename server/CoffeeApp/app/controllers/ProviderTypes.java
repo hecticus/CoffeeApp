@@ -1,14 +1,21 @@
 package controllers;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
-import models.ItemType;
+import controllers.utils.JsonUtils;
+import controllers.utils.NsExceptionsUtils;
+import controllers.utils.PropertiesCollection;
+import controllers.utils.Response;
+import io.ebean.Ebean;
+import io.ebean.PagedList;
 import models.ProviderType;
-import models.responseUtils.Response;
+import play.data.Form;
+import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import static play.mvc.Controller.request;
 
@@ -17,126 +24,106 @@ import static play.mvc.Controller.request;
  */
 public class ProviderTypes {
 
-    private static ProviderType providerTypeDao = new ProviderType();
-    private static ItemType itemTypeDao = new ItemType();
+    @Inject
+    private FormFactory formFactory;
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     @CoffeAppsecurity
     public Result create() {
-        try
-        {
+        try{
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
+            Form<ProviderType> form = formFactory.form(ProviderType.class).bind(json);
+            if (form.hasErrors())
+                return Response.invalidParameter(form.errorsAsJson());//.invalidParameter(form.errorsAsJson());
 
-            JsonNode Name = json.get("name");
-            if (Name == null)
-                return Response.requiredParameter("name");
-
-            int registered = providerTypeDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("name");
-            if(registered==1) return  Response.messageExistDeleted("name");
-
-
-            // mapping object-json
-            ProviderType providerType = Json.fromJson(json, ProviderType.class);
-
-
+            ProviderType providerType = form.get(); //Json.fromJson(json, ProviderType.class);
+//            providerType.insert();
             providerType.save();
+
             return Response.createdEntity(Json.toJson(providerType));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);// Response.responseExceptionCreated(e);
         }
     }
 
+
     @CoffeAppsecurity
-    public Result update() {
-        try
-        {
+    public Result update(Long id) {
+        try{
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("id");
-            if (id == null)
-                return Response.requiredParameter("id");
+            Form<ProviderType> form = formFactory.form(ProviderType.class).bind(json);
+            if (form.hasErrors())
+                return Response.invalidParameter(form.errorsAsJson());//.invalidParameter(form.errorsAsJson());
 
-            ProviderType providerType =  Json.fromJson(json, ProviderType.class);
-
-            JsonNode Name = json.get("name");
-            if (Name != null)
-            {
-                int registered = providerTypeDao.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("name");
-                if(registered==1) return  Response.messageExistDeleted("name");
-
-                providerType.setNameProviderType(Name.asText().toUpperCase());
-            }
-
-
+            ProviderType providerType = Json.fromJson(json, ProviderType.class);
+            providerType.setIdProviderType(id);
             providerType.update();
+
             return Response.updatedEntity(Json.toJson(providerType));
 
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);// Response.responseExceptionCreated(e);
         }
     }
+
 
     @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            ProviderType providerType = providerTypeDao.findById(id);
-            List<ItemType> itemTypes = itemTypeDao.getOpenByProviderTypeId(id);
-            if(providerType != null  && itemTypes.size()==0) {
-
-                providerType.setStatusDelete(1);
-                providerType.update();
-
-                return Response.deletedEntity();
-            } else {
-
-                if(providerType == null)  return  Response.message("Successful no existe el registro a eliminar");
-                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
-            }
+            Ebean.delete(ProviderType.class, id);
+            return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
-
-            ProviderType providerType = findById(id);
-            //    providerTypeDao.delete(id);
-            return Response.deletedEntity();
-
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
 
     @CoffeAppsecurity
-    public Result findById(Long id) {
+    public Result deletes() {
         try {
-            ProviderType providerType = providerTypeDao.findById(id);
-            return Response.foundEntity(Response.toJson(providerType, ProviderType.class));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return Response.requiredJson();
+
+            Ebean.delete(ProviderType.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
         }
     }
+
+    //@CoffeAppsecurity
+    public Result findById(Long id) {
+        try {
+            ProviderType providerType = ProviderType.findById(id);
+            return Response.foundEntity(Json.toJson(providerType));
+        }catch (Exception e) {
+            return NsExceptionsUtils.find(e);
+        }
+    }
+
 
     @CoffeAppsecurity
     public Result findAll(Integer index, Integer size) {
         try {
-            List<ProviderType> providerTypes = providerTypeDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(providerTypes));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
+            PagedList pagedList = ProviderType.findAll(index, size);
+            return Response.foundEntity(Json.toJson(pagedList));
+        } catch (Exception e) {
+            return NsExceptionsUtils.find(e);
         }
     }
 
-    public Result  getProviderTypesByName( String name, String order)
-    {
+
+
+    @CoffeAppsecurity
+    public Result  getProviderTypesByName( String name, String order){
         String strOrder = "ASC";
         try {
 
@@ -147,11 +134,11 @@ public class ProviderTypes {
             if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
                 return Response.requiredParameter("order (ASC o DESC)");
 
+            ProviderType providerTypes = ProviderType.findByName(name);
 
-            List<ProviderType> providerTypes = providerTypeDao.getProviderTypesByName(name,strOrder);
             return Response.foundEntity(Json.toJson(providerTypes));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
+        } catch (Exception e) {
+            return NsExceptionsUtils.find(e);
         }
     }
 }

@@ -1,11 +1,10 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import controllers.utils.ListPagerCollection;
+import controllers.parsers.queryStringBindable.Pager;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
@@ -18,9 +17,10 @@ import java.util.List;
  */
 @Entity
 @Table(name="farms")
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = Farm.class)
+//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = Farm.class)
 //@JsonIgnoreProperties({"proposals", "machines", "partRequests"}) //va os metodos que quiero que me ignore el metodo
 public class Farm extends AbstractEntity{
+
 
     @Id
     @Constraints.Required
@@ -42,10 +42,7 @@ public class Farm extends AbstractEntity{
 
     private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
 
-    public static Farm findById(Long id){
-        return finder.byId(id);
-    }
-
+    //Setter and Getter
     public Long getIdFarm() {
         return idFarm;
     }
@@ -80,22 +77,49 @@ public class Farm extends AbstractEntity{
     }
 
 
-    public static ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = finder.query().where().eq("status_delete",0);
+    //Metodos Definidos
+
+   public static Farm findById(Long id){
+        return finder.byId(id);
+    }
+
+
+    public static PagedList  findAll(String name, Pager pager, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(sort(sort));
+
+        if(pager.index == null || pager.size == null)
+            return  expressionList.findPagedList();
+        return expressionList.eq("status_delete",0).setMaxRows(pager.size).findPagedList();
+    }
+
+/*
+    public static PagedList findAll(String name, Pager pager, String sort, PathProperties pathProperties) {
+
+        ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null)
             expressionList.apply(pathProperties);
 
-        if(name != null)
-            expressionList.icontains("name", name);
+        if (name != null)
+            expressionList.icontains("NameFarm", name);
 
-        if(sort != null)
-            expressionList.orderBy(AbstractEntity.sort(sort));
+        if (sort != null)
+            expressionList.orderBy(sort(sort));
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.query().findCount(), pageIndex, pageSize);
-    }
+        if (pager.index == null || pager.size == null)
+            return expressionList.findPagedList();
+
+        return expressionList.findPagedList();
+    }*/
+
+
+/*
 
     public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
         ExpressionList expressionList = finder.query().where();
@@ -114,7 +138,13 @@ public class Farm extends AbstractEntity{
                 pageIndex,
                 pageSize);
     }
+*/
 
+
+
+
+
+/*
     public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).findList());
@@ -124,6 +154,7 @@ public class Farm extends AbstractEntity{
                 pageIndex,
                 pageSize);
     }
+*/
 
 
 }

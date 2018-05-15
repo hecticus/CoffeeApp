@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.Invoice;
@@ -207,6 +208,7 @@ public class Providers extends Controller {
         }
     }
 
+/*
     @CoffeAppsecurity
     public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {
         try {
@@ -219,6 +221,7 @@ public class Providers extends Controller {
             return ExceptionsUtils.find(e);
         }
     }
+*/
 
 
     @CoffeAppsecurity
@@ -250,6 +253,7 @@ public class Providers extends Controller {
         }
     }
 
+/*
     public Result  getByTypeProvider(Long id_providertype, String order)
     {
         String strOrder = "ASC";
@@ -292,12 +296,13 @@ public class Providers extends Controller {
             return Response.internalServerErrorLF();
         }
     }
+*/
 
     @CoffeAppsecurity
     public static Result findAll(Pager pager, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = providerDao.findAll(pager.pageIndex, pager.pageSize, sort, pathProperties);
+            ListPagerCollection listPager = providerDao.findAll(pager.index, pager.size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
