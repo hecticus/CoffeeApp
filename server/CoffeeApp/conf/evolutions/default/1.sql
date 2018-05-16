@@ -182,9 +182,9 @@ create table provider_type (
   id_providertype               bigint(100) auto_increment not null,
   status_delete                 integer not null,
   name_providertype             varchar(100) not null,
-  status_providertype           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_providertype           tinyint(1) default 0 not null,
   constraint pk_provider_type primary key (id_providertype)
 );
 

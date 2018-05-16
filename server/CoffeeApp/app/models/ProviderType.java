@@ -1,7 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import controllers.parsers.queryStringBindable.Pager;
+import controllers.utils.ListPagerCollection;
 import io.ebean.*;
-import io.ebean.annotation.JsonIgnore;
+import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -27,16 +30,18 @@ public class ProviderType  extends AbstractEntity {
 
     @Constraints.Required
     @Column(nullable = false, name = "status_ProviderType")
-    private Integer statusProviderType = 1;
+//    @SoftDelete
+//    private boolean statusProviderType;
+    private Integer statusProviderType;
 
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<Provider> providers = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<ItemType> itemTypes = new ArrayList<>();
 
     private static Finder<Long, ProviderType> finder = new Finder<>(ProviderType.class);
@@ -68,6 +73,7 @@ public class ProviderType  extends AbstractEntity {
         this.statusProviderType = statusProviderType;
     }
 
+
     public List<Provider> getProviders() {
         return providers;
     }
@@ -98,6 +104,28 @@ public class ProviderType  extends AbstractEntity {
                 .eq("nameProviderType", name)
                 .findUnique();
     }
+
+
+    public static ListPagerCollection findAll(String name, Pager pager, String sort, PathProperties pathProperties){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pager.index == null || pager.size == null)
+            return new ListPagerCollection(expressionList.eq("statusProviderType",0).findList());
+        return new ListPagerCollection(
+                expressionList.setFirstRow(pager.index).setMaxRows(pager.size).findList(),
+                expressionList.setFirstRow(pager.index).setMaxRows(pager.size).findCount(),
+                pager.index,
+                pager.size);
+    }
+
+
+
 
     public List<ProviderType> getProviderTypesByName(String name_providertype, String order)
     {

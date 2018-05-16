@@ -1,6 +1,8 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,8 +24,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="providers")
-public class Provider extends AbstractEntity
-{
+public class Provider extends AbstractEntity{
 
     @Id
     @Column(name = "id_Provider")
@@ -55,6 +56,7 @@ public class Provider extends AbstractEntity
 
     @ManyToOne
     @JoinColumn(name = "id_providerType", nullable = false)
+    @JsonBackReference
     private ProviderType providerType;
 
     @Constraints.Required
@@ -63,10 +65,12 @@ public class Provider extends AbstractEntity
 
     @Constraints.Required
     @Column(nullable = false, name = "status_Provider")
+//    private boolean statusProvider;
     private Integer statusProvider = 1;
 
 
     @OneToMany(mappedBy = "provider", cascade= CascadeType.ALL)
+    @JsonManagedReference
     private List<Invoice> invoices = new ArrayList<>();
 
     private static Finder<Long, Provider> finder = new Finder<>(Provider.class);
@@ -152,7 +156,6 @@ public class Provider extends AbstractEntity
         this.statusProvider = statusProvider;
     }
 
-    @JsonIgnore
     public List<Invoice> getInvoices() {
         return invoices;
     }

@@ -21,26 +21,25 @@ GET     /assets/*file                       controllers.Assets.versioned(path="/
 ###############################################################################
 #·······                 Authentication                             ··········#
 ###############################################################################
-POST    /oauth/token                security.authentication.oauth2.PasswordGrant.token()
-POST    /oauth/revokeToken          security.authentication.oauth2.PasswordGrant.revokeToken()
-#POST    /oauth/auth                security.authentication.oauth2.ImplicitGrant.auth()
+POST    /oauth/token                                                            security.authentication.oauth2.PasswordGrant.token()
+POST    /oauth/revokeToken                                                      security.authentication.oauth2.PasswordGrant.revokeToken()
+#POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
 
 
 ###############################################################################
 #·······                Farm                                        ··········#
 ###############################################################################
-#GET     /farm/search                                                            controllers.Farms.findAllSearch(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /farm                                                                    controllers.Farms.findAll(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-#GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null,pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm/search                                                            controllers.Farms.findAllSearch(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 #GET     /farm/search                                                            controllers.Farms.findAllSearch(name: String ?= null, pager: models.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /farm/:id                                                               controllers.Farms.findById(id : Long)
-
 
 ###############################################################################
 #·······                 ProviderType                               ··········#
 ###############################################################################
 GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 GET     /providerType/findAll/:index/:size                                      controllers.ProviderTypes.findAll(index: Integer, size: Integer)
+
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
 
 

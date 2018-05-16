@@ -2,13 +2,14 @@ package controllers;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.JsonUtils;
-import controllers.utils.NsExceptionsUtils;
-import controllers.utils.PropertiesCollection;
-import controllers.utils.Response;
+import controllers.parsers.queryStringBindable.Pager;
+import controllers.utils.*;
 import io.ebean.Ebean;
-import io.ebean.PagedList;
+import io.ebean.text.PathProperties;
+import models.Farm;
 import models.ProviderType;
+import models.responseUtils.ExceptionsUtils;
+import models.responseUtils.ResponseCollection;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -26,7 +27,12 @@ public class ProviderTypes {
 
     @Inject
     private FormFactory formFactory;
-    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
+    private static models.responseUtils.PropertiesCollection propertiesCollection = new models.responseUtils.PropertiesCollection();
+
+    public ProviderTypes(){
+        propertiesCollection.putPropertiesCollection("s", "(idProviderType, nameProviderType)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
+    }
 
     @CoffeAppsecurity
     public Result create() {
@@ -103,24 +109,33 @@ public class ProviderTypes {
     public Result findById(Long id) {
         try {
             ProviderType providerType = ProviderType.findById(id);
+            System.out.println(providerType.getNameProviderType());
             return Response.foundEntity(Json.toJson(providerType));
         }catch (Exception e) {
             return NsExceptionsUtils.find(e);
         }
     }
 
-
     @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
+    public Result findAll(String name, Pager pager, String sort, String collection){
         try {
-            PagedList pagedList = ProviderType.findAll(index, size);
-            return Response.foundEntity(Json.toJson(pagedList));
-        } catch (Exception e) {
-            return NsExceptionsUtils.find(e);
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = Farm.findAll(name, pager, sort, pathProperties);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
         }
     }
 
 
+    @CoffeAppsecurity
+    public Result findAll(Integer index, Integer size) {
+        Pager pager = new Pager();
+        pager.size = size;
+        pager.index = index;
+        return findAll(null, pager, null, null);
+    }
 
     @CoffeAppsecurity
     public Result  getProviderTypesByName( String name, String order){

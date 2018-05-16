@@ -1,15 +1,19 @@
 package controllers;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import controllers.parsers.queryStringBindable.Pager;
+import controllers.utils.JsonUtils;
+import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
-import io.ebean.PagedList;
+import controllers.utils.Response;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Farm;
 import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.PropertiesCollection;
-import controllers.utils.Response;
 import models.responseUtils.ResponseCollection;
+import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -25,7 +29,6 @@ public class Farms extends Controller {
 
     @Inject
     private FormFactory formFactory;
-    private static Farm farmDao = new Farm();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public Farms(){
@@ -34,143 +37,6 @@ public class Farms extends Controller {
     }
 
     @CoffeAppsecurity
-    public Result preCreate() {
-        try {
-
-            return  null;
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result create() {
-        try
-        {
-            return null;
-
-        }catch(Exception e){
-            return null;
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result update() {
-        try
-        {
-            return null;
-
-        }catch(Exception e){
-            return null;
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result delete(Long id) {
-        try{
-            return null;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    //@CoffeAppsecurity
-    public Result findById(Long id) {
-        try {
-            Farm farm = Farm.findById(id);
-            return Response.foundEntity(Json.toJson(farm));
-        } catch (Exception e) {
-            return NsExceptionsUtils.find(e);
-        }
-    }
-
-//
-////    @CoffeAppsecurity
-//    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-//        try {
-//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            PagedList listPager = Farm.findAll(name, pager, sort, pathProperties);
-//
-//            return Response.foundEntity(listPager, pathProperties);
-//        }catch(Exception e){
-//            return ExceptionsUtils.find(e);
-//        }
-//    }
-
-    //    @CoffeAppsecurity
-    public Result findAll(String name, Pager pager, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            PagedList pagedList = Farm.findAll(name, pager, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(pagedList, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-
-
-//    //@CoffeAppsecurity
-//    public Result findAll(String name, Pager pager, String sort, String collection){
-//        try {
-//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            PagedList listPager = Farm.findAll(name, pager, sort, pathProperties);
-//
-//            return ResponseCollection.foundEntity(listPager, pathProperties);
-//        }catch(Exception e){
-//            return ExceptionsUtils.find(e);
-//        }
-//    }
-
-//    public  Result findAllSearch(String name, Pager pager, String sort, String collection) {
-//        try {
-//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            ListPagerCollection listPager = Farm.findAll(name, pager.index, pager.size, sort, pathProperties);
-//
-//            return ResponseCollection.foundEntity(listPager, pathProperties);
-//        }catch(Exception e){
-//            return ExceptionsUtils.find(e);
-//        }
-//    }
-//
-
-/*
-    public  Result findAll(String  name, Pager pager, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Farm.findAll(pager.index, pager.size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-*/
-
-
-
-//    @CoffeAppsecurity
-//    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-//        try {
-//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            PagedList listPager = Farm.findAll(name, pager, sort, pathProperties);
-//
-//            return ResponseCollection.foundEntity(listPager, pathProperties);
-//        }catch(Exception e){
-//            return ExceptionsUtils.find(e);
-//        }
-//    }
-
-
-
-
-
-
-/*    @CoffeAppsecurity
     public Result preCreate() {
         try {
 
@@ -213,7 +79,7 @@ public class Farms extends Controller {
                 return Response.invalidParameter(form.errorsAsJson());
 
             Farm farm = Json.fromJson(request, Farm.class);
-            farm.setId(id);
+            farm.setIdFarm(id);
             farm.update();
 
             return Response.updatedEntity(Json.toJson(farm));
@@ -253,36 +119,41 @@ public class Farms extends Controller {
             Farm farm = Farm.findById(id);
             return Response.foundEntity(Json.toJson(farm));
         } catch (Exception e) {
-            //return NsExceptionsUtils.find(e);
-            return Response.internalServerErrorLF();
+            return NsExceptionsUtils.find(e);
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAll(Pager pager, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-
-            ListPagerCollection listPager = Farm.findAll(pager.index, pager.size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-
-    }
 
     @CoffeAppsecurity
     public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+        return findAll(name,pager, sort, collection);
+    }
+
+    @CoffeAppsecurity
+    public Result findAll(String name, Pager pager, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Farm.findAllSearch(name, pager.index, pager.size, sort, pathProperties);
+            ListPagerCollection listPager = Farm.findAll(name, pager, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
-    }*/
+    }
+
+
+
+//    @CoffeAppsecurity
+//    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
+//        try {
+//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+//            PagedList listPager = Farm.findAll(name, pager, sort, pathProperties);
+//
+//            return ResponseCollection.foundEntity(listPager, pathProperties);
+//        }catch(Exception e){
+//            return ExceptionsUtils.find(e);
+//        }
+//    }
 
 
 }

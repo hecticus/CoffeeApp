@@ -1,6 +1,7 @@
 package models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.utils.ListPagerCollection;
@@ -31,6 +32,7 @@ public class Invoice extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn(name = "id_provider", nullable = false)
+    @JsonBackReference
     private Provider provider;
 
     @Constraints.Required

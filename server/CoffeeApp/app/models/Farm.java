@@ -2,9 +2,9 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.parsers.queryStringBindable.Pager;
+import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
-import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
@@ -83,22 +83,22 @@ public class Farm extends AbstractEntity{
         return finder.byId(id);
     }
 
-
-    public static PagedList  findAll(String name, Pager pager, String sort, PathProperties pathProperties){
+    public static ListPagerCollection findAll(String name, Pager pager, String sort, PathProperties pathProperties){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
-        if (name != null)
-            expressionList.icontains("name", name);
-
         if(sort != null)
-            expressionList.orderBy(sort(sort));
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
 
         if(pager.index == null || pager.size == null)
-            return expressionList.findPagedList();
-        return expressionList.findPagedList();
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pager.index).setMaxRows(pager.size).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pager.index).setMaxRows(pager.size).findCount(),
+                pager.index,
+                pager.size);
     }
 
 
@@ -124,42 +124,6 @@ public class Farm extends AbstractEntity{
     }*/
 
 
-/*
-
-    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
-        ExpressionList expressionList = finder.query().where();
-
-        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
-            expressionList.apply(pathProperties);
-
-        if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
-        return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
-    }
-*/
-
-
-
-
-
-/*
-    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).findList());
-        return new ListPagerCollection(
-                finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                finder.query().findCount(),
-                pageIndex,
-                pageSize);
-    }
-*/
 
 
 }

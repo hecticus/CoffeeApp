@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -36,6 +37,7 @@ public class ItemType extends AbstractEntity
 
     @ManyToOne
     @JoinColumn(name = "id_providerType", nullable = false)
+    @JsonBackReference
     private ProviderType providerType;
 
     @ManyToOne
