@@ -90,13 +90,18 @@ public class Farm extends AbstractEntity{
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if (name != null)
+            expressionList.icontains("name", name);
+
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
         if(pager.index == null || pager.size == null)
-            return  expressionList.findPagedList();
-        return expressionList.eq("status_delete",0).setMaxRows(pager.size).findPagedList();
+            return expressionList.findPagedList();
+        return expressionList.findPagedList();
     }
+
+
 
 /*
     public static PagedList findAll(String name, Pager pager, String sort, PathProperties pathProperties) {

@@ -9,6 +9,7 @@ import models.Farm;
 import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.PropertiesCollection;
 import controllers.utils.Response;
+import models.responseUtils.ResponseCollection;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -103,7 +104,7 @@ public class Farms extends Controller {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             PagedList pagedList = Farm.findAll(name, pager, sort, pathProperties);
 
-            return Response.foundEntity(pagedList, pathProperties);
+            return ResponseCollection.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
