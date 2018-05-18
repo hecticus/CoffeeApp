@@ -111,6 +111,8 @@ public class Invoices extends Controller {
             if (id_provider != null)
                 invoice.setProvider(providerDao.findById(id_provider.asLong()));
 
+
+
             JsonNode status = json.get("status");
             if (status != null)
             {
@@ -155,24 +157,51 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public  Result findById(Long id) {
         try {
-            Invoice invoice = invoiceDao.findById(id);
+            Invoice invoice = Invoice.findById(id);
             return Response.foundEntity(Json.toJson((invoice)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
+//    @CoffeAppsecurity
+    public   Result findAll(String name, Integer pageIndex, Integer pageSize, String sort, String collection, Integer id_provider, Integer idProviderType, String startDate, String endDate){
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = Invoice.findAll(name, pageIndex, pageSize, sort, pathProperties, id_provider, idProviderType, startDate, endDate);
 
-    @CoffeAppsecurity
-    public  Result getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+//    @CoffeAppsecurity
+    public  Result findAllSearch(String name, Pager pager, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+//            ListPagerCollection listPager = invoiceDao.findAllSearch( pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
+            ListPagerCollection listPager = Invoice.findAll(name, pager.index, pager.size, sort, pathProperties, id_provider, id_providertype, startDate, endDate);;
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+//    @CoffeAppsecurity
+    public  Result getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pageSize){
         try {
             //    List<Invoice> invoices = invoiceDao.getByDateByTypeProvider(date,typeProvider,pageIndex,pagesize);
             //    return Response.foundEntity(Json.toJson((invoices)));
 
-            ListPagerCollection invoices = invoiceDao.getByDateByTypeProvider(date,typeProvider,pageIndex,pagesize);
+            ListPagerCollection invoices = invoiceDao.getByDateByTypeProvider(date,typeProvider,pageIndex,pageSize);
+//            ListPagerCollection invoices = Invoice.findAll(null, pageIndex, pageSize, null, null, null, typeProvider, date, null);
             return ResponseCollection.foundEntity(invoices, null);
         }catch(Exception e) {
             e.printStackTrace();
@@ -195,7 +224,7 @@ public class Invoices extends Controller {
     @CoffeAppsecurity
     public  Result getOpenByProviderId(Long providerId){
         try {
-            List<Invoice> invoices = invoiceDao.getOpenByProviderId(providerId);
+            List<Invoice> invoices = Invoice.getOpenByProviderId(providerId);
             return Response.foundEntity(Json.toJson(invoices));
         }catch(Exception e) {
             e.printStackTrace();
@@ -203,11 +232,13 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
-    public  Result findAll(Pager pager, String sort, String collection) {
+
+    //@CoffeAppsecurity
+    public  Result findAll(String name, Pager pager, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDao.findAll(pager.index, pager.size, sort, pathProperties);
+//            ListPagerCollection listPager = invoiceDao.findAllSearch( pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
+            ListPagerCollection listPager = Invoice.findAll(name, pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -216,16 +247,18 @@ public class Invoices extends Controller {
     }
 
     @CoffeAppsecurity
-    public  Result findAllSearch(String name, Pager pager, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
+    public  Result search(String name, Pager pager, String sort, String collection,Integer id_provider,Integer id_providertype,String startDate, String endDate) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDao.findAllSearch( pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
+//            ListPagerCollection listPager = invoiceDao.findAllSearch( pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
+            ListPagerCollection listPager = Invoice.findAllSearch( pager.index, pager.size, sort, pathProperties,id_provider,id_providertype,startDate, endDate);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
     }
+
 
     @CoffeAppsecurity
     public  Result preCreate() {

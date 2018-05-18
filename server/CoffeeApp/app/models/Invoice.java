@@ -133,17 +133,33 @@ public class Invoice extends AbstractEntity{
         return entities;
     }
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer id_provider, Integer idProviderType, String startDate, String endDate){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
+
+        if(name != null )
+            expressionList.icontains("id_invoice", name);
+
+        if(id_provider != null)
+            expressionList.eq("id_provider.id_Provider", id_provider);
+
+        if(idProviderType != null)
+            expressionList.eq("id_provider.id_providerType", idProviderType);
+
+        if(startDate != null)
+            expressionList.eq("dueDate_invoice", startDate);
+
+        if(endDate!= null)
+            expressionList.eq("closedDate_invoice", endDate);
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+
         return new ListPagerCollection(
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
@@ -151,7 +167,8 @@ public class Invoice extends AbstractEntity{
                 pageSize);
     }
 
-    public ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
+
+    public   ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
 
         String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
                 " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
@@ -183,7 +200,7 @@ public class Invoice extends AbstractEntity{
         //return toInvoices(sqlRows)
     }
 
-    public List<Invoice> getByDateByProviderId(String date, Long providerId)
+    public static List<Invoice> getByDateByProviderId(String date, Long providerId)
     {
         return finder.query().where().eq("id_provider",providerId).eq("dueDate_invoice",date).findList();
 
@@ -205,8 +222,7 @@ public class Invoice extends AbstractEntity{
         }
     }
 
-    public    List<Invoice> getOpenByProviderId(Long providerId)
-    {
+    public  static  List<Invoice> getOpenByProviderId(Long providerId){
         return finder.query().where().eq("id_provider",providerId)
                 .eq("status_delete",0)
                 .eq("status_invoice",1)
@@ -261,7 +277,7 @@ public class Invoice extends AbstractEntity{
         return invoices;
     }
 
-    public ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer id_provider, Integer id_providertype, String startDate, String endDate)
+    public static ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer id_provider, Integer id_providertype, String startDate, String endDate)
     {
         ExpressionList expressionList;
         try
@@ -273,8 +289,7 @@ public class Invoice extends AbstractEntity{
                 startDate = "1970-01-01";
             }
 
-            if(endDate.equals(""))
-            {
+            if(endDate.equals("")){
                 endDate="5000-01-01";
             }
             String startDateTemp = startDate.concat(" 00:00:00");

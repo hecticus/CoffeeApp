@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
@@ -158,7 +159,7 @@ public class ItemTypes extends Controller {
     @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            ItemType itemType = itemTypeDao.findById(id);
+            ItemType itemType = ItemType.findById(id);
             return Response.foundEntity(Response.toJson(itemType, ItemType.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
@@ -221,11 +222,11 @@ public class ItemTypes extends Controller {
 */
 
 
-    @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+//    @CoffeAppsecurity
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = itemTypeDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = itemTypeDao.findAll(name, index, size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -234,10 +235,11 @@ public class ItemTypes extends Controller {
     }
 
     @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
+    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = itemTypeDao.findAllSearch(name, index, size, sort, pathProperties);
+//            ListPagerCollection listPager = itemTypeDao.findAllSearch(name, index, size, sort, pathProperties);
+            ListPagerCollection listPager = itemTypeDao.findAll(name, pager.index, pager.size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

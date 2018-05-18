@@ -8,7 +8,7 @@ INSERT INTO `farms` (id_farm,status_delete, name_farm, status_farm,created_at,up
   (4,1,'Cafe de Eleta',0,'2017-10-11 14:36:13','2017-10-11 14:36:13');
 
 
-INSERT INTO `provider_type` (id_providertype, status_delete, name_providertype,, status_providertype, created_at, updated_at) VALUES
+INSERT INTO `provider_type` (id_providertype, status_delete, name_providertype, status_providertype, created_at, updated_at) VALUES
   (1,1,'Vendedor',1,'2017-09-06 20:49:27','2017-09-06 20:49:27'),
   (2,1,'Cosechador',1,'2017-09-06 20:49:27','2017-09-06 20:49:27'),
   (3,0,'prueba',1,'2017-09-06 20:49:27','2017-09-06 20:49:27');
