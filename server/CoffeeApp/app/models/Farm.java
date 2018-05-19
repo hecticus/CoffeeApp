@@ -17,8 +17,6 @@ import java.util.List;
  */
 @Entity
 @Table(name="farms")
-//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = Farm.class)
-//@JsonIgnoreProperties({"proposals", "machines", "partRequests"}) //va os metodos que quiero que me ignore el metodo
 public class Farm extends AbstractEntity{
 
 
@@ -79,7 +77,7 @@ public class Farm extends AbstractEntity{
 
     //Metodos Definidos
 
-   public static Farm findById(Long id){
+    public static Farm findById(Long id){
         return finder.byId(id);
     }
 
@@ -91,6 +89,9 @@ public class Farm extends AbstractEntity{
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(name!=null)
+            expressionList.contains( "name_farm", name);
 
         if(pager.index == null || pager.size == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());

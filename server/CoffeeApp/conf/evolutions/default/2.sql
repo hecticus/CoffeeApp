@@ -8,7 +8,7 @@ INSERT INTO `farms` (id_farm,status_delete, name_farm, status_farm,created_at,up
   (4,1,'Cafe de Eleta',0,'2017-10-11 14:36:13','2017-10-11 14:36:13');
 
 
-INSERT INTO `provider_type` (id_providertype, status_delete, name_providertype, status_providertype, created_at, updated_at) VALUES
+INSERT INTO `provider_type` (id_providertype, status_delete, name_providertype,, status_providertype, created_at, updated_at) VALUES
   (1,1,'Vendedor',1,'2017-09-06 20:49:27','2017-09-06 20:49:27'),
   (2,1,'Cosechador',1,'2017-09-06 20:49:27','2017-09-06 20:49:27'),
   (3,0,'prueba',1,'2017-09-06 20:49:27','2017-09-06 20:49:27');
@@ -54,7 +54,7 @@ INSERT INTO `lots` VALUES
   (26,0,'#3','58',58,1,4,58.00,'2017-10-13 10:29:49','2017-10-13 10:35:16');
 
 INSERT INTO `providers` VALUES
-  (-1,0,'5665416547','listener','wekmkn','45678','a@b.c',NULL,2,'listener',1,'2017-10-20 23:06:50','2017-10-20 23:06:50'),
+  (1,0,'5665416547','listener','wekmkn','45678','a@b.c',NULL,2,'listener',1,'2017-10-20 23:06:50','2017-10-20 23:06:50'),
   (1,0,'113678','cosechador 113Ba','cuidad X3','002553','g3@gmail.com','https://1d8f09d13d909de71fe8-0aa28c49e88e719ee2b71f71fdca5ee1.ssl.cf1.rackcdn.com/example/57cdedbe-756d-495b-b3cc-22cae07a8271.png',2,'cosechador 113Ba',1,'2017-09-06 20:51:09','2017-10-14 19:23:12'),
   (2,0,'11477789','darwin','caracas','145632','darwinrocha@g.com',NULL,2,'frank',1,'2017-09-06 20:51:09','2017-10-02 15:52:59'),
   (3,0,'321','rocha','1478963','1478963','1478963@f.com',NULL,2,'1478963',1,'2017-09-11 17:43:04','2017-09-14 17:24:01'),

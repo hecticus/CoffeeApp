@@ -25,7 +25,6 @@ POST    /oauth/token                                                            
 POST    /oauth/revokeToken                                                      security.authentication.oauth2.PasswordGrant.revokeToken()
 #POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
 
-
 ###############################################################################
 #·······                Farm                                        ··········#
 ###############################################################################

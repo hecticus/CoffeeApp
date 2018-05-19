@@ -73,7 +73,6 @@ public class ProviderType  extends AbstractEntity {
         this.statusProviderType = statusProviderType;
     }
 
-
     public List<Provider> getProviders() {
         return providers;
     }
@@ -92,7 +91,6 @@ public class ProviderType  extends AbstractEntity {
 
 
     //Metodos Definidos
-
     public static ProviderType findById(Long id){
         return finder.byId(id);
     }
@@ -101,27 +99,30 @@ public class ProviderType  extends AbstractEntity {
         return finder
                 .query()
                 .where()
-                .eq("nameProviderType", name)
+                .eq("name_ProviderType", name)
                 .findUnique();
     }
 
 
-    public static ListPagerCollection findAll(String name, Pager pager, String sort, PathProperties pathProperties){
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties pathProperties){
         ExpressionList expressionList = finder.query().where();
+
+        if(name!=null)
+            expressionList.contains( "name_ProviderType", name);
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
-        if(pager.index == null || pager.size == null)
-            return new ListPagerCollection(expressionList.eq("statusProviderType",0).findList());
+        if(index == null || size == null)
+            return new ListPagerCollection(expressionList.eq("status_ProviderType",0).findList());
         return new ListPagerCollection(
-                expressionList.setFirstRow(pager.index).setMaxRows(pager.size).findList(),
-                expressionList.setFirstRow(pager.index).setMaxRows(pager.size).findCount(),
-                pager.index,
-                pager.size);
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                index,
+                size);
     }
 
 
@@ -178,7 +179,7 @@ public class ProviderType  extends AbstractEntity {
         }
 
     }
-//
+    //
 //    public List<ProviderType> findAll(Integer pageIndex, Integer pageSize){
 //        List<ProviderType> entities;
 //        if(pageIndex != -1 && pageSize != -1)
