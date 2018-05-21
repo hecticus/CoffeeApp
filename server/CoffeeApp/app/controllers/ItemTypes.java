@@ -35,6 +35,21 @@ public class ItemTypes extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
+
+    @CoffeAppsecurity
+    public Result preCreate() {
+
+
+        try {
+            ItemType itemtype = new ItemType();
+
+            return Response.foundEntity(
+                    Json.toJson(itemtype));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
     @CoffeAppsecurity
     public Result create() {
         try
@@ -144,40 +159,31 @@ public class ItemTypes extends Controller {
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
 
-            ItemType ItemType = findById(id);
-            //    ItemTypeDao.delete(id);
-            return Response.deletedEntity();
 
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
-
-    @CoffeAppsecurity
-    public Result findById(Long id) {
+    //@CoffeAppsecurity
+    public  Result findById(Long id) {
         try {
             ItemType itemType = ItemType.findById(id);
-            return Response.foundEntity(Response.toJson(itemType, ItemType.class));
+            return Response.foundEntity(Json.toJson((itemType)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
-   /* @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
+    //    @CoffeAppsecurity
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection, Long id_ProviderType, Integer status) {
         try {
-            List<ItemType> itemTypes = itemTypeDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(itemTypes));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }*/
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = itemTypeDao.findAll(name, index, size, sort, pathProperties, id_ProviderType, status);
 
-    public Result getByProviderTypeId(Long id_ProviderType, Integer status)
-    {
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    public Result getByProviderTypeId(Long id_ProviderType, Integer status){
         try {
 
             if(providerTypeDao.findById(id_ProviderType)==null)
@@ -214,52 +220,5 @@ public class ItemTypes extends Controller {
         }
     }
 
-/*
-    @CoffeAppsecurity
-    public Result findAll(Pager pager, String sort, String collection) {
-        return ItemType.findAll(pager.pageIndex, pager.pageSize, sort, collection);
-    }
-*/
-
-
-//    @CoffeAppsecurity
-    public Result findAll(String name, Integer index, Integer size, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = itemTypeDao.findAll(name, index, size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            ListPagerCollection listPager = itemTypeDao.findAllSearch(name, index, size, sort, pathProperties);
-            ListPagerCollection listPager = itemTypeDao.findAll(name, pager.index, pager.size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    @CoffeAppsecurity
-    public Result preCreate() {
-
-
-        try {
-            ItemType itemtype = new ItemType();
-
-            return Response.foundEntity(
-                    Json.toJson(itemtype));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 
 }

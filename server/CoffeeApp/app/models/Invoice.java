@@ -130,9 +130,15 @@ public class Invoice extends AbstractEntity{
                 .orderBy("dueDate_invoice desc")
                 .findList();
     }
+/*
 
-    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_provider, String startDate, String endDate){
-        ExpressionList expressionList = finder.query().where();
+    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_provider, Long id_providertype, String startDate, String endDate){
+        ExpressionList expressionList;
+
+        if(id_providertype != null )
+            expressionList = finder.query().fetch("provider").where().eq("id_providertype",id_providertype);
+        else(id_provider == null)
+            expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
@@ -141,11 +147,11 @@ public class Invoice extends AbstractEntity{
         if(name != null )
             expressionList.icontains("id_invoice", name);
 
-        if(id_provider != null)
-            expressionList.eq("id_Provider", id_provider);
-            //Se debe considerar devolver solos los invoices activos es decir ==1 se debe
-            //chequear la base de datos para ver como los registra
-            expressionList.eq("status_invoice",1); //TODO
+//        if(id_provider != null)
+//            expressionList.eq("id_Provider", id_provider);
+//            //Se debe considerar devolver solos los invoices activos es decir ==1 se debe
+//            //chequear la base de datos para ver como los registra
+//            expressionList.eq("status_invoice",1); //TODO
 
         if(startDate != null)
             expressionList.eq("dueDate_invoice", startDate);
@@ -165,21 +171,23 @@ public class Invoice extends AbstractEntity{
                 pageIndex,
                 pageSize);
     }
+*/
 
-    public static ListPagerCollection search(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_provider, Long id_providertype, String startDate, String endDate){
-        ExpressionList expressionList = finder.query().fetch("provider").where().eq("id_providertype",id_providertype);
+    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_provider, String startDate, String endDate){
+        ExpressionList expressionList = finder.query().where();
 
-       /* if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(name != null )
             expressionList.icontains("id_invoice", name);
 
-        if(id_provider != null)
+        if(id_provider != 0L) {
             expressionList.eq("id_Provider", id_provider);
-        //Se debe considerar devolver solos los invoices activos es decir ==1 se debe
-        //chequear la base de datos para ver como los registra
-        expressionList.eq("status_invoice",1); //TODO
+            //Se debe considerar devolver solos los invoices activos es decir ==1 se debe
+            //chequear la base de datos para ver como los registra
+            expressionList.eq("status_invoice", 1); //TODO
+        }
 
         if(startDate != null)
             expressionList.eq("dueDate_invoice", startDate);
@@ -188,10 +196,10 @@ public class Invoice extends AbstractEntity{
             expressionList.eq("closedDate_invoice", endDate);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());*/
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
 
         return new ListPagerCollection(
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
@@ -201,7 +209,7 @@ public class Invoice extends AbstractEntity{
     }
 
 
-    /* public   ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
+    public   ListPagerCollection getByDateByTypeProvider(String date, Long typeProvider, Integer pageIndex, Integer pagesize){
 
         String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
                 " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
@@ -213,7 +221,7 @@ public class Invoice extends AbstractEntity{
                 " INNER JOIN  providers prov ON prov.id_provider = invo.id_provider " +
                 " where invo.duedate_invoice like '"+date+"%'";
 
-        if(typeProvider!=-1)  sql+=" and prov.id_providertype= :typeProvider ";
+        if(typeProvider!= 0L)  sql+=" and prov.id_providertype= :typeProvider ";
 
         sql+=" and invo.status_delete=0 and prov.status_delete=0 order by prov.fullname_provider ASC ";
 
@@ -231,7 +239,7 @@ public class Invoice extends AbstractEntity{
 
         return new ListPagerCollection(invoiceList.subList(pageIndex,Math.min(pageIndex+pagesize, invoiceList.size())), invoiceList.size(), pageIndex, pagesize);
         //return toInvoices(sqlRows)
-    }*/
+    }
 
 
     public Boolean deletedInvoice( Long invoiceId)

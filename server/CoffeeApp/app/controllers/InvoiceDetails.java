@@ -39,6 +39,30 @@ public class InvoiceDetails extends Controller {
     }
 
     @CoffeAppsecurity
+    public Result preCreate() {
+
+
+        try {
+
+            InvoiceDetail invoiceDetail = new InvoiceDetail();
+            Invoice invoice = new Invoice();
+            ItemType itemType = new ItemType ();
+            Store store = new Store();
+            Lot lot = new Lot();
+
+            invoiceDetail.setInvoice(invoice);
+            invoiceDetail.setItemType(itemType);
+            invoiceDetail.setStore(store);
+            invoiceDetail.setLot(lot);
+
+            return Response.foundEntity(
+                    Json.toJson(invoiceDetail));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -220,7 +244,7 @@ public class InvoiceDetails extends Controller {
         }
     }*/
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             InvoiceDetail invoiceDetail = invoiceDetailDao.findById(id);
@@ -230,17 +254,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    /*   @CoffeAppsecurity
-       public Result findAll(Integer index, Integer size) {
-           try {
-               List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAll(index, size);
-               return Response.foundEntity(Response.toJson(invoiceDetails, InvoiceDetail.class));
-           }catch(Exception e){
-               return Response.internalServerErrorLF();
-           }
-       }
-   
-   */
+
     @CoffeAppsecurity
     public Result findAllByIdInvoice(Long IdInvoice) {
         try {
@@ -250,23 +264,6 @@ public class InvoiceDetails extends Controller {
             return Response.internalServerErrorLF();
         }
     }
-/*    public Result findAllByIdInvoice(Long IdInvoice) {
-        try {
-            ObjectNode result;
-            JsonNode aux1;
-            List<InvoiceDetail> aux2;
-            result = Json.newObject();
-
-            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.findAllByIdInvoice(IdInvoice);
-            result.set("summary",invoiceDetailDao.findAllByIdInvoiceSummary(IdInvoice));
-            result.set("deatils",Json.toJson(invoiceDetails));
-
-            return Response.foundEntity(result);
-
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }*/
 
     @CoffeAppsecurity
     public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date)
@@ -295,23 +292,11 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+//    @CoffeAppsecurity
+    public Result findAll(Integer index, Integer size, String sort, String collection, Long invoiceId) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDetailDao.findAll(index, size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDetailDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = invoiceDetailDao.findAll(index, size, sort, pathProperties, invoiceId);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -320,27 +305,4 @@ public class InvoiceDetails extends Controller {
     }
 
 
-    @CoffeAppsecurity
-    public Result preCreate() {
-
-
-        try {
-
-            InvoiceDetail invoiceDetail = new InvoiceDetail();
-            Invoice invoice = new Invoice();
-            ItemType itemType = new ItemType ();
-            Store store = new Store();
-            Lot lot = new Lot();
-
-            invoiceDetail.setInvoice(invoice);
-            invoiceDetail.setItemType(itemType);
-            invoiceDetail.setStore(store);
-            invoiceDetail.setLot(lot);
-
-            return Response.foundEntity(
-                    Json.toJson(invoiceDetail));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 }

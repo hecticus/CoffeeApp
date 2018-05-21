@@ -119,18 +119,34 @@ public class Lot extends AbstractEntity{
 
     private static Farm farmDao = new Farm();
 
+
+
     public static Lot findById(Long id){
         return finder.byId(id);
     }
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
-        ExpressionList expressionList = finder.query().where();
+    public ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Long idFarm, Integer statusLot){
+        ExpressionList expressionList = null;
+
+        if(idFarm.equals(0L)){
+            if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0);
+            else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1);
+        }else{
+            if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0).eq("id_farm",idFarm);
+            else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1).eq("id_farm",idFarm);
+        }
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(name != null )
+            expressionList.icontains("id_invoice", name);
+
+        if(statusLot != null)
+            expressionList.eq("status_lot", statusLot);
+
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());

@@ -250,11 +250,11 @@ public class Lots extends Controller {
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+//    @CoffeAppsecurity
+    public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idFarm, Integer statusLot) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = lotDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = lotDao.findAll(name, pageindex, pagesize, sort, pathProperties, all, idFarm, statusLot);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

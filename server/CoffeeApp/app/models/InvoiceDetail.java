@@ -312,7 +312,7 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long invoiceId){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
@@ -320,6 +320,9 @@ public class InvoiceDetail  extends AbstractEntity{
 
         if(sort != null)
             expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(invoiceId != 0L)
+            expressionList.eq("id_invoice", invoiceId );
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());

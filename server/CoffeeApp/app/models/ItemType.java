@@ -51,7 +51,7 @@ public class ItemType extends AbstractEntity
 
     private static Finder<Long, ItemType> finder = new Finder<>(ItemType.class);
 
-
+    //GETTER AND SETTER
     public Long getIdItemType() {
         return idItemType;
     }
@@ -110,8 +110,13 @@ public class ItemType extends AbstractEntity
         this.invoiceDetails = invoiceDetails;
     }
 
-
+    //METODOS DEFINE
     private static Unit unitDao = new Unit();
+
+    public static ItemType findById(Long id){
+        return finder.byId(id);
+    }
+
 
     public int getExist(String name_itemtype)
     {
@@ -191,7 +196,7 @@ public class ItemType extends AbstractEntity
         return itemTypes;
     }
 
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+/*    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
         ExpressionList expressionList = finder.query().where().eq("status_delete",0);
 
         if(pathProperties != null)
@@ -206,21 +211,28 @@ public class ItemType extends AbstractEntity
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
-
-    public static ItemType findById(Long id){
-        return finder.byId(id);
-    }
+    }*/
 
 
-    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+
+
+    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_ProviderType, Integer status){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(name != null)
+            expressionList.contains("name_itemType", name);
+
+        if(status !=null)
+            expressionList.eq("status_itemType", status);
+
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
+
+        if(id_ProviderType == null || id_ProviderType != 0L)
+            expressionList.eq("id_providerType", id_ProviderType);
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());

@@ -36,13 +36,14 @@ GET     /farm/:id                                                               
 ###############################################################################
 #·······                      Invoice                               ··········#
 ###############################################################################
-GET     /invoice                                                                controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long, startDate: String ?= null, endDate: String ?= null)
-GET     /invoice/search                                                         controllers.Invoices.findAllSearch(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null,id_provider: Integer ?= -2, idProviderType: Integer ?= 2, startDate: String ?= null, endDate: String ?= null)
-GET     /invoice/getByDateByProviderId/:ProviderId                              controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long,startDate: String ?= null, endDate: String ?= null)
+GET     /invoice                                                                controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null)
+GET     /invoice/search                                                         controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null)
+GET     /invoice/getByDateByProviderId/:ProviderId                              controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long, startDate: String ?= null, endDate: String ?= null)
 GET     /invoice/getByDateByProviderId/:date/:ProviderId                        controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long, date: String, endDate: String ?= null)
 
-GET     /invoice/search                                                         controllers.Invoices.search(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Integer ?= null, idProviderType: Long, startDate: String ?= null, endDate: String ?= null)
-#GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize  controllers.Invoices.getByDateByTypeProvider(date: String, typeProvider: Integer,pageindex: Integer, pagesize: Integer)
+#GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize controllers.Invoices.findAllSearch(name: String ?= null, pageindex: Integer, pagesize: Integer, sort: String ?= null, collection: String ?= null, typeProvider: Long, date: String, endDate: String ?= null)
+#GET     /invoice/search                                                         controllers.Invoices.findAllSearch(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, idProviderType: Long ?= 0L, startDate: String ?= null, endDate: String ?= null)
+#GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize  controllers.Invoices.findAllSearch(date: String ?= null, typeProvider: Integer,pageindex: Integer?= null, pagesize: Integer?= null)
 
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
@@ -52,21 +53,47 @@ PUT     /invoice/buyHarvestsAndCoffe                                            
 PUT     /invoice                                                                controllers.Invoices.update()
 DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
 
+###############################################################################
+#·······            InvoiceDetail                                   ··········#
+###############################################################################
+GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long ?= 0L)
+GET     /invoiceDetail/search                                                   controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long ?= 0L)
+GET     /invoiceDetail/findAllByIdInvoice/:invoiceId                            controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long)
+GET     /invoiceDetail/:id                                                      controllers.InvoiceDetails.findById(id : Long)
+GET     /invoiceDetail/new                                                      controllers.InvoiceDetails.preCreate()
+POST    /invoiceDetail                                                          controllers.InvoiceDetails.create()
+PUT     /invoiceDetail                                                          controllers.InvoiceDetails.update()
+DELETE  /invoiceDetail/:id                                                      controllers.InvoiceDetails.delete(id : Long)
+DELETE  /invoiceDetail/deleteAllByIdInvoiceAndDate/:idInvoice/:date             controllers.InvoiceDetails.deleteAllByIdInvoiceAndDate(idInvoice : Long, date: String)
+
 
 ###############################################################################
 #·······                       ItemType                             ··········#
 ###############################################################################
-GET     /itemType                                                               controllers.ItemTypes.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null)
-#GET     /itemType/search                                                        controllers.ItemTypes.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /itemType/new                                                           controllers.ItemTypes.preCreate()
+GET     /itemType                                                               controllers.ItemTypes.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, status: Integer?= null)
+GET     /itemType/search                                                        controllers.ItemTypes.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, status: Integer?= null)
+GET     /itemType/getByProviderTypeId/:id_ProviderType/:status                  controllers.ItemTypes.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_ProviderType: Long, status: Integer)
+GET     /itemType/getByNameItemType/:NameItemType/:order                        controllers.ItemTypes.findAll(NameItemType: String, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, id_provider: Long ?= 0L, status: Integer?= null)
 GET     /itemType/:id                                                           controllers.ItemTypes.findById(id : Long)
-GET     /itemType/getByProviderTypeId/:id_ProviderType/:status                  controllers.ItemTypes.getByProviderTypeId(id_ProviderType: Long, status:Integer )
-GET     /itemType/getByNameItemType/:NameItemType/:order                        controllers.ItemTypes.getByNameItemType(NameItemType: String, order:String )
+GET     /itemType/new                                                           controllers.ItemTypes.preCreate()
 POST    /itemType                                                               controllers.ItemTypes.create()
 PUT     /itemType                                                               controllers.ItemTypes.update()
 DELETE  /itemType/:id                                                           controllers.ItemTypes.delete(id : Long)
 
-
+###############################################################################
+#·······                          lot                               ··········#
+###############################################################################
+GET     /lot                                                                    controllers.Lots.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm:  Long ?= 0L, status: Integer ?= null)
+GET     /lot/search                                                             controllers.Lots.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm:  Long ?= 0L, status: Integer ?= null)
+#TODO REVIEW ORDER
+GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.getByNameLot(NameLot: String, order:String )
+GET     /lot/getByStatusLot/:StatusLot/:order                                   controllers.Lots.getByStatusLot(StatusLot: String, order:String )
+GET     /lot/:id                                                                controllers.Lots.findById(id : Long)
+GET     /lot/new                                                                controllers.Lots.preCreate()
+POST    /lot                                                                    controllers.Lots.create()
+PUT     /lot                                                                    controllers.Lots.update()
+DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
+POST    /lot/deletes                                                            controllers.Lots.deletes()
 
 
 ###############################################################################
