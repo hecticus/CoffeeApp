@@ -52,8 +52,6 @@ public class Provider extends AbstractEntity{
     @Column(name = "photo_Provider")
     private String photoProvider;
 
-
-
     @ManyToOne
     @JoinColumn(name = "id_providerType", nullable = false)
     @JsonBackReference
@@ -353,8 +351,8 @@ public class Provider extends AbstractEntity{
             entities = finder.query().where().eq("status_delete",0).findList();
         return entities;
     }
-    
-    
 
-    
+
+
+
 }

@@ -117,10 +117,10 @@ public class ProviderTypes {
     }
 
     @CoffeAppsecurity
-    public Result findAll(String name, Pager pager, String sort, String collection){
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Farm.findAll(name, pager, sort, pathProperties);
+            ListPagerCollection listPager = ProviderType.findAll(name, index, size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -131,10 +131,7 @@ public class ProviderTypes {
 
     @CoffeAppsecurity
     public Result findAll(Integer index, Integer size) {
-        Pager pager = new Pager();
-        pager.size = size;
-        pager.index = index;
-        return findAll(null, pager, null, null);
+        return findAll(null, index, size, null, null);
     }
 
     @CoffeAppsecurity

@@ -37,7 +37,7 @@ public class Invoice extends AbstractEntity{
 
     @Constraints.Required
     @Column(nullable = false, name = "status_invoice")
-    private Integer statusInvoice=1;
+    private Integer statusInvoice = 1;
 
     @Column( nullable = false, name = "dueDate_invoice")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
@@ -56,7 +56,7 @@ public class Invoice extends AbstractEntity{
     @Column(name = "total_invoice")
     private Double totalInvoice=0.00;
 
-
+    // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
 
     public Long getIdInvoice() {
@@ -118,35 +118,34 @@ public class Invoice extends AbstractEntity{
         this.totalInvoice = totalInvoice;
     }
 
+    //METODOS DEFINIDOS
     public static Invoice findById(Long id){
         return finder.byId(id);
     }
 
-    public List<Invoice> findAll(Integer pageIndex, Integer pageSize){
-        List<Invoice> entities;
-        if(pageIndex != -1 && pageSize != -1)
-            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-        else
-            // entities =  find.all();
-            entities = finder.query().where().eq("status_delete",0).findList();
-        return entities;
+    public  List<Invoice> getOpenByProviderId(Long providerId){
+        return finder.query().where().eq("id_provider",providerId)
+                .eq("status_delete",0)
+                .eq("status_invoice",1)
+                .orderBy("dueDate_invoice desc")
+                .findList();
     }
 
-    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer id_provider, Integer idProviderType, String startDate, String endDate){
+    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_provider, String startDate, String endDate){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+
         if(name != null )
             expressionList.icontains("id_invoice", name);
 
         if(id_provider != null)
-            expressionList.eq("id_provider.id_Provider", id_provider);
-
-        if(idProviderType != null)
-            expressionList.eq("id_provider.id_providerType", idProviderType);
+            expressionList.eq("id_Provider", id_provider);
+            //Se debe considerar devolver solos los invoices activos es decir ==1 se debe
+            //chequear la base de datos para ver como los registra
+            expressionList.eq("status_invoice",1); //TODO
 
         if(startDate != null)
             expressionList.eq("dueDate_invoice", startDate);
@@ -167,8 +166,42 @@ public class Invoice extends AbstractEntity{
                 pageSize);
     }
 
+    public static ListPagerCollection search(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_provider, Long id_providertype, String startDate, String endDate){
+        ExpressionList expressionList = finder.query().fetch("provider").where().eq("id_providertype",id_providertype);
 
-    public   ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
+       /* if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(name != null )
+            expressionList.icontains("id_invoice", name);
+
+        if(id_provider != null)
+            expressionList.eq("id_Provider", id_provider);
+        //Se debe considerar devolver solos los invoices activos es decir ==1 se debe
+        //chequear la base de datos para ver como los registra
+        expressionList.eq("status_invoice",1); //TODO
+
+        if(startDate != null)
+            expressionList.eq("dueDate_invoice", startDate);
+
+        if(endDate!= null)
+            expressionList.eq("closedDate_invoice", endDate);
+
+        if(sort != null)
+            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());*/
+
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
+    }
+
+
+    /* public   ListPagerCollection getByDateByTypeProvider(String date, Integer typeProvider, Integer pageIndex, Integer pagesize){
 
         String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
                 " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
@@ -198,13 +231,8 @@ public class Invoice extends AbstractEntity{
 
         return new ListPagerCollection(invoiceList.subList(pageIndex,Math.min(pageIndex+pagesize, invoiceList.size())), invoiceList.size(), pageIndex, pagesize);
         //return toInvoices(sqlRows)
-    }
+    }*/
 
-    public static List<Invoice> getByDateByProviderId(String date, Long providerId)
-    {
-        return finder.query().where().eq("id_provider",providerId).eq("dueDate_invoice",date).findList();
-
-    }
 
     public Boolean deletedInvoice( Long invoiceId)
     {
@@ -222,13 +250,6 @@ public class Invoice extends AbstractEntity{
         }
     }
 
-    public  static  List<Invoice> getOpenByProviderId(Long providerId){
-        return finder.query().where().eq("id_provider",providerId)
-                .eq("status_delete",0)
-                .eq("status_invoice",1)
-                .orderBy("dueDate_invoice desc")
-                .findList();
-    }
 
     public List<Invoice> toInvoices(List<SqlRow>  sqlRows)
     {
