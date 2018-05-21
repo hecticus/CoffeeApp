@@ -32,7 +32,7 @@ public class Farm extends AbstractEntity{
 
     @Constraints.Required
     @Column(nullable = false, name = "status_farm", length = 100)
-    private Integer statusFarm=1;
+    private Integer statusFarm = 1;
 
     @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
     @JsonIgnore
@@ -40,7 +40,7 @@ public class Farm extends AbstractEntity{
 
     private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
 
-    //Setter and Getter
+    // GETTER AND SETTER
     public Long getIdFarm() {
         return idFarm;
     }
@@ -75,8 +75,7 @@ public class Farm extends AbstractEntity{
     }
 
 
-    //Metodos Definidos
-
+    //METODOS DEFINIDOS
     public static Farm findById(Long id){
         return finder.byId(id);
     }
@@ -101,30 +100,5 @@ public class Farm extends AbstractEntity{
                 pager.index,
                 pager.size);
     }
-
-
-
-/*
-    public static PagedList findAll(String name, Pager pager, String sort, PathProperties pathProperties) {
-
-        ExpressionList expressionList = finder.query().where();
-
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-        if (name != null)
-            expressionList.icontains("NameFarm", name);
-
-        if (sort != null)
-            expressionList.orderBy(sort(sort));
-
-        if (pager.index == null || pager.size == null)
-            return expressionList.findPagedList();
-
-        return expressionList.findPagedList();
-    }*/
-
-
-
 
 }

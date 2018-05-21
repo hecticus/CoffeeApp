@@ -113,7 +113,7 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Farm farm = Farm.findById(id);
@@ -124,12 +124,12 @@ public class Farms extends Controller {
     }
 
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result findAllSearch(String name, Pager pager, String sort, String collection) {
         return findAll(name,pager, sort, collection);
     }
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result findAll(String name, Pager pager, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
@@ -140,20 +140,5 @@ public class Farms extends Controller {
             return ExceptionsUtils.find(e);
         }
     }
-
-
-
-//    @CoffeAppsecurity
-//    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-//        try {
-//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            PagedList listPager = Farm.findAll(name, pager, sort, pathProperties);
-//
-//            return ResponseCollection.foundEntity(listPager, pathProperties);
-//        }catch(Exception e){
-//            return ExceptionsUtils.find(e);
-//        }
-//    }
-
 
 }
