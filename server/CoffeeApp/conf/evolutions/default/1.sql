@@ -52,12 +52,12 @@ create table config (
 );
 
 create table farms (
-  id_farm                       bigint(100) auto_increment not null,
+  id_farm                       bigint auto_increment not null,
   status_delete                 integer not null,
-  name_farm                     varchar(100) not null,
-  status_farm                   integer(100) not null,
+  name_farm                     varchar(255) not null,
+  status_farm                   integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_farms primary key (id_farm)
 );
 
@@ -78,7 +78,7 @@ create table invoices (
   closeddate_invoice            datetime(6) not null,
   total_invoice                 double,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id_invoice)
 );
 
@@ -99,7 +99,7 @@ create table invoice_details (
   namedelivered_invoicedetail   varchar(255) not null,
   status_invoicedetail          integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_invoice_details primary key (id_invoicedetail)
 );
 
@@ -137,10 +137,10 @@ create table lots (
   area_lot                      varchar(255) not null,
   heigh_lot                     double not null,
   status_lot                    integer not null,
-  id_farm                       bigint(100) not null,
+  id_farm                       bigint not null,
   price_lot                     decimal(10,2) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_lots primary key (id_lot)
 );
 
@@ -169,22 +169,22 @@ create table providers (
   phonenumber_provider          varchar(255) not null,
   email_provider                varchar(255),
   photo_provider                varchar(255),
-  id_providertype               bigint(100) not null,
+  id_providertype               bigint not null,
   contactname_provider          varchar(255) not null,
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint uq_providers_identificationdoc_provider unique (identificationdoc_provider),
   constraint pk_providers primary key (id_provider)
 );
 
 create table provider_type (
-  id_providertype               bigint(100) auto_increment not null,
+  id_providertype               bigint auto_increment not null,
   status_delete                 integer not null,
-  name_providertype             varchar(100) not null,
+  name_providertype             varchar(255) not null,
   status_providertype           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_provider_type primary key (id_providertype)
 );
 
@@ -240,7 +240,7 @@ create table status (
   status_delete                 integer not null,
   name                          varchar(100),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_status primary key (id_status)
 );
 
@@ -250,8 +250,18 @@ create table stores (
   name_store                    varchar(255) not null,
   status_store                  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   constraint pk_stores primary key (id_store)
+);
+
+create table tokens (
+  id_token                      bigint auto_increment not null,
+  status_delete                 integer not null,
+  token                         varchar(500),
+  id_user                       bigint not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  constraint pk_tokens primary key (id_token)
 );
 
 create table units (
@@ -339,6 +349,9 @@ alter table auth_pin add constraint fk_auth_pin_auth_user_id foreign key (auth_u
 alter table auth_token add constraint fk_auth_token_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 create index ix_auth_token_auth_user_id on auth_token (auth_user_id);
 
+alter table tokens add constraint fk_tokens_id_user foreign key (id_user) references user (id) on delete restrict on update restrict;
+create index ix_tokens_id_user on tokens (id_user);
+
 alter table user add constraint fk_user_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 
 
@@ -406,6 +419,9 @@ alter table auth_pin drop foreign key fk_auth_pin_auth_user_id;
 alter table auth_token drop foreign key fk_auth_token_auth_user_id;
 drop index ix_auth_token_auth_user_id on auth_token;
 
+alter table tokens drop foreign key fk_tokens_id_user;
+drop index ix_tokens_id_user on tokens;
+
 alter table user drop foreign key fk_user_auth_user_id;
 
 drop table if exists auth_user;
@@ -453,6 +469,8 @@ drop table if exists auth_token;
 drop table if exists status;
 
 drop table if exists stores;
+
+drop table if exists tokens;
 
 drop table if exists units;
 

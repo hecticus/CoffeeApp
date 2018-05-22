@@ -198,11 +198,11 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+    //@CoffeAppsecurity
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = purityDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = Purity.findAll(name, index, size, sort, pathProperties, status);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

@@ -155,7 +155,7 @@ public class Purity extends AbstractEntity{
             expressionList.icontains("name_purity", name);
 
         if(sort != null)
-            expressionList.orderBy(AbstractEntity.sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
@@ -163,22 +163,28 @@ public class Purity extends AbstractEntity{
     }
 
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort,PathProperties pathProperties,  Integer status){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
-        if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+        if(status != null)
+            expressionList.eq("status_purity",status);
 
-        if(pageIndex == null || pageSize == null)
+        if(name != null)
+            expressionList.icontains("name_purity", name);
+
+        if(sort != null)
+            expressionList.orderBy(sort(sort));
+
+        if(index == null || size == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                index,
+                size);
     }
 
 }

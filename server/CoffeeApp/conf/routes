@@ -95,6 +95,21 @@ PUT     /lot                                                                    
 DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
 POST    /lot/deletes                                                            controllers.Lots.deletes()
 
+###############################################################################
+#·······                Purity                                      ··········#
+###############################################################################
+GET     /purity                                                                 controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /purity/search                                                          controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.getByNamePurity(NamePurity: String, order:String )
+GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
+
+#GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /purity/new                                                             controllers.Purities.preCreate()
+GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
+GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
+POST    /purity                                                                 controllers.Purities.create()
+PUT     /purity                                                                 controllers.Purities.update()
+DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
 
 ###############################################################################
 #·······                 ProviderType                               ··········#
