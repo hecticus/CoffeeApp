@@ -33,6 +33,21 @@ public class Providers extends Controller {
     }
 
     @CoffeAppsecurity
+    public Result preCreate() {
+
+
+        try {
+            ProviderType providerType = new ProviderType();
+            Provider provider = new Provider();
+            provider.setProviderType(providerType);
+            return Response.foundEntity(
+                    Json.toJson(provider));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -186,17 +201,99 @@ public class Providers extends Controller {
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
+
+
+    @CoffeAppsecurity
+    public Result deletes(){
+
+        boolean aux_delete = true;
         try {
 
-            Provider provider = findById(id);
-            //    providerDao.delete(id);
-            return Response.deletedEntity();
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
+
+            List<Long> aux = new ArrayList<Long>();
+            aux = JsonUtils.toArrayLong(json, "ids");
+
+            for (Long id : aux){
+                Provider provider = providerDao.findById(id);
+                List<Invoice> invoices = invoiceDao.getOpenByProviderId(id);
+                if(provider != null && invoices.size()==0){
+
+                    provider.setStatusDelete(1);
+                    provider.update();
+                }else{
+                    aux_delete = false;
+                }
+            }
+
+            if(aux_delete) return Response.message("Successful deletes");
+            else return  Response.messageNotDeleted("algunos proveedores tienen facturas aun no cerradas");
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+    @CoffeAppsecurity
+    public Result  uploadPhotoProvider(){
+        try
+        {
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
+
+            JsonNode idprovider = json.get("idProvider");
+            Long idProvider;
+            if (idprovider == null) {
+                JsonNode identificationDocProvider = json.get("identificationDocProvider");
+                if(identificationDocProvider == null){
+                    return Response.requiredParameter("identificationDocProvider or idProvider");
+                }else{
+                    Provider testp = providerDao.getByIdentificationDoc(identificationDocProvider.asText());
+                    if(testp != null){
+                        idProvider = testp.getIdProvider();
+                    }else{
+                        return Response.requiredParameter("identificationDocProvider invalid");
+                    }
+                }
+            }else{
+                idProvider = idprovider.asLong();
+            }
+
+            JsonNode base64Photo_json = json.get("photoProvider");
+            if (base64Photo_json == null)
+                return Response.requiredParameter("photoProvider");
+
+            String base64Photo = base64Photo_json.asText();
+
+            String url;
+            if(base64Photo.contains("data:image/jpeg;base64,"))
+            {
+                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
+                url = providerDao.uploadPhoto(base64Photo,"jpg");
+            }
+            else {
+                base64Photo = base64Photo.replace("data:image/png;base64,", "");
+                url = providerDao.uploadPhoto(base64Photo,"png");
+            }
+
+            Provider provider = providerDao.findById(idProvider);
+
+            provider.setPhotoProvider(url);
+
+            provider.update();
+
+            ObjectNode response = Json.newObject();
+            response.put("urlPhoto", url);
+            return Response.updatedEntity(response);
 
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return ExceptionsUtils.find(e);
         }
-    }*/
+    }
+
 
     @CoffeAppsecurity
     public Result findById(Long id) {
@@ -208,7 +305,19 @@ public class Providers extends Controller {
         }
     }
 
-/*
+    //    @CoffeAppsecurity
+    public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idProviderType, Integer statusProvider) {
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = Provider.findAll(name, pageindex, pagesize, sort, pathProperties, all, idProviderType, statusProvider);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
     @CoffeAppsecurity
     public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {
         try {
@@ -221,7 +330,6 @@ public class Providers extends Controller {
             return ExceptionsUtils.find(e);
         }
     }
-*/
 
 
     @CoffeAppsecurity
@@ -295,148 +403,7 @@ public class Providers extends Controller {
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
-    }
-*/
+    }*/
 
-    @CoffeAppsecurity
-    public static Result findAll(Pager pager, String sort, String collection) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = providerDao.findAll(pager.index, pager.size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-
-    @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {
-        try {
-
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = providerDao.findAllSearch(name, index, size, sort, pathProperties,false, listAll, false, idProviderType);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    @CoffeAppsecurity
-    public Result preCreate() {
-
-
-        try {
-            ProviderType providerType = new ProviderType();
-            Provider provider = new Provider();
-            provider.setProviderType(providerType);
-            return Response.foundEntity(
-                    Json.toJson(provider));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result deletes() {
-
-        boolean aux_delete = true;
-        try
-        {
-
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
-
-            List<Long> aux = new ArrayList<Long>();
-            aux = JsonUtils.toArrayLong(json, "ids");
-
-            for (Long id : aux)
-            {
-                Provider provider = providerDao.findById(id);
-                List<Invoice> invoices = invoiceDao.getOpenByProviderId(id);
-                if(provider != null && invoices.size()==0) {
-
-                    provider.setStatusDelete(1);
-                    provider.update();
-
-
-                }
-                else
-                {
-                    aux_delete = false;
-                }
-
-            }
-
-            if(aux_delete) return Response.message("Successful deletes");
-            else return  Response.messageNotDeleted("algunos proveedores tienen facturas aun no cerradas");
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result  uploadPhotoProvider()
-    {
-        try
-        {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
-
-            JsonNode idprovider = json.get("idProvider");
-            Long idProvider;
-            if (idprovider == null) {
-                JsonNode identificationDocProvider = json.get("identificationDocProvider");
-                if(identificationDocProvider == null){
-                    return Response.requiredParameter("identificationDocProvider or idProvider");
-                }else{
-                    Provider testp = providerDao.getByIdentificationDoc(identificationDocProvider.asText());
-                    if(testp != null){
-                        idProvider = testp.getIdProvider();
-                    }else{
-                        return Response.requiredParameter("identificationDocProvider invalid");
-                    }
-                }
-            }else{
-                idProvider = idprovider.asLong();
-            }
-
-            JsonNode base64Photo_json = json.get("photoProvider");
-            if (base64Photo_json == null)
-                return Response.requiredParameter("photoProvider");
-
-            String base64Photo = base64Photo_json.asText();
-
-            String url;
-            if(base64Photo.contains("data:image/jpeg;base64,"))
-            {
-                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
-                url = providerDao.uploadPhoto(base64Photo,"jpg");
-            }
-            else {
-                base64Photo = base64Photo.replace("data:image/png;base64,", "");
-                url = providerDao.uploadPhoto(base64Photo,"png");
-            }
-
-            Provider provider = providerDao.findById(idProvider);
-
-            provider.setPhotoProvider(url);
-
-            provider.update();
-
-            ObjectNode response = Json.newObject();
-            response.put("urlPhoto", url);
-            return Response.updatedEntity(response);
-
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 
 }

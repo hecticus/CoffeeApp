@@ -167,143 +167,50 @@ public class Provider extends AbstractEntity{
         return finder.byId(id);
     }
 
+    private static ProviderType providerTypeDao = new ProviderType();
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort){
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).findList());
-        return new ListPagerCollection(
-                finder.query().where().eq("status_delete",0).orderBy(AbstractEntity.sort(sort)).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                finder.query().findCount(),
-                pageIndex,
-                pageSize);
-    }
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties
+                                                pathProperties, Integer all, Long idProviderType, Integer statusProvider){
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(idProviderType != 0L)
+            expressionList.eq("id_providerType", idProviderType);
+
+        if(statusProvider != null)
+            expressionList.eq("status_Provider", statusProvider);
+
         if(sort != null)
             expressionList.orderBy(AbstractEntity.sort(sort));
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
-        return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
-    }
-
-    private static ProviderType providerTypeDao = new ProviderType();
-
-    public Provider getByIdentificationDoc(String IdentificationDoc)
-    {
-        return finder.query().where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
-    }
-
-    public List<Provider> getProvidersByName(String fullname_provider, String order)
-    {
-        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
-                " t0.fullname_provider full_name, " +
-                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
-                " t0.photo_provider photo," +
-                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
-                " from providers t0" +
-                " where  t0.status_delete=0"
-                + " ";
-
-        if(!fullname_provider.equals(""))     sql += " and  fullname_provider like '%"+fullname_provider+"%'  ";
-
-        sql += "  order by fullname_provider "+order+"";
-
-
-        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-                .findList();
-
-
-
-        return toProviders(sqlRows);
-
-    }
-
-    public  List<Provider> getByNameDocByTypeProvider(String nameDoc,Long id_providertype, String order)
-    {
-        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
-                " t0.fullname_provider full_name, " +
-                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
-                " t0.photo_provider photo," +
-                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
-                " from providers t0" +
-                " where id_providertype = :id_providertype and t0.status_delete=0 " +
-                "and (identificationdoc_provider like '%"+nameDoc+"%' or fullname_provider like '%"+nameDoc+"%')"
-
-                + "  order by fullname_provider  "+order+"";
-
-
-        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-                .setParameter("id_providertype",id_providertype)
-                .findList();
-
-        return toProviders(sqlRows);
-
-    }
-
-    public List<Provider> toProviders(List<SqlRow>  sqlRows)
-    {
-        List<Provider> providers = new ArrayList<>();
-        Provider provider;
-
-        for(int i=0; i < sqlRows.size(); ++i)
-        {
-            provider = new Provider();
-
-            provider.setContactNameProvider(sqlRows.get(i).getString("contact_name"));
-            provider.setFullNameProvider(sqlRows.get(i).getString("full_name"));
-            provider.setPhoneNumberProvider(sqlRows.get(i).getString("phone_number"));
-            provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
-            provider.setAddressProvider(sqlRows.get(i).getString("address"));
-            provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
-            provider.setEmailProvider(sqlRows.get(i).getString("email"));
-            provider.setPhotoProvider(sqlRows.get(i).getString("photo"));
-            provider.setProviderType(providerTypeDao.findById(sqlRows.get(i).getLong("providerType")));
-
-            providers.add(provider);
-        }
-
-        return providers;
-    }
-
-
-    public List<Integer> getExist(String identificationdoc_provider)
-    {
-        List<Integer> aux = new ArrayList<Integer>();
-        Provider provider = finder.query().where().eq("identificationdoc_provider",identificationdoc_provider).findUnique();
-        if(provider==null) aux.add(0,-1);
+        if(all == null)
+            expressionList.eq("status_delete",0);
         else
-        {
-            aux.add(0,provider.getStatusDelete());
-            aux.add(1,Integer.parseInt(provider.getIdProvider().toString()));
-        }
-        return aux;
+            expressionList.eq("status_delete",1);
+
+        if(index == null || size == null)
+            return new ListPagerCollection(expressionList.findList());
+        return new ListPagerCollection(
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                index,
+                size);
     }
 
 
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, boolean all, Integer listAll, boolean
-            inside, Integer idProviderType) {
+    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties
+            pathProperties, boolean all, Integer listAll, boolean inside, Integer idProviderType) {
 
         ExpressionList expressionList;
 
-        if(inside)
-        {
+        if(inside){
             if (all) expressionList = finder.query().where();
             else expressionList = finder.query().where().eq("status_delete", 0);
-        }
-        else
-        {
-            if(listAll.equals(1))
-            {
+        }else{
+            if(listAll.equals(1)){
                 if(idProviderType.equals(-1)) expressionList = finder.query().where().eq("status_delete",0);
                 else expressionList = finder.query().where().eq("status_delete",0).eq("id_providertype",idProviderType);
             }
@@ -324,6 +231,91 @@ public class Provider extends AbstractEntity{
         return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
     }
 
+
+    public Provider getByIdentificationDoc(String IdentificationDoc){
+        return finder.query().where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
+    }
+
+    public List<Provider> getProvidersByName(String fullname_provider, String order){
+        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
+                " t0.fullname_provider full_name, " +
+                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
+                " t0.photo_provider photo," +
+                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
+                " from providers t0" +
+                " where  t0.status_delete=0"
+                + " ";
+
+        if(!fullname_provider.equals(""))     sql += " and  fullname_provider like '%"+fullname_provider+"%'  ";
+
+        sql += "  order by fullname_provider "+order+"";
+
+
+        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
+                .findList();
+
+        return toProviders(sqlRows);
+
+    }
+
+    public  List<Provider> getByNameDocByTypeProvider(String nameDoc,Long id_providertype, String order)
+    {
+        String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
+                " t0.fullname_provider full_name, " +
+                "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
+                " t0.photo_provider photo," +
+                " t0.contactname_provider  contact_name, t0.id_providertype providerType" +
+                " from providers t0" +
+                " where id_providertype = :id_providertype and t0.status_delete=0 " +
+                "and (identificationdoc_provider like '%"+nameDoc+"%' or fullname_provider like '%"+nameDoc+"%')"
+
+                + "  order by fullname_provider  "+order+"";
+
+        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
+                .setParameter("id_providertype",id_providertype)
+                .findList();
+
+        return toProviders(sqlRows);
+    }
+
+    public List<Provider> toProviders(List<SqlRow>  sqlRows){
+        List<Provider> providers = new ArrayList<>();
+        Provider provider;
+
+        for(int i=0; i < sqlRows.size(); ++i){
+            provider = new Provider();
+
+            provider.setContactNameProvider(sqlRows.get(i).getString("contact_name"));
+            provider.setFullNameProvider(sqlRows.get(i).getString("full_name"));
+            provider.setPhoneNumberProvider(sqlRows.get(i).getString("phone_number"));
+            provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
+            provider.setAddressProvider(sqlRows.get(i).getString("address"));
+            provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
+            provider.setEmailProvider(sqlRows.get(i).getString("email"));
+            provider.setPhotoProvider(sqlRows.get(i).getString("photo"));
+            provider.setProviderType(providerTypeDao.findById(sqlRows.get(i).getLong("providerType")));
+
+            providers.add(provider);
+        }
+
+        return providers;
+    }
+
+
+    public List<Integer> getExist(String identificationdoc_provider){
+        List<Integer> aux = new ArrayList<Integer>();
+        Provider provider = finder.query().where().eq("identificationdoc_provider",identificationdoc_provider).findUnique();
+        if(provider==null) aux.add(0,-1);
+        else
+        {
+            aux.add(0,provider.getStatusDelete());
+            aux.add(1,Integer.parseInt(provider.getIdProvider().toString()));
+        }
+        return aux;
+    }
+
+
+
     public String uploadPhoto(String base64Photo, String ext) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -340,19 +332,6 @@ public class Provider extends AbstractEntity{
         return result.get("url").asText();
 
     }
-
-    public List<Provider> findAll(Integer pageIndex, Integer pageSize){
-        List<Provider> entities;
-        if(pageIndex != -1 && pageSize != -1)
-            //    entities = finder.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-        else
-            // entities =  finder.all();
-            entities = finder.query().where().eq("status_delete",0).findList();
-        return entities;
-    }
-
-
 
 
 }

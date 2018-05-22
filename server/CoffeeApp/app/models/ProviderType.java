@@ -104,28 +104,30 @@ public class ProviderType  extends AbstractEntity {
     }
 
 
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties pathProperties){
-        ExpressionList expressionList = finder.query().where();
 
-        if(name!=null)
-            expressionList.contains( "name_ProviderType", name);
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort,PathProperties pathProperties,  Integer status){
+        ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
+
+        if(status != null)
+            expressionList.eq("status_purity",status);
+
+        if(name != null)
+            expressionList.icontains("name_ProviderType", name);
 
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
         if(index == null || size == null)
-            return new ListPagerCollection(expressionList.eq("status_ProviderType",0).findList());
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
         return new ListPagerCollection(
-                expressionList.setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
     }
-
-
 
 
     public List<ProviderType> getProviderTypesByName(String name_providertype, String order)

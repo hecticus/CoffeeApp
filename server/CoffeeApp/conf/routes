@@ -102,14 +102,36 @@ GET     /purity                                                                 
 GET     /purity/search                                                          controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.getByNamePurity(NamePurity: String, order:String )
 GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
-
-#GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 GET     /purity/new                                                             controllers.Purities.preCreate()
 GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
-GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
-POST    /purity                                                                 controllers.Purities.create()
 PUT     /purity                                                                 controllers.Purities.update()
+POST    /purity                                                                 controllers.Purities.create()
 DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
+
+#GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+
+###############################################################################
+#·······                    Provider                                ··········#
+###############################################################################
+GET     /provider                                                               controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
+GET     /provider/new                                                           controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
+GET     /provider/search                                                        controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
+GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, all: Integer ?= 0, id_providertype:  Long, status: Integer ?= null)
+GET     /provider/:index/:size                                                  controllers.Providers.findAll(name: String ?= null, index: Integer, size: Integer , sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
+#GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order   controllers.Providers.getByNameDocByTypeProvider(nameDoc: String, id_providertype: Long,order: String)
+GET     /provider/getByIdentificationDoc/:IdentificationDoc                     controllers.Providers.getByIdentificationDoc(IdentificationDoc: String)
+GET     /provider/getProvidersByName/:name/:order                               controllers.Providers.getProvidersByName(name:String,order:String)
+GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
+PUT     /provider                                                               controllers.Providers.update()
+POST    /provider                                                               controllers.Providers.create()
+POST    /provider/deletes                                                       controllers.Providers.deletes()
+POST    /provider/uploadPhotoProvider                                           controllers.Providers.uploadPhotoProvider()
+DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
+
+#TODO
+#GET     /provider/search                                                        controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
+#·listo
+#GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)
 
 ###############################################################################
 #·······                 ProviderType                               ··········#
@@ -118,4 +140,14 @@ GET     /providerType/getProviderTypesByName/:name/:order                       
 GET     /providerType/findAll/:index/:size                                      controllers.ProviderTypes.findAll(index: Integer, size: Integer)
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
 
-
+###############################################################################
+#·······                     Store                                  ··········#
+###############################################################################
+GET     /store                                                                  controllers.Stores.findAll((name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+#GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /store/new                                                              controllers.Stores.preCreate()
+GET     /store/:id                                                              controllers.Stores.findById(id : Long)
+GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )
+POST    /store                                                                  controllers.Stores.create()
+PUT     /store                                                                  controllers.Stores.update()
+DELETE  /store/:id                                                              controllers.Stores.delete(id : Long)
