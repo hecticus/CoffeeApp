@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by drocha on 31/05/17.
+ * Created by sm21 on 23/05/18.
  */
 @Entity
 @Table(name="farms")

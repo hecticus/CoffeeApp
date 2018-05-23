@@ -19,14 +19,14 @@ GET     /assets/*file                       controllers.Assets.versioned(path="/
 
 
 ###############################################################################
-#·······                 Authentication                             ··········#
+#·······                     Authentication                         ··········#
 ###############################################################################
 POST    /oauth/token                                                            security.authentication.oauth2.PasswordGrant.token()
 POST    /oauth/revokeToken                                                      security.authentication.oauth2.PasswordGrant.revokeToken()
 #POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
 
 ###############################################################################
-#·······                Farm                                        ··········#
+#·······                        Farm                                ··········#
 ###############################################################################
 GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /farm/search                                                            controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
@@ -35,15 +35,11 @@ GET     /farm/:id                                                               
 ###############################################################################
 #·······                      Invoice                               ··········#
 ###############################################################################
-GET     /invoice                                                                controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null)
-GET     /invoice/search                                                         controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null)
-GET     /invoice/getByDateByProviderId/:ProviderId                              controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long, startDate: String ?= null, endDate: String ?= null)
-GET     /invoice/getByDateByProviderId/:date/:ProviderId                        controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long, date: String, endDate: String ?= null)
-
-#GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize controllers.Invoices.findAllSearch(name: String ?= null, pageindex: Integer, pagesize: Integer, sort: String ?= null, collection: String ?= null, typeProvider: Long, date: String, endDate: String ?= null)
-#GET     /invoice/search                                                         controllers.Invoices.findAllSearch(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, idProviderType: Long ?= 0L, startDate: String ?= null, endDate: String ?= null)
-#GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize  controllers.Invoices.findAllSearch(date: String ?= null, typeProvider: Integer,pageindex: Integer?= null, pagesize: Integer?= null)
-
+GET     /invoice                                                                controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+GET     /invoice/search                                                         controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+GET     /invoice/getByDateByProviderId/:ProviderId                              controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null,  status: Integer ?= null, all: Integer ?= 0)
+GET     /invoice/getByDateByProviderId/:date/:ProviderId                        controllers.Invoices.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, ProviderId: Long, typeProvider: Long ?= 0L, date: String, endDate: String ?= null,  status: Integer ?= null, all: Integer ?= 0)
+GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize controllers.Invoices.findAllSearch(name: String ?= null, pageindex: Integer, pagesize: Integer, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long, date: String, endDate: String ?= null)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
 POST    /invoice                                                                controllers.Invoices.create()
@@ -53,7 +49,7 @@ PUT     /invoice                                                                
 DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
 
 ###############################################################################
-#·······            InvoiceDetail                                   ··········#
+#·······                       InvoiceDetail                        ··········#
 ###############################################################################
 GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long ?= 0L)
 GET     /invoiceDetail/search                                                   controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long ?= 0L)
@@ -82,10 +78,12 @@ DELETE  /itemType/:id                                                           
 ###############################################################################
 #·······                          lot                               ··········#
 ###############################################################################
-GET     /lot                                                                    controllers.Lots.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm:  Long ?= 0L, status: Integer ?= null)
+#GET     /lot                                                                    controllers.Lots.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm:  Long ?= 0L, status: Integer ?= null)
 GET     /lot/search                                                             controllers.Lots.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idFarm:  Long ?= 0L, status: Integer ?= null)
+#GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.findAll(NameLot: String, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, all: Integer ?= 0, idFarm:  Long ?= 0L, status: Integer ?= null)
+
 #TODO REVIEW ORDER
-GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.getByNameLot(NameLot: String, order:String )
+#GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.getByNameLot(NameLot: String, order:String )
 GET     /lot/getByStatusLot/:StatusLot/:order                                   controllers.Lots.getByStatusLot(StatusLot: String, order:String )
 GET     /lot/:id                                                                controllers.Lots.findById(id : Long)
 GET     /lot/new                                                                controllers.Lots.preCreate()
@@ -95,7 +93,7 @@ DELETE  /lot/:id                                                                
 POST    /lot/deletes                                                            controllers.Lots.deletes()
 
 ###############################################################################
-#·······                Purity                                      ··········#
+#·······                        Purity                              ··········#
 ###############################################################################
 GET     /purity                                                                 controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /purity/search                                                          controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
@@ -110,7 +108,7 @@ DELETE  /purity/:id                                                             
 #GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 
 ###############################################################################
-#·······                    Provider                                ··········#
+#·······                          Provide                           ··········#
 ###############################################################################
 GET     /provider                                                               controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= null, idProviderType:  Long ?= 0L, status: Integer ?= null)
 GET     /provider/new                                                           controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= null, idProviderType:  Long ?= 0L, status: Integer ?= null)

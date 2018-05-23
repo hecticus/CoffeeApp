@@ -232,7 +232,7 @@ public class Provider extends AbstractEntity{
     }
 
 
-    public Provider getByIdentificationDoc(String IdentificationDoc){
+    public static Provider getByIdentificationDoc(String IdentificationDoc){
         return finder.query().where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
     }
 

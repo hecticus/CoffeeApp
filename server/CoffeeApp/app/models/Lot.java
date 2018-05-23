@@ -126,43 +126,35 @@ public class Lot extends AbstractEntity{
     }
 
     public ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Long idFarm, Integer statusLot){
-        ExpressionList expressionList = null;
+        ExpressionList expressionList = finder.query().where();
 
-        if(idFarm.equals(0L)){
-            if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0);
-            else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1);
-        }else{
-            if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0).eq("id_farm",idFarm);
-            else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1).eq("id_farm",idFarm);
-        }
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(idFarm != 0L)
+            expressionList.eq("id_farm", idFarm);
+
         if(name != null )
-            expressionList.icontains("id_invoice", name);
+            expressionList.eq("name_lot", name);
 
         if(statusLot != null)
             expressionList.eq("status_lot", statusLot);
 
+        if (all != null)
+            expressionList.eq("status_delete", all);
+
         if(sort != null)
-            expressionList.orderBy(sort(sort));
+            expressionList.orderBy(sort(sort, nameLot, idLot));
 
         if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+            return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
                 pageIndex,
                 pageSize);
     }
-
-    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
-
-/*    public LotDaoImpl(){
-        propertiesCollection.putPropertiesCollection("s", "(idLot, nameLot)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }*/
 
     public List<Integer> getExist(String name_lot, int id_farm)
     {
@@ -231,8 +223,9 @@ public class Lot extends AbstractEntity{
     }
 
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Integer idFarm) {
-
+        String strOrder = "ASC";
         ExpressionList expressionList = null;
+
         if(idFarm.equals(-1)) {
             if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0);
             else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1);
@@ -250,7 +243,7 @@ public class Lot extends AbstractEntity{
             expressionList.icontains("name_lot", name);
 
         if(sort != null)
-            expressionList.orderBy(sort(sort));
+            expressionList.orderBy(sort(sort, nameLot, idLot));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());

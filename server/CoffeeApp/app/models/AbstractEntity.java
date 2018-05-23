@@ -14,6 +14,7 @@ import play.data.validation.Constraints;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
+import java.util.InputMismatchException;
 
 /**
  *
@@ -80,4 +81,21 @@ public abstract class AbstractEntity extends Model {
         return sort + " asc";
     }
 
+    public static String sort(String sort, String name, Long id) {
+        try {
+            String[] sorting = sort.split(" ", 2);
+
+            System.out.println(sorting[0]);
+            System.out.println("*********************");
+            System.out.println(sorting[1]);
+            if (sorting[0].equals(name) || sorting[0].equals(id)) {
+                if (sorting[1].equals("desc") || sorting[1].equals("asc"))
+                    return sorting.toString();
+            }
+            return "";
+        }catch(InputMismatchException e){
+            System.out.println("That is not an integer, please try again." );
+            return "";
+        }
+    }
 }

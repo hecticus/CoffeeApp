@@ -37,10 +37,25 @@ public class Invoices extends Controller {
 
     public Invoices(){
         propertiesCollection.putPropertiesCollection("s", "(id, name)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
+        propertiesCollection.putPropertiesCollection("m", "(*" +
+                ", provider(id_Provider, identificationDoc_Provider, fullName_Provider, address_Provider" +
+                " phoneNumber_Provider,email_Provider, providerType(id_ProviderType, name_ProviderType))");
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
+    public  Result preCreate() {
+        try {
+            Provider provider = new Provider();
+            Invoice invoice = new Invoice();
+            invoice.setProvider(provider);
+
+            return Response.foundEntity(Json.toJson(invoice));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+//    @CoffeAppsecurity
     public    Result create() {
         try
         {
@@ -72,12 +87,10 @@ public class Invoices extends Controller {
             DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime((startDate.asText()));
             DateTime closedDatetime =  Request.dateTimeFormatter.parseDateTime((closedDate.asText()));
 
-
-
             // mapping object-json
             Invoice invoice = Json.fromJson(json, Invoice.class);
 
-            invoice.setProvider(providerDao.findById(id_provider.asLong()));
+            invoice.setProvider(Provider.findById(id_provider.asLong()));
             invoice.setStartDateInvoice(startDatetime);
             invoice.setClosedDateInvoice(closedDatetime);
 
@@ -90,7 +103,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public  Result update() {
         try
         {
@@ -105,11 +118,11 @@ public class Invoices extends Controller {
 
             //   Invoice invoice =  Json.fromJson(json, Invoice.class);
 
-            Invoice invoice =   invoiceDao.findById(id.asLong());
+            Invoice invoice =   Invoice.findById(id.asLong());
 
             JsonNode id_provider = json.get("id_provider");
             if (id_provider != null)
-                invoice.setProvider(providerDao.findById(id_provider.asLong()));
+                invoice.setProvider(Provider.findById(id_provider.asLong()));
 
 
 
@@ -138,14 +151,14 @@ public class Invoices extends Controller {
     public  Result delete(Long id) {
 
         try{
-            Invoice invoice = invoiceDao.findById(id);
+            Invoice invoice = Invoice.findById(id);
             if(invoice != null) {
 
                 invoice.setStatusDelete(1);
                 invoice.setStatusInvoice(3);
                 invoice.update();// = invoiceDao.update(invoice);
 
-                if(invoiceDao.deletedInvoice(id))
+                if(Invoice.deletedInvoice(id))
                     return  Response.message("Fallo ejecucion del store procedure");
 
                 return Response.message("Entity Deleted");
@@ -168,10 +181,11 @@ public class Invoices extends Controller {
     }
 
 //    @CoffeAppsecurity
-    public   Result findAll(String name, Integer pageIndex, Integer pageSize, String sort, String collection, Long id_provider, String startDate, String endDate){
+    public   Result findAll(String name, Integer pageIndex, Integer pageSize, String sort, String collection, Long
+                                            id_provider, Long id_providertype, String startDate, String endDate, Integer status, Integer all){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Invoice.findAll(name, pageIndex, pageSize, sort, pathProperties, id_provider, startDate, endDate);
+            ListPagerCollection listPager = Invoice.findAll(name, pageIndex, pageSize, sort, pathProperties, id_provider, id_providertype, startDate, endDate, status, all);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -179,33 +193,17 @@ public class Invoices extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
-    public  Result findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, String collection,Long id_provider, Long id_providertype, String startDate, String endDate) {
+    //    @CoffeAppsecurity
+    public  Result findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, String collection, Long id_provider, Long id_providertype, String startDate, String endDate) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDao.getByDateByTypeProvider(startDate, id_providertype,  pageIndex, pageSize);//, sort, pathProperties, id_provider, startDate, endDate);
+            ListPagerCollection listPager = Invoice.getByDateByTypeProvider(startDate, id_providertype,  pageIndex, pageSize);//, sort, pathProperties, id_provider, startDate, endDate);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
     }
 
-
-
-    @CoffeAppsecurity
-    public  Result preCreate() {
-
-        try {
-            Provider provider = new Provider();
-            Invoice invoice = new Invoice();
-            invoice.setProvider(provider);
-
-            return Response.foundEntity(
-                    Json.toJson(invoice));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 
     @CoffeAppsecurity
     public  Result buyHarvestsAndCoffe(){
@@ -222,7 +220,7 @@ public class Invoices extends Controller {
             if(identificationDocProvider == null){
                 return Response.requiredParameter("identificationDocProvider or idProvider");
             }else{
-                idProvider = providerDao.getByIdentificationDoc(identificationDocProvider.asText()).getIdProvider();
+                idProvider = Provider.getByIdentificationDoc(identificationDocProvider.asText()).getIdProvider();
             }
         }else{
             idProvider = idprovider.asLong();
@@ -271,7 +269,7 @@ public class Invoices extends Controller {
             if (idItemtype == null)
                 return Response.requiredParameter("idItemType");
 
-            ItemType itemType = itemTypeDao.findById(idItemtype.asLong());
+            ItemType itemType = ItemType.findById(idItemtype.asLong());
 
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             invoiceDetail.setItemType(itemType);
@@ -283,7 +281,7 @@ public class Invoices extends Controller {
                 if (idLot == null)
                     return Response.requiredParameter("idLot");
 
-                Lot lot = lotDao.findById(idLot.asLong());
+                Lot lot = Lot.findById(idLot.asLong());
 
                 invoiceDetail.setLot(lot);
                 invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
@@ -300,7 +298,7 @@ public class Invoices extends Controller {
                 if (id_store == null)
                     return Response.requiredParameter("id_store");
 
-                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
+                invoiceDetail.setStore(Store.findById(id_store.asLong()));
 
                 monto = Amount.asInt() * (float) price.asDouble();
 
@@ -377,7 +375,7 @@ public class Invoices extends Controller {
                     if (valueRateInvoiceDetailPurity == null)
                         return Response.requiredParameter("valueRateInvoiceDetailPurity");
 
-                    Purity puritys = purityDao.findById(idPurity.asLong());
+                    Purity puritys = Purity.findById(idPurity.asLong());
 
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());

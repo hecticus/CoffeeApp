@@ -34,6 +34,22 @@ public class Lots extends Controller {
     }
 
     @CoffeAppsecurity
+    public Result preCreate() {
+
+
+        try {
+            Farm farm = new Farm();
+            Lot lot = new Lot();
+            lot.setFarm(farm);
+
+            return Response.foundEntity(
+                    Json.toJson(lot));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -176,17 +192,43 @@ public class Lots extends Controller {
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
 
-            Lot lot = findById(id);
-            //    lotDao.delete(id);
-            return Response.deletedEntity();
+    @CoffeAppsecurity
+    public Result deletes() {
+        boolean aux_delete = true;
+        try
+        {
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
 
+            List<Long> aux = new ArrayList<Long>();
+            aux = JsonUtils.toArrayLong(json, "ids");
+
+            for (Long id : aux)
+            {
+                Lot lot = lotDao.findById(id);
+
+                List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+                if(lot != null  && invoiceDetails.size()==0) {
+
+                    lot.setStatusDelete(1);
+                    lot.update();// = lotDao.update(lot);
+
+                    return Response.deletedEntity();
+                } else {
+                    aux_delete = false;
+
+                }
+
+            }
+
+            if(aux_delete)  return  Response.messageNotDeleted("La eliminacion fue correcta");
+            else  return  Response.messageNotDeleted(" algunos registros tiene facturas aun no cerradas");
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return ExceptionsUtils.find(e);
         }
-    }*/
+    }
 
     @CoffeAppsecurity
     public Result findById(Long id) {
@@ -198,15 +240,17 @@ public class Lots extends Controller {
         }
     }
 
-   /* @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
+    //    @CoffeAppsecurity
+    public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idFarm, Integer statusLot) {
         try {
-            List<Lot> lots = lotDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(lots));
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = lotDao.findAllSearch(name, pageindex, pagesize, sort, pathProperties, all, idFarm.intValue());//, statusLot);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return Response.internalServerErrorLF();
+            return ExceptionsUtils.find(e);
         }
-    }*/
+    }
 
     public Result getByNameLot(String NameLot, String order)
     {
@@ -250,85 +294,6 @@ public class Lots extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
-    public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idFarm, Integer statusLot) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = lotDao.findAll(name, pageindex, pagesize, sort, pathProperties, all, idFarm, statusLot);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer all, Integer idFarm) {
-        try {
-
-
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = lotDao.findAllSearch(name, index, size, sort, pathProperties, all,idFarm);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    @CoffeAppsecurity
-    public Result preCreate() {
-
-
-        try {
-            Farm farm = new Farm();
-            Lot lot = new Lot();
-            lot.setFarm(farm);
-
-            return Response.foundEntity(
-                    Json.toJson(lot));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    @CoffeAppsecurity
-    public Result deletes() {
-        boolean aux_delete = true;
-        try
-        {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
-
-            List<Long> aux = new ArrayList<Long>();
-            aux = JsonUtils.toArrayLong(json, "ids");
-
-            for (Long id : aux)
-            {
-                Lot lot = lotDao.findById(id);
-
-                List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
-                if(lot != null  && invoiceDetails.size()==0) {
-
-                    lot.setStatusDelete(1);
-                    lot.update();// = lotDao.update(lot);
-
-                    return Response.deletedEntity();
-                } else {
-                    aux_delete = false;
-
-                }
-
-            }
-
-            if(aux_delete)  return  Response.messageNotDeleted("La eliminacion fue correcta");
-            else  return  Response.messageNotDeleted(" algunos registros tiene facturas aun no cerradas");
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 
     @CoffeAppsecurity
     public  Result getByIdFarm(Long idFarm, Integer index, Integer size, String sort, String collection)
