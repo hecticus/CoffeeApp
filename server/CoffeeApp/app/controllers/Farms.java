@@ -125,15 +125,10 @@ public class Farms extends Controller {
 
 
     //@CoffeAppsecurity
-    public Result findAllSearch(String name, Pager pager, String sort, String collection) {
-        return findAll(name,pager, sort, collection);
-    }
-
-    //@CoffeAppsecurity
-    public Result findAll(String name, Pager pager, String sort, String collection){
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Farm.findAll(name, pager, sort, pathProperties);
+            ListPagerCollection listPager = Farm.findAll(name, index, size, sort, pathProperties, status);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

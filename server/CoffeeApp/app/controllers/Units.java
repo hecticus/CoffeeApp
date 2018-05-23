@@ -1,9 +1,13 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.utils.ListPagerCollection;
+import io.ebean.text.PathProperties;
 import models.ItemType;
 import models.Unit;
+import models.responseUtils.ExceptionsUtils;
 import models.responseUtils.Response;
+import models.responseUtils.ResponseCollection;
 import play.libs.Json;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
@@ -41,12 +45,8 @@ public class Units {
             if (status == null)
                 return Response.requiredParameter("status");
 
-
-
-
             // mapping object-json
             Unit unit = Json.fromJson(json, Unit.class);
-
 
             unit.save();// = unitDao.create(unit);
             return Response.createdEntity(Json.toJson(unit));
@@ -109,17 +109,7 @@ public class Units {
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
 
-            Unit unit = findById(id);
-            //    unitDao.delete(id);
-            return Response.deletedEntity();
-
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
 
     @CoffeAppsecurity
     public Result findById(Long id) {
@@ -131,13 +121,19 @@ public class Units {
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
+    //@CoffeAppsecurity
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status) {
         try {
-            List<Unit> units = unitDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(units));
+//            List<Unit> units = unitDao.findAll(index, size);
+            ListPagerCollection listPager = Unit.findAll(name, index, size, sort, null, status);
+
+            return ResponseCollection.foundEntity(listPager);
         }catch(Exception e){
-            return Response.internalServerErrorLF();
+            return ExceptionsUtils.find(e);
         }
     }
+
 }
+
+
+

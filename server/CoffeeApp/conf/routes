@@ -3,10 +3,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET     /                                   controllers.HomeController.index
 
 # An example controller showing how to write asynchronous code
-GET     /message                    controllers.AsyncController.message
+GET     /message                            controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
@@ -28,9 +28,8 @@ POST    /oauth/revokeToken                                                      
 ###############################################################################
 #·······                Farm                                        ··········#
 ###############################################################################
-GET     /farm/search                                                            controllers.Farms.findAll(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-#GET     /farm/search                                                            controllers.Farms.findAllSearch(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /farm/search                                                            controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /farm/:id                                                               controllers.Farms.findById(id : Long)
 
 ###############################################################################
@@ -137,20 +136,32 @@ DELETE  /provider/:id                                                           
 #·······                 ProviderType                               ··········#
 ###############################################################################
 GET     /providerType/findAll/:index/:size                                      controllers.ProviderTypes.findAll(name: String ?= null, index: Integer, size: Integer , sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-#GET     /providerType/findAll/:index/:size                                      controllers.ProviderTypes.findAll(name: String ?= null, index: Integer ?= null, size: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-#GET     /providerType/findAll/:index/:size                                      controllers.ProviderTypes.findAll(index: Integer, size: Integer)
-GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
-
+GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.findAll(name: String, index: Integer ?= null, size: Integer ?= null, order: String, collection: String ?= null, status: Integer ?= null)
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
 
 ###############################################################################
 #·······                     Store                                  ··········#
 ###############################################################################
 GET     /store                                                                  controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-#GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /store/new                                                              controllers.Stores.preCreate()
+GET     /store/search                                                           controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, StatusStore: Integer)
 GET     /store/:id                                                              controllers.Stores.findById(id : Long)
-GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )
-POST    /store                                                                  controllers.Stores.create()
+GET     /store/new                                                              controllers.Stores.preCreate()
 PUT     /store                                                                  controllers.Stores.update()
+POST    /store                                                                  controllers.Stores.create()
 DELETE  /store/:id                                                              controllers.Stores.delete(id : Long)
+
+#GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )
+#GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+
+###############################################################################
+#·······                       Unit                                 ··········#
+###############################################################################
+GET     /unit                                                                   controllers.Units.findAll(name: String ?= null, index: Integer ?= null, size: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /unit/findAll/:index/:size                                              controllers.Units.findAll(name: String ?= null, index: Integer, size: Integer, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /unit/:id                                                               controllers.Units.findById(id : Long)
+PUT     /unit                                                                   controllers.Units.update()
+POST    /unit                                                                   controllers.Units.create()
+DELETE  /unit/:id                                                               controllers.Units.delete(id : Long)
+
+

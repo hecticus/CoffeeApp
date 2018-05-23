@@ -80,25 +80,27 @@ public class Farm extends AbstractEntity{
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(String name, Pager pager, String sort, PathProperties pathProperties){
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort,PathProperties pathProperties,  Integer status){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(status != null)
+            expressionList.eq("status_farm",status);
+
+        if(name != null)
+            expressionList.icontains("name_farm", name);
+
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
-
-        if(name!=null)
-            expressionList.contains( "name_farm", name);
-
-        if(pager.index == null || pager.size == null)
+            expressionList.orderBy(sort(sort));
+        if(index == null || size == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pager.index).setMaxRows(pager.size).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pager.index).setMaxRows(pager.size).findCount(),
-                pager.index,
-                pager.size);
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                index,
+                size);
     }
 
 }

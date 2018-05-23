@@ -1,7 +1,10 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import controllers.utils.ListPagerCollection;
+import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -78,16 +81,30 @@ public class Unit extends AbstractEntity{
         }
     }
 
-    public List<Unit> findAll(Integer pageIndex, Integer pageSize){
-        List<Unit> entities;
-        if(pageIndex != -1 && pageSize != -1)
-            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-        else
-            // entities =  find.all();
-            entities = finder.query().where().eq("status_delete",0).findList();
-        return entities;
-    }
 
+
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties pathProperties, Integer status){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(status != null)
+            expressionList.eq("status_unit",status);
+
+        if(name != null)
+            expressionList.icontains("name_unit", name);
+
+        if(sort != null)
+            expressionList.orderBy(sort(sort));
+
+        if(index == null || size == null)
+            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        return new ListPagerCollection(
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                index,
+                size);
+    }
 
 }

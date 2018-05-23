@@ -166,11 +166,11 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+    //@CoffeAppsecurity
+    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = storeDao.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = Store.findAll(name, index, size, sort, pathProperties, status);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

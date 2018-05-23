@@ -112,7 +112,7 @@ public class ProviderType  extends AbstractEntity {
             expressionList.apply(pathProperties);
 
         if(status != null)
-            expressionList.eq("status_purity",status);
+            expressionList.eq("status_ProviderType",status);
 
         if(name != null)
             expressionList.icontains("name_ProviderType", name);

@@ -116,7 +116,7 @@ public class ProviderTypes {
         }
     }
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
