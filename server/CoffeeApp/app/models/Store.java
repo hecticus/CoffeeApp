@@ -93,9 +93,9 @@ public class Store extends AbstractEntity{
         if(name != null)
             expressionList.icontains("name_store", name);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
-
+        if(sort != null) {
+            expressionList.orderBy(sort);
+        }
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
         return new ListPagerCollection(
@@ -104,6 +104,7 @@ public class Store extends AbstractEntity{
                 index,
                 size);
     }
+
 
     public List<Store> getByStatusStore(String StatusStore, String order){
         String sql="select t0.id_store c0, t0.status_delete c1, t0.name_store c2, t0.status_store c3, " +
@@ -142,21 +143,5 @@ public class Store extends AbstractEntity{
         return stores;
     }
 
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = finder.query().where().eq("status_delete",0);
-
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-        if(name != null)
-            expressionList.icontains("name_store", name);
-
-        if(sort != null)
-            expressionList.orderBy(AbstractEntity.sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
 
 }

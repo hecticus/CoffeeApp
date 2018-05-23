@@ -29,6 +29,20 @@ public class Stores {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
+
+    @CoffeAppsecurity
+    public Result preCreate() {
+
+
+        try {
+            Store store = new Store();
+            return Response.foundEntity(
+                    Json.toJson(store));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
     @CoffeAppsecurity
     public Result create() {
         try
@@ -49,9 +63,6 @@ public class Stores {
             JsonNode status = json.get("statusStore");
             if (status == null)
                 return Response.requiredParameter("statusStore");
-
-
-
 
             // mapping object-json
             Store store = Json.fromJson(json, Store.class);
@@ -80,15 +91,13 @@ public class Stores {
             Store store =  Json.fromJson(json, Store.class);
 
             JsonNode Name = json.get("nameStore");
-            if (Name != null)
-            {
+            if (Name != null) {
                 int registered = storeDao.getExist(Name.asText().toUpperCase());
                 if(registered==0) return  Response.messageExist("nameStore");
                 if(registered==1) return  Response.messageExistDeleted("nameStore");
 
                 store.setNameStore(Name.asText().toUpperCase());
             }
-
 
             store.update();
             return Response.updatedEntity(Json.toJson(store));
@@ -115,17 +124,6 @@ public class Stores {
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
-
-            Store store = findById(id);
-            //    storeDao.delete(id);
-            return Response.deletedEntity();
-
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
 
     @CoffeAppsecurity
     public Result findById(Long id) {
@@ -137,15 +135,6 @@ public class Stores {
         }
     }
 
- /*   @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
-        try {
-            List<Store> stores = storeDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(stores));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }*/
 
     public Result getByStatusStore(String statusStore, String order)
     {
@@ -178,30 +167,5 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
-        try {
 
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = storeDao.findAllSearch(name, index, size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    @CoffeAppsecurity
-    public Result preCreate() {
-
-
-        try {
-            Store store = new Store();
-            return Response.foundEntity(
-                    Json.toJson(store));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 }
