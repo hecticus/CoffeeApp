@@ -42,17 +42,9 @@ public abstract class AbstractEntity extends Model {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
 
-    public static String sort(String sort) {
-        if (sort == null)
-            return "";
-        if (sort.startsWith("-"))
-            return sort.substring(1) + " desc";
-        return sort + " asc";
-    }
-
     @Constraints.Required
     @Column(nullable = false)
-    private Integer statusDelete=0;
+    private Integer statusDelete = 0;
 
     public Integer getStatusDelete() {
         return statusDelete;
@@ -78,6 +70,14 @@ public abstract class AbstractEntity extends Model {
     //@JsonIgnore
     public void setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public static String sort(String sort) {
+        if (sort == null)
+            return "";
+        if (sort.startsWith("-"))
+            return sort.substring(1) + " desc";
+        return sort + " asc";
     }
 
 }

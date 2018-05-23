@@ -121,7 +121,7 @@ public class InvoiceDetailPurity  extends AbstractEntity{
             expressionList.apply(pathProperties);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());

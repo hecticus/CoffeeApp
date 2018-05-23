@@ -319,7 +319,7 @@ public class InvoiceDetail  extends AbstractEntity{
             expressionList.apply(pathProperties);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(invoiceId != 0L)
             expressionList.eq("id_invoice", invoiceId );

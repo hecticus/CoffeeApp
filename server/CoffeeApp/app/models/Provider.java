@@ -224,7 +224,7 @@ public class Provider extends AbstractEntity{
             expressionList.icontains("fullName_provider", name);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());

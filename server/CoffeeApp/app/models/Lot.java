@@ -250,7 +250,7 @@ public class Lot extends AbstractEntity{
             expressionList.icontains("name_lot", name);
 
         if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
