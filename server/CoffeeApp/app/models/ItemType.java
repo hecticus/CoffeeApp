@@ -118,7 +118,7 @@ public class ItemType extends AbstractEntity
     }
 
 
-    public int getExist(String name_itemtype)
+    public static int getExist(String name_itemtype)
     {
         if(finder.query().where().eq("name_itemtype",name_itemtype).eq("status_delete",0).findUnique()!=null) return 0;
         else

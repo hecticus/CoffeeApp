@@ -208,8 +208,7 @@ public class Invoice extends AbstractEntity{
     }
 
 
-    public static Boolean deletedInvoice( Long invoiceId)
-    {
+    public static Boolean deletedInvoice( Long invoiceId){
         try {
             String sql = " CALL `deletedInvoicesAndInvoicesDetails`(:invoiceId) ";
 
@@ -218,8 +217,7 @@ public class Invoice extends AbstractEntity{
 
             SqlRow result = query.findUnique();
             return false;
-        }catch (Exception e)
-        {
+        }catch (Exception e){
             return true;
         }
     }
@@ -333,11 +331,10 @@ public class Invoice extends AbstractEntity{
 
     }
 
-    public double calcularTotalInvoice(Long idInvioce)
-    {
+    public static  double calcularTotalInvoice(Long idInvioce) {
         List<InvoiceDetail> invoiceDetails = InvoiceDetail.finderAllByIdInvoice(idInvioce);
         Lot lot;
-        Invoice invoice = this.findById(idInvioce);
+        Invoice invoice = Invoice.findById(idInvioce);//this.findById(idInvioce);
         double total = 0;
         boolean harvest = true;
         if(invoice.getProvider().getProviderType().getNameProviderType().toUpperCase().equals("VENDEDOR")) harvest=false;

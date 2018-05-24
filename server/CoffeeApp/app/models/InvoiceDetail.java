@@ -224,12 +224,12 @@ public class InvoiceDetail  extends AbstractEntity{
 
     }
 
-    public    List<InvoiceDetail> getOpenByItemTypeId( Long idItemType)
+    public  static  List<InvoiceDetail> getOpenByItemTypeId( Long idItemType)
     {
         return finder.query().where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
     }
 
-    public    List<InvoiceDetail> getOpenByLotId( Long idLot)
+    public  static  List<InvoiceDetail> getOpenByLotId( Long idLot)
     {
         return finder.query().where().eq("id_lot",idLot).eq("status_delete",0).findList();
     }
@@ -290,7 +290,7 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public int deleteAllByIdInvoiceAndDate(Long idInvoice, String date){
+    public static int deleteAllByIdInvoiceAndDate(Long idInvoice, String date){
 
         date = "'"+date+"'";
 
@@ -303,7 +303,7 @@ public class InvoiceDetail  extends AbstractEntity{
         return query.execute();
     }
 
-    public List<InvoiceDetail> findAllByIdInvoice(Long IdInvoice){
+    public static List<InvoiceDetail> findAllByIdInvoice(Long IdInvoice){
         return finder
                 .query()
                 .where()
@@ -312,7 +312,7 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long invoiceId){
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long invoiceId){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())

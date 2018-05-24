@@ -147,20 +147,15 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public  Result delete(Long id) {
 
         try{
             Invoice invoice = Invoice.findById(id);
             if(invoice != null) {
-
                 invoice.setStatusDelete(1);
                 invoice.setStatusInvoice(3);
-                invoice.update();// = invoiceDao.update(invoice);
-
-                if(Invoice.deletedInvoice(id))
-                    return  Response.message("Fallo ejecucion del store procedure");
-
+                invoice.update();
                 return Response.message("Entity Deleted");
             } else {
                 return  Response.message("Successful no existe el registro a eliminar");
@@ -253,8 +248,6 @@ public class Invoices extends Controller {
 
         if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
             return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
-
-
 
         Invoice openInvoice = null;
 

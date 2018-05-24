@@ -38,12 +38,9 @@ public class InvoiceDetails extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result preCreate() {
-
-
         try {
-
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             Invoice invoice = new Invoice();
             ItemType itemType = new ItemType ();
@@ -62,7 +59,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -109,26 +106,33 @@ public class InvoiceDetails extends Controller {
             if (startDate==  null)
                 return Response.requiredParameter("startDateInvoiceDetail");
 
-
+            System.out.println("hola/////////");
             // mapping object-json
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
-
+            System.out.println(("chao---------------------"));
 
             JsonNode id_store = json.get("id_store");
             if (id_store != null)
-                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
+                invoiceDetail.setStore(Store.findById(id_store.asLong()));
 
-            invoiceDetail.setInvoice(invoiceDao.findById(id_invoice.asLong()));
-            invoiceDetail.setItemType(itemTypeDao.findById(id_itemType.asLong()));
-            invoiceDetail.setLot(lotDao.findById(id_lot.asLong()));
+            System.out.println("/////////////////////////////");
+            invoiceDetail.setInvoice(Invoice.findById(id_invoice.asLong()));
+            System.out.println("/////////////////////////////"+invoiceDetail.getInvoice().getIdInvoice());
+            invoiceDetail.setItemType(ItemType.findById(id_itemType.asLong()));
+            System.out.println("/////////////////////////////"+invoiceDetail.getItemType().getNameItemType());
+            invoiceDetail.setLot(Lot.findById(id_lot.asLong()));
+            System.out.println("/////////////////////////////"+invoiceDetail.getLot().getNameLot());
 
-            DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
-
+            System.out.println();
+            DateTime startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
+//            DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
+            System.out.println(startDate.toString());
 
             invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 
             invoiceDetail.save();// = invoiceDetailDao.create(invoiceDetail);
             //  return Response.createdEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
+            System.out.println(invoiceDetail.getIdInvoiceDetail());
             return  Response.createdEntity(Json.toJson(invoiceDetail));
 
         }catch(Exception e){
@@ -136,7 +140,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update() {
         try
         {
@@ -201,7 +205,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         Invoice invoice;
         try{
@@ -232,17 +236,6 @@ public class InvoiceDetails extends Controller {
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
-
-            InvoiceDetail invoiceDetail = findById(id);
-            //    invoiceDetailDao.delete(id);
-            return Response.deletedEntity();
-
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
 
     //@CoffeAppsecurity
     public Result findById(Long id) {
@@ -272,17 +265,17 @@ public class InvoiceDetails extends Controller {
         try {
             List<InvoiceDetail> invoiceDetails;
 
-            int result = invoiceDetailDao.deleteAllByIdInvoiceAndDate(IdInvoice,date);
+            int result = InvoiceDetail.deleteAllByIdInvoiceAndDate(IdInvoice,date);
 
-            List<InvoiceDetail> invoicesDetailsOpen= invoiceDetailDao.findAllByIdInvoice(IdInvoice);
-            Invoice  invoice = invoiceDao.findById(IdInvoice);
+            List<InvoiceDetail> invoicesDetailsOpen= InvoiceDetail.findAllByIdInvoice(IdInvoice);
+            Invoice  invoice = Invoice.findById(IdInvoice);
             if ( invoicesDetailsOpen.size()==0)
             {
 
                 invoice.setStatusDelete(1);
 
             }
-            newTotal = invoiceDao.calcularTotalInvoice(IdInvoice);
+            newTotal = Invoice.calcularTotalInvoice(IdInvoice);
             invoice.setTotalInvoice(newTotal);
             invoice.update();// = invoiceDao.update(invoice);
             return this.findAllByIdInvoice(IdInvoice);
@@ -296,7 +289,7 @@ public class InvoiceDetails extends Controller {
     public Result findAll(Integer index, Integer size, String sort, String collection, Long invoiceId) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = invoiceDetailDao.findAll(index, size, sort, pathProperties, invoiceId);
+            ListPagerCollection listPager = InvoiceDetail.findAll(index, size, sort, pathProperties, invoiceId);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

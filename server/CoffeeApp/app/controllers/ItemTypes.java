@@ -36,10 +36,8 @@ public class ItemTypes extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result preCreate() {
-
-
         try {
             ItemType itemtype = new ItemType();
 
@@ -50,10 +48,9 @@ public class ItemTypes extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
-        try
-        {
+        try{
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
@@ -87,8 +84,8 @@ public class ItemTypes extends Controller {
 
             itemType.setNameItemType(Name.asText().toUpperCase());
 
-            itemType.setUnit(unitDao.findById(id_unit.asLong()));
-            itemType.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
+            itemType.setUnit(Unit.findById(id_unit.asLong()));
+            itemType.setProviderType(ProviderType.findById(typeProvider.asLong()));
 
             itemType.save();// = itemTypeDao.create(itemType);
             return Response.createdEntity(Json.toJson(itemType));
@@ -98,7 +95,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update() {
         try
         {
@@ -115,7 +112,7 @@ public class ItemTypes extends Controller {
             JsonNode Name = json.get("nameItemType");
             if (Name != null)
             {
-                int registered = itemTypeDao.getExist(Name.asText().toUpperCase());
+                int registered = ItemType.getExist(Name.asText().toUpperCase());
                 if(registered==0) return  Response.messageExist("nameItemType");
                 if(registered==1) return  Response.messageExistDeleted("nameItemType");
 
@@ -138,11 +135,11 @@ public class ItemTypes extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            ItemType itemType = itemTypeDao.findById(id);
-            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByItemTypeId(id);
+            ItemType itemType = ItemType.findById(id);
+            List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByItemTypeId(id);
             if(itemType != null  && invoiceDetails.size()==0) {
 
                 itemType.setStatusDelete(1);

@@ -33,10 +33,8 @@ public class Lots extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result preCreate() {
-
-
         try {
             Farm farm = new Farm();
             Lot lot = new Lot();
@@ -49,7 +47,7 @@ public class Lots extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result create() {
         try
         {
@@ -110,7 +108,7 @@ public class Lots extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update() {
         try
         {
@@ -143,8 +141,7 @@ public class Lots extends Controller {
                 return Response.requiredParameter("price_lot", "US precio");
 
             Lot lot =  Json.fromJson(json, Lot.class);
-
-            Lot lot_up = lotDao.findById(id.asLong());
+            Lot lot_up = Lot.findById(id.asLong());
 
             JsonNode Name = json.get("name");
             if (Name == null || Name.asText().equals("null") || Name.asText().equals(""))
@@ -153,7 +150,7 @@ public class Lots extends Controller {
             JsonNode nameChange = json.get("nameChange");
             if (Name != null && (!nameChange.asText().equals(Name.asText()) || !farm.asText().equals(lot_up.getFarm().getIdFarm().toString())))
             {
-                List<Integer> registered = lotDao.getExist(Name.asText().toUpperCase(),farm.asInt());
+                List<Integer> registered = Lot.getExist(Name.asText().toUpperCase(),farm.asInt());
                 if(registered.get(0)==0) return  Response.messageExist("name");
                 if(registered.get(0)==1) return  Response.messageExistDeleted("name");
 
@@ -161,7 +158,7 @@ public class Lots extends Controller {
             }
 
 
-            lot.setFarm(farmDao.findById(farm.asLong()));
+            lot.setFarm(Farm.findById(farm.asLong()));
 
             lot.update();// = lotDao.update(lot);
             return Response.updatedEntity(Json.toJson(lot));
@@ -171,12 +168,12 @@ public class Lots extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Lot lot = lotDao.findById(id);
+            Lot lot = Lot.findById(id);
 
-            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+            List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
             if(lot != null  && invoiceDetails.size()==0) {
 
                 lot.setStatusDelete(1);
@@ -193,7 +190,7 @@ public class Lots extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result deletes() {
         boolean aux_delete = true;
         try
@@ -207,13 +204,13 @@ public class Lots extends Controller {
 
             for (Long id : aux)
             {
-                Lot lot = lotDao.findById(id);
+                Lot lot = Lot.findById(id);
 
                 List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
                 if(lot != null  && invoiceDetails.size()==0) {
 
                     lot.setStatusDelete(1);
-                    lot.update();// = lotDao.update(lot);
+                    lot.update();// = Lot.update(lot);
 
                     return Response.deletedEntity();
                 } else {
@@ -230,10 +227,10 @@ public class Lots extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Lot lot = lotDao.findById(id);
+            Lot lot = Lot.findById(id);
             return Response.foundEntity(Response.toJson(lot, Lot.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
@@ -244,7 +241,7 @@ public class Lots extends Controller {
     public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idFarm, Integer statusLot) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = lotDao.findAllSearch(name, pageindex, pagesize, sort, pathProperties, all, idFarm.intValue());//, statusLot);
+            ListPagerCollection listPager = lotDao.findAll(name, pageindex, pagesize, sort, pathProperties, all, idFarm.intValue());//, statusLot);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -267,7 +264,7 @@ public class Lots extends Controller {
             if(NameLot.equals(""))
                 return Response.message("Falta el atributo [name]");
 
-            List<Lot> lots = lotDao.getByNameLot(NameLot,strOrder);
+            List<Lot> lots = Lot.getByNameLot(NameLot,strOrder);
             return Response.foundEntity(Json.toJson(lots));
 
         }catch(Exception e){
@@ -286,7 +283,7 @@ public class Lots extends Controller {
                 return Response.requiredParameter("order (ASC o DESC)");
 
 
-            List<Lot> lots = lotDao.getByStatusLot(StatusLot,strOrder);
+            List<Lot> lots = Lot.getByStatusLot(StatusLot,strOrder);
             return Response.foundEntity(Json.toJson(lots));
 
         }catch(Exception e){
@@ -295,12 +292,12 @@ public class Lots extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public  Result getByIdFarm(Long idFarm, Integer index, Integer size, String sort, String collection)
     {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = lotDao.getByIdFarm(idFarm, index, size, sort, pathProperties);
+            ListPagerCollection listPager = Lot.getByIdFarm(idFarm, index, size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
