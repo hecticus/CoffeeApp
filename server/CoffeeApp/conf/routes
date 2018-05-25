@@ -95,28 +95,27 @@ DELETE  /lot/:id                                                                
 #·······                        Purity                              ··········#
 ###############################################################################
 GET     /purity                                                                 controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /purity/new                                                             controllers.Purities.preCreate()
 GET     /purity/search                                                          controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.getByNamePurity(NamePurity: String, order:String )
 GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
-GET     /purity/new                                                             controllers.Purities.preCreate()
 GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
 PUT     /purity                                                                 controllers.Purities.update()
 POST    /purity                                                                 controllers.Purities.create()
 DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
 
-#GET     /purity/search                                                          controllers.Purities.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-
 ###############################################################################
-#·······                          Provide                           ··········#
+#·······                          Provider                          ··········#
 ###############################################################################
-GET     /provider                                                               controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= null, idProviderType:  Long ?= 0L, status: Integer ?= null)
+GET     /provider                                                               controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
 GET     /provider/new                                                           controllers.Providers.preCreate()
-GET     /provider/search                                                        controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= null, idProviderType:  Long ?= 0L, status: Integer ?= null)
-GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, all: Integer ?= null, id_providertype:  Long, status: Integer ?= null)
-GET     /provider/:index/:size                                                  controllers.Providers.findAll(name: String ?= null, index: Integer, size: Integer , sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
-#GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order   controllers.Providers.getByNameDocByTypeProvider(nameDoc: String, id_providertype: Long,order: String)
-GET     /provider/getByIdentificationDoc/:IdentificationDoc                     controllers.Providers.getByIdentificationDoc(IdentificationDoc: String)
+GET     /provider/search                                                        controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
 GET     /provider/getProvidersByName/:name/:order                               controllers.Providers.getProvidersByName(name:String,order:String)
+GET     /provider/getByIdentificationDoc/:IdentificationDoc                     controllers.Providers.getByIdentificationDoc(IdentificationDoc: String)
+#GET     /provider/getByNameDocByTypeProvider/:nameDoc/:id_providertype/:order   controllers.Providers.getByNameDocByTypeProvider(nameDoc: String, id_providertype: Long,order: String)
+#GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)
+GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, all: Integer ?= 0, id_providertype:  Long, status: Integer ?= null)
+GET     /provider/:index/:size                                                  controllers.Providers.findAll(name: String ?= null, index: Integer, size: Integer , sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType:  Long ?= 0L, status: Integer ?= null)
 GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
 POST    /provider                                                               controllers.Providers.create()
 POST    /provider/deletes                                                       controllers.Providers.deletes()
@@ -124,33 +123,28 @@ POST    /provider/uploadPhotoProvider                                           
 PUT     /provider                                                               controllers.Providers.update()
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
 
-#TODO
-#GET     /provider/search                                                        controllers.Providers.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null, all: Integer ?= 0, idProviderType: Integer  ?= -1)
-#·listo
-#GET     /provider/getByTypeProvider/:id_providertype/:order                     controllers.Providers.getByTypeProvider(id_providertype: Long,order: String)
-
 ###############################################################################
 #·······                 ProviderType                               ··········#
 ###############################################################################
 GET     /providerType/findAll/:index/:size                                      controllers.ProviderTypes.findAll(name: String ?= null, index: Integer, size: Integer , sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.findAll(name: String, index: Integer ?= null, size: Integer ?= null, order: String, collection: String ?= null, status: Integer ?= null)
+#GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
 
 ###############################################################################
 #·······                     Store                                  ··········#
 ###############################################################################
 GET     /store                                                                  controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-GET     /store/search                                                           controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
 GET     /store/new                                                              controllers.Stores.preCreate()
-
+#GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /store/search                                                           controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+#GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )
 GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, StatusStore: Integer)
 GET     /store/:id                                                              controllers.Stores.findById(id : Long)
-PUT     /store                                                                  controllers.Stores.update()
 POST    /store                                                                  controllers.Stores.create()
+PUT     /store                                                                  controllers.Stores.update()
 DELETE  /store/:id                                                              controllers.Stores.delete(id : Long)
 
-#GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )
-#GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 
 ###############################################################################
 #·······                       Unit                                 ··········#

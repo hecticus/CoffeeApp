@@ -115,10 +115,11 @@ public class ProviderType  extends AbstractEntity {
             expressionList.eq("status_ProviderType",status);
 
         if(name != null)
-            expressionList.icontains("name_ProviderType", name);
+            System.out.println("****************************************");
+            expressionList.eq("name_ProviderType", name).findUnique();
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+//        if(sort != null)
+//            expressionList.orderBy(sort(sort));
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
@@ -181,18 +182,7 @@ public class ProviderType  extends AbstractEntity {
         }
 
     }
-    //
-//    public List<ProviderType> findAll(Integer pageIndex, Integer pageSize){
-//        List<ProviderType> entities;
-//        if(pageIndex != -1 && pageSize != -1)
-//            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-//            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-//        else
-//            // entities =  find.all();
-//            entities = finder.query().where().eq("status_delete",0).findList();
-//        return entities;
-//
-//    }
+
     public static PagedList findAll(Integer pageIndex, Integer pageSize){
         ExpressionList expressionList = finder.query().where();
 

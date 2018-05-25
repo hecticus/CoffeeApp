@@ -128,7 +128,7 @@ public class ProviderTypes {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result  getProviderTypesByName( String name, String order){
         String strOrder = "ASC";
         try {

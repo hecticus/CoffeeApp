@@ -183,13 +183,11 @@ public class Provider extends AbstractEntity{
         if(statusProvider != null)
             expressionList.eq("status_Provider", statusProvider);
 
-        if(sort != null)
-            expressionList.orderBy(AbstractEntity.sort(sort));
+//        if(sort != null)
+//            expressionList.orderBy(sort(sort));
 
-        if(all == null)
-            expressionList.eq("status_delete",0);
-        else
-            expressionList.eq("status_delete",1);
+
+        expressionList.eq("status_delete",all);
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());

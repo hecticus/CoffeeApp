@@ -31,7 +31,7 @@ public class Purities extends Controller{
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -72,7 +72,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update() {
         try
         {
@@ -105,16 +105,15 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Purity purity = purityDao.findById(id);
-            List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+            Purity purity = Purity.findById(id);
+            List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
+            System.out.println(purity.getNamePurity());
             if(purity != null  && invoiceDetails.size()==0) {
-
                 purity.setStatusDelete(1);
                 purity.update();
-
                 return Response.deletedEntity();
             } else {
                 if(purity == null)  return  Response.message("Successful no existe el registro a eliminar");
@@ -124,19 +123,8 @@ public class Purities extends Controller{
             return Response.responseExceptionDeleted(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
 
-            Purity purity = findById(id);
-            //    purityDao.delete(id);
-            return Response.deletedEntity();
-
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
-
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Purity purity = purityDao.findById(id);
@@ -145,16 +133,6 @@ public class Purities extends Controller{
             return Response.internalServerErrorLF();
         }
     }
-
- /*   @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
-        try {
-            List<Purity> puritys = purityDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(puritys));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }*/
 
     public Result getByNamePurity(String NamePurity, String order)
     {
@@ -224,7 +202,7 @@ public class Purities extends Controller{
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result preCreate() {
 
 

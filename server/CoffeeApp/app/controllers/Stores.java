@@ -30,7 +30,7 @@ public class Stores {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result preCreate() {
 
 
@@ -43,7 +43,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -76,7 +76,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update() {
         try
         {
@@ -107,7 +107,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Store store = storeDao.findById(id);
@@ -125,7 +125,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Store store = storeDao.findById(id);

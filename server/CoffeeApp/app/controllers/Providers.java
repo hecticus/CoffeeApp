@@ -32,7 +32,7 @@ public class Providers extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result preCreate() {
 
 
@@ -47,7 +47,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try
         {
@@ -111,7 +111,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update() {
         try
         {
@@ -181,7 +181,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Provider provider = providerDao.findById(id);
@@ -203,7 +203,7 @@ public class Providers extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result deletes(){
 
         boolean aux_delete = true;
@@ -236,7 +236,7 @@ public class Providers extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result  uploadPhotoProvider(){
         try
         {
@@ -295,7 +295,7 @@ public class Providers extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Provider provider = providerDao.findById(id);
@@ -318,7 +318,7 @@ public class Providers extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {
         try {
 
@@ -332,7 +332,7 @@ public class Providers extends Controller {
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result  getByIdentificationDoc(String IdentificationDoc){
         try {
             Provider provider = providerDao.getByIdentificationDoc(IdentificationDoc);
@@ -361,49 +361,49 @@ public class Providers extends Controller {
         }
     }
 
-/*
-    public Result  getByTypeProvider(Long id_providertype, String order)
-    {
-        String strOrder = "ASC";
-        try {
 
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-
-            List<Provider> providers = providerDao.getByTypeProvider(id_providertype,strOrder);
-            return Response.foundEntity(Json.toJson(providers));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
-    public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order)
-    {
-        List<Provider> providers;
-        String strOrder = "ASC";
-        try
-        {
-
-
-            if (providerTypeDao.findById(id_providertype)==null) return Response.notFoundEntity("providerType");
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC")) return Response.requiredParameter("order (ASC o DESC)");
-
-
-            if(!nameDoc.equals("-1"))  providers = providerDao.getByNameDocByTypeProvider(nameDoc,id_providertype,strOrder);
-            else   providers = providerDao.getByTypeProvider(id_providertype,strOrder);
-
-
-            return Response.foundEntity(Json.toJson(providers));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }*/
+//    public Result  getByTypeProvider(Long id_providertype, String order)
+//    {
+//        String strOrder = "ASC";
+//        try {
+//
+//            if(!order.equals("-1")) strOrder = order;
+//
+//            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
+//                return Response.requiredParameter("order (ASC o DESC)");
+//
+//
+//            List<Provider> providers = providerDao.getByTypeProvider(id_providertype,strOrder);
+//            return Response.foundEntity(Json.toJson(providers));
+//        }catch(Exception e){
+//            return Response.internalServerErrorLF();
+//        }
+//    }
+//
+//    public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order)
+//    {
+//        List<Provider> providers;
+//        String strOrder = "ASC";
+//        try
+//        {
+//
+//
+//            if (providerTypeDao.findById(id_providertype)==null) return Response.notFoundEntity("providerType");
+//
+//            if(!order.equals("-1")) strOrder = order;
+//
+//            if(!strOrder.equals("ASC") && !strOrder.equals("DESC")) return Response.requiredParameter("order (ASC o DESC)");
+//
+//
+//            if(!nameDoc.equals("-1"))  providers = providerDao.getByNameDocByTypeProvider(nameDoc,id_providertype,strOrder);
+//            else   providers = providerDao.getByTypeProvider(id_providertype,strOrder);
+//
+//
+//            return Response.foundEntity(Json.toJson(providers));
+//        }catch(Exception e){
+//            return Response.internalServerErrorLF();
+//        }
+//    }
 
 
 }

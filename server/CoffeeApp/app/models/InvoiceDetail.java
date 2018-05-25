@@ -224,18 +224,15 @@ public class InvoiceDetail  extends AbstractEntity{
 
     }
 
-    public  static  List<InvoiceDetail> getOpenByItemTypeId( Long idItemType)
-    {
+    public  static  List<InvoiceDetail> getOpenByItemTypeId( Long idItemType){
         return finder.query().where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
     }
 
-    public  static  List<InvoiceDetail> getOpenByLotId( Long idLot)
-    {
+    public  static  List<InvoiceDetail> getOpenByLotId( Long idLot){
         return finder.query().where().eq("id_lot",idLot).eq("status_delete",0).findList();
     }
 
-    public    List<InvoiceDetail> getOpenByStoreId( Long idStore)
-    {
+    public    List<InvoiceDetail> getOpenByStoreId( Long idStore){
         return finder.query().where().eq("id_store",idStore).eq("status_delete",0).findList();
     }
 
