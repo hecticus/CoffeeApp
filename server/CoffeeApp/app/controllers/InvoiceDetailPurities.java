@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.InvoiceDetail;
 import models.InvoiceDetailPurity;
 import models.Purity;
-import models.responseUtils.Response;
+import controllers.responseUtils.Response;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import models.requestUtils.Request;
-import models.responseUtils.CustomDateTimeSerializer;
-import models.responseUtils.Response;
+import controllers.requestUtils.Request;
+import controllers.responseUtils.CustomDateTimeSerializer;
+import controllers.responseUtils.Response;
 import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 

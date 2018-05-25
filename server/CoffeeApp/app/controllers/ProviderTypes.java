@@ -8,8 +8,8 @@ import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Farm;
 import models.ProviderType;
-import models.responseUtils.ExceptionsUtils;
-import models.responseUtils.ResponseCollection;
+import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ResponseCollection;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -27,7 +27,7 @@ public class ProviderTypes {
 
     @Inject
     private FormFactory formFactory;
-    private static models.responseUtils.PropertiesCollection propertiesCollection = new models.responseUtils.PropertiesCollection();
+    private static controllers.responseUtils.PropertiesCollection propertiesCollection = new controllers.responseUtils.PropertiesCollection();
 
     public ProviderTypes(){
         propertiesCollection.putPropertiesCollection("s", "(idProviderType, nameProviderType)");

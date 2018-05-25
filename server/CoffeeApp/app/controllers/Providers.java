@@ -8,7 +8,7 @@ import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Provider;
 import models.ProviderType;
-import models.responseUtils.*;
+import controllers.responseUtils.*;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;

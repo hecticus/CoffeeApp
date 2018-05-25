@@ -6,12 +6,11 @@ import io.ebean.text.PathProperties;
 import models.Farm;
 import models.InvoiceDetail;
 import models.Lot;
-import models.requestUtils.Request;
-import models.responseUtils.*;
+import controllers.requestUtils.Request;
+import controllers.responseUtils.*;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
 
 import java.util.ArrayList;
 import java.util.List;

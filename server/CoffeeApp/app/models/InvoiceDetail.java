@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import models.responseUtils.CustomDateTimeSerializer;
+import controllers.responseUtils.CustomDateTimeSerializer;
 import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 import play.libs.Json;

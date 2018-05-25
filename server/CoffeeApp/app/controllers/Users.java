@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import models.User;
-import models.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ExceptionsUtils;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -34,7 +34,7 @@ public class Users extends Controller {
 
         try {
             User user = userDao.findByEmail(email);
-            return models.responseUtils.Response.foundEntity(Json.toJson(user));
+            return controllers.responseUtils.Response.foundEntity(Json.toJson(user));
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
@@ -44,7 +44,7 @@ public class Users extends Controller {
     public Result uploadPhoto(JsonNode request) {
         try {
             JsonNode jracksPhoto = userDao.uploadPhoto(request);
-            return models.responseUtils.Response.foundEntity(Json.toJson(jracksPhoto));
+            return controllers.responseUtils.Response.foundEntity(Json.toJson(jracksPhoto));
         } catch (Exception e) {
             return ExceptionsUtils.update(e);
         }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import models.responseUtils.PropertiesCollection;
+import controllers.responseUtils.PropertiesCollection;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;

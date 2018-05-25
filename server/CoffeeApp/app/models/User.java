@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import io.ebean.Finder;
 import io.ebean.annotation.Formula;
-import models.multimediaUtils.Multimedia;
+import controllers.multimediaUtils.Multimedia;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
