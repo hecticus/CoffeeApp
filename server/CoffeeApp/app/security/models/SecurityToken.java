@@ -12,9 +12,6 @@ import javax.persistence.*;
 @Table(name = "auth_token")
 public class SecurityToken extends AbstractEntity {
 
-    @Id
-    private Long id;
-
     @Constraints.Required
     @Column(columnDefinition = "text", nullable = false)
     private String token;
@@ -32,14 +29,6 @@ public class SecurityToken extends AbstractEntity {
                 .eq("authUser.id", authUserId)
                 .eq("token", token)
                 .findUnique();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getToken() {

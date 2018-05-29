@@ -20,10 +20,10 @@ import java.util.List;
 @Table(name = "auth_role")
 public class Role extends AbstractEntity{
 
-    @Id
+    @Constraints.Required
     @Constraints.MaxLength(50)
-    @Column(length = 50)
-    private String id;
+    @Column(length = 50, unique = true, nullable = false)
+    private String name;
 
     private String description;
 
@@ -38,10 +38,14 @@ public class Role extends AbstractEntity{
     @JsonIgnore
     private List<AuthUser> authUsers = new ArrayList<>();
 
-    private static Finder<String, Role> finder = new Finder<>(Role.class);
+    private static Finder<Long, Role> finder = new Finder<>(Role.class);
 
-    public static Role findById(String id){
+    public static Role findById(Long id){
         return finder.byId(id);
+    }
+
+    public static Role findByName(String name){
+        return finder.query().where().eq("name", name).findUnique();
     }
 
     public static List<Role> findAllByUserId(Long authUserId){
@@ -76,16 +80,16 @@ public class Role extends AbstractEntity{
 
     public static void deleteAll(){
         List<Role> roles = finder.all();
-        if( roles != null || !roles.isEmpty())
+        if( roles != null && !roles.isEmpty())
             Ebean.deleteAll(roles);
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

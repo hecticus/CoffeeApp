@@ -12,6 +12,7 @@ import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import play.data.format.Formats;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
 
@@ -20,6 +21,9 @@ import java.time.ZonedDateTime;
  */
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
+
+    @Id
+    private Long id;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
@@ -36,6 +40,14 @@ public abstract class AbstractEntity extends Model {
     @UpdatedTimestamp //Automatically gets set to the current date and time whenever the record is updated
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;

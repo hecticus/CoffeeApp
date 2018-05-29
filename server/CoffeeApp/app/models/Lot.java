@@ -1,10 +1,10 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import controllers.responseUtils.PropertiesCollection;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -24,7 +24,8 @@ public class Lot extends AbstractEntity{
     private Long idLot;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_lot")
+    @Constraints.MaxLength(255)
+    @Column(nullable = false, name = "name_lot", length = 255)
     private String nameLot;
 
     @Constraints.Required
@@ -61,10 +62,12 @@ public class Lot extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
+    @JsonProperty("farm")
     public Farm getFarm() {
         return farm;
     }
 
+    @JsonProperty("farmId")
     public void setFarm(Farm farm) {
         this.farm = farm;
     }
@@ -77,10 +80,12 @@ public class Lot extends AbstractEntity{
         this.idLot = idLot;
     }
 
+    @JsonProperty("nameLot")
     public String getNameLot() {
         return nameLot;
     }
 
+    @JsonProperty("name")
     public void setNameLot(String nameLot) {
         this.nameLot = nameLot;
     }
@@ -109,10 +114,12 @@ public class Lot extends AbstractEntity{
         this.statusLot = statusLot;
     }
 
+    @JsonProperty("priceLot")
     public Float getPrice_lot() {
         return priceLot;
     }
 
+    @JsonProperty("price_lot")
     public void setPrice_lot(Float priceLot) {
         this.priceLot = priceLot;
     }
@@ -123,6 +130,16 @@ public class Lot extends AbstractEntity{
 
     public static Lot findById(Long id){
         return finder.byId(id);
+    }
+
+    public static boolean existId(Long id) {
+        if(InvoiceDetail.findById(id) != null ) return true;
+        return false;
+    }
+
+    public static boolean existName(String name_itemtype){
+        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
+        return false;
     }
 
     public ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Long idFarm, Integer statusLot){

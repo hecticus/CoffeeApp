@@ -214,17 +214,21 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public static List<InvoiceDetail> finderAllByIdInvoice(Long IdInvoice)    {
+    public static List<InvoiceDetail> finderAllByIdInvoice(Long IdInvoice){
         return finder.query()
                 .where()
                 .eq("id_invoice", IdInvoice)
                 .eq("status_delete",0)
                 .orderBy("duedate_invoicedetail")
                 .findList();
-
     }
 
-    public  static  List<InvoiceDetail> getOpenByItemTypeId( Long idItemType){
+    public static boolean existId(Long id) {
+        if(InvoiceDetail.findById(id) != null ) return true;
+        return false;
+    }
+
+    public  static  List<InvoiceDetail> getOpenByItemTypeId(Long idItemType){
         return finder.query().where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
     }
 

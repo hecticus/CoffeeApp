@@ -16,10 +16,11 @@ import java.util.List;
 @Table(name="auth_group")
 public class Group extends AbstractEntity {
 
-    @Id
+//    Se agrego campo name
+    @Constraints.Required
     @Constraints.MaxLength(50)
-    @Column(length = 50)
-    private String id;
+    @Column(length = 50, unique = true, nullable = false)
+    private String name;
 
     private String description;
 
@@ -30,24 +31,28 @@ public class Group extends AbstractEntity {
     @JsonIgnore
     private List<AuthUser> authUsers = new ArrayList<>();
 
-    private static Finder<String, Group> finder = new Finder<>(Group.class);
+    private static Finder<Long, Group> finder = new Finder<>(Group.class);
 
-    public static Group findById(String id){
+    public static Group findById(Long id){
         return finder.byId(id);
+    }
+
+    public static Group findByName(String name){
+        return finder.query().where().eq("name", name).findUnique();
     }
 
     public static void deleteAll(){
         List<Group> groups = finder.all();
-        if(groups != null || !groups.isEmpty())
+        if(groups != null && !groups.isEmpty())
             Ebean.deleteAll(groups);
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

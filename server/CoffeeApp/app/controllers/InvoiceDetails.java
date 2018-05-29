@@ -142,66 +142,70 @@ public class InvoiceDetails extends Controller {
 
 //    @CoffeAppsecurity
     public Result update() {
-        try
-        {
-            JsonNode json = request().body().asJson();
-            if(json== null)
-                return Response.requiredJson();
 
-            JsonNode id = json.get("idInvoiceDetail");
-            if (id == null)
-                return Response.requiredParameter("idInvoiceDetail");
+        JsonNode json = request().body().asJson();
+        if(json== null)
+            return badRequest("Expecting Json data");
 
-            InvoiceDetail invoiceDetail = invoiceDetailDao.findById(id.asLong());
+        JsonNode id = json.get("idInvoiceDetail");
+        if (id == null )
+            return badRequest("Missing parameter idInvoiceDetail");
 
-            JsonNode priceItemTypeByLot = json.get("priceItemTypeByLot");
+        if(!InvoiceDetail.existId(id.asLong()))
+            return badRequest("There is no InvoiceDetail with id");
+
+        try{
+            InvoiceDetail invoiceDetail = InvoiceDetail.findById(id.asLong());
+
+            System.out.println(invoiceDetail.getNameReceivedInvoiceDetail());
+
+            JsonNode priceItemTypeByLot = json.findValue("priceItemTypeByLot");
             if (priceItemTypeByLot!= null)
-                invoiceDetail.setPriceItemTypeByLot(Float.parseFloat(priceItemTypeByLot.asText()));
+                invoiceDetail.setPriceItemTypeByLot(priceItemTypeByLot.floatValue());
 
-            JsonNode amount = json.get("amountInvoiceDetail");
+            JsonNode amount = json.findValue("amountInvoiceDetail");
             if (amount!= null)
                 invoiceDetail.setAmountInvoiceDetail(amount.floatValue());
 
-            JsonNode freight = json.get("freightInvoiceDetail");
+            JsonNode freight = json.findValue("freightInvoiceDetail");
             if (freight!= null)
                 invoiceDetail.setFreightInvoiceDetail(freight.asBoolean());
 
-            JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
+            JsonNode nameReceived = json.findValue("nameReceivedInvoiceDetail");
             if (nameReceived!= null)
                 invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
 
-            JsonNode nameDelivered = json.get("nameDeliveredInvoiceDetail");
+            JsonNode nameDelivered = json.findValue("nameDeliveredInvoiceDetail");
             if (nameDelivered!= null)
                 invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
 
             JsonNode startDate =  Request.removeParameter(json, "startDateInvoiceDetail");
-            if (startDate != null)
-            {
+            if (startDate != null){
                 DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime(startDate.asText());
                 invoiceDetail.setStartDateInvoiceDetail(startDatetime);
             }
-            JsonNode id_invoice = json.get("id_invoice");
+
+            JsonNode id_invoice = json.findValue("id_invoice");
             if (id_invoice != null)
-                invoiceDetail.setInvoice(invoiceDao.findById(id_invoice.asLong()));
+                invoiceDetail.setInvoice(Invoice.findById(id_invoice.asLong()));
 
-            JsonNode id_itemType = json.get("id_itemType");
+            JsonNode id_itemType = json.findValue("id_itemType");
             if (id_itemType != null)
-                invoiceDetail.setItemType(itemTypeDao.findById(id_itemType.asLong()));
+                invoiceDetail.setItemType(ItemType.findById(id_itemType.asLong()));
 
-            JsonNode id_lot = json.get("id_lot");
+            JsonNode id_lot = json.findValue("id_lot");
             if (id_lot != null)
-                invoiceDetail.setLot(lotDao.findById(id_lot.asLong()));
+                invoiceDetail.setLot(Lot.findById(id_lot.asLong()));
 
-            JsonNode id_store = json.get("id_store");
+            JsonNode id_store = json.findValue("id_store");
             if (id_store != null)
-                invoiceDetail.setStore(storeDao.findById(id_store.asLong()));
+                invoiceDetail.setStore(Store.findById(id_store.asLong()));
 
-            invoiceDetail.update();// = invoiceDetailDao.update(invoiceDetail);
-            // return Response.updatedEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
-            return  Response.updatedEntity(Json.toJson(invoiceDetail));
+            invoiceDetail.update();
+            return  ok(Json.toJson(invoiceDetail));
 
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return badRequest(e.toString());
         }
     }
 

@@ -117,17 +117,14 @@ public class ItemType extends AbstractEntity
         return finder.byId(id);
     }
 
+    public static boolean existId(Long id) {
+        if(InvoiceDetail.findById(id) != null ) return true;
+        return false;
+    }
 
-    public static int getExist(String name_itemtype)
-    {
-        if(finder.query().where().eq("name_itemtype",name_itemtype).eq("status_delete",0).findUnique()!=null) return 0;
-        else
-        {
-            if(finder.query().where().eq("name_itemtype",name_itemtype).eq("status_delete",1).findUnique()!=null)  return 1;
-            else return 2;
-
-        }
-
+    public static boolean existName(String name_itemtype){
+        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
+        return false;
     }
 
     public List<ItemType> getOpenByUnitId(Long idUnit)

@@ -50,18 +50,16 @@ public class ItemTypes extends Controller {
 
 //    @CoffeAppsecurity
     public Result create() {
+
+        JsonNode json = request().body().asJson();
+        if(json == null)
+            return Response.requiredJson();
+
+
         try{
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
-
             JsonNode Name = json.get("nameItemType");
-            if (Name == null)
-                return Response.requiredParameter("nameItemType");
-
-            int registered = itemTypeDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("nameItemType");
-            if(registered==1) return  Response.messageExistDeleted("nameItemType");
+            if (Name == null || !ItemType.existName(Name.asText().toUpperCase()) )
+                return badRequest("Required o there is ItemType with name");
 
             JsonNode cost = json.get("costItemType");
             if (cost == null)
@@ -95,39 +93,37 @@ public class ItemTypes extends Controller {
         }
     }
 
+
 //    @CoffeAppsecurity
     public Result update() {
-        try
-        {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
+        JsonNode json = request().body().asJson();
+        if(json== null)
+            return badRequest("Expecting Json data");
 
-            JsonNode id = json.get("idItemType");
-            if (id == null)
-                return Response.requiredParameter("idItemType");
+        JsonNode id = json.get("idItemType");
+        if (id == null )
+            return badRequest("Missing parameter idItemType");
 
-            ItemType itemType =  Json.fromJson(json, ItemType.class);
+        if(!ItemType.existId(id.asLong()))
+            return badRequest("There is no ItemType with id");
 
-            JsonNode Name = json.get("nameItemType");
-            if (Name != null)
-            {
-                int registered = ItemType.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("nameItemType");
-                if(registered==1) return  Response.messageExistDeleted("nameItemType");
+        try {
+            ItemType itemType =  ItemType.findById(id.asLong());
 
-                itemType.setNameItemType(Name.asText().toUpperCase());
+            JsonNode name = json.findValue("nameItemType");
+            if (name != null & ItemType.existName(name.asText().toUpperCase())){
+                itemType.setNameItemType(name.asText().toUpperCase());
             }
 
             JsonNode id_unit = json.get("id_unit");
             if (id_unit != null)
-                itemType.setUnit(unitDao.findById(id_unit.asLong()));
+                itemType.setUnit(Unit.findById(id_unit.asLong()));
 
             JsonNode typeProvider = json.get("id_ProviderType");
             if (typeProvider != null)
-                itemType.setProviderType(providerTypeDao.findById(typeProvider.asLong()));
+                itemType.setProviderType(ProviderType.findById(typeProvider.asLong()));
 
-            itemType.update();// = itemTypeDao.update(itemType);
+            itemType.update();
             return Response.updatedEntity(Json.toJson(itemType));
 
         }catch(Exception e){

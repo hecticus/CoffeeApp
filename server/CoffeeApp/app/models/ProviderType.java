@@ -95,6 +95,17 @@ public class ProviderType  extends AbstractEntity {
         return finder.byId(id);
     }
 
+    public static boolean existId(Long id) {
+        if(InvoiceDetail.findById(id) != null ) return true;
+        return false;
+    }
+
+    public static boolean existName(String name_itemtype){
+        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
+        return false;
+    }
+
+
     public static ProviderType findByName(String name) {
         return finder
                 .query()

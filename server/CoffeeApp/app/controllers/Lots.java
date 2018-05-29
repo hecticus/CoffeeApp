@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.requestUtils.requestObject.LotRequest;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.Farm;
@@ -8,10 +9,13 @@ import models.InvoiceDetail;
 import models.Lot;
 import controllers.requestUtils.Request;
 import controllers.responseUtils.*;
+import play.data.Form;
+import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,8 @@ import java.util.List;
  */
 public class Lots extends Controller {
 
+    @Inject
+    private FormFactory formFactory;
     
     private static Lot lotDao = new Lot();
     private static Farm farmDao = new Farm();
@@ -109,62 +115,33 @@ public class Lots extends Controller {
 
 //    @CoffeAppsecurity
     public Result update() {
-        try
-        {
+        try{
             JsonNode json = request().body().asJson();
             if(json == null)
-                return Response.requiredJson();
+                return badRequest("Expecting Json data");
 
-            JsonNode id = json.get("idLot");
-            if (id == null)
-                return Response.requiredParameter("idLot");
+            if (json.get("idLot") == null )
+                return badRequest("Missing parameter idLot");
 
-            JsonNode farm = json.get("farm");
-            if (farm != null)
-                farm = Request.removeParameter(json, "farm");
+            Form<LotRequest> form = formFactory.form(LotRequest.class).bind(json);
+            if(form.hasErrors())
+                return badRequest(form.errorsAsJson());
 
-            if (farm == null || farm.asText().equals("null") || farm.asText().equals(""))
-                return Response.requiredParameter("farm", "nombre de la finca");
+            Lot lot = Json.fromJson(json, Lot.class);
 
-            JsonNode area = json.get("areaLot");
-            if (area == null || area.asText().equals("null") || area.asText().equals(""))
-                return Response.requiredParameter("areaLot", "area");
-
-            JsonNode heigh = json.get("heighLot");
-            if (heigh == null || heigh.asText().equals("null") || heigh.asText().equals(""))
-                return Response.requiredParameter("heighLot", "altura");
-
-
-            JsonNode price_lot = json.get("price_lot");
-            if (price_lot == null || price_lot.asText().equals("null") || price_lot.asText().equals(""))
-                return Response.requiredParameter("price_lot", "US precio");
-
-            Lot lot =  Json.fromJson(json, Lot.class);
-            Lot lot_up = Lot.findById(id.asLong());
-
-            JsonNode Name = json.get("name");
-            if (Name == null || Name.asText().equals("null") || Name.asText().equals(""))
-                return Response.requiredParameter("name","nombre del lote");
-
-            JsonNode nameChange = json.get("nameChange");
-            if (Name != null && (!nameChange.asText().equals(Name.asText()) || !farm.asText().equals(lot_up.getFarm().getIdFarm().toString())))
-            {
-                List<Integer> registered = Lot.getExist(Name.asText().toUpperCase(),farm.asInt());
-                if(registered.get(0)==0) return  Response.messageExist("name");
-                if(registered.get(0)==1) return  Response.messageExistDeleted("name");
-
-                lot.setNameLot(Name.asText().toUpperCase());
+            if (json.findValue("farm") != null) {
+                Farm farm = new Farm();
+                farm.setIdFarm(json.get("farm").asLong());
+                lot.setFarm(farm);
             }
-
-
-            lot.setFarm(Farm.findById(farm.asLong()));
-
-            lot.update();// = lotDao.update(lot);
-            return Response.updatedEntity(Json.toJson(lot));
-
+            lot.update();
+            return  Response.updatedEntity(Json.toJson(lot));
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);
         }
+
+
+
     }
 
 //    @CoffeAppsecurity

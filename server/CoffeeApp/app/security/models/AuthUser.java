@@ -22,12 +22,10 @@ import java.util.List;
 @Entity
 public class AuthUser extends AbstractEntity{
 
-    @Id
-    protected Long id;
-
-    /*@Constraints.MaxLength(100)
+    @Constraints.MaxLength(100)
+    @Constraints.Required
     @Column(length = 100, unique = true, nullable = false, updatable = false)
-    protected String username;*/
+    protected String username;
 
     @Constraints.Email
     @Constraints.Required
@@ -40,7 +38,7 @@ public class AuthUser extends AbstractEntity{
     protected String password;
 
     @Constraints.Required
-    @Column(columnDefinition = "tinyint default 0", nullable = false, insertable = false)
+    @Column(columnDefinition = "tinyint default 0",  insertable = false) //nullable = false,
     protected Boolean archived = false;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
@@ -65,24 +63,45 @@ public class AuthUser extends AbstractEntity{
     protected List<SecurityToken> securityTokens;
 
 
-    public static final Finder<Long, AuthUser> find = new Finder<>(AuthUser.class);
-
-    //private static Task .Finder<Long, AuthUser> finder = new Model.Finder<>(AuthUser.class);
+    public static final Finder<Long, AuthUser> finder = new Finder<>(AuthUser.class);
 
     public static AuthUser findById(Long id){
-        return find.byId(id);
+        return finder.byId(id);
+    }
+
+    public static void deleteAll(){
+        List<AuthUser> authUsers = finder.all();
+        if( authUsers != null && !authUsers.isEmpty())
+            Ebean.deleteAll(authUsers);
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public static AuthUser findByEmail(String email){
-        return find
+        return finder
                 .query()
                 .where()
                 .eq("email", email)
                 .findUnique();
     }
 
+    public static AuthUser findByName(String name){
+        return finder
+                .query()
+                .where()
+                .eq("username", name)
+                .findUnique();
+    }
+
     public static AuthUser findByEmailPassword(String email, String password){
-        return find
+        return finder
                 .query()
                 .where()
                 .eq("email", email)
@@ -91,13 +110,13 @@ public class AuthUser extends AbstractEntity{
     }
 
     public static void softDelete(Long id) {
-        AuthUser entity = find.byId(id);
+        AuthUser entity = finder.byId(id);
         entity.setArchived(true);
         entity.update();
     }
 
     public static void softDelete(List<Long> ids) {
-        List<AuthUser> entities = find.query().where().idIn(ids).findList();
+        List<AuthUser> entities = finder.query().where().idIn(ids).findList();
         for (AuthUser entity: entities){
             entity.setArchived(true);
             entity.update();
@@ -105,23 +124,15 @@ public class AuthUser extends AbstractEntity{
     }
 
     public static void delete(Long id) {
-        AuthUser entity = find.byId(id);
+        AuthUser entity = finder.byId(id);
         if(entity != null)
             Ebean.delete(entity);
     }
 
     public static void delete(List<Long> ids) {
-        List<AuthUser> entities = find.query().where().idIn(ids).findList();
+        List<AuthUser> entities = finder.query().where().idIn(ids).findList();
         if(!entities.isEmpty())
             Ebean.deleteAll(entities);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEmail() {

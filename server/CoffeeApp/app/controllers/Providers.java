@@ -110,56 +110,40 @@ public class Providers extends Controller {
             return Response.responseExceptionCreated(e);
         }
     }
-
+/*
 //    @CoffeAppsecurity
     public Result update() {
-        try
-        {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
+        JsonNode json = request().body().asJson();
+        if(json== null)
+            return badRequest("Expecting Json data");
 
-            JsonNode id = json.get("idProvider");
-            if (id == null)
-                return Response.requiredParameter("idProvider");
+        JsonNode id = json.get("idProvider");
+        if (id == null )
+            return badRequest("Missing parameter idProvider");
+
+        if(!Provider.existId(id.asLong()))
+            return badRequest("There is Provider with id");
+
+        try{
 
             Provider provider =  Json.fromJson(json, Provider.class);
 
-            JsonNode identificationDoc = json.get("identificationDocProvider");
-            JsonNode identificationDocChange = json.get("identificationDocProviderChange");
+            JsonNode identificationDoc = json.findValue("identificationDocProvider");
+            if (identificationDoc != null & Provider.existIdentfy(identificationDoc.textValue()))
+                provider.setIdentificationDocProvider(identificationDoc.textValue().toUpperCase());
 
-            if (identificationDoc == null || identificationDoc.asText().equals("null") || identificationDoc.asText().equals(""))
-                return Response.requiredParameter("identificationDocProvider","numero de identificacion");
-
-            if (!identificationDoc.asText().equals(identificationDocChange.asText()))
-            {
-                List<Integer> registered =  providerDao.getExist(identificationDoc.asText().toUpperCase());
-                if(registered.get(0)==0)  return  Response.messageExist("identificationDocProvider");
-                if(registered.get(0)==1) return  Response.messageExistDeleted("identificationDocProvider");
-
-                provider.setIdentificationDocProvider(identificationDoc.asText().toUpperCase());
+            JsonNode name = json.get("fullNameProvider");
+            if (name != null & !name.textValue().isEmpty()){
+                if(Provider.existName(name.textValue()))
+                    return badRequest("There is Provider name");
+                provider.setFullNameProvider(name.textValue().toUpperCase());
             }
-
-            JsonNode fullName = json.get("fullNameProvider");
-            if (fullName == null || fullName.asText().equals("null") || fullName.asText().equals(""))
-                return Response.requiredParameter("fullNameProvider", "nombre de proveedor");
 
             JsonNode typeProvider = json.get("id_ProviderType");
-            if (typeProvider == null || typeProvider.asText().equals("null") || typeProvider.asText().equals(""))
-                return Response.requiredParameter("id_ProviderType", "tipo de proveedor");
+            if (typeProvider != null & ProviderType.existId(typeProvider.asLong()))
+                provider.setProviderType(ProviderType.findById(typeProvider.asLong()));
 
-            if (typeProvider != null)
-            {
-                ProviderType providerType = providerTypeDao.findById(typeProvider.asLong());
-                if(providerType.getNameProviderType().toUpperCase().equals("VENDEDOR"))
-                {
-                    ListPagerCollection list = providerDao.findAllSearch(fullName.asText(), null,null,null,null, true,1,false,1);
-                    if(list.entities.size()>1)
-                        return Response.messageExist("fullNameProvider");
-                }
-
-                provider.setProviderType(providerType);
-            }
+*--*-*-*-*-*-*--*-*-*-*-**--*
 
             JsonNode phoneNumber = json.get("phoneNumberProvider");
             if (phoneNumber == null || phoneNumber.asText().equals("null") || phoneNumber.asText().equals(""))
@@ -179,7 +163,7 @@ public class Providers extends Controller {
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);
         }
-    }
+    }*/
 
 //    @CoffeAppsecurity
     public Result delete(Long id) {

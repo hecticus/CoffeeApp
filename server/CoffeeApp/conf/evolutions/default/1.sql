@@ -7,23 +7,25 @@ create table auth_user (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  username                      varchar(100) not null,
   email                         varchar(100) not null,
   password                      text not null,
-  archived                      tinyint default 0 not null,
+  archived                      tinyint default 0,
   last_login                    datetime,
+  constraint uq_auth_user_username unique (username),
   constraint uq_auth_user_email unique (email),
   constraint pk_auth_user primary key (id)
 );
 
 create table auth_user_auth_role (
   auth_user_id                  bigint not null,
-  auth_role_id                  varchar(50) not null,
+  auth_role_id                  bigint not null,
   constraint pk_auth_user_auth_role primary key (auth_user_id,auth_role_id)
 );
 
 create table auth_user_auth_group (
   auth_user_id                  bigint not null,
-  auth_group_id                 varchar(50) not null,
+  auth_group_id                 bigint not null,
   constraint pk_auth_user_auth_group primary key (auth_user_id,auth_group_id)
 );
 
@@ -62,10 +64,12 @@ create table farms (
 );
 
 create table auth_group (
-  id                            varchar(50) not null,
+  id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  name                          varchar(50) not null,
   description                   varchar(255),
+  constraint uq_auth_group_name unique (name),
   constraint pk_auth_group primary key (id)
 );
 
@@ -148,15 +152,15 @@ create table auth_permission (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  name                          varchar(70),
-  route                         varchar(100) not null,
+  name                          varchar(100) not null,
   description                   varchar(255),
+  constraint uq_auth_permission_name unique (name),
   constraint pk_auth_permission primary key (id)
 );
 
 create table auth_permission_auth_role (
   auth_permission_id            bigint not null,
-  auth_role_id                  varchar(50) not null,
+  auth_role_id                  bigint not null,
   constraint pk_auth_permission_auth_role primary key (auth_permission_id,auth_role_id)
 );
 
@@ -200,16 +204,18 @@ create table purities (
 );
 
 create table auth_role (
-  id                            varchar(50) not null,
+  id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  name                          varchar(50) not null,
   description                   varchar(255),
+  constraint uq_auth_role_name unique (name),
   constraint pk_auth_role primary key (id)
 );
 
 create table auth_role_auth_group (
-  auth_role_id                  varchar(50) not null,
-  auth_group_id                 varchar(50) not null,
+  auth_role_id                  bigint not null,
+  auth_group_id                 bigint not null,
   constraint pk_auth_role_auth_group primary key (auth_role_id,auth_group_id)
 );
 

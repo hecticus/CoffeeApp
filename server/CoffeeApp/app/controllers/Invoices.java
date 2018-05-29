@@ -104,42 +104,36 @@ public class Invoices extends Controller {
 
     //@CoffeAppsecurity
     public  Result update() {
-        try
-        {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
+        JsonNode json = request().body().asJson();
+        if(json== null)
+            return badRequest("Expecting Json data");
 
-            JsonNode id = json.get("idInvoice");
-            if (id == null)
-                return Response.requiredParameter("idInvoice");
+        JsonNode id = json.get("idInvoice");
+        if (id == null )
+            return badRequest("Missing parameter idInvoice");
 
+        if(!Invoice.existId(id.asLong()))
+            return badRequest("There is Invoice with id");
 
-            //   Invoice invoice =  Json.fromJson(json, Invoice.class);
-
+        try{
             Invoice invoice =   Invoice.findById(id.asLong());
 
-            JsonNode id_provider = json.get("id_provider");
+            JsonNode id_provider = json.findValue("id_provider");
             if (id_provider != null)
                 invoice.setProvider(Provider.findById(id_provider.asLong()));
 
-
-
-            JsonNode status = json.get("status");
-            if (status != null)
-            {
+            JsonNode status = json.findValue("status");
+            if (status != null & status.isInt()){
                 invoice.setStatusInvoice(status.asInt());
                 JsonNode closedDate =  Request.removeParameter(json, "closedDate");
-                if (closedDate == null)
-                {
-                    return Response.requiredParameter("closedDate");
+                if (closedDate == null){
+                    return badRequest(" Requiered closedDate");
                 }
                 invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime((closedDate.asText())));
             }
 
-            invoice.update();// = invoiceDao.update(invoice);
-            //  return Response.updatedEntity(Response.toJson(invoice, InvoiceResponse.class));
-            return  Response.updatedEntity(Json.toJson(invoice));
+            invoice.update();
+            return  ok(Json.toJson(invoice));
 
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);

@@ -19,9 +19,6 @@ import javax.persistence.Table;
 @Table(name = "auth_client_credential")
 public class ClientCredential extends AbstractEntity {
 
-    @Id
-    private Long id;
-
     @Constraints.Required
     @Constraints.MaxLength(50)
     @Column(length = 50, unique = true, nullable = false)
@@ -85,14 +82,6 @@ public class ClientCredential extends AbstractEntity {
                 .where()
                 .eq("clientId", clientId)
                 .findUnique();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getClientId() {

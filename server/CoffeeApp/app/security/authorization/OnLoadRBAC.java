@@ -1,18 +1,15 @@
-
 package security.authorization;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
-import play.Configuration;
-import scala.collection.immutable.List;
-import scala.math.Ordering;
+import security.models.AuthUser;
 import security.models.Group;
 import security.models.Permission;
 import security.models.Role;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nisa on 26/10/17.
@@ -20,44 +17,45 @@ import java.util.*;
  * reference: https://www.playframework.com/documentation/2.5.x/ScalaDependencyInjection
  *
  */
-
 @Singleton
 public class OnLoadRBAC {
 
     @Inject
-    public OnLoadRBAC(Configuration config) {
+    public OnLoadRBAC(Config config) {
         System.out.println("*** Loading control access tables...");
         Group.deleteAll();
         Role.deleteAll();
+        AuthUser.deleteAll();
         Permission.deleteAll();
-        //buildRolesManyPermission(config.getConfig("play.rbac.roles"));
-        buildGroupsManyRoles(config.getConfig("play.rbac.groups"));
+        buildRolesManyPermission(config);
+        buildGroupsManyRoles(config);
+//        buildGroupsManyUser(config);
         System.out.println("*** Complete control access tables...");
     }
 
-    private void buildGroupsManyRoles(Configuration config){
-        for(String groupKey : config.subKeys()) {
-            //System.out.println(groupKey);
-            Group group = Group.findById(groupKey);
+    private void buildGroupsManyRoles(Config config){
+        config.getObject("play.rbac.groups").forEach((k,v)->{
+            //System.out.println(k);
+            Group group = Group.findByName(k);
             if(group == null){
                 group = new Group();
-                group.setId(groupKey);
-               // group.setRoles(buildRoles(config.getList(groupKey)));
+                group.setName(k);
+                group.setRoles(buildRoles(config.getStringList("play.rbac.groups." + k)));
                 group.insert();
             }else{
-                //group.setRoles(buildRoles(config.getList(groupKey)));
+                group.setRoles(buildRoles(config.getStringList("play.rbac.groups." + k)));
                 group.update();
             }
-        }
+        });
     }
 
-/*    private List<Role> buildRoles(List<Object> roleKeys){
+    private List<Role> buildRoles(List<String> roleKeys){
         List<Role> roles = new ArrayList<>();
         for(Object roleKey : roleKeys) {
-            Role role = Role.findById(roleKey.toString());
+            Role role = Role.findByName(roleKey.toString());
             if(role == null) {
                 role = new Role();
-                role.setId(roleKey.toString());
+                role.setName(roleKey.toString());
                 role.insert();
             }
             roles.add(role);
@@ -65,34 +63,61 @@ public class OnLoadRBAC {
         return roles;
     }
 
-    private void buildRolesManyPermission(Configuration config){
-        for(Ordering.String roleKey : config.subKeys()) {
-            //System.out.println(roleKey);
-            Role role = Role.findById(roleKey);
+    private void buildRolesManyPermission(Config config){
+        config.getObject("play.rbac.roles").forEach((k,v)->{
+            //System.out.println("key : " + k + " value : " + v);
+            System.out.println(k);
+            Role role = Role.findByName(k);
             if(role == null){
                 role = new Role();
-                role.setId(roleKey);
-                role.setPermissions(buildPermissions(config.getList(roleKey)));
+                role.setName(k);
+                role.setPermissions(buildPermissions(config.getStringList("play.rbac.roles." + k)));
                 role.insert();
             }else{
-                role.setPermissions(buildPermissions(config.getList(roleKey)));
+                role.setPermissions(buildPermissions(config.getStringList("play.rbac.roles." + k)));
                 role.update();
             }
-        }
+        });
     }
 
-    private List<Permission> buildPermissions(List<Object> permissionKeys){
+    private List<Permission> buildPermissions(List<String> permissionKeys){
         List<Permission> permissions = new ArrayList<>();
         for(Object permissionKey : permissionKeys) {
             //System.out.println(permissionKey);
-            Permission permission = Permission.findByRoute(permissionKey.toString());
+            Permission permission = Permission.findByName(permissionKey.toString());
             if(permission == null){
                 permission = new Permission();
-                permission.setRoute(permissionKey.toString());
+                permission.setName(permissionKey.toString());
                 permission.insert();
             }
             permissions.add(permission);
         }
         return permissions;
-    }*/
+    }
+
+    private void buildGroupsManyUser(Config config){
+        config.getObject("play.rbac.groupUser").forEach((k,v)->{
+            Group group = Group.findByName(k);
+            if(group == null){
+                group = new Group();
+                group.setName(k);
+                group.setAuthUsers(buildAuthUser(config.getStringList("play.rbac.groupUser." + k)));
+                group.insert();
+            }else{
+                group.setAuthUsers(buildAuthUser(config.getStringList("play.rbac.groupUser." + k)));
+                group.update();
+            }
+        });
+    }
+
+
+
+    private List<AuthUser> buildAuthUser(List<String> authUserKeys){
+        List<AuthUser> users = new ArrayList<>();
+        for(Object authUserKey : authUserKeys) {
+            AuthUser user = AuthUser.findByName(authUserKey.toString());
+            users.add(user);
+        }
+        return users;
+    }
 }

@@ -120,7 +120,7 @@ GET     /provider/:id                                                           
 POST    /provider                                                               controllers.Providers.create()
 POST    /provider/deletes                                                       controllers.Providers.deletes()
 POST    /provider/uploadPhotoProvider                                           controllers.Providers.uploadPhotoProvider()
-PUT     /provider                                                               controllers.Providers.update()
+#PUT     /provider                                                               controllers.Providers.update()
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
 
 ###############################################################################

@@ -86,6 +86,10 @@ public class Unit extends AbstractEntity{
         return false;
     }
 
+    public static boolean existId(Long id) {
+        if(InvoiceDetail.findById(id) != null ) return true;
+        return false;
+    }
 
     public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties pathProperties, Integer status){
         ExpressionList expressionList = finder.query().where();

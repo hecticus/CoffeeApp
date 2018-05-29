@@ -14,6 +14,7 @@ import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
 import controllers.multimediaUtils.Multimedia;
 import play.data.validation.Constraints;
+import scala.reflect.internal.Trees;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -167,6 +168,16 @@ public class Provider extends AbstractEntity{
         return finder.byId(id);
     }
 
+    public static boolean existName(String name_itemtype){
+        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
+        return false;
+    }
+
+    public static boolean existId(Long id) {
+        if(InvoiceDetail.findById(id) != null ) return true;
+        return false;
+    }
+
     private static ProviderType providerTypeDao = new ProviderType();
 
     public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties
@@ -197,6 +208,7 @@ public class Provider extends AbstractEntity{
                 index,
                 size);
     }
+
 
 
     public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties
@@ -312,7 +324,10 @@ public class Provider extends AbstractEntity{
         return aux;
     }
 
-
+    public static boolean existIdentfy(String identify){
+        if(finder.query().where().eq("identificationdoc_provider", identify).findUnique() != null) return true;
+        return false;
+    }
 
     public String uploadPhoto(String base64Photo, String ext) {
 

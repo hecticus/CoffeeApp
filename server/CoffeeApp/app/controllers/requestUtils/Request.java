@@ -44,16 +44,13 @@ public class Request{
         return jsonRemoved;
     }
 
-    public static java.sql.Date formatter_date(String date)
-    {
-        try
-        {
+    public static java.sql.Date formatter_date(String date){
+        try{
             java.util.Date utilDate = dateFormat.parse(date);
             java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
             
             return sqlDate;
-        }
-        catch(Exception e){
+        }catch(Exception e){
             Throwable eRoot = Response.getCause(e);
             eRoot.printStackTrace();
            return null;

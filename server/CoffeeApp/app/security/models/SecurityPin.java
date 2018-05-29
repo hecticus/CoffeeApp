@@ -21,9 +21,6 @@ import java.time.ZonedDateTime;
 @Table(name = "auth_pin")
 public class SecurityPin extends AbstractEntity {
 
-    @Id
-    private Long id;
-
     @OneToOne
     @PrimaryKeyJoinColumn
     @JoinColumn(nullable = false)
@@ -77,14 +74,6 @@ public class SecurityPin extends AbstractEntity {
         SecurityPin entity = finder.byId(id);
         if(entity != null)
             Ebean.delete(entity);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getPin() {

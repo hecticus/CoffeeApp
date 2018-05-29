@@ -1,91 +1,64 @@
-# --- !Ups
---
--- Dumping data for table `config`
---
-LOCK TABLES `config` WRITE;
-/*!40000 ALTER TABLE `config` DISABLE KEYS */;
-/*!40000 ALTER TABLE `config` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 --
--- Dumping data for table `user`
---
-LOCK TABLES `auth_user` WRITE;
-/*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` ( id, email, password, archived, last_login, created_at,  updated_at) VALUES
-  (2,'yenny.fung@hecticus.com','yenny',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (3,'han@han.com','han',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (4,'leia@leia.com','leia',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (5,'chewie@chewie.com','chewie',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (6,'marwin@hecticus.com','1234',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (7,'gabriel.perez@hecticus.com','gabriel',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (8,'hnmhernandez@gmail.com','1234',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (9,'brayan.mendoza@hecticus.com','ingeniero',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (10,'ana@ana.com','ana',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
-  (11,'shamuel.manrrique@hecticus.com','root',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17');
-/*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
+-- This no loaded in dataBase
 --
 -- Dumping data for table `auth_role`,
 --
 INSERT INTO `auth_role` (id, created_at, updated_at, description) VALUES
   #providerType
-  ('providerType_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType read '),
-  ('providerType_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType get '),
-  ('providerType_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType cup '),
+  (1,'providerType_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType read '),
+  (2,'providerType_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType get '),
+  (3,'providerType_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'providerType cup '),
 
   #provider
-  ('provider_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider read '),
-  ('provider_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider get '),
-  ('provider_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider cup '),
+  (4,'provider_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider read '),
+  (5,'provider_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider get '),
+  (6,'provider_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'provider cup '),
 
   #invoice
-  ('invoice_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice read '),
-  ('invoice_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice get '),
-  ('invoice_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice cup '),
+  (7,'invoice_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice read '),
+  (8,'invoice_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice get '),
+  (9,'invoice_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoice cup '),
 
   #unit
-  ('unit_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit read '),
-  ('unit_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit get '),
-  ('unit_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit cup '),
+  (10',unit_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit read '),
+  (11,'unit_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit get '),
+  (12,'unit_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'unit cup '),
 
   #itemType
-  ('itemType_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType read '),
-  ('itemType_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType get '),
-  ('itemType_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType cup '),
+  (13,'itemType_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType read '),
+  (14,'itemType_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType get '),
+  (15,'itemType_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'itemType cup '),
 
   #lot
-  ('lot_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot read '),
-  ('lot_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot get '),
-  ('lot_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot cup '),
+  (16,'lot_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot read '),
+  (17,'lot_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot get '),
+  (18,'lot_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'lot cup '),
 
    #farm
-  ('farm_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm read '),
-  ('farm_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm get '),
-  ('farm_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm cup '),
+  (19,'farm_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm read '),
+  (20,'farm_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm get '),
+  (21,'farm_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'farm cup '),
 
   #purity
-  ('purity_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity read '),
-  ('purity_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity get '),
-  ('purity_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity cup '),
+  (22,'purity_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity read '),
+  (23,'purity_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity get '),
+  (24,'purity_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'purity cup '),
 
   #invoiceDetailPurity
-  ('invoiceDetailPurity_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity read '),
-  ('invoiceDetailPurity_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity get '),
-  ('invoiceDetailPurity_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity cup '),
+  (25,'invoiceDetailPurity_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity read '),
+  (26,'invoiceDetailPurity_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity get '),
+  (27,'invoiceDetailPurity_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetailPurity cup '),
 
   #invoiceDetail
-  ('invoiceDetail_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail read '),
-  ('invoiceDetail_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail get '),
-  ('invoiceDetail_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail cup '),
+  (28,'invoiceDetail_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail read '),
+  (29,'invoiceDetail_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail get '),
+  (30,'invoiceDetail_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'invoiceDetail cup '),
 
    #store
-  ('store_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store read '),
-  ('store_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store get '),
-  ('store_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store cup ');
-
+  (31,'store_r','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store read '),
+  (32,'store_g','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store get '),
+  (33,'store_u','2017-06-22 22:27:17','2017-06-22 22:27:17', 'store cup ');
 
 
 INSERT INTO `auth_permission`(id, created_at, updated_at, name, route, description) VALUES
@@ -198,9 +171,9 @@ INSERT INTO `auth_permission`(id, created_at, updated_at, name, route, descripti
 
 
 INSERT INTO `auth_group` ( id, created_at, updated_at, description) VALUES
-  ('admin','2017-06-22 22:27:17','2017-06-22 22:27:17', 'Super Poder '),
-  ('client','2017-06-22 22:27:17','2017-06-22 22:27:17', 'Loggin Basic '),
-  ('basic','2017-06-22 22:27:17','2017-06-22 22:27:17', 'Ordenes ');
+  (1,'admin','2017-06-22 22:27:17','2017-06-22 22:27:17', 'Super Poder '),
+  (2,'client','2017-06-22 22:27:17','2017-06-22 22:27:17', 'Loggin Basic '),
+  (3,'basic','2017-06-22 22:27:17','2017-06-22 22:27:17', 'Ordenes ');
 
 INSERT INTO `auth_client_credential` (id, created_at, updated_at, client_id,
                                       client_secret , name, icon, home_page_url,
@@ -476,51 +449,91 @@ INSERT INTO `auth_role_auth_group` (auth_role_id, auth_group_id) VALUES
   #('store_g', 'basic'),
   #('store_u', 'basic'),
   ('store_r', 'basic');
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- TRUNCATE auth_role;
+
+-- TRUNCATE auth_permission_auth_role;
+--
+-- TRUNCATE auth_role_auth_group;
+--
+-- TRUNCATE auth_user_auth_group;
+--
+TRUNCATE auth_client_credential;
+--
+-- TRUNCATE auth_permission;
+
+TRUNCATE auth_user;
+--
+-- TRUNCATE auth_user_auth_group;
+--
+-- TRUNCATE auth_user_auth_role;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+# --- !Ups
+--
+-- Dumping data for table `config`
+--
+-- LOCK TABLES `config` WRITE;
+-- /*!40000 ALTER TABLE `config` DISABLE KEYS */;
+-- /*!40000 ALTER TABLE `config` ENABLE KEYS */;
+-- UNLOCK TABLES;
+INSERT INTO `auth_client_credential` (id, created_at, updated_at, client_id,
+                                      client_secret , name, icon, home_page_url,
+                                      privacy_policy_url, auth_callback_uri, description ) VALUES
+  (1,'2017-05-02 00:00:00','2015-05-02 00:00:00','web_site',NULL,'web site',NULL,NULL,NULL,NULL,NULL),
+  (2,'2017-05-02 00:00:00','2015-05-02 00:00:00','android_app',NULL,'android app',NULL,NULL,NULL,NULL,NULL);
+
+--
+-- Dumping data for table `user`
+--
+INSERT INTO `auth_user` ( id, username, email,password, archived, last_login, created_at,  updated_at) VALUES
+  (2, 'yenny', 'yenny.fung@hecticus.com','yenny',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+  (3,'han', 'han@han.com','han',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+  (11,'sm','shamuel.manrrique@hecticus.com','root',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17');
+--   (4,'leia@leia.com','leia',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+--   (5,'chewie@chewie.com','chewie',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+--   (6,'marwin@hecticus.com','1234',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+--   (7,'gabriel.perez@hecticus.com','gabriel',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+--   (8,'hnmhernandez@gmail.com','1234',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+--   (9,'brayan.mendoza@hecticus.com','ingeniero',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+--   (10,'ana@ana.com','ana',0,NULL,'2017-06-22 22:27:17','2017-06-22 22:27:17'),
+
 
 
 --
 -- Dumping data for table `user_auth_group`
 --
 INSERT INTO `auth_user_auth_role` (auth_user_id,auth_role_id) VALUES
-  ('6','purity_r'),
-  ('3','purity_r'),
-  ('5','lot_r'),
-  ('6','farm_u'),
-  ('6','farm_r'),
-  ('11','farm_u'),
-  ('11','purity_r'),
-  ('9','farm_r'),
-  ('5','farm_u');
+  (11,93),
+  (11,94),
+  (11,95);
+--   (11,49),
+--   (11,56);
+--   ('6','purity_r'),
+--   ('3','purity_r'),
+--   ('5','lot_r'),
+--   ('6','farm_u'),
+--   ('6','farm_r'),
+--   ('11','farm_u'),
+--   ('11','purity_r'),
+--   ('9','farm_r'),
+--   ('5','farm_u');
 
-
+--
 INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id)VALUES
-  ('6','admin'),
-  ('11','admin'),
-  ('10','basic'),
-  ('7','basic'),
-  ('9','client'),
-  ('4','client');
+  (11,14),
+  (2,15);
 
 # --- !Downs
 SET FOREIGN_KEY_CHECKS = 0;
 
-TRUNCATE auth_user;
-
-TRUNCATE auth_role;
-
-TRUNCATE auth_user_auth_role;
-
-TRUNCATE auth_group;
-
-TRUNCATE auth_user_auth_group;
-
 TRUNCATE auth_client_credential;
 
-TRUNCATE auth_permission;
+TRUNCATE auth_user;
 
-TRUNCATE auth_permission_auth_role;
-
-TRUNCATE auth_role_auth_group;
 
 SET FOREIGN_KEY_CHECKS = 1;
 

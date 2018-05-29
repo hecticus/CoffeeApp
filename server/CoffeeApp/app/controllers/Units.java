@@ -63,80 +63,44 @@ public class Units extends Controller {
         }
     }
 
-////    @CoffeAppsecurity
-//    public Result update() {
-//        try
-//        {
-//            JsonNode json = request().body().asJson();
-//            if(json == null)
-//                return Response.requiredJson();
-//
-//            JsonNode id = json.get("id");
-//            if (id == null)
-//                return Response.requiredParameter("id");
-//
-//            Unit unit =  Json.fromJson(json, Unit.class);
-//
-//            System.out.println(unit.getIdUnit());
-//
-//            JsonNode Name = json.get("name");
-//            if (Name != null)
-//            {
-//                int registered = unitDao.getExist(Name.asText().toUpperCase());
-//                if(registered==0) return  Response.messageExist("name");
-//                if(registered==1) return  Response.messageExistDeleted("name");
-//
-//                unit.setNameUnit(Name.asText().toUpperCase());
-//            }
-//
-//            unit.insert();//.update();// = unitDao.update(unit);
-//            return Response.updatedEntity(Json.toJson(unit));
-//
-//        }catch(Exception e){
-//            return Response.responseExceptionUpdated(e);
-//        }
-//    }
-
     public  Result update(){
         JsonNode json = request().body().asJson();
 
         if(json == null)
             return badRequest("Expecting Json data");
 
-        if(json.get("id") == null)
+        JsonNode id = json.get("idUnit");
+        if(id == null || !id.isLong())
             return badRequest("Missing parameter [id]");
 
-        Unit unit  = Unit.findById(json.findPath("id").asLong());
+        if(!Unit.existId(id.asLong()))
+            return badRequest("There is no InvoiceDetail with id");
 
         try {
+            Unit unit  = Unit.findById(json.findPath("id").asLong());
 
-        JsonNode status = json.findPath("status");
-         if (status != null & status.isInt())
-             unit.setStatusDelete(status.asInt());
+            JsonNode status = json.findValue("status");
+             if (status != null & status.isInt())
+                 unit.setStatusDelete(status.asInt());
 
-        JsonNode statusUnit = json.findPath("statusUnit");
-        if (statusUnit != null & statusUnit.isInt())
-            unit.setStatusUnit(statusUnit.asInt());
+            JsonNode statusUnit = json.findValue("statusUnit");
+            if (statusUnit != null & statusUnit.isInt())
+                unit.setStatusUnit(statusUnit.asInt());
 
-        JsonNode nameUnit = json.findPath("name");
-
-        if (nameUnit != null & ! nameUnit.asText().isEmpty()) {
-            String name = nameUnit.asText();
-            if (Unit.existName(name)) {
-                System.out.println("************");
-                return badRequest("There is the name, write new name");
+            JsonNode nameUnit = json.findValue("name");
+            if (nameUnit != null & ! nameUnit.asText().isEmpty()) {
+                if (Unit.existName(nameUnit.asText())) {
+                    return badRequest("There is the name, write new name");
+                }
+                unit.setNameUnit(nameUnit.textValue());
             }
-            unit.setNameUnit(nameUnit.textValue());
-        }
 
-        unit.update();
-        return ok(Json.toJson(unit));
+            unit.update();
+            return ok(Json.toJson(unit));
 
         }catch (Exception e){
             return badRequest(e.toString());
         }
-
-
     }
 
 
