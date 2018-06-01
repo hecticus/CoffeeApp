@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 
 /**
  * Created by nisa on 30/10/17.
- * modify sm21 on 01/06/2018
+ * modify sm21 on 01/06/20
  */
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
@@ -20,15 +20,12 @@ public abstract class AbstractEntity extends Model {
     @Id
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable=false)
     protected ZonedDateTime createdAt;
 
-
-    @Temporal(TemporalType.TIMESTAMP)
     @Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")

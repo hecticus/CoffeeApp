@@ -16,6 +16,7 @@ import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,8 +55,9 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")//, cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
+    @Constraints.Min(0)
     @Column(name = "total_invoice")
-    private Double totalInvoice=0.00;
+    private BigDecimal totalInvoice;
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
@@ -111,11 +113,11 @@ public class Invoice extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
-    public Double getTotalInvoice() {
+    public BigDecimal getTotalInvoice() {
         return totalInvoice;
     }
 
-    public void setTotalInvoice(Double totalInvoice) {
+    public void setTotalInvoice(BigDecimal totalInvoice) {
         this.totalInvoice = totalInvoice;
     }
 
@@ -268,7 +270,7 @@ public class Invoice extends AbstractEntity{
                 formattedTime = output.format(d);
 
                 invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
-                invoice.setTotalInvoice(sqlRows.get(i).getDouble("total"));
+                invoice.setTotalInvoice(sqlRows.get(i).getBigDecimal("total"));
 
                 invoices.add(invoice);
             }

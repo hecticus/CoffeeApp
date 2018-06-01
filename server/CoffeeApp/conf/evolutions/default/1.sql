@@ -80,7 +80,7 @@ create table invoices (
   status_invoice                integer not null,
   duedate_invoice               datetime(6),
   closeddate_invoice            datetime(6),
-  total_invoice                 double,
+  total_invoice                 decimal(38),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id_invoice)

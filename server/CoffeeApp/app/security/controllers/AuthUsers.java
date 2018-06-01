@@ -5,7 +5,7 @@ import io.ebean.PagedList;
 import controllers.responseUtils.ExceptionsUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.NsExceptionsUtils;
-import controllers.utils.PropertiesCollections;
+import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
 import play.data.Form;
 import play.data.FormFactory;
@@ -23,7 +23,7 @@ public class AuthUsers extends Controller {
 
     @Inject
     private FormFactory formFactory;
-    private static PropertiesCollections propertiesCollection = new PropertiesCollections();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public AuthUsers(){
         propertiesCollection.putPropertiesCollection("s", "(id, name)");

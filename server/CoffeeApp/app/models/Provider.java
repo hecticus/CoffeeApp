@@ -50,6 +50,7 @@ public class Provider extends AbstractEntity{
     @Column(name = "email_Provider")
     private String emailProvider;
 
+    @Constraints.MaxLength(255)
     @Column(name = "photo_Provider")
     private String photoProvider;
 

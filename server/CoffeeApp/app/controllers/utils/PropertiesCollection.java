@@ -1,6 +1,6 @@
 package controllers.utils;
 
-import com.avaje.ebean.text.PathProperties;
+import io.ebean.text.PathProperties;
 
 import java.util.HashMap;
 import java.util.Map;

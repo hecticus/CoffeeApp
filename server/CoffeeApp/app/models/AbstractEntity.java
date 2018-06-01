@@ -7,6 +7,7 @@ import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeseriali
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import io.ebean.Model;
 import io.ebean.annotation.CreatedTimestamp;
+import io.ebean.annotation.SoftDelete;
 import io.ebean.annotation.UpdatedTimestamp;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
@@ -19,33 +20,28 @@ import java.util.InputMismatchException;
 /**
  *
  *
- * @author  Yenny Fung
- * @since   2016
+ * @author  Yenny Fung 2016
+ * modify sm21 2018
  */
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @CreatedTimestamp //Automatically gets set to the current date and time when the record is first created
-    //@Temporal(TemporalType.TIMESTAMP)
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
     protected ZonedDateTime createdAt;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @UpdatedTimestamp //Automatically gets set to the current date and time whenever the record is updated
-    //@Temporal(TemporalType.TIMESTAMP)
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @UpdatedTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
 
     @Constraints.Required
     @Column(nullable = false)
     private Integer statusDelete = 0;
+
 
     public Integer getStatusDelete() {
         return statusDelete;
