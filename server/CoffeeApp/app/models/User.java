@@ -52,6 +52,11 @@ public class User extends AbstractEntity {
     @Column(length = 100, nullable = false)
     protected String lastName;
 
+    @Column(columnDefinition = "text")
+    private String description;
+
+    @Embedded
+    private Contact contact;
 
     /*
      * Email to send the confirmation of register. This email is used like username for login in sytem.
@@ -180,7 +185,7 @@ public class User extends AbstractEntity {
     }
 
     
-    public JsonNode uploadPhoto(JsonNode request)
+    public static JsonNode uploadPhoto(JsonNode request)
     {
         Multimedia multimedia = new Multimedia();
 

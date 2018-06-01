@@ -7,6 +7,7 @@ import controllers.utils.*;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Farm;
+import models.Provider;
 import models.ProviderType;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.ResponseCollection;
@@ -17,6 +18,11 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 import static play.mvc.Controller.request;
 
@@ -34,7 +40,7 @@ public class ProviderTypes {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -43,21 +49,20 @@ public class ProviderTypes {
 
             Form<ProviderType> form = formFactory.form(ProviderType.class).bind(json);
             if (form.hasErrors())
-                return Response.invalidParameter(form.errorsAsJson());//.invalidParameter(form.errorsAsJson());
+                return Response.invalidParameter(form.errorsAsJson());
 
-            ProviderType providerType = form.get(); //Json.fromJson(json, ProviderType.class);
-//            providerType.insert();
+            ProviderType providerType = form.get();
             providerType.save();
 
             return Response.createdEntity(Json.toJson(providerType));
 
         }catch(Exception e){
-            return NsExceptionsUtils.create(e);// Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update(Long id) {
         try{
             JsonNode json = request().body().asJson();
@@ -66,7 +71,7 @@ public class ProviderTypes {
 
             Form<ProviderType> form = formFactory.form(ProviderType.class).bind(json);
             if (form.hasErrors())
-                return Response.invalidParameter(form.errorsAsJson());//.invalidParameter(form.errorsAsJson());
+                return Response.invalidParameter(form.errorsAsJson());
 
             ProviderType providerType = Json.fromJson(json, ProviderType.class);
             providerType.setIdProviderType(id);
@@ -75,16 +80,27 @@ public class ProviderTypes {
             return Response.updatedEntity(Json.toJson(providerType));
 
         }catch(Exception e){
-            return NsExceptionsUtils.update(e);// Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
-
-    @CoffeAppsecurity
+//
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Ebean.delete(ProviderType.class, id);
-            return Response.deletedEntity();
+            ProviderType providerType = ProviderType.findById(id);
+            //TODO validation
+            if(providerType.getProviders() != null){
+                ListIterator<Provider> aux = providerType.getProviders().listIterator();
+                while (aux.hasNext()){
+                    Provider provider = aux.next();
+                    provider.setStatusDelete(1);
+                    provider.update();
+                }
+            }
+            providerType.setStatusDelete(1);
+            providerType.update();
+            return Response.updatedEntity(Json.toJson(providerType));//deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }

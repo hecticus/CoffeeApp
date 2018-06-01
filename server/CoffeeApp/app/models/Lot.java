@@ -40,6 +40,7 @@ public class Lot extends AbstractEntity{
     @Column(nullable = false, name = "status_lot")
     private Integer statusLot=1;
 
+    @Constraints.Required
     @ManyToOne
     @JoinColumn(name = "id_farm", nullable = false)
     private Farm farm;
@@ -62,12 +63,10 @@ public class Lot extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
-    @JsonProperty("farm")
     public Farm getFarm() {
         return farm;
     }
 
-    @JsonProperty("farmId")
     public void setFarm(Farm farm) {
         this.farm = farm;
     }
@@ -80,12 +79,10 @@ public class Lot extends AbstractEntity{
         this.idLot = idLot;
     }
 
-    @JsonProperty("nameLot")
     public String getNameLot() {
         return nameLot;
     }
 
-    @JsonProperty("name")
     public void setNameLot(String nameLot) {
         this.nameLot = nameLot;
     }
@@ -125,8 +122,6 @@ public class Lot extends AbstractEntity{
     }
 
     private static Farm farmDao = new Farm();
-
-
 
     public static Lot findById(Long id){
         return finder.byId(id);

@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
+import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.text.PathProperties;
 import controllers.requestUtils.Request;
 import controllers.responseUtils.CustomDateTimeSerializer;
 import controllers.responseUtils.Response;
 import org.joda.time.DateTime;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -33,24 +35,23 @@ public class Invoice extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "id_provider", nullable = false)
     @JsonBackReference
+//    @Constraints.Required
     private Provider provider;
 
     @Constraints.Required
     @Column(nullable = false, name = "status_invoice")
     private Integer statusInvoice = 1;
 
-    @Column( nullable = false, name = "dueDate_invoice")
+    @Column(  name = "dueDate_invoice") //nullable = false,
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime startDateInvoice;
 
-
-
-    @Column( nullable = false,name = "closedDate_invoice")
+    @Column(name = "closedDate_invoice")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     private DateTime closedDateInvoice;
 
 
-    @OneToMany(mappedBy = "invoice", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "invoice")//, cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
     @Column(name = "total_invoice")

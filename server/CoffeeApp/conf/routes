@@ -26,6 +26,15 @@ POST    /oauth/revokeToken                                                      
 #POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
 
 ###############################################################################
+#·······                     oAuthUser                              ··········#
+###############################################################################
+#GET     /AuthUsers                                                              security.controllers.AuthUsers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+#GET     /AuthUsers/:id                                                          security.controllers.AuthUsers.findById(id : Long)
+POST    /AuthUsers                                                              security.controllers.AuthUsers.create()
+PUT     /AuthUsers/:id                                                          security.controllers.AuthUsers.update(id : Long)
+#DELETE  /AuthUsers/:id                                                          security.controllers.AuthUsers.delete(id : Long)
+
+###############################################################################
 #·······                        Farm                                ··········#
 ###############################################################################
 GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
@@ -130,6 +139,12 @@ GET     /providerType/findAll/:index/:size                                      
 GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.findAll(name: String, index: Integer ?= null, size: Integer ?= null, order: String, collection: String ?= null, status: Integer ?= null)
 #GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
+
+#Nuevas
+POST    /providerType                                                            controllers.ProviderTypes.create()
+POST    /providerType/deletes                                                    controllers.ProviderTypes.deletes()
+PUT     /providerType/:id                                                        controllers.ProviderTypes.update(id : Long)
+DELETE  /providerType/:id                                                        controllers.ProviderTypes.delete(id : Long)
 
 ###############################################################################
 #·······                     Store                                  ··········#

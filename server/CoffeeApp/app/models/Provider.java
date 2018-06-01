@@ -53,8 +53,8 @@ public class Provider extends AbstractEntity{
     @Column(name = "photo_Provider")
     private String photoProvider;
 
-    @ManyToOne
-    @JoinColumn(name = "id_providerType", nullable = false)
+    @ManyToOne(optional = false)
+    //@JoinColumn(name = "id_providerType", nullable = false)
     @JsonBackReference
     private ProviderType providerType;
 

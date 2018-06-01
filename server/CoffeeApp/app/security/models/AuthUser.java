@@ -1,6 +1,5 @@
 package security.models;
 
-//import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -9,6 +8,8 @@ import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeseriali
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import io.ebean.Ebean;
 import io.ebean.Finder;
+import io.ebean.PagedList;
+import io.ebean.annotation.SoftDelete;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -37,9 +38,12 @@ public class AuthUser extends AbstractEntity{
     @Column(columnDefinition = "text", nullable = false) //TODO cambiar a BLOB
     protected String password;
 
-    @Constraints.Required
-    @Column(columnDefinition = "tinyint default 0",  insertable = false) //nullable = false,
-    protected Boolean archived = false;
+//    @Constraints.Required
+////    @Column(columnDefinition = "tinyint default 0",  insertable = false) //nullable = false,
+////    protected Boolean archived = false;
+
+    @SoftDelete
+    boolean deleted;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
@@ -109,19 +113,6 @@ public class AuthUser extends AbstractEntity{
                 .findUnique();
     }
 
-    public static void softDelete(Long id) {
-        AuthUser entity = finder.byId(id);
-        entity.setArchived(true);
-        entity.update();
-    }
-
-    public static void softDelete(List<Long> ids) {
-        List<AuthUser> entities = finder.query().where().idIn(ids).findList();
-        for (AuthUser entity: entities){
-            entity.setArchived(true);
-            entity.update();
-        }
-    }
 
     public static void delete(Long id) {
         AuthUser entity = finder.byId(id);
@@ -151,12 +142,12 @@ public class AuthUser extends AbstractEntity{
         this.password = password;
     }
 
-    public Boolean getArchived() {
-        return archived;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setArchived(Boolean archived) {
-        this.archived = archived;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public ZonedDateTime getLastLogin() {
@@ -198,5 +189,14 @@ public class AuthUser extends AbstractEntity{
     public void setSecurityTokens(List<SecurityToken> securityTokens) {
         this.securityTokens = securityTokens;
     }
+
+//    public PagedList findAll(String name, Integer pageindex, Integer pagesize, String sort, String username, String email,
+//                             String password, Boolean archived, String collection, List<Role> roles, List<Group> groups ){
+//
+//
+//
+//
+//
+//    }
 }
 

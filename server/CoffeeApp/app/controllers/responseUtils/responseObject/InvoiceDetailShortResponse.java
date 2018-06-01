@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by drocha on 05/05/17.
  */
-public class InvoiceDetailShortResponse  extends AbstractEntityResponse
+public class InvoiceDetailShortResponse
 {
 
     public Long idInvoiceDetail;

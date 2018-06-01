@@ -1,4 +1,6 @@
 package security.controllers;
 
-public class Permissions {
+import play.mvc.Controller;
+
+public class Permissions extends Controller {
 }

@@ -22,6 +22,7 @@ public class Group extends AbstractEntity {
     @Column(length = 50, unique = true, nullable = false)
     private String name;
 
+    @Constraints.MaxLength(255)
     private String description;
 
     @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)

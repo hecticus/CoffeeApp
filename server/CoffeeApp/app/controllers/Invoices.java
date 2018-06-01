@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
@@ -11,11 +12,14 @@ import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
 import org.joda.time.DateTime;
+import play.data.Form;
+import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -29,9 +33,12 @@ public class Invoices extends Controller {
     private static Purity purityDao = new Purity();
     private static Provider providerDao = new Provider();
     private static Lot lotDao = new Lot();
-    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
     private static ItemType itemTypeDao = new ItemType();
     private static Store storeDao = new Store();
+
+    @Inject
+    private FormFactory formFactory;
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
 
     public Invoices(){
@@ -62,39 +69,52 @@ public class Invoices extends Controller {
             if(json == null)
                 return Response.requiredJson();
 
+//
+//            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+//            ObjectNode providerNode = Json.newObject();
+//            providerNode.set("idProvider", json.findValue("id_provider"));
+//            node.set("provider", providerNode);
 
-            JsonNode id_provider = json.get("id_provider");
-            if (id_provider == null)
-                return Response.requiredParameter("id_provider");
+            Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
+            if (form.hasErrors()){
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
+            }
 
-            JsonNode startDate =  Request.removeParameter(json, "startDateInvoice");;
-            if (startDate == null)
-                return Response.requiredParameter("startDateInvoice");
-
-            JsonNode closedDate =  Request.removeParameter(json, "closedDateInvoice");
-            if (closedDate == null)
-                return Response.requiredParameter("closedDateInvoice");
-
-            JsonNode status = json.get("statusInvoice");
-            if (status == null)
-                return Response.requiredParameter("statusInvoice");
-
-            JsonNode total = json.get("totalInvoice");
-            if (total == null)
-                return Response.requiredParameter("totalInvoice");
-
-            DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime((startDate.asText()));
-            DateTime closedDatetime =  Request.dateTimeFormatter.parseDateTime((closedDate.asText()));
-
-            // mapping object-json
             Invoice invoice = Json.fromJson(json, Invoice.class);
 
-            invoice.setProvider(Provider.findById(id_provider.asLong()));
-            invoice.setStartDateInvoice(startDatetime);
-            invoice.setClosedDateInvoice(closedDatetime);
+//            JsonNode id_provider = json.get("id_provider");
+//            if (id_provider == null)
+//                return Response.requiredParameter("id_provider");
+//
+//            JsonNode startDate =  Request.removeParameter(json, "startDateInvoice");;
+//            if (startDate == null)
+//                return Response.requiredParameter("startDateInvoice");
+//
+//            JsonNode closedDate =  Request.removeParameter(json, "closedDateInvoice");
+//            if (closedDate == null)
+//                return Response.requiredParameter("closedDateInvoice");
+//
+//            JsonNode status = json.get("statusInvoice");:
+//            if (status == null)
+//                return Response.requiredParameter("statusInvoice");
+//
+//            JsonNode total = json.get("totalInvoice");
+//            if (total == null)
+//                return Response.requiredParameter("totalInvoice");
+//
+//            DateTime startDatetime =  Request.dateTimeFormatter.parseDateTime((startDate.asText()));
+//            DateTime closedDatetime =  Request.dateTimeFormatter.parseDateTime((closedDate.asText()));
 
-            invoice.save();// = invoiceDao.create(invoice);
+                // mapping object-json
+            //Invoice invoice = Json.fromJson(json, Invoice.class);
+
+//            invoice.setProvider(Provider.findById(id_provider.asLong()));
+//            invoice.setStartDateInvoice(startDatetime);
+//            invoice.setClosedDateInvoice(closedDatetime);
+
+            //invoice.save();// = invoiceDao.create(invoice);
             //  return Response.createdEntity(Response.toJson(invoice, InvoiceResponse.class));
+            invoice.save();
             return  Response.createdEntity(Json.toJson(invoice));
 
         }catch(Exception e){

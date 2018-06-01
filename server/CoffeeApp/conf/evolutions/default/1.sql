@@ -10,8 +10,8 @@ create table auth_user (
   username                      varchar(100) not null,
   email                         varchar(100) not null,
   password                      text not null,
-  archived                      tinyint default 0,
   last_login                    datetime,
+  deleted                       tinyint(1) default 0 not null,
   constraint uq_auth_user_username unique (username),
   constraint uq_auth_user_email unique (email),
   constraint pk_auth_user primary key (id)
@@ -78,8 +78,8 @@ create table invoices (
   status_delete                 integer not null,
   id_provider                   bigint not null,
   status_invoice                integer not null,
-  duedate_invoice               datetime(6) not null,
-  closeddate_invoice            datetime(6) not null,
+  duedate_invoice               datetime(6),
+  closeddate_invoice            datetime(6),
   total_invoice                 double,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -173,7 +173,7 @@ create table providers (
   phonenumber_provider          varchar(255) not null,
   email_provider                varchar(255),
   photo_provider                varchar(255),
-  id_providertype               bigint(100) not null,
+  provider_type_id_provider_type bigint(100) not null,
   contactname_provider          varchar(255) not null,
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
@@ -189,6 +189,7 @@ create table provider_type (
   status_providertype           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint uq_provider_type_name_providertype unique (name_providertype),
   constraint pk_provider_type primary key (id_providertype)
 );
 
@@ -276,6 +277,13 @@ create table user (
   auth_user_id                  bigint not null,
   first_name                    varchar(100) not null,
   last_name                     varchar(100) not null,
+  description                   text,
+  latitude                      double,
+  longitude                     double,
+  address                       varchar(200),
+  phone                         varchar(100),
+  phone2                        varchar(100),
+  email2                        varchar(100),
   last_login                    datetime not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -331,8 +339,8 @@ create index ix_auth_permission_auth_role_auth_permission on auth_permission_aut
 alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
 create index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role (auth_role_id);
 
-alter table providers add constraint fk_providers_id_providertype foreign key (id_providertype) references provider_type (id_providertype) on delete restrict on update restrict;
-create index ix_providers_id_providertype on providers (id_providertype);
+alter table providers add constraint fk_providers_provider_type_id_provider_type foreign key (provider_type_id_provider_type) references provider_type (id_providertype) on delete restrict on update restrict;
+create index ix_providers_provider_type_id_provider_type on providers (provider_type_id_provider_type);
 
 alter table auth_role_auth_group add constraint fk_auth_role_auth_group_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
 create index ix_auth_role_auth_group_auth_role on auth_role_auth_group (auth_role_id);
@@ -398,8 +406,8 @@ drop index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_
 alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_role;
 drop index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role;
 
-alter table providers drop foreign key fk_providers_id_providertype;
-drop index ix_providers_id_providertype on providers;
+alter table providers drop foreign key fk_providers_provider_type_id_provider_type;
+drop index ix_providers_provider_type_id_provider_type on providers;
 
 alter table auth_role_auth_group drop foreign key fk_auth_role_auth_group_auth_role;
 drop index ix_auth_role_auth_group_auth_role on auth_role_auth_group;

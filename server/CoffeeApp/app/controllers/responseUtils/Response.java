@@ -261,6 +261,7 @@ public class Response {
     }
 
     public static Result responseExceptionDeleted(Exception e){
+        System.out.println(e);
         Throwable eRoot = Response.getCause(e);
         if(eRoot != null) {
             if(e!=null && e instanceof NullPointerException)
@@ -270,6 +271,7 @@ public class Response {
     }
 
     public static Result responseExceptionUpdated(Exception e){
+        System.out.println(e);
         Throwable eRoot = Response.getCause(e);
         if(eRoot != null) {
             if (eRoot instanceof EntityNotFoundException)
@@ -291,6 +293,7 @@ public class Response {
     }
 
     public static Result responseExceptionCreated(Exception e){
+        System.out.println(e);
         Throwable eRoot = Response.getCause(e);
         if(eRoot != null) {
             if (eRoot instanceof EntityNotFoundException)

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by sm21 on 10/05/18.
  */
-public class InvoiceDetailResponse extends AbstractEntityResponse {
+public class InvoiceDetailResponse {
 
 
     public static class Invoice

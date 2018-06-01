@@ -1,7 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.requestUtils.requestObject.LotRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.Farm;
@@ -54,59 +55,25 @@ public class Lots extends Controller {
 
     //@CoffeAppsecurity
     public Result create() {
-        try
-        {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.set("nameLot", json.findValue("name"));
+            node.set("priceLot", json.findValue("price_lot"));
+            ObjectNode farmNode = Json.newObject();
+            farmNode.set("idFarm", json.findValue("farm"));
+            node.set("farm", farmNode);
 
-            JsonNode Name = json.get("name");
-            if (Name == null || Name.asText().equals("null") || Name.asText().equals(""))
-                return Response.requiredParameter("name","nombre del lote");
+            Form<Lot> form = formFactory.form(Lot.class).bind(node);
+            if(form.hasErrors())
+                return badRequest(form.errorsAsJson());
 
-            JsonNode farm = json.get("farm");
-            if (farm == null || farm.asText().equals("null") || farm.asText().equals(""))
-                return Response.requiredParameter("farm", "nombre de la finca");
-
-            farm = Request.removeParameter(json, "farm");
-
-            List<Integer> registered = lotDao.getExist(Name.asText().toUpperCase(), farm.asInt());
-            if(registered.get(0)==0) return  Response.messageExist("name");
-            //  if(registered==1) return  Response.messageExistDeleted("name");
-
-            JsonNode area = json.get("areaLot");
-            if (area == null || area.asText().equals("null") || area.asText().equals(""))
-                return Response.requiredParameter("areaLot", "area");
-
-            JsonNode heigh = json.get("heighLot");
-            if (heigh == null || heigh.asText().equals("null") || heigh.asText().equals(""))
-                return Response.requiredParameter("heighLot", "altura");
-
-            JsonNode price_lot = json.get("price_lot");
-            if (price_lot == null || price_lot.asText().equals("null") || price_lot.asText().equals(""))
-                return Response.requiredParameter("price_lot", "US precio");
-
-            JsonNode status = json.get("statusLot");
-            if (status == null || status.asText().equals("null") || status.asText().equals(""))
-                return Response.requiredParameter("statusLot");
-
-
-            // mapping object-json
-            Lot lot = Json.fromJson(json, Lot.class);
-
-            lot.setFarm(farmDao.findById(farm.asLong()));
-
-            lot.setNameLot(Name.asText().toUpperCase());
-
-            if(registered.get(0)==1)
-            {   lot.setStatusDelete(0);
-                lot.setIdLot(registered.get(1).longValue());
-                lot.update();// = lotDao.update(lot);
-            }
-            else lot.save();// = lotDao.create(lot);
-
-            return Response.createdEntity(Json.toJson(lot));
+            Lot lot = Json.fromJson(node, Lot.class);
+            lot.save();
+            return  Response.updatedEntity(Json.toJson(lot));
 
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
@@ -123,25 +90,23 @@ public class Lots extends Controller {
             if (json.get("idLot") == null )
                 return badRequest("Missing parameter idLot");
 
-            Form<LotRequest> form = formFactory.form(LotRequest.class).bind(json);
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.set("nameLot", json.findValue("name"));
+            node.set("priceLot", json.findValue("price_lot"));
+            ObjectNode farmNode = Json.newObject();
+            farmNode.set("idFarm", json.findValue("farm"));
+            node.set("farm", farmNode);
+
+            Form<Lot> form = formFactory.form(Lot.class).bind(node);
             if(form.hasErrors())
                 return badRequest(form.errorsAsJson());
 
-            Lot lot = Json.fromJson(json, Lot.class);
-
-            if (json.findValue("farm") != null) {
-                Farm farm = new Farm();
-                farm.setIdFarm(json.get("farm").asLong());
-                lot.setFarm(farm);
-            }
+            Lot lot = Json.fromJson(node, Lot.class);
             lot.update();
             return  Response.updatedEntity(Json.toJson(lot));
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);
         }
-
-
-
     }
 
 //    @CoffeAppsecurity
@@ -169,24 +134,18 @@ public class Lots extends Controller {
 //    @CoffeAppsecurity
     public Result deletes() {
         boolean aux_delete = true;
-        try
-        {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            List<Long> aux = new ArrayList<Long>();
-            aux = JsonUtils.toArrayLong(json, "ids");
-
-            for (Long id : aux)
-            {
+            List<Long> aux = JsonUtils.toArrayLong(json, "ids");
+            for (Long id : aux) {
                 Lot lot = Lot.findById(id);
-
-                List<InvoiceDetail> invoiceDetails = invoiceDetailDao.getOpenByLotId(id);
+                List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
                 if(lot != null  && invoiceDetails.size()==0) {
-
                     lot.setStatusDelete(1);
-                    lot.update();// = Lot.update(lot);
+                    lot.update();
 
                     return Response.deletedEntity();
                 } else {

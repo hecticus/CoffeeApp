@@ -8,6 +8,7 @@ import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,29 +19,25 @@ import java.util.List;
 @Table(name="provider_type")
 public class ProviderType  extends AbstractEntity {
     @Id
-    @Constraints.Required
-    @Constraints.MaxLength(100)
     @Column(name = "id_ProviderType", length = 100, nullable = false)
     private Long idProviderType;
 
-    @Constraints.Required
-    @Column(nullable = false, name = "name_ProviderType", length = 100)
-    private String nameProviderType;
 
+    @Constraints.Required
+    @Constraints.MaxLength(100)
+    @Column(nullable = false, unique = true, name = "name_ProviderType", length = 100)
+    private String nameProviderType;
 
     @Constraints.Required
     @Column(nullable = false, name = "status_ProviderType")
-//    @SoftDelete
-//    private boolean statusProviderType;
     private Integer statusProviderType;
 
-
-    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "providerType")//, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Provider> providers = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "providerType")//, cascade = CascadeType.PERSIST)//.ALL)
     @JsonManagedReference
     private List<ItemType> itemTypes = new ArrayList<>();
 

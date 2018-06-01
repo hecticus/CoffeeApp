@@ -472,7 +472,7 @@ TRUNCATE auth_user;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-# --- !Ups
+-- # --- !Ups
 --
 -- Dumping data for table `config`
 --
@@ -507,9 +507,9 @@ INSERT INTO `auth_user` ( id, username, email,password, archived, last_login, cr
 -- Dumping data for table `user_auth_group`
 --
 INSERT INTO `auth_user_auth_role` (auth_user_id,auth_role_id) VALUES
-  (11,93),
-  (11,94),
-  (11,95);
+  (11,93);
+--   (11,94),
+--   (11,95);
 --   (11,49),
 --   (11,56);
 --   ('6','purity_r'),
@@ -527,7 +527,7 @@ INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id)VALUES
   (11,14),
   (2,15);
 
-# --- !Downs
+-- # --- !Downs
 SET FOREIGN_KEY_CHECKS = 0;
 
 TRUNCATE auth_client_credential;
