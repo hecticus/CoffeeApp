@@ -24,7 +24,7 @@ public class Role extends AbstractEntity{
     @Constraints.MaxLength(50)
     @Column(length = 50, unique = true, nullable = false)
     private String name;
-    
+
     @Constraints.MaxLength(255)
     private String description;
 

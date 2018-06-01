@@ -54,9 +54,9 @@ public class Users extends Controller {
 //            AuthUser authUsers = form.get();
 //            authUsers.insert();//
             User user = form.get();
-            user.insert();
-
-            return Response.createdEntity(Json.toJson(user));
+            user.save();
+            User userr = user;
+            return Response.createdEntity(Json.toJson(userr));
         } catch (Exception e) {
             return NsExceptionsUtils.create(e);
         }

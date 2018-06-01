@@ -43,8 +43,9 @@ public class AuthUsers extends Controller {
 
             AuthUser authUsers = form.get();
             authUsers.insert();
-
-            return Response.createdEntity(Json.toJson(authUsers));
+            AuthUser userr = AuthUser.findById(Long.valueOf(7));
+            return Response.createdEntity(Json.toJson(userr));
+//            return Response.createdEntity(Json.toJson(authUsers));
         } catch (Exception e) {
             return NsExceptionsUtils.create(e);
         }

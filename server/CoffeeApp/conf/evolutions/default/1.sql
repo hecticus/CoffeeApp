@@ -6,11 +6,11 @@
 create table auth_user (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   username                      varchar(100) not null,
   email                         varchar(100) not null,
   password                      text not null,
-  last_login                    datetime,
+  last_login                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted                       tinyint(1) default 0 not null,
   constraint uq_auth_user_username unique (username),
   constraint uq_auth_user_email unique (email),
@@ -32,7 +32,7 @@ create table auth_user_auth_group (
 create table auth_client_credential (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   client_id                     varchar(50) not null,
   client_secret                 varchar(100),
   name                          varchar(100) not null,
@@ -66,7 +66,7 @@ create table farms (
 create table auth_group (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name                          varchar(50) not null,
   description                   varchar(255),
   constraint uq_auth_group_name unique (name),
@@ -151,7 +151,7 @@ create table lots (
 create table auth_permission (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name                          varchar(100) not null,
   description                   varchar(255),
   constraint uq_auth_permission_name unique (name),
@@ -207,7 +207,7 @@ create table purities (
 create table auth_role (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   name                          varchar(50) not null,
   description                   varchar(255),
   constraint uq_auth_role_name unique (name),
@@ -223,7 +223,7 @@ create table auth_role_auth_group (
 create table auth_pin (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   auth_user_id                  bigint not null,
   pin                           varchar(50) not null,
   expiration                    datetime,
@@ -235,7 +235,7 @@ create table auth_pin (
 create table auth_token (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   token                         text not null,
   auth_user_id                  bigint not null,
   constraint pk_auth_token primary key (id)

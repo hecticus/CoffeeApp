@@ -30,6 +30,15 @@ POST    /oauth/revokeToken                                                      
 ###############################################################################
 #GET     /AuthUsers                                                              security.controllers.AuthUsers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
 #GET     /AuthUsers/:id                                                          security.controllers.AuthUsers.findById(id : Long)
+#POST    /User                                                                controllers.AuthUsers.create()
+##PUT     /Users/:id                                                          security.controllers.AuthUsers.update(id : Long)
+##DELETE  /AuthUsers/:id                                                          security.controllers.AuthUsers.delete(id : Long)
+#
+################################################################################
+#·······                     oAuthUser                              ··········#
+###############################################################################
+#GET     /AuthUsers                                                              security.controllers.AuthUsers.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+#GET     /AuthUsers/:id                                                          security.controllers.AuthUsers.findById(id : Long)
 POST    /AuthUsers                                                              security.controllers.AuthUsers.create()
 PUT     /AuthUsers/:id                                                          security.controllers.AuthUsers.update(id : Long)
 #DELETE  /AuthUsers/:id                                                          security.controllers.AuthUsers.delete(id : Long)
