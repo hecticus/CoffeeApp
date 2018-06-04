@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
@@ -8,6 +9,7 @@ import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,23 +26,26 @@ public class ItemType extends AbstractEntity
     private Long idItemType;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_itemType")
+    @Column(nullable = false, name = "name_itemType", unique = true)
     private String nameItemType;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)",name = "cost_itemType")
-    private Float costItemType;
+    @Constraints.Min(0)
+    @Column(nullable = false, name = "cost_itemType")
+    private BigDecimal costItemType;
 
-    @Constraints.Required
+    @Range(min = 0, max = 3)
     @Column(nullable = false, name = "status_itemType")
-    private Integer statusItemType=1;
+    private Integer statusItemType;
 
     @ManyToOne
-    @JoinColumn(name = "id_providerType", nullable = false)
     @JsonBackReference
+    @Constraints.Required
+    @JoinColumn(name = "id_providerType", nullable = false)
     private ProviderType providerType;
 
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_unit", nullable = false)
     private Unit unit;
 
@@ -50,6 +55,10 @@ public class ItemType extends AbstractEntity
 
 
     private static Finder<Long, ItemType> finder = new Finder<>(ItemType.class);
+
+    public ItemType() {
+        statusItemType = 1;
+    }
 
     //GETTER AND SETTER
     public Long getIdItemType() {
@@ -68,11 +77,11 @@ public class ItemType extends AbstractEntity
         this.nameItemType = nameItemType;
     }
 
-    public Float getCostItemType() {
+    public BigDecimal getCostItemType() {
         return costItemType;
     }
 
-    public void setCostItemType(Float costItemType) {
+    public void setCostItemType(BigDecimal costItemType) {
         this.costItemType = costItemType;
     }
 
@@ -137,7 +146,7 @@ public class ItemType extends AbstractEntity
         return finder.query().where().eq("id_providertype",idProviderType).eq("status_delete",0).findList();
     }
 
-    public List<ItemType> getByProviderTypeId(Long idProviderType, Integer status)
+    public static List<ItemType> getByProviderTypeId(Long idProviderType, Integer status)
     {
         String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
                 " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
@@ -157,7 +166,7 @@ public class ItemType extends AbstractEntity
         return toItemTypes(results);
     }
 
-    public List<ItemType> getByNameItemType(String NameItemType, String order)
+    public static List<ItemType> getByNameItemType(String NameItemType, String order)
     {
         String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
                 " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
@@ -173,7 +182,7 @@ public class ItemType extends AbstractEntity
         return toItemTypes(results);
     }
 
-    public List<ItemType> toItemTypes(List<SqlRow>  sqlRows)
+    public static List<ItemType> toItemTypes(List<SqlRow>  sqlRows)
     {
         List<ItemType> itemTypes = new ArrayList<>();
 
@@ -184,7 +193,7 @@ public class ItemType extends AbstractEntity
 
             itemType.setIdItemType(sqlRows.get(i).getLong("c0"));
             itemType.setNameItemType(sqlRows.get(i).getString("c2"));
-            itemType.setCostItemType(sqlRows.get(i).getFloat("c3"));
+            itemType.setCostItemType(sqlRows.get(i).getBigDecimal("c3"));
             itemType.setUnit(unitDao.findById(sqlRows.get(i).getLong("c8")));
             itemType.setStatusItemType(sqlRows.get(i).getInteger("c4"));
             itemTypes.add(itemType);

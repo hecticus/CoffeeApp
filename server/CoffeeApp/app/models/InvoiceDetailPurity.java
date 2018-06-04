@@ -106,7 +106,7 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         this.statusInvoiceDetailPurity = statusInvoiceDetailPurity;
     }
 
-    public InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
+    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
         return finder.query().where().eq("id_invoicedetail",IdInvopiceDetail).eq("id_purity",IdPurity).eq("status_delete",0).findUnique();
     }
 

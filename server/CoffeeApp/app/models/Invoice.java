@@ -2,11 +2,13 @@ package models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.CreatedTimestamp;
+import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
 import controllers.requestUtils.Request;
 import controllers.responseUtils.CustomDateTimeSerializer;
@@ -36,23 +38,25 @@ public class Invoice extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "id_provider", nullable = false)
     @JsonBackReference
-//    @Constraints.Required
+    @Constraints.Required
     private Provider provider;
 
-    @Constraints.Required
     @Column(nullable = false, name = "status_invoice")
     private Integer statusInvoice = 1;
 
-    @Column(  name = "dueDate_invoice") //nullable = false,
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedTimestamp
+    @Column(name = "dueDate_invoice", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)//, insertable = false)
     private DateTime startDateInvoice;
 
-    @Column(name = "closedDate_invoice")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @UpdatedTimestamp
+    @Column(name = "closedDate_invoice", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")//, insertable = false)
     private DateTime closedDateInvoice;
 
-
-    @OneToMany(mappedBy = "invoice")//, cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
     @Constraints.Min(0)
@@ -136,7 +140,7 @@ public class Invoice extends AbstractEntity{
         return false;
     }
 
-    public  List<Invoice> getOpenByProviderId(Long providerId){
+    public static  List<Invoice> getOpenByProviderId(Long providerId){
         return finder.query().where().eq("id_provider",providerId)
                 .eq("status_delete",0)
                 .eq("status_invoice",1)
@@ -144,7 +148,7 @@ public class Invoice extends AbstractEntity{
                 .findList();
     }
 
-    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties
+    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, String sort, PathProperties
                                 pathProperties, Long id_provider, Long id_providertype, String startDate, String
                                 endDate, Integer status ,Integer all){
 
@@ -157,8 +161,6 @@ public class Invoice extends AbstractEntity{
 //                finder.query().fetch("provider.providerType");
             expressionList.apply(pathProperties);
 
-        if(name != null )
-            expressionList.icontains("id_invoice", name);
 
         if(id_provider != 0L)
             expressionList.eq("id_Provider", id_provider);
@@ -283,15 +285,13 @@ public class Invoice extends AbstractEntity{
         return invoices;
     }
 
-    public static ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer id_provider, Integer id_providertype, String startDate, String endDate)
-    {
+    public static ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties
+            pathProperties, Integer id_provider, Integer id_providertype, String startDate, String endDate){
         ExpressionList expressionList;
-        try
-        {
+        try{
 
             SimpleDateFormat Datetemp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if(startDate.equals(""))
-            {
+            if(startDate.equals("")){
                 startDate = "1970-01-01";
             }
 
@@ -303,8 +303,7 @@ public class Invoice extends AbstractEntity{
             // Date startDateTemp = Datetemp.parse(startDate);
             // Date endDateTemp = Datetemp.parse(endDate);
 
-            if(!id_provider.equals(-2))
-            {
+            if(!id_provider.equals(-2)){
                 //to invoices t1 provider
                 if(!id_provider.equals(-1)) expressionList = finder.query().fetch("provider").where().eq("t0.status_delete", 0).eq("t0.id_provider",id_provider).between("t0.duedate_invoice",startDateTemp,endDateTemp);
                 else
@@ -332,8 +331,7 @@ public class Invoice extends AbstractEntity{
                 return new ListPagerCollection(expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(), findRowCount, pageIndex, pageSize);
             }
         }
-        catch(Exception e)
-        {
+        catch(Exception e){
             Throwable eRoot = Response.getCause(e);
             eRoot.printStackTrace();
 
@@ -344,21 +342,19 @@ public class Invoice extends AbstractEntity{
 
     }
 
-    public static  double calcularTotalInvoice(Long idInvioce) {
+    public static  BigDecimal calcularTotalInvoice(Long idInvioce) {
         List<InvoiceDetail> invoiceDetails = InvoiceDetail.finderAllByIdInvoice(idInvioce);
         Lot lot;
         Invoice invoice = Invoice.findById(idInvioce);//this.findById(idInvioce);
-        double total = 0;
+        BigDecimal total = BigDecimal.ZERO;
         boolean harvest = true;
         if(invoice.getProvider().getProviderType().getNameProviderType().toUpperCase().equals("VENDEDOR")) harvest=false;
 
-        for(InvoiceDetail invoiceDetail: invoiceDetails)
-        {
-            if (!harvest) total=total+(invoiceDetail.getCostItemType()*invoiceDetail.getAmountInvoiceDetail());
-            else
-            {
+        for(InvoiceDetail invoiceDetail: invoiceDetails){
+            if (!harvest) total = total.add(invoiceDetail.getCostItemType().multiply(invoiceDetail.getAmountInvoiceDetail()));
+            else{
                 lot = Lot.findById(invoiceDetail.getLot().getIdLot());
-                total=total+(lot.getPrice_lot()*invoiceDetail.getAmountInvoiceDetail());
+                total=total.add(lot.getPrice_lot().multiply(invoiceDetail.getAmountInvoiceDetail()));
             }
         }
 

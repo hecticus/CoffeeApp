@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.ListPagerCollection;
@@ -29,6 +30,7 @@ public class ProviderType  extends AbstractEntity {
     private String nameProviderType;
 
     @Constraints.Required
+
     @Column(nullable = false, name = "status_ProviderType")
     private Integer statusProviderType;
 

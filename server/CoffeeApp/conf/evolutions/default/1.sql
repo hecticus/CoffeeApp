@@ -54,12 +54,13 @@ create table config (
 );
 
 create table farms (
-  id_farm                       bigint(100) auto_increment not null,
+  id_farm                       bigint auto_increment not null,
   status_delete                 integer not null,
-  name_farm                     varchar(100) not null,
+  name_farm                     varchar(50) not null,
   status_farm                   integer(100) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint uq_farms_name_farm unique (name_farm),
   constraint pk_farms primary key (id_farm)
 );
 
@@ -78,11 +79,11 @@ create table invoices (
   status_delete                 integer not null,
   id_provider                   bigint not null,
   status_invoice                integer not null,
-  duedate_invoice               datetime(6),
-  closeddate_invoice            datetime(6),
   total_invoice                 decimal(38),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  duedate_invoice               TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  closeddate_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id_invoice)
 );
 
@@ -93,17 +94,17 @@ create table invoice_details (
   id_itemtype                   bigint not null,
   id_lot                        bigint,
   id_store                      bigint,
-  price_itemtypebylot           decimal(10,2) not null,
-  cost_itemtype                 decimal(10,2) not null,
-  duedate_invoicedetail         datetime(6) not null,
-  amount_invoicedetail          float(10,2) not null,
+  price_itemtypebylot           decimal(38) not null,
+  cost_itemtype                 decimal(38) not null,
+  amount_invoicedetail          decimal(38) not null,
   isfreight_invoicedetail       tinyint(1) default 0 not null,
-  note_invoicedetail            varchar(255),
+  note_invoicedetail            text,
   namereceived_invoicedetail    varchar(255) not null,
   namedelivered_invoicedetail   varchar(255) not null,
   status_invoicedetail          integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  duedate_invoicedetail         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoice_details primary key (id_invoicedetail)
 );
 
@@ -125,12 +126,13 @@ create table item_types (
   id_itemtype                   bigint auto_increment not null,
   status_delete                 integer not null,
   name_itemtype                 varchar(255) not null,
-  cost_itemtype                 decimal(10,2) not null,
+  cost_itemtype                 decimal(38) not null,
   status_itemtype               integer not null,
   id_providertype               bigint(100) not null,
   id_unit                       bigint not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint uq_item_types_name_itemtype unique (name_itemtype),
   constraint pk_item_types primary key (id_itemtype)
 );
 
@@ -141,8 +143,8 @@ create table lots (
   area_lot                      varchar(255) not null,
   heigh_lot                     double not null,
   status_lot                    integer not null,
-  id_farm                       bigint(100) not null,
-  price_lot                     decimal(10,2) not null,
+  id_farm                       bigint not null,
+  price_lot                     decimal(38) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_lots primary key (id_lot)

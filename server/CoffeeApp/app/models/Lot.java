@@ -8,6 +8,7 @@ import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,26 +34,33 @@ public class Lot extends AbstractEntity{
     private String areaLot;
 
     @Constraints.Required
+    @Constraints.Min(0)
     @Column(nullable = false, name = "heigh_lot")
     private Double heighLot;
 
     @Constraints.Required
     @Column(nullable = false, name = "status_lot")
-    private Integer statusLot=1;
+    private Integer statusLot;
 
-    @Constraints.Required
+
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_farm", nullable = false)
     private Farm farm;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)",name = "price_lot")
-    private Float priceLot;
+    @Constraints.Min(0)
+    @Column(nullable = false, name = "price_lot")
+    private BigDecimal priceLot;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
     private static Finder<Long, Lot> finder = new Finder<>(Lot.class);
+
+    public Lot() {
+        statusLot = 1;
+    }
 
     @JsonIgnore
     public List<InvoiceDetail> getInvoiceDetails() {
@@ -112,12 +120,12 @@ public class Lot extends AbstractEntity{
     }
 
     @JsonProperty("priceLot")
-    public Float getPrice_lot() {
+    public BigDecimal getPrice_lot() {
         return priceLot;
     }
 
     @JsonProperty("price_lot")
-    public void setPrice_lot(Float priceLot) {
+    public void setPrice_lot(BigDecimal priceLot) {
         this.priceLot = priceLot;
     }
 
@@ -232,7 +240,7 @@ public class Lot extends AbstractEntity{
         return lots;
     }
 
-    public  ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Integer idFarm) {
+    public  static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Integer idFarm) {
         String strOrder = "ASC";
         ExpressionList expressionList = finder.query().where();
 
@@ -255,8 +263,8 @@ public class Lot extends AbstractEntity{
         if(name != null)
             expressionList.icontains("name_lot", name);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort, this.getNameLot(), this.getIdLot()));
+//        if(sort != null)
+//            expressionList.orderBy(sort(sort, getNameLot(), getIdLot()));
 
         expressionList.eq("status_delete", all);
 

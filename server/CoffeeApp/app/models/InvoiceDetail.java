@@ -1,18 +1,20 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
+import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.text.PathProperties;
-import controllers.responseUtils.CustomDateTimeSerializer;
 import org.joda.time.DateTime;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.libs.Json;
 
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,16 +26,17 @@ import java.util.List;
 @Table(name="invoice_details")
 public class InvoiceDetail  extends AbstractEntity{
 
-
     @Id
     @Column(name = "id_invoiceDetail")
     private Long idInvoiceDetail;
 
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_invoice", nullable = false)
     private Invoice invoice;
 
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_itemType", nullable = false)
     private ItemType itemType;
 
@@ -41,53 +44,64 @@ public class InvoiceDetail  extends AbstractEntity{
     private List<InvoiceDetailPurity> invoiceDetailPurity = new ArrayList<>();
 
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_lot")
     private Lot lot;
 
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_store")
     private Store store;
 
+    @Constraints.Min(0)
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "price_ItemTypeByLot")
-    private Float priceItemTypeByLot;
+    @Column(nullable = false, name = "price_ItemTypeByLot")
+    private BigDecimal priceItemTypeByLot;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "Decimal(10,2)", name = "cost_ItemType")
-    private Double costItemType = 0.0;
+    @Constraints.Min(0)
+    @Column(nullable = false,  name = "cost_ItemType")
+    private BigDecimal costItemType;
 
 
-    @Column( nullable = false, name = "dueDate_invoiceDetail")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedTimestamp
+    @Column(nullable = false, name = "dueDate_invoiceDetail", columnDefinition =
+            "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)  //, insertable = false)
     private DateTime startDateInvoiceDetail;
 
     @Constraints.Required
-    @Column(nullable = false, columnDefinition = "FLOAT(10,2)", name = "amount_invoiceDetail")
-    //@Column(name = "amount_invoiceDetail")
-    private Float amountInvoiceDetail;
+    @Constraints.Min(0)
+    @Column(nullable = false, name = "amount_invoiceDetail")
+    private BigDecimal amountInvoiceDetail;
 
     @Column(name = "isFreight_invoiceDetail")
-    private boolean freightInvoiceDetail=false;
+    private boolean freightInvoiceDetail;
 
-    @Column(name = "note_invoiceDetail")
+    @Column(name = "note_invoiceDetail", columnDefinition = "text")
     private String noteInvoiceDetail;
 
-
     @Constraints.Required
+    @Constraints.MaxLength(100)
     @Column(nullable = false, name = "nameReceived_invoiceDetail")
     private String nameReceivedInvoiceDetail;
 
-
     @Constraints.Required
+    @Constraints.MaxLength(100)
     @Column(nullable = false, name = "nameDelivered_invoiceDetail")
     private String nameDeliveredInvoiceDetail;
 
-
-    @Constraints.Required
     @Column(nullable = false, name = "status_invoiceDetail")
-    private Integer statusInvoiceDetail=1;
+    private Integer statusInvoiceDetail;
 
     private static Finder<Long, InvoiceDetail> finder = new Finder<>(InvoiceDetail.class);
+
+    public InvoiceDetail() {
+        statusInvoiceDetail = 1;
+        freightInvoiceDetail = false;
+        costItemType = BigDecimal.ZERO;
+    }
 
     public Long getIdInvoiceDetail() {
         return idInvoiceDetail;
@@ -137,19 +151,19 @@ public class InvoiceDetail  extends AbstractEntity{
         this.store = store;
     }
 
-    public Float getPriceItemTypeByLot() {
+    public BigDecimal getPriceItemTypeByLot() {
         return priceItemTypeByLot;
     }
 
-    public void setPriceItemTypeByLot(Float priceItemTypeByLot) {
+    public void setPriceItemTypeByLot(BigDecimal priceItemTypeByLot) {
         this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
-    public Double getCostItemType() {
+    public BigDecimal getCostItemType() {
         return costItemType;
     }
 
-    public void setCostItemType(Double costItemType) {
+    public void setCostItemType(BigDecimal costItemType) {
         this.costItemType = costItemType;
     }
 
@@ -161,11 +175,11 @@ public class InvoiceDetail  extends AbstractEntity{
         this.startDateInvoiceDetail = startDateInvoiceDetail;
     }
 
-    public Float getAmountInvoiceDetail() {
+    public BigDecimal getAmountInvoiceDetail() {
         return amountInvoiceDetail;
     }
 
-    public void setAmountInvoiceDetail(Float amountInvoiceDetail) {
+    public void setAmountInvoiceDetail(BigDecimal amountInvoiceDetail) {
         this.amountInvoiceDetail = amountInvoiceDetail;
     }
 

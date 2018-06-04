@@ -28,10 +28,6 @@ public class Lots extends Controller {
 
     @Inject
     private FormFactory formFactory;
-    
-    private static Lot lotDao = new Lot();
-    private static Farm farmDao = new Farm();
-    private static InvoiceDetail invoiceDetailDao = new InvoiceDetail();
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public Lots(){
@@ -63,6 +59,8 @@ public class Lots extends Controller {
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
             node.set("nameLot", json.findValue("name"));
             node.set("priceLot", json.findValue("price_lot"));
+
+            //farm
             ObjectNode farmNode = Json.newObject();
             farmNode.set("idFarm", json.findValue("farm"));
             node.set("farm", farmNode);
@@ -113,19 +111,10 @@ public class Lots extends Controller {
     public Result delete(Long id) {
         try{
             Lot lot = Lot.findById(id);
-
-            List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
-            if(lot != null  && invoiceDetails.size()==0) {
-
-                lot.setStatusDelete(1);
-                lot.update();// = lotDao.update(lot);
-
-                return Response.deletedEntity();
-            } else {
-
-                if(lot == null)  return  Response.messageNotDeleted("no existe el registro a eliminar");
-                else  return  Response.messageNotDeleted("el registro tiene facturas aun no cerradas");
-            }
+            lot.setStatusDelete(1);
+            lot.setStatusLot(0);
+            lot.update();
+            return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
         }
@@ -176,7 +165,7 @@ public class Lots extends Controller {
     public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idFarm, Integer statusLot) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = lotDao.findAll(name, pageindex, pagesize, sort, pathProperties, all, idFarm.intValue());//, statusLot);
+            ListPagerCollection listPager = Lot.findAll(name, pageindex, pagesize, sort, pathProperties, all, idFarm.intValue());//, statusLot);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

@@ -36,18 +36,7 @@ public class Farms extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
-    public Result preCreate() {
-        try {
-
-            return  null;
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -67,7 +56,7 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode request = request().body().asJson();
@@ -88,17 +77,20 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try {
-            Ebean.delete(Farm.class, id);
+//            Ebean.delete(Farm.class, id);
+            Farm farm = Farm.findById(id);
+            farm.setStatusDelete(1);
+            farm.update();
             return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();

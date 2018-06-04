@@ -21,16 +21,14 @@ public class Farm extends AbstractEntity{
 
 
     @Id
-    @Constraints.Required
-    @Constraints.MaxLength(100)
-    @Column(name = "id_farm", length = 100, nullable = false)
+    @Column(name = "id_farm", nullable = false)
     private Long idFarm;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_farm", length = 100)
+    @Constraints.MaxLength(50)
+    @Column(nullable = false, name = "name_farm", length = 50, unique = true)
     private String NameFarm;
 
-    @Constraints.Required
     @Column(nullable = false, name = "status_farm", length = 100)
     private Integer statusFarm = 1;
 
