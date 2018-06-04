@@ -8,10 +8,12 @@ import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
+import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static play.mvc.Controller.request;
@@ -21,7 +23,8 @@ import static play.mvc.Controller.request;
  */
 public class Stores {
 
-    private static Store storeDao = new Store();
+    @Inject
+    private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public Stores(){
@@ -56,7 +59,7 @@ public class Stores {
             if (Name == null)
                 return Response.requiredParameter("nameStore");
 
-            int registered = storeDao.getExist(Name.asText().toUpperCase());
+            int registered = Store.getExist(Name.asText().toUpperCase());
             if(registered==0) return  Response.messageExist("nameStore");
             if(registered==1) return  Response.messageExistDeleted("nameStore");
 
@@ -92,7 +95,7 @@ public class Stores {
 
             JsonNode Name = json.get("nameStore");
             if (Name != null) {
-                int registered = storeDao.getExist(Name.asText().toUpperCase());
+                int registered = Store.getExist(Name.asText().toUpperCase());
                 if(registered==0) return  Response.messageExist("nameStore");
                 if(registered==1) return  Response.messageExistDeleted("nameStore");
 
@@ -110,7 +113,7 @@ public class Stores {
 //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Store store = storeDao.findById(id);
+            Store store = Store.findById(id);
             if(store != null) {
 
                 store.setStatusDelete(1);
@@ -128,7 +131,7 @@ public class Stores {
 //    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Store store = storeDao.findById(id);
+            Store store = Store.findById(id);
             return Response.foundEntity(Response.toJson(store, Store.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
@@ -147,7 +150,7 @@ public class Stores {
                 return Response.requiredParameter("order (ASC o DESC)");
 
 
-            List<Store> stores = storeDao. getByStatusStore(statusStore,strOrder);
+            List<Store> stores = Store.getByStatusStore(statusStore,strOrder);
             return Response.foundEntity(Json.toJson(stores));
 
         }catch(Exception e){

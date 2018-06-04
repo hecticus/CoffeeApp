@@ -154,7 +154,7 @@ GET     /providerType/getProviderTypesByName/:name/:order                       
 #GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.getProviderTypesByName(name:String,order:String)
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
 
-#Nuevas
+#New creates by sm21
 POST    /providerType                                                            controllers.ProviderTypes.create()
 POST    /providerType/deletes                                                    controllers.ProviderTypes.deletes()
 PUT     /providerType/:id                                                        controllers.ProviderTypes.update(id : Long)

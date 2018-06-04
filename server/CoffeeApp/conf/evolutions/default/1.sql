@@ -172,15 +172,16 @@ create table providers (
   identificationdoc_provider    varchar(255) not null,
   fullname_provider             varchar(255) not null,
   address_provider              varchar(255) not null,
-  phonenumber_provider          varchar(255) not null,
+  phonenumber_provider          varchar(20) not null,
   email_provider                varchar(255),
   photo_provider                varchar(255),
   provider_type_id_provider_type bigint(100) not null,
-  contactname_provider          varchar(255) not null,
+  contactname_provider          varchar(55) not null,
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_providers_identificationdoc_provider unique (identificationdoc_provider),
+  constraint uq_providers_contactname_provider unique (contactname_provider),
   constraint pk_providers primary key (id_provider)
 );
 
@@ -256,10 +257,11 @@ create table status (
 create table stores (
   id_store                      bigint auto_increment not null,
   status_delete                 integer not null,
-  name_store                    varchar(255) not null,
+  name_store                    varchar(50) not null,
   status_store                  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint uq_stores_name_store unique (name_store),
   constraint pk_stores primary key (id_store)
 );
 

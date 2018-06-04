@@ -23,17 +23,23 @@ public class Store extends AbstractEntity{
     private Long idStore;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_store")
+    @Constraints.Max(50)
+    @Column(nullable = false, name = "name_store", unique = true, length = 50)
     private String NameStore;
 
     @Constraints.Required
     @Column(nullable = false, name = "status_store")
-    private Integer statusStore=1;
+    private Integer statusStore;
 
     @OneToMany(mappedBy = "store", cascade= CascadeType.ALL)
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+    private List<InvoiceDetail> invoiceDetails;
 
     private static Finder<Long, Store> finder = new Finder<>(Store.class);
+
+    public Store() {
+        statusStore = 1;
+        invoiceDetails = new ArrayList<>();
+    }
 
     public Long getIdStore() {
         return idStore;
@@ -68,7 +74,7 @@ public class Store extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
-    public int getExist(String name_store){
+    public static int getExist(String name_store){
         if(finder.query().where().eq("name_store",name_store).eq("status_delete",0).findUnique()!=null) return 0;
         else{
             if(finder.query().where().eq("name_store",name_store).eq("status_delete",1).findUnique()!=null)  return 1;
@@ -106,7 +112,7 @@ public class Store extends AbstractEntity{
     }
 
 
-    public List<Store> getByStatusStore(String StatusStore, String order){
+    public static List<Store> getByStatusStore(String StatusStore, String order){
         String sql="select t0.id_store c0, t0.status_delete c1, t0.name_store c2, t0.status_store c3, " +
                 " t0.created_at c5, t0.updated_at c6 " +
                 " from stores t0 "+
@@ -123,8 +129,7 @@ public class Store extends AbstractEntity{
         return toStores(results);
     }
 
-    public List<Store> toStores(List<SqlRow>  sqlRows)
-    {
+    public static List<Store> toStores(List<SqlRow>  sqlRows) {
         List<Store> stores = new ArrayList<>();
 
         Store Store;

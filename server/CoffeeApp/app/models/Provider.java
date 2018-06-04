@@ -1,6 +1,7 @@
 package models;
 
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +18,7 @@ import play.data.validation.Constraints;
 import scala.reflect.internal.Trees;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,21 +34,26 @@ public class Provider extends AbstractEntity{
     private Long idProvider;
 
     @Constraints.Required
-    @Column(unique=true,nullable = false, name = "identificationDoc_Provider")
+    @Constraints.MaxLength(255)
+    @Column(unique=true, nullable = false, name = "identificationDoc_Provider")
     private String identificationDocProvider;
 
     @Constraints.Required
+    @Constraints.MaxLength(255)
     @Column(nullable = false, name = "fullName_Provider")
     private String fullNameProvider;
 
     @Constraints.Required
+    @Constraints.MaxLength(255)
     @Column(nullable = false, name = "address_Provider")
     private String addressProvider;
 
     @Constraints.Required
-    @Column(nullable = false, name = "phoneNumber_Provider")
+    @Constraints.MaxLength(20)
+    @Column(nullable = false, name = "phoneNumber_Provider", length = 20)
     private String phoneNumberProvider;
 
+    @Constraints.Email
     @Column(name = "email_Provider")
     private String emailProvider;
 
@@ -55,25 +62,30 @@ public class Provider extends AbstractEntity{
     private String photoProvider;
 
     @ManyToOne(optional = false)
-    //@JoinColumn(name = "id_providerType", nullable = false)
     @JsonBackReference
+    @Constraints.Required
     private ProviderType providerType;
 
     @Constraints.Required
-    @Column(nullable = false, name = "contactName_Provider")
+    @Constraints.Max(55)
+    @Column(nullable = false, name = "contactName_Provider", length = 55, unique = true)
     private String contactNameProvider;
 
-    @Constraints.Required
+    @Range(max = 1, min = 0)
     @Column(nullable = false, name = "status_Provider")
-//    private boolean statusProvider;
-    private Integer statusProvider = 1;
+    private Integer statusProvider;
 
 
     @OneToMany(mappedBy = "provider", cascade= CascadeType.ALL)
     @JsonManagedReference
-    private List<Invoice> invoices = new ArrayList<>();
+    private List<Invoice> invoices;
 
     private static Finder<Long, Provider> finder = new Finder<>(Provider.class);
+
+    public Provider() {
+        statusProvider = 1;
+        invoices = new ArrayList<>();
+    }
 
 
     public Long getIdProvider() {
@@ -212,7 +224,7 @@ public class Provider extends AbstractEntity{
 
 
 
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties
+    public static ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties
             pathProperties, boolean all, Integer listAll, boolean inside, Integer idProviderType) {
 
         ExpressionList expressionList;
@@ -247,7 +259,7 @@ public class Provider extends AbstractEntity{
         return finder.query().where().eq("identificationdoc_provider",IdentificationDoc).findUnique();
     }
 
-    public List<Provider> getProvidersByName(String fullname_provider, String order){
+    public static List<Provider> getProvidersByName(String fullname_provider, String order){
         String sql = "select t0.id_provider prov_id, t0.identificationdoc_provider identification_doc," +
                 " t0.fullname_provider full_name, " +
                 "t0.address_provider address, t0.phonenumber_provider phone_number, t0.email_provider email," +
@@ -289,7 +301,7 @@ public class Provider extends AbstractEntity{
         return toProviders(sqlRows);
     }
 
-    public List<Provider> toProviders(List<SqlRow>  sqlRows){
+    public static List<Provider> toProviders(List<SqlRow>  sqlRows){
         List<Provider> providers = new ArrayList<>();
         Provider provider;
 
@@ -330,7 +342,7 @@ public class Provider extends AbstractEntity{
         return false;
     }
 
-    public String uploadPhoto(String base64Photo, String ext) {
+    public static String uploadPhoto(String base64Photo, String ext) {
 
         ObjectMapper mapper = new ObjectMapper();
         //    ArrayNode arrayNode = mapper.createArrayNode();
