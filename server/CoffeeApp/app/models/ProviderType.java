@@ -23,7 +23,6 @@ public class ProviderType  extends AbstractEntity {
     @Column(name = "id_ProviderType", length = 100, nullable = false)
     private Long idProviderType;
 
-
     @Constraints.Required
     @Constraints.MaxLength(100)
     @Column(nullable = false, unique = true, name = "name_ProviderType", length = 100)

@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.ListPagerCollection;
@@ -19,7 +20,6 @@ import java.util.List;
 @Table(name="farms")
 public class Farm extends AbstractEntity{
 
-
     @Id
     @Column(name = "id_farm", nullable = false)
     private Long idFarm;
@@ -29,14 +29,20 @@ public class Farm extends AbstractEntity{
     @Column(nullable = false, name = "name_farm", length = 50, unique = true)
     private String NameFarm;
 
-    @Column(nullable = false, name = "status_farm", length = 100)
-    private Integer statusFarm = 1;
+    @Range(min = 0, max = 1)
+    @Column(nullable = false, name = "status_farm")
+    private Integer statusFarm;
 
-    @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
     @JsonIgnore
-    private List<Lot> lots = new ArrayList<>();
+    @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
+    private List<Lot> lots;
 
     private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
+
+    public Farm() {
+        statusFarm = 1;
+        lots = new ArrayList<>();
+    }
 
     // GETTER AND SETTER
     public Long getIdFarm() {
@@ -89,25 +95,34 @@ public class Farm extends AbstractEntity{
     }
 
 
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort,PathProperties pathProperties,  Integer status){
+    public static ListPagerCollection findAll(String name, Integer index, Integer size, String
+                                                sort,PathProperties pathProperties,  Integer status){
+
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(status != null)
-            expressionList.eq("status_farm",status);
+            expressionList.eq("statusFarm",status);
 
         if(name != null)
-            expressionList.icontains("name_farm", name);
+            expressionList.icontains("NameFarm", name);
 
         if(sort != null)
             expressionList.orderBy(sort(sort));
+
+        if( status != null ){
+            expressionList.eq("statusDelete", status);
+        }
+
         if(index == null || size == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+            return new ListPagerCollection(expressionList.findList());
+
+
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
     }

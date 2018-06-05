@@ -226,7 +226,7 @@ public class ItemType extends AbstractEntity
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.contains("name_itemType", name);
+            expressionList.startsWith("name_itemType", name);
 
         if(status !=null)
             expressionList.eq("status_itemType", status);

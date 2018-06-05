@@ -202,10 +202,10 @@ public class Provider extends AbstractEntity{
             expressionList.apply(pathProperties);
 
         if(idProviderType != 0L)
-            expressionList.eq("id_providerType", idProviderType);
+            expressionList.eq("providerType.idProviderType", idProviderType);
 
         if(statusProvider != null)
-            expressionList.eq("status_Provider", statusProvider);
+            expressionList.eq("statusProvider", statusProvider);
 
 //        if(sort != null)
 //            expressionList.orderBy(sort(sort));
