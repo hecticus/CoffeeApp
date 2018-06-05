@@ -1,11 +1,10 @@
-
 package models;
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import io.ebean.Finder;
+import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
 import controllers.multimediaUtils.Multimedia;
 import org.joda.time.DateTime;
@@ -16,19 +15,18 @@ import security.models.AuthUser;
 import javax.persistence.*;
 import java.util.List;
 
-
-
 /*
  * Bean for users registered in system.
- *
  * @author Yenny Fung
  * @since 2016
+ *
+ * modify sn21 since 2018
+ *
  */
 
 @Entity
 @Table(name = "user")
 public class User extends AbstractEntity {
-
 
     @Id
     private Long id;
@@ -42,14 +40,14 @@ public class User extends AbstractEntity {
     @Formula(select="(select concat(first_name,' ',last_name) from user u where u.id = ${ta}.id) ")
     private String name;;
 
-    @Constraints.MaxLength(100)
+    @Constraints.MaxLength(50)
     @Constraints.Required
-    @Column(length = 100, nullable = false)
+    @Column(length = 50, nullable = false)
     protected String firstName;
 
-    @Constraints.MaxLength(100)
+    @Constraints.MaxLength(50)
     @Constraints.Required
-    @Column(length = 100, nullable = false)
+    @Column(length = 50, nullable = false)
     protected String lastName;
 
     @Column(columnDefinition = "text")
@@ -58,46 +56,34 @@ public class User extends AbstractEntity {
     @Embedded
     private Contact contact;
 
-    /*
-     * Email to send the confirmation of register. This email is used like username for login in sytem.
-     *//*
-
-    @Constraints.Required
-    @Column(unique = true, nullable = false)
-    protected String email;
-
-
-    /*
-     * Last login in system
-     */
-
-    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(columnDefinition = "datetime", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedTimestamp
+    @Column(columnDefinition = "datetime", updatable = false, nullable = false)//, insertable = false)
     protected DateTime lastLogin;
 
     private static Finder<Long, User> finder = new Finder<>(User.class);
 
-    @PrePersist
-    public void createAuthUser() throws MySQLIntegrityConstraintViolationException {
-        if(this.authUser != null) {
-            this.authUser.setPassword(this.authUser.getPassword()); //TODO ENCRYP
-            this.authUser.insert();
-            this.id = this.authUser.getId();
-        }else{
-            throw new MySQLIntegrityConstraintViolationException("Violation constrain: Cannot add or update a child row: a foreign key constraint fails");
-        }
-    }
-
-    @PreUpdate
-    public void updateAuthUser(){
-        if(this.id != null) {
-            AuthUser authUser = User.findById(this.id).getAuthUser();
-            authUser.setEmail(this.authUser.getEmail());
-            authUser.update();
-            this.authUser = authUser;
-        }
-    }
+//    @PrePersist
+////    public void createAuthUser() throws MySQLIntegrityConstraintViolationException {
+////        if(this.authUser != null) {
+////            this.authUser.setPassword(this.authUser.getPassword()); //TODO ENCRYP
+////            this.authUser.insert();
+////            this.id = this.authUser.getId();
+////        }else{
+////            throw new MySQLIntegrityConstraintViolationException("Violation constrain: Cannot add or update a child row: a foreign key constraint fails");
+////        }
+////    }
+////
+////    @PreUpdate
+////    public void updateAuthUser(){
+////        if(this.id != null) {
+////            AuthUser authUser = User.findById(this.id).getAuthUser();
+////            authUser.setEmail(this.authUser.getEmail());
+////            authUser.update();
+////            this.authUser = authUser;
+////        }
+////    }
 
     //No clear
     public static User findById(Long id){
@@ -166,8 +152,6 @@ public class User extends AbstractEntity {
             return users.get(0);
         return null;
     }
-
-
 
     public User findUniqueByEmail(String email){
         return finder.query()

@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
@@ -23,17 +24,21 @@ public class Unit extends AbstractEntity{
     private Long idUnit;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_unit")
+    @Column(nullable = false, name = "name_unit", unique = true)
     private String NameUnit;
 
-    @Constraints.Required
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_unit")
-    private Integer statusUnit=1;
+    private Integer statusUnit;
 
     @OneToMany(mappedBy = "unit", cascade= CascadeType.ALL)
     private List<ItemType> itemTypes = new ArrayList<>();
 
     private static Finder<Long, Unit> finder = new Finder<>(Unit.class);
+
+    public Unit() {
+        statusUnit = 1;
+    }
 
 
     public Long getIdUnit() {

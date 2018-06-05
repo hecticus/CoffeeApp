@@ -136,18 +136,15 @@ public class ItemType extends AbstractEntity
         return false;
     }
 
-    public List<ItemType> getOpenByUnitId(Long idUnit)
-    {
+    public static List<ItemType> getOpenByUnitId(Long idUnit) {
         return finder.query().where().eq("id_unit",idUnit).eq("status_delete",0).findList();
     }
 
-    public List<ItemType> getOpenByProviderTypeId(Long idProviderType)
-    {
+    public List<ItemType> getOpenByProviderTypeId(Long idProviderType) {
         return finder.query().where().eq("id_providertype",idProviderType).eq("status_delete",0).findList();
     }
 
-    public static List<ItemType> getByProviderTypeId(Long idProviderType, Integer status)
-    {
+    public static List<ItemType> getByProviderTypeId(Long idProviderType, Integer status){
         String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
                 " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
                 " item.updated_at c6, item.id_providertype c7, item.id_unit c8  " +

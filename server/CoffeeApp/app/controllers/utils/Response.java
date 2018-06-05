@@ -3,16 +3,23 @@ package controllers.utils;
 //import com.avaje.ebean.Ebean;
 //import com.avaje.ebean.text.*;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mysql.jdbc.MysqlDataTruncation;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import io.ebean.Ebean;
 import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.libs.Json;
 import play.mvc.Result;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static play.mvc.Results.*;
 
@@ -129,6 +136,29 @@ public class Response{
         return badRequest(response);
     }
 
+    public static Result invalidParameter(InvalidFormatException e){
+        final Pattern pattern = Pattern.compile("\\[\"(.+?)\"\\]");
+        Matcher matcher = pattern.matcher(e.getPathReference());
+        String attribute = "<unknow>";
+        if (matcher.find())
+            attribute = matcher.group(1);
+        while(matcher.find())
+            attribute += "." + matcher.group(1);
+        return invalidParameter(attribute);
+    }
+
+    public static Result invalidParameter(JsonMappingException e){
+        final Pattern pattern = Pattern.compile("\\[\"(.+?)\"\\]");
+        Matcher matcher = pattern.matcher(e.getPathReference());
+        String attribute = "<unknow>";
+        if (matcher.find())
+            attribute = matcher.group(1);
+        while(matcher.find())
+            attribute += "." + matcher.group(1);
+        return invalidParameter(attribute);
+    }
+
+
     /*
     * notFound 404
     */
@@ -157,4 +187,6 @@ public class Response{
     public static Result internalServerErrorLF(String message){
         return internalServerError(buildExtendResponse("Oops!: " + message));
     }
+
+
 }

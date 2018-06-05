@@ -67,8 +67,8 @@ public class Provider extends AbstractEntity{
     private ProviderType providerType;
 
     @Constraints.Required
-    @Constraints.Max(55)
-    @Column(nullable = false, name = "contactName_Provider", length = 55, unique = true)
+    @Constraints.MaxLength(50)
+    @Column(nullable = false, name = "contactName_Provider", length = 50, unique = true)
     private String contactNameProvider;
 
     @Range(max = 1, min = 0)

@@ -7,8 +7,8 @@ create table auth_user (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  username                      varchar(100) not null,
-  email                         varchar(100) not null,
+  username                      varchar(50) not null,
+  email                         varchar(50) not null,
   password                      text not null,
   last_login                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted                       tinyint(1) default 0 not null,
@@ -176,7 +176,7 @@ create table providers (
   email_provider                varchar(255),
   photo_provider                varchar(255),
   provider_type_id_provider_type bigint(100) not null,
-  contactname_provider          varchar(55) not null,
+  contactname_provider          varchar(50) not null,
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -272,6 +272,7 @@ create table units (
   status_unit                   integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint uq_units_name_unit unique (name_unit),
   constraint pk_units primary key (id_unit)
 );
 
@@ -279,8 +280,8 @@ create table user (
   id                            bigint auto_increment not null,
   status_delete                 integer not null,
   auth_user_id                  bigint not null,
-  first_name                    varchar(100) not null,
-  last_name                     varchar(100) not null,
+  first_name                    varchar(50) not null,
+  last_name                     varchar(50) not null,
   description                   text,
   latitude                      double,
   longitude                     double,
@@ -288,9 +289,9 @@ create table user (
   phone                         varchar(100),
   phone2                        varchar(100),
   email2                        varchar(100),
-  last_login                    datetime not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  last_login                    datetime not null,
   constraint uq_user_auth_user_id unique (auth_user_id),
   constraint pk_user primary key (id)
 );

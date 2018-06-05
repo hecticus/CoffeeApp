@@ -1,13 +1,14 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.responseUtils.Response;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.Store;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
+import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Result;
@@ -35,8 +36,6 @@ public class Stores {
 
 //    @CoffeAppsecurity
     public Result preCreate() {
-
-
         try {
             Store store = new Store();
             return Response.foundEntity(
@@ -48,32 +47,19 @@ public class Stores {
 
 //    @CoffeAppsecurity
     public Result create() {
-        try
-        {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-
-            JsonNode Name = json.get("nameStore");
-            if (Name == null)
-                return Response.requiredParameter("nameStore");
-
-            int registered = Store.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("nameStore");
-            if(registered==1) return  Response.messageExistDeleted("nameStore");
-
-            JsonNode status = json.get("statusStore");
-            if (status == null)
-                return Response.requiredParameter("statusStore");
+            Form<Store> form = formFactory.form(Store.class).bind(json);
+            if(form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             // mapping object-json
             Store store = Json.fromJson(json, Store.class);
-
-
             store.save();
             return Response.createdEntity(Json.toJson(store));
-
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
         }
@@ -91,17 +77,12 @@ public class Stores {
             if (id == null)
                 return Response.requiredParameter("idStore");
 
-            Store store =  Json.fromJson(json, Store.class);
+            Form<Store> form = formFactory.form(Store.class).bind(json);
+            if(form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            JsonNode Name = json.get("nameStore");
-            if (Name != null) {
-                int registered = Store.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("nameStore");
-                if(registered==1) return  Response.messageExistDeleted("nameStore");
-
-                store.setNameStore(Name.asText().toUpperCase());
-            }
-
+            // mapping object-json
+            Store store = Json.fromJson(json, Store.class);
             store.update();
             return Response.updatedEntity(Json.toJson(store));
 
@@ -114,15 +95,9 @@ public class Stores {
     public Result delete(Long id) {
         try{
             Store store = Store.findById(id);
-            if(store != null) {
-
-                store.setStatusDelete(1);
-                store.update();
-
-                return Response.deletedEntity();
-            } else {
-                return  Response.message("Successful no existe el registro a eliminar");
-            }
+            store.setStatusDelete(1);
+            store.update();
+            return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
         }

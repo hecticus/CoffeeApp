@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -23,11 +24,11 @@ public class Store extends AbstractEntity{
     private Long idStore;
 
     @Constraints.Required
-    @Constraints.Max(50)
+    @Constraints.MaxLength(50)
     @Column(nullable = false, name = "name_store", unique = true, length = 50)
     private String NameStore;
 
-    @Constraints.Required
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_store")
     private Integer statusStore;
 

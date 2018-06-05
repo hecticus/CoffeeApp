@@ -21,15 +21,15 @@ import java.util.List;
 @Entity
 public class AuthUser extends AbstractEntity{
 
-    @Constraints.MaxLength(100)
+    @Constraints.MaxLength(50)
     @Constraints.Required
-    @Column(length = 100, unique = true, nullable = false, updatable = false)
+    @Column(length = 50, unique = true, nullable = false, updatable = false)
     protected String username;
 
     @Constraints.Email
     @Constraints.Required
-    @Constraints.MaxLength(100)
-    @Column(length = 100, unique = true, nullable = false)
+    @Constraints.MaxLength(50)
+    @Column(length = 50, unique = true, nullable = false)
     protected String email;
 
     @Constraints.Required
