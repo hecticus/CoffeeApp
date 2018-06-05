@@ -10,6 +10,7 @@ import models.Unit;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
+import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -36,6 +37,10 @@ public class Units extends Controller {
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
             node.set("NameUnit", json.findValue("name"));
 
+            Form<Unit> form = formFactory.form(Unit.class).bind(json);
+            if(form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
+
             // mapping object-json
             Unit unit = Json.fromJson(node, Unit.class);
             unit.save();
@@ -60,6 +65,10 @@ public class Units extends Controller {
 
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
             node.set("NameUnit", json.findValue("name"));
+
+            Form<Unit> form = formFactory.form(Unit.class).bind(json);
+            if(form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             // mapping object-json
             Unit unit = Json.fromJson(node, Unit.class);

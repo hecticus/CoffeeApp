@@ -50,7 +50,7 @@ public class ItemType extends AbstractEntity
     private Unit unit;
 
     @OneToMany(mappedBy = "itemType", cascade= CascadeType.ALL)
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+    private List<InvoiceDetail> invoiceDetails;
 
 
 
@@ -58,6 +58,7 @@ public class ItemType extends AbstractEntity
 
     public ItemType() {
         statusItemType = 1;
+        invoiceDetails = new ArrayList<>();
     }
 
     //GETTER AND SETTER

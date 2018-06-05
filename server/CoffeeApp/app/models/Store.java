@@ -18,7 +18,6 @@ import java.util.List;
 @Table(name="stores")
 public class Store extends AbstractEntity{
 
-
     @Id
     @Column(name = "id_store")
     private Long idStore;

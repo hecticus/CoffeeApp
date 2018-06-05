@@ -105,12 +105,9 @@ public class Providers extends Controller {
         try{
             Provider provider = Provider.findById(id);
             List<Invoice> invoices = Invoice.getOpenByProviderId(id);
-            if(provider != null && invoices.size()==0) {
-
+                if(provider != null && invoices.size()==0) {
                 provider.setStatusDelete(1);
-
                 provider.update();
-
                 return Response.deletedEntity();
             } else {
                 if(provider == null)  return  Response.messageNotDeleted(" no existe el registro a eliminar");

@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,9 +41,6 @@ public class InvoiceDetail  extends AbstractEntity{
     @JoinColumn(name = "id_itemType", nullable = false)
     private ItemType itemType;
 
-    @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
-    private List<InvoiceDetailPurity> invoiceDetailPurity = new ArrayList<>();
-
     @ManyToOne
     @Constraints.Required
     @JoinColumn(name = "id_lot")
@@ -62,7 +60,6 @@ public class InvoiceDetail  extends AbstractEntity{
     @Constraints.Min(0)
     @Column(nullable = false,  name = "cost_ItemType")
     private BigDecimal costItemType;
-
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -84,16 +81,20 @@ public class InvoiceDetail  extends AbstractEntity{
 
     @Constraints.Required
     @Constraints.MaxLength(100)
-    @Column(nullable = false, name = "nameReceived_invoiceDetail")
+    @Column(nullable = false, name = "nameReceived_invoiceDetail", length = 100)
     private String nameReceivedInvoiceDetail;
 
     @Constraints.Required
     @Constraints.MaxLength(100)
-    @Column(nullable = false, name = "nameDelivered_invoiceDetail")
+    @Column(nullable = false, name = "nameDelivered_invoiceDetail", length = 100)
     private String nameDeliveredInvoiceDetail;
 
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_invoiceDetail")
     private Integer statusInvoiceDetail;
+
+    @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
+    private List<InvoiceDetailPurity> invoiceDetailPurity;
 
     private static Finder<Long, InvoiceDetail> finder = new Finder<>(InvoiceDetail.class);
 
@@ -101,6 +102,7 @@ public class InvoiceDetail  extends AbstractEntity{
         statusInvoiceDetail = 1;
         freightInvoiceDetail = false;
         costItemType = BigDecimal.ZERO;
+        invoiceDetailPurity = new ArrayList<>();
     }
 
     public Long getIdInvoiceDetail() {
@@ -250,7 +252,7 @@ public class InvoiceDetail  extends AbstractEntity{
         return finder.query().where().eq("id_lot",idLot).eq("status_delete",0).findList();
     }
 
-    public    List<InvoiceDetail> getOpenByStoreId( Long idStore){
+    public  static  List<InvoiceDetail> getOpenByStoreId( Long idStore){
         return finder.query().where().eq("id_store",idStore).eq("status_delete",0).findList();
     }
 
@@ -271,8 +273,7 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public JsonNode finderAllByIdInvoiceSummary(Long idInvoice)
-    {
+    public JsonNode finderAllByIdInvoiceSummary(Long idInvoice) {
         ObjectNode aux;
         List<ObjectNode> result = new ArrayList<>();
         String sql="SELECT duedate_invoicedetail as c0, SUM(amount_invoicedetail) as c1 " +
@@ -286,17 +287,13 @@ public class InvoiceDetail  extends AbstractEntity{
 
         List<SqlRow> results = query.findList();
 
-
-
-        for(int i=0; i < results.size(); ++i)
-        {
+        for(int i=0; i < results.size(); ++i) {
             aux= Json.newObject();
 
             aux.put("startDateInvoiceDetail",results.get(i).getTimestamp("c0").toString());
             aux.put("amountTotal",results.get(i).getString("c1"));
 
             result.add(aux);
-
         }
 
 

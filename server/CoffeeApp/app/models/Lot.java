@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import controllers.utils.ListPagerCollection;
@@ -30,6 +31,7 @@ public class Lot extends AbstractEntity{
     private String nameLot;
 
     @Constraints.Required
+    @Constraints.Min(0)
     @Column(nullable = false, name = "area_lot")
     private String areaLot;
 
@@ -39,9 +41,9 @@ public class Lot extends AbstractEntity{
     private Double heighLot;
 
     @Constraints.Required
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_lot")
     private Integer statusLot;
-
 
     @ManyToOne
     @Constraints.Required
@@ -54,12 +56,13 @@ public class Lot extends AbstractEntity{
     private BigDecimal priceLot;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+    private List<InvoiceDetail> invoiceDetails;
 
     private static Finder<Long, Lot> finder = new Finder<>(Lot.class);
 
     public Lot() {
         statusLot = 1;
+        invoiceDetails = new ArrayList<>();
     }
 
     @JsonIgnore
@@ -165,7 +168,7 @@ public class Lot extends AbstractEntity{
             expressionList.eq("status_delete", all);
 
         if(sort != null)
-            expressionList.orderBy(sort(sort, nameLot, idLot));
+            expressionList.orderBy(sort(sort));
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());

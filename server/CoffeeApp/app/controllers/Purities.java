@@ -1,6 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
@@ -9,11 +11,14 @@ import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
+import play.data.Form;
+import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
+import javax.inject.Inject;
 import java.util.List;
 
 
@@ -22,8 +27,8 @@ import java.util.List;
  */
 public class Purities extends Controller{
 
-    private static Purity purityDao = new Purity();
-    private static InvoiceDetail invoiceDetailDao = new InvoiceDetail();
+    @Inject
+    private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     public Purities(){
@@ -31,39 +36,31 @@ public class Purities extends Controller{
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
+    //    @CoffeAppsecurity
+    public Result preCreate() {
+        try {
+            return Response.foundEntity(Json.toJson(new Purity()));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
+    }
+
 //    @CoffeAppsecurity
     public Result create() {
-        try
-        {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-
-            JsonNode Name = json.get("namePurity");
-            if (Name == null)
-                return Response.requiredParameter("namePurity");
-
-            int registered = purityDao.getExist(Name.asText().toUpperCase());
-            if(registered==0) return  Response.messageExist("namePurity");
-            if(registered==1) return  Response.messageExistDeleted("namePurity");
-
-
-            JsonNode DiscountRate = json.get("discountRatePurity");
-            if (DiscountRate == null)
-                return Response.requiredParameter("discountRatePurity");
-
-            JsonNode status = json.get("statusPurity");
-            if (status == null)
-                return Response.requiredParameter("statusPurity");
-
-
-
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.set("NamePurity", json.findValue("namePurity"));
+            Form<Purity> form = formFactory.form(Purity.class).bind(node);
+            if (form.hasErrors()){
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
+            }
 
             // mapping object-json
             Purity purity = Json.fromJson(json, Purity.class);
-
-
             purity.save();
             return Response.createdEntity(Json.toJson(purity));
 
@@ -74,8 +71,7 @@ public class Purities extends Controller{
 
 //    @CoffeAppsecurity
     public Result update() {
-        try
-        {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
@@ -84,19 +80,16 @@ public class Purities extends Controller{
             if (id == null)
                 return Response.requiredParameter("idPurity");
 
-            Purity purity =  Json.fromJson(json, Purity.class);
-
-            JsonNode Name = json.get("namePurity");
-            if (Name != null)
-            {
-                int registered = purityDao.getExist(Name.asText().toUpperCase());
-                if(registered==0) return  Response.messageExist("namePurity");
-                if(registered==1) return  Response.messageExistDeleted("namePurity");
-
-                purity.setNamePurity(Name.asText().toUpperCase());
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.set("NamePurity", json.findValue("namePurity"));
+            Form<Purity> form = formFactory.form(Purity.class).bind(node);
+            if (form.hasErrors()){
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
 
-
+            // mapping object-json
+            Purity purity = Json.fromJson(json, Purity.class);
+            purity.setIdPurity(id.asLong());
             purity.update();
             return Response.updatedEntity(Json.toJson(purity));
 
@@ -109,16 +102,9 @@ public class Purities extends Controller{
     public Result delete(Long id) {
         try{
             Purity purity = Purity.findById(id);
-            List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
-            System.out.println(purity.getNamePurity());
-            if(purity != null  && invoiceDetails.size()==0) {
-                purity.setStatusDelete(1);
-                purity.update();
-                return Response.deletedEntity();
-            } else {
-                if(purity == null)  return  Response.message("Successful no existe el registro a eliminar");
-                else  return  Response.message("Successful el registro tiene facturas aun no cerradas");
-            }
+            purity.setStatusDelete(1);
+            purity.update();
+            return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
         }
@@ -127,8 +113,7 @@ public class Purities extends Controller{
 //    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Purity purity = purityDao.findById(id);
-            return Response.foundEntity(Response.toJson(purity, Purity.class));
+            return Response.foundEntity(Json.toJson( Purity.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -149,7 +134,7 @@ public class Purities extends Controller{
             if(NamePurity.equals(""))
                 return Response.message("Falta el atributo [name]");
 
-            List<Purity> purities = purityDao.getByNamePurity(NamePurity,strOrder);
+            List<Purity> purities = Purity.getByNamePurity(NamePurity,strOrder);
             return Response.foundEntity(Json.toJson(purities));
 
         }catch(Exception e){
@@ -168,7 +153,7 @@ public class Purities extends Controller{
                 return Response.requiredParameter("order (ASC o DESC)");
 
 
-            List<Purity> purities = purityDao. getByStatusPurity(StatusPurity,strOrder);
+            List<Purity> purities = Purity.getByStatusPurity(StatusPurity,strOrder);
             return Response.foundEntity(Json.toJson(purities));
 
         }catch(Exception e){
@@ -193,24 +178,10 @@ public class Purities extends Controller{
         try {
 
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = purityDao.findAllSearch(name, index, size, sort, pathProperties);
+            ListPagerCollection listPager = Purity.findAllSearch(name, index, size, sort, pathProperties);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-//    @CoffeAppsecurity
-    public Result preCreate() {
-
-
-        try {
-            Purity purity = new Purity();
-            return Response.foundEntity(
-                    Json.toJson(purity));
-        } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
     }

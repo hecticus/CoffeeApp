@@ -42,7 +42,7 @@ public class Invoice extends AbstractEntity{
     private Provider provider;
 
     @Column(nullable = false, name = "status_invoice")
-    private Integer statusInvoice = 1;
+    private Integer statusInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -57,7 +57,7 @@ public class Invoice extends AbstractEntity{
     private DateTime closedDateInvoice;
 
     @OneToMany(mappedBy = "invoice")
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+    private List<InvoiceDetail> invoiceDetails;
 
     @Constraints.Min(0)
     @Column(name = "total_invoice")
@@ -65,6 +65,11 @@ public class Invoice extends AbstractEntity{
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
+
+    public Invoice() {
+        statusInvoice = 1;
+        invoiceDetails = new ArrayList<>();
+    }
 
     public Long getIdInvoice() {
         return idInvoice;

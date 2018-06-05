@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -27,17 +28,24 @@ public class Purity extends AbstractEntity{
     private String NamePurity;
 
     @Constraints.Required
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_purity")
-    private Integer statusPurity=1;
+    private Integer statusPurity;
 
     @Constraints.Required
     @Column(nullable = false, name = "discountRate_purity")
-    private Integer DiscountRatePurity=0;
+    private Integer DiscountRatePurity;
 
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)
-    private List<InvoiceDetailPurity> invoiceDetailPurities = new ArrayList<>();
+    private List<InvoiceDetailPurity> invoiceDetailPurities;
 
     private static Finder<Long, Purity> finder = new Finder<>(Purity.class);
+
+    public Purity() {
+        statusPurity = 1;
+        DiscountRatePurity = 0;
+        invoiceDetailPurities = new ArrayList<>();
+    }
 
     public Long getIdPurity() {
         return idPurity;
@@ -86,7 +94,7 @@ public class Purity extends AbstractEntity{
     }
 
 
-    public int getExist(String name_purity){
+    public static int getExist(String name_purity){
         if(finder.query().where().eq("name_purity",name_purity).eq("status_delete",0).findUnique()!=null) return 0;
         else{
             if(finder.query().where().eq("name_purity",name_purity).eq("status_delete",1).findUnique()!=null)  return 1;
@@ -94,7 +102,7 @@ public class Purity extends AbstractEntity{
         }
     }
 
-    public List<Purity> getByNamePurity(String NamePurity, String order){
+    public static List<Purity> getByNamePurity(String NamePurity, String order){
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3," +
                 " t0.discountrate_purity c4, t0.created_at c5, t0.updated_at c6 " +
                 "from purities t0" +
@@ -108,7 +116,7 @@ public class Purity extends AbstractEntity{
         return toPuritys(results);
     }
 
-    public List<Purity> getByStatusPurity(String StatusPurity, String order){
+    public static List<Purity> getByStatusPurity(String StatusPurity, String order){
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3, " +
                 " t0.discountrate_purity c4, t0.created_at c5, t0.updated_at c6 " +
                 " from purities t0 "+
@@ -125,7 +133,7 @@ public class Purity extends AbstractEntity{
         return toPuritys(results);
     }
 
-    public List<Purity> toPuritys(List<SqlRow>  sqlRows)
+    public static List<Purity> toPuritys(List<SqlRow>  sqlRows)
     {
         List<Purity> purities = new ArrayList<>();
 
@@ -145,7 +153,7 @@ public class Purity extends AbstractEntity{
         return purities;
     }
 
-    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
+    public static  ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
         ExpressionList expressionList = finder.query().where().eq("status_delete",0);
 
         if(pathProperties != null)

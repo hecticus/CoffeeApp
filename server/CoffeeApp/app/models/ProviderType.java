@@ -29,7 +29,7 @@ public class ProviderType  extends AbstractEntity {
     private String nameProviderType;
 
     @Constraints.Required
-
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_ProviderType")
     private Integer statusProviderType;
 

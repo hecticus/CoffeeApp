@@ -40,7 +40,6 @@ public class Unit extends AbstractEntity{
         statusUnit = 1;
     }
 
-
     public Long getIdUnit() {
         return idUnit;
     }

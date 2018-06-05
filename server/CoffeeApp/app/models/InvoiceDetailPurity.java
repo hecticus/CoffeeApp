@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
@@ -22,31 +23,40 @@ public class InvoiceDetailPurity  extends AbstractEntity{
     private Long idInvoiceDetailPurity;
 
     @ManyToOne
+    @Constraints.Required
     @JoinColumn(name = "id_purity", nullable = false)
     private Purity purity;
 
     @Constraints.Required
     @Column(nullable = false, name = "valueRate_invoiceDetail_purity")
-    private Integer valueRateInvoiceDetailPurity=0;
+    private Integer valueRateInvoiceDetailPurity;
 
     @Constraints.Required
     @Column(nullable = false, name = "totalDiscount_purity")
-    private Integer totalDiscountPurity=0;
+    private Integer totalDiscountPurity;
 
     @Constraints.Required
     @Column(nullable = false, name = "discountRate_purity")
-    private Integer discountRatePurity=0;
+    private Integer discountRatePurity;
 
     @ManyToOne
     @JoinColumn(name = "id_invoiceDetail")
+    @Constraints.Required
     private InvoiceDetail invoiceDetail;
 
-
     @Constraints.Required
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status__invoiceDetail_purity")
-    private Integer statusInvoiceDetailPurity=1;
+    private Integer statusInvoiceDetailPurity;
 
     private static Finder<Long, InvoiceDetailPurity> finder = new Finder<>(InvoiceDetailPurity.class);
+
+    public InvoiceDetailPurity() {
+        totalDiscountPurity = 0;
+        discountRatePurity = 0;
+        valueRateInvoiceDetailPurity = 0;
+        statusInvoiceDetailPurity = 1;
+    }
 
 
     public Long getIdInvoiceDetailPurity() {

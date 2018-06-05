@@ -39,13 +39,13 @@ public class Provider extends AbstractEntity{
     private String identificationDocProvider;
 
     @Constraints.Required
-    @Constraints.MaxLength(255)
-    @Column(nullable = false, name = "fullName_Provider")
+    @Constraints.MaxLength(60)
+    @Column(nullable = false, name = "fullName_Provider", length = 60)
     private String fullNameProvider;
 
     @Constraints.Required
-    @Constraints.MaxLength(255)
-    @Column(nullable = false, name = "address_Provider")
+    @Constraints.MaxLength(60)
+    @Column(nullable = false, name = "address_Provider", length = 60)
     private String addressProvider;
 
     @Constraints.Required
@@ -71,7 +71,7 @@ public class Provider extends AbstractEntity{
     @Column(nullable = false, name = "contactName_Provider", length = 50, unique = true)
     private String contactNameProvider;
 
-    @Range(max = 1, min = 0)
+    @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_Provider")
     private Integer statusProvider;
 
