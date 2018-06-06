@@ -82,7 +82,7 @@ public class Farms extends Controller {
         try {
 //            Ebean.delete(Farm.class, id);
             Farm farm = Farm.findById(id);
-            farm.setStatusDelete(1);
+//            farm.setStatusDelete(1);
             farm.update();
             return Response.deletedEntity();
         } catch (Exception e) {

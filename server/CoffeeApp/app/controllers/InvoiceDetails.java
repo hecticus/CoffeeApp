@@ -277,7 +277,7 @@ public class InvoiceDetails extends Controller {
         Invoice invoice;
         try{
             InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
-            invoiceDetail.getInvoice().setStatusDelete(1);
+//            invoiceDetail.getInvoice().setStatusDelete(1);
             invoiceDetail.getInvoice().update();
             invoiceDetail.setAmountInvoiceDetail(BigDecimal.ZERO);
             invoiceDetail.update();
@@ -342,7 +342,7 @@ public class InvoiceDetails extends Controller {
             Invoice  invoice = Invoice.findById(IdInvoice);
             if ( invoicesDetailsOpen.size()==0){
 
-                invoice.setStatusDelete(1);
+//                invoice.setStatusDelete(1);
 
             }
             newTotal = Invoice.calcularTotalInvoice(IdInvoice);

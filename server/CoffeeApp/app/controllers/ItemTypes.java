@@ -124,7 +124,7 @@ public class ItemTypes extends Controller {
         try{
 
             ItemType itemType = ItemType.findById(id);
-            itemType.setStatusDelete(1);
+//            itemType.setStatusDelete(1);
             itemType.update();
             return Response.deletedEntity();
         } catch (Exception e) {

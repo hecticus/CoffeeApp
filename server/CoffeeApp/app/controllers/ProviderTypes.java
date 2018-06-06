@@ -94,11 +94,11 @@ public class ProviderTypes {
                 ListIterator<Provider> aux = providerType.getProviders().listIterator();
                 while (aux.hasNext()){
                     Provider provider = aux.next();
-                    provider.setStatusDelete(1);
+//                    provider.setStatusDelete(1);
                     provider.update();
                 }
             }
-            providerType.setStatusDelete(1);
+//            providerType.setStatusDelete(1);
             providerType.update();
             return Response.updatedEntity(Json.toJson(providerType));//deletedEntity();
         } catch (Exception e) {

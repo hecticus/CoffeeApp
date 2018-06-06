@@ -103,7 +103,7 @@ public class InvoiceDetailPurities  extends Controller {
             InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.findById(id);
             if(invoiceDetailPurity != null) {
 
-                invoiceDetailPurity.setStatusDelete(1);
+//                invoiceDetailPurity.setStatusDelete(1);
 //                invoiceDetailPurity = invoiceDetailPurityDao.update(invoiceDetailPurity);
                 invoiceDetailPurity.update();
                 return Response.deletedEntity();

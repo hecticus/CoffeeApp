@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="units")
-public class Unit extends AbstractEntity{
+public class Unit extends AbstractEntity {
 
     @Id
     @Column(name = "id_unit")
@@ -32,12 +32,13 @@ public class Unit extends AbstractEntity{
     private Integer statusUnit;
 
     @OneToMany(mappedBy = "unit", cascade= CascadeType.ALL)
-    private List<ItemType> itemTypes = new ArrayList<>();
+    private List<ItemType> itemTypes;
 
     private static Finder<Long, Unit> finder = new Finder<>(Unit.class);
 
     public Unit() {
         statusUnit = 1;
+        itemTypes = new ArrayList<>();
     }
 
     public Long getIdUnit() {
@@ -111,10 +112,10 @@ public class Unit extends AbstractEntity{
             expressionList.orderBy(sort(sort));
 
         if(index == null || size == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+            return new ListPagerCollection(expressionList.findList());
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
     }

@@ -102,7 +102,7 @@ public class Purities extends Controller{
     public Result delete(Long id) {
         try{
             Purity purity = Purity.findById(id);
-            purity.setStatusDelete(1);
+//            purity.setStatusDelete(1);
             purity.update();
             return Response.deletedEntity();
         } catch (Exception e) {

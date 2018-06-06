@@ -234,7 +234,7 @@ public class InvoiceDetail  extends AbstractEntity{
         return finder.query()
                 .where()
                 .eq("id_invoice", IdInvoice)
-                .eq("status_delete",0)
+//                .eq("status_delete",0)
                 .orderBy("duedate_invoicedetail")
                 .findList();
     }

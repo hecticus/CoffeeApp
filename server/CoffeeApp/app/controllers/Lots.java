@@ -111,7 +111,7 @@ public class Lots extends Controller {
     public Result delete(Long id) {
         try{
             Lot lot = Lot.findById(id);
-            lot.setStatusDelete(1);
+//            lot.setStatusDelete(1);
             lot.setStatusLot(0);
             lot.update();
             return Response.deletedEntity();
@@ -133,7 +133,7 @@ public class Lots extends Controller {
                 Lot lot = Lot.findById(id);
                 List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
                 if(lot != null  && invoiceDetails.size()==0) {
-                    lot.setStatusDelete(1);
+//                    lot.setStatusDelete(1);
                     lot.update();
 
                     return Response.deletedEntity();

@@ -147,7 +147,7 @@ public class Invoice extends AbstractEntity{
 
     public static  List<Invoice> getOpenByProviderId(Long providerId){
         return finder.query().where().eq("id_provider",providerId)
-                .eq("status_delete",0)
+//                .eq("status_delete",0)
                 .eq("status_invoice",1)
                 .orderBy("dueDate_invoice desc")
                 .findList();
@@ -182,7 +182,7 @@ public class Invoice extends AbstractEntity{
         if(status != null)
             expressionList.eq("status_invoice", status);
 
-        expressionList.eq("status_delete", all);
+//        expressionList.eq("status_delete", all);
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
@@ -342,7 +342,7 @@ public class Invoice extends AbstractEntity{
 
         }
 
-        expressionList = finder.query().where().eq("status_delete", -2);
+        expressionList = finder.query().where();// .eq("status_delete", -2);
         return new ListPagerCollection(expressionList.findList());
 
     }

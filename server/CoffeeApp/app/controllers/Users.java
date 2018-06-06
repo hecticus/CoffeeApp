@@ -87,7 +87,7 @@ public class Users extends Controller {
     public Result delete(Long id) {
         try {
             User user = User.findById(id);
-            user.setStatusDelete(1);
+//            user.setStatusDelete(1);
             user.getAuthUser().setDeleted(true);
             user.getAuthUser().update();
             user.update();

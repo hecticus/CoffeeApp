@@ -26,6 +26,7 @@ public class Config extends Model {
     @Column(nullable = false)
     private String value;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     public static Finder<Long, Config> finder = new Finder<Long, Config>(Config.class);

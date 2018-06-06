@@ -1,21 +1,15 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import io.ebean.Model;
 import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.SoftDelete;
 import io.ebean.annotation.UpdatedTimestamp;
 import play.data.format.Formats;
-import play.data.validation.Constraints;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
-import java.util.InputMismatchException;
 
 /**
  *
@@ -38,20 +32,19 @@ public abstract class AbstractEntity extends Model {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")//, insertable = false)
     protected ZonedDateTime updatedAt;
 
-    @Column(nullable = false)
-    private Integer statusDelete;
+//    @Column(nullable = false)
+//    private Integer statusDelete;
 
-    protected AbstractEntity() {
-        statusDelete = 0;
-    }
+    @SoftDelete
+    private boolean statusDelete;
 
 
-    public Integer getStatusDelete() {
+    public boolean isStatusDeleted() {
         return statusDelete;
     }
 
-    public void setStatusDelete(Integer statusDelete) {
-        this.statusDelete = statusDelete;
+    public void setStatusDeleted(boolean statusDeleted) {
+        this.statusDelete = statusDeleted;
     }
 
     public ZonedDateTime getCreatedAt() {

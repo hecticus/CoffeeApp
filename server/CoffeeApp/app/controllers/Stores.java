@@ -95,7 +95,7 @@ public class Stores {
     public Result delete(Long id) {
         try{
             Store store = Store.findById(id);
-            store.setStatusDelete(1);
+//            store.setStatusDelete(1);
             store.update();
             return Response.deletedEntity();
         } catch (Exception e) {

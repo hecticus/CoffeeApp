@@ -99,7 +99,7 @@ public class Invoices extends Controller {
 
         try{
             Invoice invoice = Invoice.findById(id);
-            invoice.setStatusDelete(1);
+//            invoice.setStatusDelete(1);
             invoice.setStatusInvoice(3);
             invoice.update();
             return controllers.utils.Response.deletedEntity();
@@ -359,8 +359,8 @@ public class Invoices extends Controller {
 
         Invoice openInvoice = Invoice.findById(idInvoice.asLong());
 
-        if(openInvoice.getStatusDelete()==1)
-            return Response.message("no es posible modificar");
+//        if(openInvoice.getStatusDelete()==1)
+//            return Response.message("no es posible modificar");
 
         for (JsonNode itemtypeAux : itemtypes) {
 

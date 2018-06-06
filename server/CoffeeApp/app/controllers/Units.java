@@ -83,7 +83,7 @@ public class Units extends Controller {
     public Result delete(Long id) {
         try{
             Unit unit = Unit.findById(id);
-            unit.setStatusDelete(1);
+//            unit.setStatusDelete(1);
             unit.setStatusUnit(0);
             unit.update();
             return Response.deletedEntity();

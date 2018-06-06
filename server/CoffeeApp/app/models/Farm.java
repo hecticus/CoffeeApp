@@ -112,9 +112,9 @@ public class Farm extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-        if( status != null ){
-            expressionList.eq("statusDelete", status);
-        }
+//        if( status != null ){
+//            expressionList.eq("statusDelete", status);
+//        }
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());

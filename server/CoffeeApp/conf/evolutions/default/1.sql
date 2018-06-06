@@ -49,17 +49,17 @@ create table config (
   id_config                     bigint auto_increment not null,
   config_key                    varchar(50) not null,
   value                         varchar(255) not null,
-  description                   varchar(255),
+  description                   text,
   constraint pk_config primary key (id_config)
 );
 
 create table farms (
   id_farm                       bigint auto_increment not null,
-  status_delete                 integer not null,
   name_farm                     varchar(50) not null,
   status_farm                   integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint uq_farms_name_farm unique (name_farm),
   constraint pk_farms primary key (id_farm)
 );
@@ -76,12 +76,12 @@ create table auth_group (
 
 create table invoices (
   id_invoice                    bigint auto_increment not null,
-  status_delete                 integer not null,
   id_provider                   bigint not null,
   status_invoice                integer not null,
   total_invoice                 decimal(38),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   duedate_invoice               TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   closeddate_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id_invoice)
@@ -89,7 +89,6 @@ create table invoices (
 
 create table invoice_details (
   id_invoicedetail              bigint auto_increment not null,
-  status_delete                 integer not null,
   id_invoice                    bigint not null,
   id_itemtype                   bigint not null,
   id_lot                        bigint,
@@ -104,13 +103,13 @@ create table invoice_details (
   status_invoicedetail          integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   duedate_invoicedetail         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoice_details primary key (id_invoicedetail)
 );
 
 create table invoicesdetails_purities (
   id_invoicedetail_purity       bigint auto_increment not null,
-  status_delete                 integer not null,
   id_purity                     bigint not null,
   valuerate_invoicedetail_purity integer not null,
   totaldiscount_purity          integer not null,
@@ -119,12 +118,12 @@ create table invoicesdetails_purities (
   status__invoicedetail_purity  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint pk_invoicesdetails_purities primary key (id_invoicedetail_purity)
 );
 
 create table item_types (
   id_itemtype                   bigint auto_increment not null,
-  status_delete                 integer not null,
   name_itemtype                 varchar(255) not null,
   cost_itemtype                 decimal(38) not null,
   status_itemtype               integer not null,
@@ -132,13 +131,13 @@ create table item_types (
   id_unit                       bigint not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint uq_item_types_name_itemtype unique (name_itemtype),
   constraint pk_item_types primary key (id_itemtype)
 );
 
 create table lots (
   id_lot                        bigint auto_increment not null,
-  status_delete                 integer not null,
   name_lot                      varchar(255) not null,
   area_lot                      varchar(255) not null,
   heigh_lot                     double not null,
@@ -147,6 +146,7 @@ create table lots (
   price_lot                     decimal(38) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint pk_lots primary key (id_lot)
 );
 
@@ -168,7 +168,6 @@ create table auth_permission_auth_role (
 
 create table providers (
   id_provider                   bigint auto_increment not null,
-  status_delete                 integer not null,
   identificationdoc_provider    varchar(255) not null,
   fullname_provider             varchar(60) not null,
   address_provider              varchar(60) not null,
@@ -180,6 +179,7 @@ create table providers (
   status_provider               integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint uq_providers_identificationdoc_provider unique (identificationdoc_provider),
   constraint uq_providers_contactname_provider unique (contactname_provider),
   constraint pk_providers primary key (id_provider)
@@ -187,23 +187,23 @@ create table providers (
 
 create table provider_type (
   id_providertype               bigint(100) auto_increment not null,
-  status_delete                 integer not null,
   name_providertype             varchar(100) not null,
   status_providertype           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint uq_provider_type_name_providertype unique (name_providertype),
   constraint pk_provider_type primary key (id_providertype)
 );
 
 create table purities (
   id_purity                     bigint auto_increment not null,
-  status_delete                 integer not null,
   name_purity                   varchar(255) not null,
   status_purity                 integer not null,
   discountrate_purity           integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint pk_purities primary key (id_purity)
 );
 
@@ -247,38 +247,37 @@ create table auth_token (
 create table status (
   status_type                   varchar(31) not null,
   id_status                     bigint auto_increment not null,
-  status_delete                 integer not null,
   name                          varchar(100),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint pk_status primary key (id_status)
 );
 
 create table stores (
   id_store                      bigint auto_increment not null,
-  status_delete                 integer not null,
   name_store                    varchar(50) not null,
   status_store                  integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint uq_stores_name_store unique (name_store),
   constraint pk_stores primary key (id_store)
 );
 
 create table units (
   id_unit                       bigint auto_increment not null,
-  status_delete                 integer not null,
   name_unit                     varchar(255) not null,
   status_unit                   integer not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   constraint uq_units_name_unit unique (name_unit),
   constraint pk_units primary key (id_unit)
 );
 
 create table user (
   id                            bigint auto_increment not null,
-  status_delete                 integer not null,
   auth_user_id                  bigint not null,
   first_name                    varchar(50) not null,
   last_name                     varchar(50) not null,
@@ -291,6 +290,7 @@ create table user (
   email2                        varchar(100),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  status_delete                 tinyint(1) default 0 not null,
   last_login                    datetime not null,
   constraint uq_user_auth_user_id unique (auth_user_id),
   constraint pk_user primary key (id)

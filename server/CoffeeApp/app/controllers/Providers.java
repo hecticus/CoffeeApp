@@ -106,7 +106,7 @@ public class Providers extends Controller {
             Provider provider = Provider.findById(id);
             List<Invoice> invoices = Invoice.getOpenByProviderId(id);
                 if(provider != null && invoices.size()==0) {
-                provider.setStatusDelete(1);
+//                provider.setStatusDelete(1);
                 provider.update();
                 return Response.deletedEntity();
             } else {
@@ -136,7 +136,7 @@ public class Providers extends Controller {
                 List<Invoice> invoices = Invoice.getOpenByProviderId(id);
                 if(provider != null && invoices.size()==0){
 
-                    provider.setStatusDelete(1);
+                    //provider.setStatusDelete(1);
                     provider.update();
                 }else{
                     aux_delete = false;
