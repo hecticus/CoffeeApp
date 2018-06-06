@@ -30,7 +30,7 @@ public class Farm extends AbstractEntity{
     private String NameFarm;
 
     @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_farm")
+    @Column( name = "status_farm", columnDefinition = "integer default 1")
     private Integer statusFarm;
 
     @JsonIgnore

@@ -10,6 +10,7 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import javax.validation.Constraint;
+import javax.ws.rs.DefaultValue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +25,12 @@ public class ProviderType  extends AbstractEntity {
     private Long idProviderType;
 
     @Constraints.Required
-    @Constraints.MaxLength(100)
-    @Column(nullable = false, unique = true, name = "name_ProviderType", length = 100)
+    @Constraints.MaxLength(60)
+    @Column(nullable = false, unique = true, name = "name_ProviderType", length = 60)
     private String nameProviderType;
 
-    @Constraints.Required
     @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_ProviderType")
+    @Column(name = "status_ProviderType", columnDefinition = "integer default 1")
     private Integer statusProviderType;
 
     @OneToMany(mappedBy = "providerType")//, cascade = CascadeType.ALL)
@@ -40,10 +40,14 @@ public class ProviderType  extends AbstractEntity {
 
     @OneToMany(mappedBy = "providerType")//, cascade = CascadeType.PERSIST)//.ALL)
     @JsonManagedReference
-    private List<ItemType> itemTypes = new ArrayList<>();
+    private List<ItemType> itemTypes;
 
     private static Finder<Long, ProviderType> finder = new Finder<>(ProviderType.class);
 
+    public ProviderType() {
+        statusProviderType = 1;
+        itemTypes = new ArrayList<>();
+    }
 
     //Setter and Getter
 

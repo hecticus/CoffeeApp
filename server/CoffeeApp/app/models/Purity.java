@@ -143,7 +143,7 @@ public class Purity extends AbstractEntity{
             purity = new Purity();
 
             purity.setIdPurity(sqlRows.get(i).getLong("c0"));
-            purity.setStatusDelete(sqlRows.get(i).getInteger("c1"));
+//            purity.setStatusDelete(sqlRows.get(i).getInteger("c1"));
             purity.setNamePurity(sqlRows.get(i).getString("c2"));
             purity.setStatusPurity(sqlRows.get(i).getInteger("c3"));
             purity.setDiscountRatePurity(sqlRows.get(i).getInteger("c4"));

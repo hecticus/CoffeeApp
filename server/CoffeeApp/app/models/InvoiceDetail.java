@@ -58,7 +58,7 @@ public class InvoiceDetail  extends AbstractEntity{
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(nullable = false,  name = "cost_ItemType")
+    @Column(nullable = false, name = "cost_ItemType")
     private BigDecimal costItemType;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")

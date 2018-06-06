@@ -56,7 +56,7 @@ create table config (
 create table farms (
   id_farm                       bigint auto_increment not null,
   name_farm                     varchar(50) not null,
-  status_farm                   integer not null,
+  status_farm                   integer default 1,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,
@@ -77,7 +77,7 @@ create table auth_group (
 create table invoices (
   id_invoice                    bigint auto_increment not null,
   id_provider                   bigint not null,
-  status_invoice                integer not null,
+  status_invoice                integer,
   total_invoice                 decimal(38),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -139,9 +139,9 @@ create table item_types (
 create table lots (
   id_lot                        bigint auto_increment not null,
   name_lot                      varchar(255) not null,
-  area_lot                      varchar(255) not null,
+  area_lot                      varchar(200) not null,
   heigh_lot                     double not null,
-  status_lot                    integer not null,
+  status_lot                    integer default 1,
   id_farm                       bigint not null,
   price_lot                     decimal(38) not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
@@ -172,11 +172,11 @@ create table providers (
   fullname_provider             varchar(60) not null,
   address_provider              varchar(60) not null,
   phonenumber_provider          varchar(20) not null,
-  email_provider                varchar(255),
+  email_provider                varchar(255) not null,
   photo_provider                varchar(255),
   provider_type_id_provider_type bigint(100) not null,
   contactname_provider          varchar(50) not null,
-  status_provider               integer not null,
+  status_provider               integer default 1,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,
@@ -187,8 +187,8 @@ create table providers (
 
 create table provider_type (
   id_providertype               bigint(100) auto_increment not null,
-  name_providertype             varchar(100) not null,
-  status_providertype           integer not null,
+  name_providertype             varchar(60) not null,
+  status_providertype           integer default 1,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,
@@ -257,7 +257,7 @@ create table status (
 create table stores (
   id_store                      bigint auto_increment not null,
   name_store                    varchar(50) not null,
-  status_store                  integer not null,
+  status_store                  integer default 1 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,

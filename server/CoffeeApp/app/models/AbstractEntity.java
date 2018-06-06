@@ -39,12 +39,12 @@ public abstract class AbstractEntity extends Model {
     private boolean statusDelete;
 
 
-    public boolean isStatusDeleted() {
+    public boolean isStatusDelete() {
         return statusDelete;
     }
 
-    public void setStatusDeleted(boolean statusDeleted) {
-        this.statusDelete = statusDeleted;
+    public void setStatusDeleted(boolean statusDelete) {
+        this.statusDelete = statusDelete;
     }
 
     public ZonedDateTime getCreatedAt() {

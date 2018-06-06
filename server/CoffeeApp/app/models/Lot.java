@@ -31,8 +31,8 @@ public class Lot extends AbstractEntity{
     private String nameLot;
 
     @Constraints.Required
-    @Constraints.Min(0)
-    @Column(nullable = false, name = "area_lot")
+    @Constraints.MaxLength(200)
+    @Column(nullable = false, name = "area_lot", length = 200)
     private String areaLot;
 
     @Constraints.Required
@@ -40,9 +40,8 @@ public class Lot extends AbstractEntity{
     @Column(nullable = false, name = "heigh_lot")
     private Double heighLot;
 
-    @Constraints.Required
     @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_lot")
+    @Column(columnDefinition = "integer default 1" , name = "status_lot")
     private Integer statusLot;
 
     @ManyToOne
@@ -184,7 +183,7 @@ public class Lot extends AbstractEntity{
         Lot lot = finder.query().where().eq("name_lot",name_lot).eq("id_farm",id_farm).setMaxRows(1).findUnique(); //findUnique();
         if(lot==null) aux.add(0,-1);
         else{
-            aux.add(0,lot.getStatusDelete());
+//            aux.add(0,lot.getStatusDelete());
             aux.add(1,Integer.parseInt(lot.getIdLot().toString()));
         }
         return aux;
@@ -232,7 +231,7 @@ public class Lot extends AbstractEntity{
             lot = new Lot();
 
             lot.setIdLot(sqlRows.get(i).getLong("c0"));
-            lot.setStatusDelete(sqlRows.get(i).getInteger("c1"));
+//            lot.setStatusDelete(sqlRows.get(i).getInteger("c1"));
             lot.setNameLot(sqlRows.get(i).getString("c2"));
             lot.setAreaLot(sqlRows.get(i).getString("c3"));
             lot.setFarm(Farm.findById(sqlRows.get(i).getLong("c4")));

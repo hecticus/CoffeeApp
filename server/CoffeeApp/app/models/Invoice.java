@@ -1,6 +1,7 @@
 package models;
 
 
+import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,7 +42,8 @@ public class Invoice extends AbstractEntity{
     @Constraints.Required
     private Provider provider;
 
-    @Column(nullable = false, name = "status_invoice")
+    @Column( name = "status_invoice")
+    @Range(min = 0, max = 3)
     private Integer statusInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")

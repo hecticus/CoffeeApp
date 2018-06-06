@@ -54,7 +54,7 @@ public class Provider extends AbstractEntity{
     private String phoneNumberProvider;
 
     @Constraints.Email
-    @Column(name = "email_Provider")
+    @Column(name = "email_Provider", nullable = false)
     private String emailProvider;
 
     @Constraints.MaxLength(255)
@@ -72,7 +72,7 @@ public class Provider extends AbstractEntity{
     private String contactNameProvider;
 
     @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_Provider")
+    @Column( name = "status_Provider", columnDefinition = "integer default 1")
     private Integer statusProvider;
 
 
@@ -331,7 +331,7 @@ public class Provider extends AbstractEntity{
         if(provider==null) aux.add(0,-1);
         else
         {
-            aux.add(0,provider.getStatusDelete());
+//            aux.add(0,provider.getStatusDelete());
             aux.add(1,Integer.parseInt(provider.getIdProvider().toString()));
         }
         return aux;
