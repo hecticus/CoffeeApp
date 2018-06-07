@@ -38,7 +38,6 @@ public abstract class AbstractEntity extends Model {
     @SoftDelete
     private boolean statusDelete;
 
-
     public boolean isStatusDelete() {
         return statusDelete;
     }

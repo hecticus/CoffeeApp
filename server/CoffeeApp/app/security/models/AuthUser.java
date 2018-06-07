@@ -39,7 +39,6 @@ public class AuthUser extends AbstractEntity{
 //    @Constraints.Required
 ////    @Column(columnDefinition = "tinyint default 0",  insertable = false) //nullable = false,
 ////    protected Boolean archived = false;
-
     @SoftDelete
     boolean deleted;
 

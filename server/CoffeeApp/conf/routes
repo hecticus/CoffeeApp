@@ -55,8 +55,8 @@ PUT     /group/:id                                                              
 ###############################################################################
 #·······                        Farm                                ··········#
 ###############################################################################
-GET     /farm                                                                   controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-GET     /farm/search                                                            controllers.Farms.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /farm                                                                   controllers.Farms.findAll(index: Integer ?= null, size: Integer ?= null, collection: String ?= null, name: String ?= null,  sort: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
+GET     /farm/search                                                            controllers.Farms.findAll(index: Integer ?= null, size: Integer ?= null, collection: String ?= null, name: String ?= null,  sort: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 GET     /farm/:id                                                               controllers.Farms.findById(id : Long)
 # New path add by sm21
 POST    /farm                                                                   controllers.Farms.create()

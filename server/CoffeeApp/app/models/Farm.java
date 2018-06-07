@@ -2,7 +2,6 @@ package models;
 
 import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
@@ -80,23 +79,13 @@ public class Farm extends AbstractEntity{
 
 
     //METODOS DEFINIDOS
+
     public static Farm findById(Long id){
         return finder.byId(id);
     }
 
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
-    }
-
-    public static boolean existName(String name_itemtype){
-        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
-        return false;
-    }
-
-
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String
-                                                sort,PathProperties pathProperties,  Integer status){
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+                                    String name, String sort, Integer status, boolean deleted){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -107,14 +96,14 @@ public class Farm extends AbstractEntity{
             expressionList.eq("statusFarm",status);
 
         if(name != null)
-            expressionList.icontains("NameFarm", name);
+            expressionList.startsWith("NameFarm", name);
 
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-//        if( status != null ){
-//            expressionList.eq("statusDelete", status);
-//        }
+        if( deleted ){
+            expressionList.setIncludeSoftDeletes();
+        }
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());

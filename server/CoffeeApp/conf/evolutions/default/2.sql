@@ -215,9 +215,34 @@ INSERT INTO `invoicesdetails_purities` (`id_invoicedetail_purity`,`status_delete
 (40, 0, 2, 10,0,0,1262,  1),
 (41, 0, 1, 25,0,0,1262,  1);
 
+
+INSERT INTO `auth_client_credential` (id, client_id,  name) VALUES
+(1,'web_site',    'web site'),
+(2,'android_app', 'android app');
+
+INSERT INTO `auth_user` (`id`, `username`,`email`,`password`,`last_login`,`deleted`) VALUES
+(100,'sm21','shamuel21@gmail.com','123456','2018-06-07 10:17:29',0);
+
+INSERT INTO `user` (`id`,`auth_user_id`,`first_name`,`last_name`,`address`,`phone`, `status_delete`,)
+VALUES (100,100,'shamuel','manrrique','charallave','0141412514', 0);
+
+INSERT INTO `auth_user_auth_group` (`auth_user_id`,`auth_group_id`) VALUES
+(100,7),
+(100,8),
+(100,9);
+
+INSERT INTO `auth_user_auth_role` (`auth_user_id`,`auth_role_id`) VALUES
+(100,56),
+(100,51);
+
+
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE auth_client_credential;
+
+TRUNCATE auth_user;
 
 TRUNCATE farms;
 

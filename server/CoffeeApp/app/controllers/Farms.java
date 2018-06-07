@@ -1,8 +1,6 @@
 package controllers;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
@@ -24,6 +22,7 @@ import javax.inject.Inject;
 
 /**
  * Created by darwin on 30/08/17.
+ * modify sm21 2018
  */
 public class Farms extends Controller {
 
@@ -36,7 +35,7 @@ public class Farms extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -56,7 +55,7 @@ public class Farms extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode request = request().body().asJson();
@@ -77,20 +76,18 @@ public class Farms extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try {
-//            Ebean.delete(Farm.class, id);
             Farm farm = Farm.findById(id);
-//            farm.setStatusDelete(1);
-            farm.update();
+            Ebean.delete(farm);
             return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -105,7 +102,7 @@ public class Farms extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Farm farm = Farm.findById(id);
@@ -116,11 +113,12 @@ public class Farms extends Controller {
     }
 
 
-    //@CoffeAppsecurity
-    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status){
+    @CoffeAppsecurity
+    public Result findAll( Integer index, Integer size, String collection,
+                           String name, String sort, Integer status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Farm.findAll(name, index, size, sort, pathProperties, status);
+            ListPagerCollection listPager = Farm.findAll(index, size, pathProperties, name,  sort, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
