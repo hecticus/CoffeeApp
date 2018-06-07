@@ -49,13 +49,13 @@ public class Invoice extends AbstractEntity{
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp
-    @Column(name = "dueDate_invoice", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",  updatable = false)//, insertable = false)
+    @Column(name = "dueDate_invoice", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private DateTime startDateInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
-    @Column(name = "closedDate_invoice", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")//, insertable = false)
+    @Column(name = "closedDate_invoice", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private DateTime closedDateInvoice;
 
     @OneToMany(mappedBy = "invoice")
@@ -155,28 +155,26 @@ public class Invoice extends AbstractEntity{
                 .findList();
     }
 
-    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, String sort, PathProperties
-                                pathProperties, Long id_provider, Long id_providertype, String startDate, String
-                                endDate, Integer status ,Integer all){
+    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
+                                         String sort, Long id_provider, Long id_providertype, String startDate,
+                                         String endDate, Integer status ,Boolean deleted){
 
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
-//            if(pathProperties.hasPath("provider"))
-//                finder.query().fetch("provider");
-//            if(pathProperties.hasPath("provider.providerType"))
-//                finder.query().fetch("provider.providerType");
             expressionList.apply(pathProperties);
 
-
         if(id_provider != 0L)
-            expressionList.eq("id_Provider", id_provider);
+            expressionList.eq("provider.idProvider", id_provider);
+
+        if(id_providertype != 0L)
+            expressionList.eq("provider.providerType.idProviderType", id_providertype);
 
         if(startDate != null)
-            expressionList.eq("dueDate_invoice", startDate);
+            expressionList.eq("startDateInvoice", startDate);
 
         if(endDate!= null)
-            expressionList.eq("closedDate_invoice", endDate);
+            expressionList.eq("closedDateInvoice", endDate);
 
         if(sort != null)
             expressionList.orderBy(sort(sort));
@@ -184,7 +182,8 @@ public class Invoice extends AbstractEntity{
         if(status != null)
             expressionList.eq("status_invoice", status);
 
-//        expressionList.eq("status_delete", all);
+        if( deleted )
+            expressionList.setIncludeSoftDeletes();
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
@@ -197,52 +196,6 @@ public class Invoice extends AbstractEntity{
     }
 
 
-    public static  ListPagerCollection getByDateByTypeProvider(String date, Long typeProvider, Integer pageIndex, Integer pagesize){
-
-        String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
-                " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
-                " prov.id_provider AS prov_id, prov.fullname_provider as full_name," +
-                " prov.address_provider as address," +
-                " prov.contactname_provider as contact_name, prov.identificationdoc_provider as identification_doc," +
-                " prov.phonenumber_provider as phone_number, prov.photo_provider as photo_provider" +
-                " FROM invoices invo " +
-                " INNER JOIN  providers prov ON prov.id_provider = invo.id_provider " +
-                " where invo.duedate_invoice like '"+date+"%'";
-
-        if(typeProvider!= 0L)  sql+=" and prov.id_providertype= :typeProvider ";
-
-        sql+=" and invo.status_delete=0 and prov.status_delete=0 order by prov.fullname_provider ASC ";
-
-        //    sql += " limit :pageIndex, :pagesize";
-
-
-        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-                .setParameter("typeProvider", typeProvider)
-                .setParameter("date", date)
-                .setParameter("pageIndex",pageIndex)
-                .setParameter("pagesize",pagesize)
-                .findList();
-
-        List<Invoice> invoiceList = toInvoices(sqlRows);
-
-        return new ListPagerCollection(invoiceList.subList(pageIndex,Math.min(pageIndex+pagesize, invoiceList.size())), invoiceList.size(), pageIndex, pagesize);
-        //return toInvoices(sqlRows)
-    }
-
-
-    public static Boolean deletedInvoice( Long invoiceId){
-        try {
-            String sql = " CALL `deletedInvoicesAndInvoicesDetails`(:invoiceId) ";
-
-            SqlQuery query = Ebean.createSqlQuery(sql)
-                    .setParameter("invoiceId", invoiceId);
-
-            SqlRow result = query.findUnique();
-            return false;
-        }catch (Exception e){
-            return true;
-        }
-    }
 
 
     public static List<Invoice> toInvoices(List<SqlRow>  sqlRows)
@@ -292,62 +245,7 @@ public class Invoice extends AbstractEntity{
         return invoices;
     }
 
-    public static ListPagerCollection findAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties
-            pathProperties, Integer id_provider, Integer id_providertype, String startDate, String endDate){
-        ExpressionList expressionList;
-        try{
 
-            SimpleDateFormat Datetemp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if(startDate.equals("")){
-                startDate = "1970-01-01";
-            }
-
-            if(endDate.equals("")){
-                endDate="5000-01-01";
-            }
-            String startDateTemp = startDate.concat(" 00:00:00");
-            String endDateTemp = endDate.concat(" 23:59:59");
-            // Date startDateTemp = Datetemp.parse(startDate);
-            // Date endDateTemp = Datetemp.parse(endDate);
-
-            if(!id_provider.equals(-2)){
-                //to invoices t1 provider
-                if(!id_provider.equals(-1)) expressionList = finder.query().fetch("provider").where().eq("t0.status_delete", 0).eq("t0.id_provider",id_provider).between("t0.duedate_invoice",startDateTemp,endDateTemp);
-                else
-                { expressionList = finder.query()
-                        .fetch("provider")
-                        .where()
-                        .eq("t1.id_providertype",id_providertype)
-                        .eq("t0.status_delete",0)
-                        .between("duedate_invoice",startDateTemp,endDateTemp);
-
-                }
-
-                if (pathProperties != null)
-                    expressionList.apply(pathProperties);
-
-                if (sort != null)
-                    expressionList.orderBy(AbstractEntity.sort(sort));
-
-                if (pageIndex == null || pageSize == null)
-                    return new ListPagerCollection(expressionList.findList());
-
-                //to invoices t1 provider
-                int findRowCount = expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).findList().size();
-
-                return new ListPagerCollection(expressionList.eq("t1.id_providertype",id_providertype).eq("t0.status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(), findRowCount, pageIndex, pageSize);
-            }
-        }
-        catch(Exception e){
-            Throwable eRoot = Response.getCause(e);
-            eRoot.printStackTrace();
-
-        }
-
-        expressionList = finder.query().where();// .eq("status_delete", -2);
-        return new ListPagerCollection(expressionList.findList());
-
-    }
 
     public static  BigDecimal calcularTotalInvoice(Long idInvioce) {
         List<InvoiceDetail> invoiceDetails = InvoiceDetail.finderAllByIdInvoice(idInvioce);

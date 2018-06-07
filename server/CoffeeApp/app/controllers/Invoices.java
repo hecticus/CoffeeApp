@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.*;
 import controllers.responseUtils.ExceptionsUtils;
@@ -18,6 +19,7 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class Invoices extends Controller {
                 " phoneNumber_Provider,email_Provider, providerType(id_ProviderType, name_ProviderType))");
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public    Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -63,7 +65,7 @@ public class Invoices extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result update() {
         JsonNode json = request().body().asJson();
         if(json== null)
@@ -94,21 +96,18 @@ public class Invoices extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result delete(Long id) {
-
         try{
             Invoice invoice = Invoice.findById(id);
-//            invoice.setStatusDelete(1);
-            invoice.setStatusInvoice(3);
-            invoice.update();
+            Ebean.delete(invoice);
             return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result findById(Long id) {
         try {
             Invoice invoice = Invoice.findById(id);
@@ -118,24 +117,15 @@ public class Invoices extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
-    public   Result findAll( Integer pageIndex, Integer pageSize, String sort, String collection, Long
-                                            id_provider, Long id_providertype, String startDate, String endDate, Integer status, Integer all){
+    @CoffeAppsecurity
+    public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
+                                    String sort, Long id_provider, Long id_providertype, String startDate,
+                                    String endDate, Integer status ,Boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, sort, pathProperties, id_provider, id_providertype, startDate, endDate, status, all);
+            ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
+                                                                        id_providertype, startDate, endDate, status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    //    @CoffeAppsecurity
-    public  Result findAllSearch( Integer pageIndex, Integer pageSize, String sort, String collection, Long id_provider, Long id_providertype, String startDate, String endDate) {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Invoice.getByDateByTypeProvider(startDate, id_providertype,  pageIndex, pageSize);//, sort, pathProperties, id_provider, startDate, endDate);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
@@ -148,8 +138,14 @@ public class Invoices extends Controller {
         BigDecimal monto;
         InvoiceDetailPurity invoiceDetailPurity;
         JsonNode json = request().body().asJson();
+
         if(json == null)
             return Response.requiredJson();
+
+//        ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+//        ObjectNode providerNode = Json.newObject();
+//        providerNode.set("idProvider", json.findValue("idProvider"));
+//        node.set("provider", providerNode);
 
         JsonNode idprovider = json.get("idProvider");
         Long idProvider;
@@ -485,12 +481,12 @@ public class Invoices extends Controller {
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();
-        ((ObjectNode) response).put("nameCompany", Config.getString("nameCompany"));
-        ((ObjectNode) response).put("invoiceDescription", Config.getString("invoiceDescription"));
-        ((ObjectNode) response).put("invoiceType", Config.getString("invoiceType"));
-        ((ObjectNode) response).put("RUC", Config.getString("RUC"));
-        ((ObjectNode) response).put("telephonoCompany", Config.getString("telephonoCompany"));
-        ((ObjectNode) response).put("invoice", Json.toJson(invoice));
+        response.put("nameCompany", Config.getString("nameCompany"));
+        response.put("invoiceDescription", Config.getString("invoiceDescription"));
+        response.put("invoiceType", Config.getString("invoiceType"));
+        response.put("RUC", Config.getString("RUC"));
+        response.put("telephonoCompany", Config.getString("telephonoCompany"));
+        response.set("invoice", Json.toJson(invoice));
 
         return Response.createdEntity(response);
     }

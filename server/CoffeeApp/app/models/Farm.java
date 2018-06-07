@@ -101,9 +101,8 @@ public class Farm extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-        if( deleted ){
+        if( deleted )
             expressionList.setIncludeSoftDeletes();
-        }
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
