@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.CreatedTimestamp;
+import io.ebean.annotation.Formula;
 import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
 import controllers.requestUtils.Request;
@@ -61,8 +62,7 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-    @Constraints.Min(0)
-    @Column(name = "total_invoice")
+    @Formula(select = "(SELECT SUM( t.amount_invoiceDetail) FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
     private BigDecimal totalInvoice;
 
     // GETTER AND SETTER
@@ -196,8 +196,6 @@ public class Invoice extends AbstractEntity{
     }
 
 
-
-
     public static List<Invoice> toInvoices(List<SqlRow>  sqlRows)
     {
         List<Invoice> invoices = new ArrayList<>();
@@ -248,20 +246,20 @@ public class Invoice extends AbstractEntity{
 
 
     public static  BigDecimal calcularTotalInvoice(Long idInvioce) {
-        List<InvoiceDetail> invoiceDetails = InvoiceDetail.finderAllByIdInvoice(idInvioce);
+        List<InvoiceDetail> invoiceDetails;// = InvoiceDetail.finderAllByIdInvoice(idInvioce);
         Lot lot;
         Invoice invoice = Invoice.findById(idInvioce);//this.findById(idInvioce);
         BigDecimal total = BigDecimal.ZERO;
         boolean harvest = true;
         if(invoice.getProvider().getProviderType().getNameProviderType().toUpperCase().equals("VENDEDOR")) harvest=false;
 
-        for(InvoiceDetail invoiceDetail: invoiceDetails){
-            if (!harvest) total = total.add(invoiceDetail.getCostItemType().multiply(invoiceDetail.getAmountInvoiceDetail()));
-            else{
-                lot = Lot.findById(invoiceDetail.getLot().getIdLot());
-                total=total.add(lot.getPrice_lot().multiply(invoiceDetail.getAmountInvoiceDetail()));
-            }
-        }
+//        for(InvoiceDetail invoiceDetail: invoiceDetails){
+//            if (!harvest) total = total.add(invoiceDetail.getCostItemType().multiply(invoiceDetail.getAmountInvoiceDetail()));
+//            else{
+//                lot = Lot.findById(invoiceDetail.getLot().getIdLot());
+//                total=total.add(lot.getPrice_lot().multiply(invoiceDetail.getAmountInvoiceDetail()));
+//            }
+//        }
 
         return total;
     }

@@ -93,7 +93,7 @@ public class Farm extends AbstractEntity{
             expressionList.apply(pathProperties);
 
         if(status != null)
-            expressionList.eq("statusFarm",status);
+            expressionList.eq("statusFarm", status);
 
         if(name != null)
             expressionList.startsWith("NameFarm", name);
@@ -106,7 +106,6 @@ public class Farm extends AbstractEntity{
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
-
 
         return new ListPagerCollection(
                 expressionList.setFirstRow(index).setMaxRows(size).findList(),

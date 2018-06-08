@@ -18,8 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="item_types")
-public class ItemType extends AbstractEntity
-{
+public class ItemType extends AbstractEntity{
 
     @Id
     @Column(name = "id_itemType")

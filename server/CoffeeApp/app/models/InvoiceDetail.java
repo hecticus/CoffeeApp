@@ -101,7 +101,7 @@ public class InvoiceDetail  extends AbstractEntity{
     public InvoiceDetail() {
         statusInvoiceDetail = 1;
         freightInvoiceDetail = false;
-        costItemType = BigDecimal.ZERO;
+//        costItemType = BigDecimal.ZERO;
         invoiceDetailPurity = new ArrayList<>();
     }
 
@@ -225,55 +225,13 @@ public class InvoiceDetail  extends AbstractEntity{
         this.statusInvoiceDetail = statusInvoiceDetail;
     }
 
+    //Metodos Creados
     public static InvoiceDetail findById(Long id){
         return finder.byId(id);
     }
 
 
-    public static List<InvoiceDetail> finderAllByIdInvoice(Long IdInvoice){
-        return finder.query()
-                .where()
-                .eq("id_invoice", IdInvoice)
-//                .eq("status_delete",0)
-                .orderBy("duedate_invoicedetail")
-                .findList();
-    }
-
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
-    }
-
-    public  static  List<InvoiceDetail> getOpenByItemTypeId(Long idItemType){
-        return finder.query().where().eq("id_itemtype",idItemType).eq("status_delete",0).findList();
-    }
-
-    public  static  List<InvoiceDetail> getOpenByLotId( Long idLot){
-        return finder.query().where().eq("id_lot",idLot).eq("status_delete",0).findList();
-    }
-
-    public  static  List<InvoiceDetail> getOpenByStoreId( Long idStore){
-        return finder.query().where().eq("id_store",idStore).eq("status_delete",0).findList();
-    }
-
-
-    public ListPagerCollection finderAllSearch(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = finder.query().where().eq("status_delete",0);
-
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-
-        if(sort != null)
-            expressionList.orderBy(AbstractEntity.sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
-
-
-    public JsonNode finderAllByIdInvoiceSummary(Long idInvoice) {
+    public static JsonNode finderAllByIdInvoiceSummary(Long idInvoice) {
         ObjectNode aux;
         List<ObjectNode> result = new ArrayList<>();
         String sql="SELECT duedate_invoicedetail as c0, SUM(amount_invoicedetail) as c1 " +
@@ -295,9 +253,6 @@ public class InvoiceDetail  extends AbstractEntity{
 
             result.add(aux);
         }
-
-
-
         return Json.toJson(result);
     }
 
@@ -324,25 +279,51 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
 
-    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long invoiceId){
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
+                                              Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
+                                              String startDateInvoiceDetail, Integer status, boolean deleted){
+
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(invoice != 0L)
+            expressionList.eq("invoice.idInvoice", invoice );
+
+        if(itemType != 0L)
+            expressionList.eq("itemType.idItemType", itemType );
+
+        if(lot != 0L)
+            expressionList.eq("lot.idLot", lot );
+
+        if(store != 0L)
+            expressionList.eq("store.idStore", store );
+
+        if(nameReceivedInvoiceDetail != null)
+            expressionList.eq("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
+
+        if(startDateInvoiceDetail != null)
+            expressionList.eq("startDateInvoiceDetail", startDateInvoiceDetail );
+
+        if(deleted)
+            expressionList.setIncludeSoftDeletes();
+
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-        if(invoiceId != 0L)
-            expressionList.eq("id_invoice", invoiceId );
+        if(status != null)
+            expressionList.eq("statusInvoiceDetail", status );
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+        if(index == null || size == null)
+            return new ListPagerCollection(expressionList.findList());
+
+
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                index,
+                size);
     }
 
 

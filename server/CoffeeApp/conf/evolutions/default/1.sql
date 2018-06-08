@@ -78,7 +78,6 @@ create table invoices (
   id_invoice                    bigint auto_increment not null,
   id_provider                   bigint not null,
   status_invoice                integer,
-  total_invoice                 decimal(38),
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,

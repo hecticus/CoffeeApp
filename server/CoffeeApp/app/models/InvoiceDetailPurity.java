@@ -116,9 +116,9 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         this.statusInvoiceDetailPurity = statusInvoiceDetailPurity;
     }
 
-    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
-        return finder.query().where().eq("id_invoicedetail",IdInvopiceDetail).eq("id_purity",IdPurity).eq("status_delete",0).findUnique();
-    }
+//    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
+//        return finder.query().where().eq("id_invoicedetail",IdInvopiceDetail).eq("id_purity",IdPurity).eq("status_delete",0).findUnique();
+//    }
 
     public static  InvoiceDetailPurity findById(Long id){
         return finder.byId(id);
@@ -135,6 +135,7 @@ public class InvoiceDetailPurity  extends AbstractEntity{
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+
         return new ListPagerCollection(
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),

@@ -73,25 +73,25 @@ GET     /invoice/getByDateByProviderId/:ProviderId                              
 GET     /invoice/getByDateByProviderId/:date/:ProviderId                        controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, ProviderId: Long      , typeProvider: Long ?= 0L, date: String             , endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize controllers.Invoices.findAll( pageindex: Integer      , pagesize: Integer        , collection: String ?= null,sort: String ?= null, ProviderId: Long ?= 0L, typeProvider: Long      , date: String             , endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
-GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
-POST    /invoice                                                                controllers.Invoices.create()
-POST    /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.buyHarvestsAndCoffe()
-PUT     /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.updateBuyHarvestsAndCoffe()
-PUT     /invoice                                                                controllers.Invoices.update()
-DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
+#GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
+#POST    /invoice                                                                controllers.Invoices.create()
+#POST    /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.buyHarvestsAndCoffe()
+#PUT     /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.updateBuyHarvestsAndCoffe()
+#PUT     /invoice                                                                controllers.Invoices.update()
+#DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
 
 ###############################################################################
 #·······                       InvoiceDetail                        ··········#
 ###############################################################################
-GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long ?= 0L)
+GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,  sort: String ?= null, invoiceId: Long ?= 0L, itemType: Long ?= 0L, lot: Long ?= 0L, store: Long ?= 0L,  nameReceivedInvoiceDetail: String ?= null, startDateInvoiceDetail: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
+GET     /invoiceDetail/search                                                   controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,  sort: String ?= null, invoiceId: Long ?= 0L, itemType: Long ?= 0L, lot: Long ?= 0L, store: Long ?= 0L,  nameReceivedInvoiceDetail: String ?= null, startDateInvoiceDetail: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
 GET     /invoiceDetail/new                                                      controllers.InvoiceDetails.preCreate()
-GET     /invoiceDetail/search                                                   controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long ?= 0L)
-GET     /invoiceDetail/findAllByIdInvoice/:invoiceId                            controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, invoiceId: Long)
+GET     /invoiceDetail/findAllByIdInvoice/:invoiceId                            controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,  sort: String ?= null, invoiceId: Long      , itemType: Long ?= 0L, lot: Long ?= 0L, store: Long ?= 0L,  nameReceivedInvoiceDetail: String ?= null, startDateInvoiceDetail: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
 GET     /invoiceDetail/:id                                                      controllers.InvoiceDetails.findById(id : Long)
 POST    /invoiceDetail                                                          controllers.InvoiceDetails.create()
 PUT     /invoiceDetail                                                          controllers.InvoiceDetails.update()
 DELETE  /invoiceDetail/:id                                                      controllers.InvoiceDetails.delete(id : Long)
-DELETE  /invoiceDetail/deleteAllByIdInvoiceAndDate/:idInvoice/:date             controllers.InvoiceDetails.deleteAllByIdInvoiceAndDate(idInvoice : Long, date: String)
+#DELETE  /invoiceDetail/deleteAllByIdInvoiceAndDate/:idInvoice/:date             controllers.InvoiceDetails.deleteAllByIdInvoiceAndDate(idInvoice : Long, date: String)
 
 ###############################################################################
 #·······                       ItemType                             ··········#
