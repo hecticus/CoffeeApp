@@ -28,20 +28,18 @@ public class Farm extends AbstractEntity{
     @Column(nullable = false, name = "name_farm", length = 50, unique = true)
     private String NameFarm;
 
-//    @Range(min = 0, max = 1)
-//    @Column( name = "status_farm", columnDefinition = "integer default 1")
-//    private Integer statusFarm;
-    @Column( name = "status_farm", columnDefinition = "boolean default 1", nullable = false)
-    private boolean statusFarm;
+    @Range(min = 0, max = 1)
+    @Column( name = "status_farm", columnDefinition = "integer default 1")
+    private Integer statusFarm;
 
     @JsonIgnore
     @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
     private List<Lot> lots;
 
-    private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
+    public static Finder<Long, Farm> finder = new Finder<>(Farm.class);
 
     public Farm() {
-        statusFarm = true;
+        statusFarm = 1;
         lots = new ArrayList<>();
     }
 
@@ -63,11 +61,11 @@ public class Farm extends AbstractEntity{
         this.lots = lots;
     }
 
-    public boolean getStatusFarm() {
+    public Integer getStatusFarm() {
         return statusFarm;
     }
 
-    public void setStatusFarm(boolean statusFarm) {
+    public void setStatusFarm(Integer statusFarm) {
         this.statusFarm = statusFarm;
     }
 
@@ -100,8 +98,14 @@ public class Farm extends AbstractEntity{
         if(name != null)
             expressionList.startsWith("NameFarm", name);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idFarm", sort));
+            }
+        }
 
         if( deleted )
             expressionList.setIncludeSoftDeletes();

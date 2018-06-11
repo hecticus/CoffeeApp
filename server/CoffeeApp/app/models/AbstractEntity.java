@@ -73,8 +73,8 @@ public abstract class AbstractEntity extends Model {
     }
 
     public static String sort(String sort, String order) {
-        if (!order.equals("ASC") || !order.equals("DESC") || !order.equals("asc") || !order.equals("desc")) {
-            if (order.equals("DESC") || order.equals("desc") )
+        if (order.equalsIgnoreCase("asc")  || order.equalsIgnoreCase("desc")) {
+            if (order.equalsIgnoreCase("desc") )
                 return sort + " desc" ;
             return sort + " asc";
         }else{

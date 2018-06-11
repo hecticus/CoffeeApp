@@ -325,8 +325,14 @@ public class InvoiceDetail  extends AbstractEntity{
         if(deleted)
             expressionList.setIncludeSoftDeletes();
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idInvoiceDetail", sort));
+            }
+        }
 
         if(status != null)
             expressionList.eq("statusInvoiceDetail", status );

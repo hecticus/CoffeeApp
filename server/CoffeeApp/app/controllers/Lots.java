@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Farm;
 import models.InvoiceDetail;
@@ -85,7 +86,8 @@ public class Lots extends Controller {
             if(json == null)
                 return badRequest("Expecting Json data");
 
-            if (json.get("idLot") == null )
+            Long id = json.get("idLot").asLong();
+            if (id == null )
                 return badRequest("Missing parameter idLot");
 
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
@@ -100,6 +102,7 @@ public class Lots extends Controller {
                 return badRequest(form.errorsAsJson());
 
             Lot lot = Json.fromJson(node, Lot.class);
+            lot.setIdLot(id);
             lot.update();
             return  Response.updatedEntity(Json.toJson(lot));
         }catch(Exception e){
@@ -110,10 +113,7 @@ public class Lots extends Controller {
 //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Lot lot = Lot.findById(id);
-//            lot.setStatusDelete(1);
-            lot.setStatusLot(0);
-            lot.update();
+            Ebean.delete(Lot.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -122,30 +122,9 @@ public class Lots extends Controller {
 
 //    @CoffeAppsecurity
     public Result deletes() {
-        boolean aux_delete = true;
         try {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
-
-            List<Long> aux = JsonUtils.toArrayLong(json, "ids");
-//            for (Long id : aux) {
-//                Lot lot = Lot.findById(id);
-//                List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
-//                if(lot != null  && invoiceDetails.size()==0) {
-////                    lot.setStatusDelete(1);
-//                    lot.update();
-//
-//                    return Response.deletedEntity();
-//                } else {
-//                    aux_delete = false;
-//
-//                }
-//
-//            }
-
-            if(aux_delete)  return  Response.messageNotDeleted("La eliminacion fue correcta");
-            else  return  Response.messageNotDeleted(" algunos registros tiene facturas aun no cerradas");
+           Ebean.deleteAll(Lot.class, Lot.finder.query().findList());
+            return Response.deletedEntity();
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
@@ -162,10 +141,11 @@ public class Lots extends Controller {
     }
 
     //    @CoffeAppsecurity
-    public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idFarm, Integer statusLot) {
+    public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
+                           String name, Long idFarm, Integer status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Lot.findAll(name, pageindex, pagesize, sort, pathProperties, all, idFarm.intValue());//, statusLot);
+            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize, pathProperties, sort, name,  idFarm, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -173,60 +153,6 @@ public class Lots extends Controller {
         }
     }
 
-    public Result getByNameLot(String NameLot, String order)
-    {
-        String strOrder = "ASC";
-        try {
 
-            if (NameLot.equals("-1")) NameLot = "";
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-            if(NameLot.equals(""))
-                return Response.message("Falta el atributo [name]");
-
-            List<Lot> lots = Lot.getByNameLot(NameLot,strOrder);
-            return Response.foundEntity(Json.toJson(lots));
-
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
-    public Result getByStatusLot(String StatusLot, String order)
-    {
-        String strOrder = "ASC";
-        try {
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-
-            List<Lot> lots = Lot.getByStatusLot(StatusLot,strOrder);
-            return Response.foundEntity(Json.toJson(lots));
-
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
-
-//    @CoffeAppsecurity
-    public  Result getByIdFarm(Long idFarm, Integer index, Integer size, String sort, String collection)
-    {
-        try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Lot.getByIdFarm(idFarm, index, size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
 
 }

@@ -57,13 +57,14 @@ public class Lot extends AbstractEntity{
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails;
 
-    private static Finder<Long, Lot> finder = new Finder<>(Lot.class);
+    public static Finder<Long, Lot> finder = new Finder<>(Lot.class);
 
     public Lot() {
         statusLot = 1;
         invoiceDetails = new ArrayList<>();
     }
 
+    //GETTER AND SETTER
     @JsonIgnore
     public List<InvoiceDetail> getInvoiceDetails() {
         return invoiceDetails;
@@ -121,53 +122,49 @@ public class Lot extends AbstractEntity{
         this.statusLot = statusLot;
     }
 
-    @JsonProperty("priceLot")
     public BigDecimal getPrice_lot() {
         return priceLot;
     }
 
-    @JsonProperty("price_lot")
     public void setPrice_lot(BigDecimal priceLot) {
         this.priceLot = priceLot;
     }
 
-    private static Farm farmDao = new Farm();
+
+    //METODOS DEFINE
 
     public static Lot findById(Long id){
         return finder.byId(id);
     }
 
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
-    }
+    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, PathProperties pathProperties, String sort,
+                                        String name, Long idFarm, Integer status, boolean deleted){
 
-    public static boolean existName(String name_itemtype){
-        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
-        return false;
-    }
-
-    public ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Long idFarm, Integer statusLot){
         ExpressionList expressionList = finder.query().where();
-
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(idFarm != 0L)
-            expressionList.eq("id_farm", idFarm);
+            expressionList.eq("farm.idFarm", idFarm);
 
         if(name != null )
-            expressionList.eq("name_lot", name);
+            expressionList.eq("nameLot", name);
 
-        if(statusLot != null)
-            expressionList.eq("status_lot", statusLot);
+        if(status != null)
+            expressionList.eq("statusLot", status);
 
-        if (all != null)
-            expressionList.eq("status_delete", all);
+        if (deleted)
+            expressionList.setIncludeSoftDeletes();
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idLot", sort));
+            }
+        }
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.findList());
@@ -178,19 +175,7 @@ public class Lot extends AbstractEntity{
                 pageSize);
     }
 
-    public static List<Integer> getExist(String name_lot, int id_farm){
-        List<Integer> aux = new ArrayList<Integer>();
-        Lot lot = finder.query().where().eq("name_lot",name_lot).eq("id_farm",id_farm).setMaxRows(1).findUnique(); //findUnique();
-        if(lot==null) aux.add(0,-1);
-        else{
-//            aux.add(0,lot.getStatusDelete());
-            aux.add(1,Integer.parseInt(lot.getIdLot().toString()));
-        }
-        return aux;
-    }
-
-    public static List<Lot> getByNameLot(String NameLot, String order)
-    {
+    public static List<Lot> getByNameLot(String NameLot, String order) {
         String sql="select t0.id_lot c0, t0.status_delete c1, t0.name_lot c2," +
                 " t0.area_lot c3, t0.id_farm c4, t0.heigh_lot c5, t0.created_at c6, " +
                 "t0.updated_at c7 from lots t0 " +
@@ -204,8 +189,7 @@ public class Lot extends AbstractEntity{
         return toLots(results);
     }
 
-    public static List<Lot> getByStatusLot(String StatusLot, String order)
-    {
+    public static List<Lot> getByStatusLot(String StatusLot, String order) {
         String sql="select t0.id_lot c0, t0.status_delete c1, t0.name_lot c2," +
                 " t0.area_lot c3, t0.id_farm c4, t0.heigh_lot c5, t0.created_at c6, " +
                 "t0.updated_at c7 from lots t0 ";
@@ -242,51 +226,7 @@ public class Lot extends AbstractEntity{
         return lots;
     }
 
-    public  static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Integer all, Integer idFarm) {
-        String strOrder = "ASC";
-        ExpressionList expressionList = finder.query().where();
 
-//        if(idFarm.equals(-1)) {
-//            if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0);
-//            else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1);
-//        }
-//        else
-//        {
-//            if (all.equals(1)) expressionList = finder.query().where().eq("status_delete", 0).eq("id_farm",idFarm);
-//            else expressionList = finder.query().where().eq("status_delete", 0).eq("status_lot", 1).eq("id_farm",idFarm);
-//        }
 
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
 
-        if(idFarm != 0L)
-            expressionList.eq("status_delete", 0);
-
-        if(name != null)
-            expressionList.icontains("name_lot", name);
-
-//        if(sort != null)
-//            expressionList.orderBy(sort(sort, getNameLot(), getIdLot()));
-
-        expressionList.eq("status_delete", all);
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
-
-    public static ListPagerCollection  getByIdFarm(Long idFarm, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties)
-    {
-        ExpressionList expressionList =  finder.query().where().eq("status_delete",0).eq("id_farm",idFarm).eq("status_lot",1);
-
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-        if(sort != null)
-            expressionList.orderBy(AbstractEntity.sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
 }

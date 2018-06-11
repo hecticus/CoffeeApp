@@ -143,7 +143,7 @@ public class ItemType extends AbstractEntity{
         if(sort != null) {
             if(sort.contains(" ")) {
                 String []  aux = sort.split(" ", 2);
-                expressionList.orderBy(sort( aux[1], aux[0]));
+                expressionList.orderBy(sort( aux[0], aux[1]));
             }else {
                 expressionList.orderBy(sort("idItemType", sort));
             }

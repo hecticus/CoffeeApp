@@ -176,8 +176,14 @@ public class Invoice extends AbstractEntity{
         if(endDate!= null)
             expressionList.eq("closedDateInvoice", endDate);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idInvoice", sort));
+            }
+        }
 
         if(status != null)
             expressionList.eq("status_invoice", status);
