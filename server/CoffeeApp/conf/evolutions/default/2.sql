@@ -18,10 +18,10 @@ INSERT INTO `providers` (id_provider, identificationdoc_provider, fullname_provi
 (1137, '3324324234234'	   ,  'Cosechador novele'   ,   'sdasda', 123434	  ,'asdasd@asas.com'	,	2,	'Cosechador novelero');
 
 INSERT INTO `farms` (id_farm, status_delete, status_farm, name_farm) VALUES
-(1, 1, 1, 'granja 1'),
-(2, 1, 1, 'granja 2'),
-(3, 1, 1, 'granja 3'),
-(4, 0, 1, 'Cafe Eleta');
+(1, 0, 1, 'granja 1'),
+(2, 1, 0, 'granja 2'),
+(3, 0, 1, 'granja 3'),
+(4, 1, 0, 'Cafe Eleta');
 
 INSERT INTO `stores` (id_store, status_store, status_delete, name_store )VALUES
  (1, 0, 0,'store 1' ),

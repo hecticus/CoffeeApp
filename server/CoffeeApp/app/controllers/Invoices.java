@@ -211,7 +211,7 @@ public class Invoices extends Controller {
                 Lot lot = Lot.findById(idLot.asLong());
 
                 invoiceDetail.setLot(lot);
-                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+//                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
                 monto = Amount.decimalValue().multiply(lot.getPrice_lot());
             } else{
                 JsonNode price = itemtypeAux.get("price");
@@ -228,7 +228,7 @@ public class Invoices extends Controller {
 
                 monto = Amount.decimalValue().multiply(price.decimalValue());
 
-                invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
+//                invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
 
                 /*
                 comentado por el nuevo caculo que viene en caos de compra

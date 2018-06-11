@@ -150,42 +150,25 @@ public class InvoiceDetails extends Controller {
 //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
-
-            Invoice invoice = invoiceDetail.getInvoice();
-            invoice.setTotalInvoice(invoice.getTotalInvoice().subtract(invoiceDetail.getAmountInvoiceDetail()));
-            invoice.update();
-            Ebean.delete(invoice);
+            Ebean.delete(InvoiceDetail.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionUpdated(e);
         }
     }
 
-//    @CoffeAppsecurity
-//    public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date) {
-//        try {
-//            BigDecimal newTotal;
-//            List<InvoiceDetail> invoiceDetails;
-//
-//            int result = InvoiceDetail.deleteAllByIdInvoiceAndDate(IdInvoice,date);
-//
-//            List<InvoiceDetail> invoicesDetailsOpen= InvoiceDetail.findAllByIdInvoice(IdInvoice);
-//            Invoice  invoice = Invoice.findById(IdInvoice);
-//            if ( invoicesDetailsOpen.size()==0){
-//
-////                invoice.setStatusDelete(1);
-//
-//            }
-//            newTotal = Invoice.calcularTotalInvoice(IdInvoice);
-//            invoice.setTotalInvoice(newTotal);
-//            invoice.update();// = invoiceDao.update(invoice);
-//            return this.findAllByIdInvoice(IdInvoice);
-//
-//        }catch(Exception e){
-//            return Response.internalServerErrorLF();
-//        }
-//    }
+    @CoffeAppsecurity
+    public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date) {
+        try {
+            List invoiceDetails = InvoiceDetail.findAll(null, null, null, null,
+                    IdInvoice, null, null,null, null,
+                    date, null, false).entities;
+            Ebean.deleteAll((List<InvoiceDetail>) invoiceDetails);
+            return Response.deletedEntity();
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
 
     //@CoffeAppsecurity
     public Result findById(Long id) {

@@ -129,20 +129,20 @@ public class Lots extends Controller {
                 return Response.requiredJson();
 
             List<Long> aux = JsonUtils.toArrayLong(json, "ids");
-            for (Long id : aux) {
-                Lot lot = Lot.findById(id);
-                List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
-                if(lot != null  && invoiceDetails.size()==0) {
-//                    lot.setStatusDelete(1);
-                    lot.update();
-
-                    return Response.deletedEntity();
-                } else {
-                    aux_delete = false;
-
-                }
-
-            }
+//            for (Long id : aux) {
+//                Lot lot = Lot.findById(id);
+//                List<InvoiceDetail> invoiceDetails = InvoiceDetail.getOpenByLotId(id);
+//                if(lot != null  && invoiceDetails.size()==0) {
+////                    lot.setStatusDelete(1);
+//                    lot.update();
+//
+//                    return Response.deletedEntity();
+//                } else {
+//                    aux_delete = false;
+//
+//                }
+//
+//            }
 
             if(aux_delete)  return  Response.messageNotDeleted("La eliminacion fue correcta");
             else  return  Response.messageNotDeleted(" algunos registros tiene facturas aun no cerradas");

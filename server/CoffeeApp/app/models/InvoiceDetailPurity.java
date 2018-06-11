@@ -44,6 +44,7 @@ public class InvoiceDetailPurity  extends AbstractEntity{
     @Constraints.Required
     private InvoiceDetail invoiceDetail;
 
+
     @Constraints.Required
     @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status__invoiceDetail_purity")

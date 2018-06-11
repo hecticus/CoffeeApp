@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
+import org.jetbrains.annotations.NotNull;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -120,29 +121,50 @@ public class ItemType extends AbstractEntity{
     }
 
     //METODOS DEFINE
-    private static Unit unitDao = new Unit();
 
     public static ItemType findById(Long id){
         return finder.byId(id);
     }
 
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+                                              String sort, String name, Long id_ProviderType, Integer status,
+                                              boolean deleted ){
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.startsWith("nameItemType", name);
+
+        if(status != null)
+            expressionList.eq("statusItemType", status);
+
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[1], aux[0]));
+            }else {
+                expressionList.orderBy(sort("idItemType", sort));
+            }
+        }
+
+        if(id_ProviderType != 0L )
+            expressionList.eq("providerType.idProviderType", id_ProviderType);
+
+        if( deleted )
+            expressionList.setIncludeSoftDeletes();
+
+        if(pageIndex == null || pageSize == null)
+            return new ListPagerCollection(expressionList.findList());
+
+        return new ListPagerCollection(
+                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                pageIndex,
+                pageSize);
     }
 
-    public static boolean existName(String name_itemtype){
-        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
-        return false;
-    }
-
-    public static List<ItemType> getOpenByUnitId(Long idUnit) {
-        return finder.query().where().eq("id_unit",idUnit).eq("status_delete",0).findList();
-    }
-
-    public List<ItemType> getOpenByProviderTypeId(Long idProviderType) {
-        return finder.query().where().eq("id_providertype",idProviderType).eq("status_delete",0).findList();
-    }
 
     public static List<ItemType> getByProviderTypeId(Long idProviderType, Integer status){
         String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
@@ -191,61 +213,12 @@ public class ItemType extends AbstractEntity{
             itemType.setIdItemType(sqlRows.get(i).getLong("c0"));
             itemType.setNameItemType(sqlRows.get(i).getString("c2"));
             itemType.setCostItemType(sqlRows.get(i).getBigDecimal("c3"));
-            itemType.setUnit(unitDao.findById(sqlRows.get(i).getLong("c8")));
+            itemType.setUnit(Unit.findById(sqlRows.get(i).getLong("c8")));
             itemType.setStatusItemType(sqlRows.get(i).getInteger("c4"));
             itemTypes.add(itemType);
         }
 
         return itemTypes;
     }
-
-/*    public ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = finder.query().where().eq("status_delete",0);
-
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-        if(name != null)
-            expressionList.icontains("name_itemtype", name);
-
-        if(sort != null)
-            expressionList.orderBy(AbstractDaoImpl.Sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }*/
-
-
-
-
-    public static ListPagerCollection findAll(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties, Long id_ProviderType, Integer status){
-        ExpressionList expressionList = finder.query().where();
-
-        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
-            expressionList.apply(pathProperties);
-
-        if(name != null)
-            expressionList.startsWith("name_itemType", name);
-
-        if(status !=null)
-            expressionList.eq("status_itemType", status);
-
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
-
-        if(id_ProviderType == null || id_ProviderType != 0L)
-            expressionList.eq("id_providerType", id_ProviderType);
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
-        return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
-    }
-
-
 
 }

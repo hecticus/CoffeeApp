@@ -56,7 +56,7 @@ create table config (
 create table farms (
   id_farm                       bigint auto_increment not null,
   name_farm                     varchar(50) not null,
-  status_farm                   integer default 1,
+  status_farm                   boolean default 1 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,

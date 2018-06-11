@@ -28,9 +28,11 @@ public class Farm extends AbstractEntity{
     @Column(nullable = false, name = "name_farm", length = 50, unique = true)
     private String NameFarm;
 
-    @Range(min = 0, max = 1)
-    @Column( name = "status_farm", columnDefinition = "integer default 1")
-    private Integer statusFarm;
+//    @Range(min = 0, max = 1)
+//    @Column( name = "status_farm", columnDefinition = "integer default 1")
+//    private Integer statusFarm;
+    @Column( name = "status_farm", columnDefinition = "boolean default 1", nullable = false)
+    private boolean statusFarm;
 
     @JsonIgnore
     @OneToMany(mappedBy = "farm", cascade= CascadeType.ALL)
@@ -39,7 +41,7 @@ public class Farm extends AbstractEntity{
     private static Finder<Long, Farm> finder = new Finder<>(Farm.class);
 
     public Farm() {
-        statusFarm = 1;
+        statusFarm = true;
         lots = new ArrayList<>();
     }
 
@@ -61,11 +63,11 @@ public class Farm extends AbstractEntity{
         this.lots = lots;
     }
 
-    public Integer getStatusFarm() {
+    public boolean getStatusFarm() {
         return statusFarm;
     }
 
-    public void setStatusFarm(Integer statusFarm) {
+    public void setStatusFarm(boolean statusFarm) {
         this.statusFarm = statusFarm;
     }
 

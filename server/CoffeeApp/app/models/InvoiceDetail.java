@@ -54,12 +54,12 @@ public class InvoiceDetail  extends AbstractEntity{
     @Constraints.Min(0)
     @Constraints.Required
     @Column(nullable = false, name = "price_ItemTypeByLot")
-    private BigDecimal priceItemTypeByLot;
+    private BigDecimal priceItemTypeByLot; //esta en lote desconozco la relacion
 
     @Constraints.Required
     @Constraints.Min(0)
     @Column(nullable = false, name = "cost_ItemType")
-    private BigDecimal costItemType;
+    private BigDecimal costItemType;//esta en Item Type desconozco la relacion
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -153,13 +153,6 @@ public class InvoiceDetail  extends AbstractEntity{
         this.store = store;
     }
 
-    public BigDecimal getPriceItemTypeByLot() {
-        return priceItemTypeByLot;
-    }
-
-    public void setPriceItemTypeByLot(BigDecimal priceItemTypeByLot) {
-        this.priceItemTypeByLot = priceItemTypeByLot;
-    }
 
     public BigDecimal getCostItemType() {
         return costItemType;
@@ -270,12 +263,35 @@ public class InvoiceDetail  extends AbstractEntity{
         return query.execute();
     }
 
-    public static List<InvoiceDetail> findAllByIdInvoice(Long IdInvoice){
-        return finder
-                .query()
-                .where()
-                .eq("id_invoice", IdInvoice)
-                .findList();
+    public static List<InvoiceDetail> findAllList(Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
+                                              String startDateInvoiceDetail, Integer status, boolean deleted){
+        ExpressionList expressionList = finder.query().where();
+
+        if(invoice != null)
+            expressionList.eq("invoice.idInvoice", invoice );
+
+        if(itemType != null)
+            expressionList.eq("itemType.idItemType", itemType );
+
+        if(lot != null)
+            expressionList.eq("lot.idLot", lot );
+
+        if(store != null)
+            expressionList.eq("store.idStore", store );
+
+        if(nameReceivedInvoiceDetail != null)
+            expressionList.eq("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
+
+        if(startDateInvoiceDetail != null)
+            expressionList.eq("startDateInvoiceDetail", startDateInvoiceDetail );
+
+        if(deleted)
+            expressionList.setIncludeSoftDeletes();
+
+        if(status != null)
+            expressionList.eq("statusInvoiceDetail", status );
+
+        return (List<InvoiceDetail>) expressionList.findList();
     }
 
 
