@@ -74,39 +74,42 @@ public class Store extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
-    public static int getExist(String name_store){
-        if(finder.query().where().eq("name_store",name_store).eq("status_delete",0).findUnique()!=null) return 0;
-        else{
-            if(finder.query().where().eq("name_store",name_store).eq("status_delete",1).findUnique()!=null)  return 1;
-            else return 2;
-
-        }
-    }
-
     public static Store findById(Long id){
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort,PathProperties pathProperties,  Integer status){
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+                                              String sort, String name, Integer status, boolean deleted){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
-        if(status != null)
-            expressionList.eq("status_store",status);
-
         if(name != null)
-            expressionList.icontains("name_store", name);
+            expressionList.icontains("NameStore", name);
+
+        if(deleted)
+            expressionList.setIncludeSoftDeletes();
 
         if(sort != null) {
-            expressionList.orderBy(sort);
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idStore", sort));
+            }
         }
+
+        if(status != null)
+            expressionList.eq("statusStore", status );
+
         if(index == null || size == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+            return new ListPagerCollection(expressionList.findList());
+
+
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
     }

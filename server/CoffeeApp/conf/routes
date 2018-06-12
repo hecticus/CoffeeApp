@@ -167,12 +167,10 @@ DELETE  /providerType/:id                                                       
 ###############################################################################
 #·······                     Store                                  ··········#
 ###############################################################################
-GET     /store                                                                  controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /store                                                                  controllers.Stores.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 GET     /store/new                                                              controllers.Stores.preCreate()
-#GET     /store/search                                                           controllers.Stores.findAllSearch(name: String ?= null, pager: models.manager.requestUtils.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
-GET     /store/search                                                           controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-#GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.getByStatusStore(StatusStore: String, order:String )
-GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, order: String, collection: String ?= null, StatusStore: Integer)
+GET     /store/search                                                           controllers.Stores.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
+GET     /store/getByStatusStore/:StatusStore/:order                             controllers.Stores.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , name: String ?= null, StatusStore: Integer   , deleted: Boolean ?= false)
 GET     /store/:id                                                              controllers.Stores.findById(id : Long)
 POST    /store                                                                  controllers.Stores.create()
 PUT     /store                                                                  controllers.Stores.update()

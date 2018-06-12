@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.responseUtils.Response;
 import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Store;
 import controllers.responseUtils.ExceptionsUtils;
@@ -94,9 +95,7 @@ public class Stores {
 //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Store store = Store.findById(id);
-//            store.setStatusDelete(1);
-            store.update();
+            Ebean.delete(Store.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -113,32 +112,12 @@ public class Stores {
         }
     }
 
-
-    public Result getByStatusStore(String statusStore, String order)
-    {
-        String strOrder = "ASC";
-        try {
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-
-            List<Store> stores = Store.getByStatusStore(statusStore,strOrder);
-            return Response.foundEntity(Json.toJson(stores));
-
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
     //@CoffeAppsecurity
-    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status) {
+    public Result findAll(Integer index, Integer size, String collection,
+                          String sort, String name, Integer status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Store.findAll(name, index, size, sort, pathProperties, status);
-
+            ListPagerCollection listPager = Store.findAll(index, size, pathProperties, sort, name, status, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
