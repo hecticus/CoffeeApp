@@ -116,7 +116,7 @@ public class Purities extends Controller{
             return Response.internalServerErrorLF();
         }
     }
-    
+
     //@CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection, String sort, String name, Integer status,
                           boolean deleted){

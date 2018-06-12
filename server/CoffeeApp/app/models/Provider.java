@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * Created by drocha on 21/04/17.
+ * modify sm21 06/2018
  */
 @Entity
 @Table(name="providers")
@@ -54,6 +55,7 @@ public class Provider extends AbstractEntity{
     private String phoneNumberProvider;
 
     @Constraints.Email
+    @Constraints.Required
     @Column(name = "email_Provider", nullable = false)
     private String emailProvider;
 
@@ -75,12 +77,11 @@ public class Provider extends AbstractEntity{
     @Column( name = "status_Provider", columnDefinition = "integer default 1")
     private Integer statusProvider;
 
-
     @OneToMany(mappedBy = "provider", cascade= CascadeType.ALL)
     @JsonManagedReference
     private List<Invoice> invoices;
 
-    private static Finder<Long, Provider> finder = new Finder<>(Provider.class);
+    public static Finder<Long, Provider> finder = new Finder<>(Provider.class);
 
     public Provider() {
         statusProvider = 1;
@@ -181,20 +182,12 @@ public class Provider extends AbstractEntity{
         return finder.byId(id);
     }
 
-    public static boolean existName(String name_itemtype){
-        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
-        return false;
-    }
 
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
-    }
-
-    private static ProviderType providerTypeDao = new ProviderType();
-
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties
-                                                pathProperties, Integer all, Long idProviderType, Integer statusProvider){
+    public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
+                                               String sort, String name,  Long idProviderType,
+                                               String identificationDocProvider, String addressProvider,
+                                               String phoneNumberProvider, String emailProvider,
+                                               String contactNameProvider, Integer status, boolean deleted){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -204,14 +197,38 @@ public class Provider extends AbstractEntity{
         if(idProviderType != 0L)
             expressionList.eq("providerType.idProviderType", idProviderType);
 
-        if(statusProvider != null)
-            expressionList.eq("statusProvider", statusProvider);
+        if(status != null)
+            expressionList.eq("statusProvider", status);
 
-//        if(sort != null)
-//            expressionList.orderBy(sort(sort));
+        if(identificationDocProvider != null)
+           expressionList.startsWith("identificationDocProvider", identificationDocProvider);
 
+        if(name != null)
+           expressionList.startsWith("fullNameProvider", name);
 
-        expressionList.eq("status_delete",all);
+        if(addressProvider != null)
+           expressionList.startsWith("addressProvider", addressProvider);
+
+        if(phoneNumberProvider != null)
+           expressionList.eq("phoneNumberProvider", phoneNumberProvider);
+
+        if(status != null)
+           expressionList.eq("emailProvider", emailProvider);
+
+        if(contactNameProvider != null)
+           expressionList.startsWith("contactNameProvider", contactNameProvider);
+
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idProvider", sort));
+            }
+        }
+
+        if( deleted )
+            expressionList.setIncludeSoftDeletes();
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
@@ -316,7 +333,7 @@ public class Provider extends AbstractEntity{
             provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
             provider.setEmailProvider(sqlRows.get(i).getString("email"));
             provider.setPhotoProvider(sqlRows.get(i).getString("photo"));
-            provider.setProviderType(providerTypeDao.findById(sqlRows.get(i).getLong("providerType")));
+            provider.setProviderType(ProviderType.findById(sqlRows.get(i).getLong("providerType")));
 
             providers.add(provider);
         }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Provider;
@@ -66,7 +67,7 @@ public class Providers extends Controller {
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
             Provider provider = Json.fromJson(node, Provider.class);
-            //provider.save();
+            provider.save();
             return  Response.createdEntity(Json.toJson(provider));
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
@@ -103,16 +104,8 @@ public class Providers extends Controller {
     //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Provider provider = Provider.findById(id);
-            List<Invoice> invoices = Invoice.getOpenByProviderId(id);
-                if(provider != null && invoices.size()==0) {
-//                provider.setStatusDelete(1);
-                provider.update();
-                return Response.deletedEntity();
-            } else {
-                if(provider == null)  return  Response.messageNotDeleted(" no existe el registro a eliminar");
-                else  return  Response.messageNotDeleted(" el proveedor tiene facturas aun no cerradas");
-            }
+            Ebean.delete(Provider.findById(id));
+            return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
         }
@@ -121,30 +114,9 @@ public class Providers extends Controller {
 
     //    @CoffeAppsecurity
     public Result deletes(){
-
-        boolean aux_delete = true;
         try {
-            JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
-
-            List<Long> aux = new ArrayList<Long>();
-            aux = JsonUtils.toArrayLong(json, "ids");
-
-            for (Long id : aux){
-                Provider provider = Provider.findById(id);
-                List<Invoice> invoices = Invoice.getOpenByProviderId(id);
-                if(provider != null && invoices.size()==0){
-
-                    //provider.setStatusDelete(1);
-                    provider.update();
-                }else{
-                    aux_delete = false;
-                }
-            }
-
-            if(aux_delete) return Response.message("Successful deletes");
-            else return  Response.messageNotDeleted("algunos proveedores tienen facturas aun no cerradas");
+            Ebean.deleteAll(Provider.finder.query().findList());
+            return Response.deletedEntity();
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
         }
@@ -220,104 +192,22 @@ public class Providers extends Controller {
     }
 
     //    @CoffeAppsecurity
-    public Result findAll(String name, Integer pageindex, Integer pagesize, String sort, String collection, Integer all, Long idProviderType, Integer statusProvider) {
+    public Result findAll( Integer index, Integer size, String collection,
+                           String sort, String name,  Long idProviderType,
+                           String identificationDocProvider, String addressProvider,
+                           String phoneNumberProvider, String emailProvider,
+                           String contactNameProvider, Integer status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Provider.findAll(name, pageindex, pagesize, sort, pathProperties, all, idProviderType, statusProvider);
+            ListPagerCollection listPager = Provider.findAll( index, size,  pathProperties, sort, name,
+                                                            idProviderType, identificationDocProvider, addressProvider,
+                                                            phoneNumberProvider, emailProvider,  contactNameProvider,
+                                                            status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
     }
-
-
-    //    @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection, Integer listAll, Integer idProviderType) {
-        try {
-
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Provider.findAllSearch(name, index, size, sort, pathProperties,false, listAll, false, idProviderType);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    //    @CoffeAppsecurity
-    public Result  getByIdentificationDoc(String IdentificationDoc){
-        try {
-            Provider provider = Provider.getByIdentificationDoc(IdentificationDoc);
-            return Response.foundEntity(Json.toJson(provider));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
-    public Result  getProvidersByName(String name, String order){
-
-
-        String strOrder = "ASC";
-        try {
-
-            if (name.equals("-1")) name = "";
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-            List<Provider> providers = Provider.getProvidersByName(name,strOrder);
-            return Response.foundEntity(Json.toJson(providers));
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
-
-//    public Result  getByTypeProvider(Long id_providertype, String order)
-//    {
-//        String strOrder = "ASC";
-//        try {
-//
-//            if(!order.equals("-1")) strOrder = order;
-//
-//            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-//                return Response.requiredParameter("order (ASC o DESC)");
-//
-//
-//            List<Provider> providers = providerDao.getByTypeProvider(id_providertype,strOrder);
-//            return Response.foundEntity(Json.toJson(providers));
-//        }catch(Exception e){
-//            return Response.internalServerErrorLF();
-//        }
-//    }
-//
-//    public Result getByNameDocByTypeProvider(String nameDoc, Long id_providertype, String order)
-//    {
-//        List<Provider> providers;
-//        String strOrder = "ASC";
-//        try
-//        {
-//
-//
-//            if (providerTypeDao.findById(id_providertype)==null) return Response.notFoundEntity("providerType");
-//
-//            if(!order.equals("-1")) strOrder = order;
-//
-//            if(!strOrder.equals("ASC") && !strOrder.equals("DESC")) return Response.requiredParameter("order (ASC o DESC)");
-//
-//
-//            if(!nameDoc.equals("-1"))  providers = providerDao.getByNameDocByTypeProvider(nameDoc,id_providertype,strOrder);
-//            else   providers = providerDao.getByTypeProvider(id_providertype,strOrder);
-//
-//
-//            return Response.foundEntity(Json.toJson(providers));
-//        }catch(Exception e){
-//            return Response.internalServerErrorLF();
-//        }
-//    }
-
 
 }
