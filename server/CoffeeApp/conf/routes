@@ -74,11 +74,11 @@ GET     /invoice/getByDateByProviderId/:date/:ProviderId                        
 GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize controllers.Invoices.findAll( pageindex: Integer      , pagesize: Integer        , collection: String ?= null,sort: String ?= null, ProviderId: Long ?= 0L, typeProvider: Long      , date: String             , endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 #GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
-#POST    /invoice                                                                controllers.Invoices.create()
+POST    /invoice                                                                controllers.Invoices.create()
 #POST    /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.buyHarvestsAndCoffe()
 #PUT     /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.updateBuyHarvestsAndCoffe()
-#PUT     /invoice                                                                controllers.Invoices.update()
-#DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
+PUT     /invoice                                                                controllers.Invoices.update()
+DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
 
 ###############################################################################
 #·······                       InvoiceDetail                        ··········#

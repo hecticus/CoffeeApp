@@ -117,9 +117,11 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         this.statusInvoiceDetailPurity = statusInvoiceDetailPurity;
     }
 
-//    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
-//        return finder.query().where().eq("id_invoicedetail",IdInvopiceDetail).eq("id_purity",IdPurity).eq("status_delete",0).findUnique();
-//    }
+    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
+        return finder.query().where()
+                .eq("id_invoicedetail",IdInvopiceDetail)
+                .eq("id_purity",IdPurity).findUnique();
+    }
 
     public static  InvoiceDetailPurity findById(Long id){
         return finder.byId(id);

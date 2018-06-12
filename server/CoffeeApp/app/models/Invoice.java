@@ -137,23 +137,6 @@ public class Invoice extends AbstractEntity{
         return finder.byId(id);
     }
 
-    public static boolean existName(String name_itemtype){
-        if(finder.query().where().eq("name_itemtype",name_itemtype ).findUnique() != null ) return true;
-        return false;
-    }
-
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
-    }
-
-    public static  List<Invoice> getOpenByProviderId(Long providerId){
-        return finder.query().where().eq("id_provider",providerId)
-//                .eq("status_delete",0)
-                .eq("status_invoice",1)
-                .orderBy("dueDate_invoice desc")
-                .findList();
-    }
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long id_providertype, String startDate,
@@ -250,6 +233,13 @@ public class Invoice extends AbstractEntity{
     }
 
 
+
+    public static  List<Invoice> getOpenByProviderId(Long providerId){
+        return finder.query().where().eq("id_provider",providerId)
+                .eq("status_invoice",1)
+                .orderBy("dueDate_invoice desc")
+                .findList();
+    }
 
     public static  BigDecimal calcularTotalInvoice(Long idInvioce) {
         List<InvoiceDetail> invoiceDetails;// = InvoiceDetail.finderAllByIdInvoice(idInvioce);

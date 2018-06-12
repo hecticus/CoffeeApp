@@ -101,7 +101,8 @@ public class InvoiceDetail  extends AbstractEntity{
     public InvoiceDetail() {
         statusInvoiceDetail = 1;
         freightInvoiceDetail = false;
-//        costItemType = BigDecimal.ZERO;
+        costItemType = BigDecimal.ZERO;
+        priceItemTypeByLot = BigDecimal.ZERO;
         invoiceDetailPurity = new ArrayList<>();
     }
 
@@ -216,6 +217,14 @@ public class InvoiceDetail  extends AbstractEntity{
 
     public void setStatusInvoiceDetail(Integer statusInvoiceDetail) {
         this.statusInvoiceDetail = statusInvoiceDetail;
+    }
+
+    public BigDecimal getPriceItemTypeByLot() {
+        return priceItemTypeByLot;
+    }
+
+    public void setPriceItemTypeByLot(BigDecimal priceItemTypeByLot) {
+        this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
     //Metodos Creados

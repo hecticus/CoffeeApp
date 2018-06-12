@@ -19,7 +19,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -99,8 +98,7 @@ public class Invoices extends Controller {
     @CoffeAppsecurity
     public  Result delete(Long id) {
         try{
-            Invoice invoice = Invoice.findById(id);
-            Ebean.delete(invoice);
+            Ebean.delete(Invoice.findById(id));
             return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -138,14 +136,8 @@ public class Invoices extends Controller {
         BigDecimal monto;
         InvoiceDetailPurity invoiceDetailPurity;
         JsonNode json = request().body().asJson();
-
         if(json == null)
             return Response.requiredJson();
-
-//        ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-//        ObjectNode providerNode = Json.newObject();
-//        providerNode.set("idProvider", json.findValue("idProvider"));
-//        node.set("provider", providerNode);
 
         JsonNode idprovider = json.get("idProvider");
         Long idProvider;
@@ -211,7 +203,7 @@ public class Invoices extends Controller {
                 Lot lot = Lot.findById(idLot.asLong());
 
                 invoiceDetail.setLot(lot);
-//                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
                 monto = Amount.decimalValue().multiply(lot.getPrice_lot());
             } else{
                 JsonNode price = itemtypeAux.get("price");
@@ -228,7 +220,7 @@ public class Invoices extends Controller {
 
                 monto = Amount.decimalValue().multiply(price.decimalValue());
 
-//                invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
+                invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
 
                 /*
                 comentado por el nuevo caculo que viene en caos de compra
@@ -254,8 +246,8 @@ public class Invoices extends Controller {
 
             List<Invoice> invoices = Invoice.getOpenByProviderId(idProvider);
 
-            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd").equals(
-                    invoices.get(0).getStartDateInvoice())){//.equals(startDatetime.toString("yyyy-MM-dd"))) {
+            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd HH:mm:ss").equals(
+                    invoices.get(0).getStartDateInvoice())){
                 openInvoice = invoices.get(0);
             } else {
                 openInvoice = new Invoice();
@@ -268,7 +260,7 @@ public class Invoices extends Controller {
             invoiceDetails.add(invoiceDetail);
             openInvoice.setInvoiceDetails(invoiceDetails);
 
-            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd").equals(
+            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd HH:mm:ss").equals(
                     invoices.get(0).getStartDateInvoice())){
                 openInvoice.update();
             } else {
@@ -309,173 +301,168 @@ public class Invoices extends Controller {
         return Response.createdEntity(Json.toJson(openInvoice));
     }
 
+
+//    @CoffeAppsecurity
+    public  Result updateBuyHarvestsAndCoffe() {
+        BigDecimal monto;
+        boolean auxCreate = false;
+        InvoiceDetailPurity invoiceDetailPurity;
+
+        JsonNode json = request().body().asJson();
+        if(json == null)
+            return Response.requiredJson();
+
+        JsonNode idInvoice = json.get("idInvoice");
+        if (idInvoice == null)
+            return Response.requiredParameter("idInvoice");
+
+        JsonNode idProvider = json.get("idProvider");
+        if (idProvider == null)
+            return Response.requiredParameter("idProvider");
+
+        JsonNode itemtypes = json.get("itemtypes");
+        if (itemtypes == null)
+            return Response.requiredParameter("itemtypes");
+
+        JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
+        if (nameReceived== null)
+            return Response.requiredParameter("nameReceivedInvoiceDetail");
+
+        JsonNode nameDelivered = json.get("nameDeliveredInvoiceDetail");
+        if (nameDelivered==  null)
+            return Response.requiredParameter("nameDeliveredInvoiceDetail");
+
+        JsonNode note = json.get("note");
+
+        JsonNode freigh = json.get("freigh");
+        if (freigh==  null)
+            return Response.requiredParameter("freigh");
+
+        JsonNode buyOption = json.get("buyOption");
+        if (buyOption==  null)
+            return Response.requiredParameter("buyOption");
+
+        if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
+            return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
+
+        Invoice openInvoice = Invoice.findById(idInvoice.asLong());
+
+        for (JsonNode itemtypeAux : itemtypes) {
+
+            JsonNode Amount = itemtypeAux.get("amount");
+            if (Amount == null)
+                return Response.requiredParameter("amount");
+
+            JsonNode idItemtype = itemtypeAux.get("idItemType");
+            if (idItemtype == null)
+                return Response.requiredParameter("idItemType");
+
+            JsonNode idInvoiceDetail = itemtypeAux.get("idInvoiceDetail");
+            if (idInvoiceDetail == null)
+                return Response.requiredParameter("idInvoiceDetail");
+
+            ItemType itemType = ItemType.findById(idItemtype.asLong());
+
+            InvoiceDetail invoiceDetail = InvoiceDetail.findById(idInvoiceDetail.asLong());  //new InvoiceDetail();
+            invoiceDetail.setItemType(itemType);
+
+
+            if (buyOption.asInt() == 1) {
+                JsonNode idLot = json.get("idLot");
+                if (idLot == null)
+                    return Response.requiredParameter("idLot");
+
+                Lot lot = Lot.findById(idLot.asLong());
+
+                invoiceDetail.setLot(lot);
+                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+
+                monto = Amount.decimalValue().multiply( lot.getPrice_lot());
+            } else {
+                JsonNode price = itemtypeAux.get("price");
+                if (price == null)
+                    return Response.requiredParameter("price");
+
+                invoiceDetail.setCostItemType(price.decimalValue());
+
+                JsonNode id_store = itemtypeAux.get("id_store");
+                if (id_store == null)
+                    return Response.requiredParameter("id_store");
+
+                invoiceDetail.setStore(Store.findById(id_store.asLong()));
+
+                monto = Amount.decimalValue().multiply(price.decimalValue());
+                /*
+                monto = Amount.asInt() * itemType.getCostItemType();
+
+                int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
+                invoiceDetailPurity.setDiscountRatePurity(Discount);
+
+                monto = monto+Discount;*/
+            }
+
+            invoiceDetail.setAmountInvoiceDetail(Amount.decimalValue());
+            invoiceDetail.setFreightInvoiceDetail(freigh.asBoolean());
+            invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
+            invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
+            invoiceDetail.setNoteInvoiceDetail(note.asText());
+
+//            DateTime startDatetime;
+//            startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
+//            invoiceDetail.setStartDateInvoiceDetail(startDatetime);
 //
-////    @CoffeAppsecurity
-//    public  Result updateBuyHarvestsAndCoffe() {
-//        BigDecimal monto;
-//        boolean auxCreate = false;
-//        InvoiceDetailPurity invoiceDetailPurity;
-//
-//        JsonNode json = request().body().asJson();
-//        if(json == null)
-//            return Response.requiredJson();
-//
-//        JsonNode idInvoice = json.get("idInvoice");
-//        if (idInvoice == null)
-//            return Response.requiredParameter("idInvoice");
-//
-//        JsonNode idProvider = json.get("idProvider");
-//        if (idProvider == null)
-//            return Response.requiredParameter("idProvider");
-//
-//        JsonNode itemtypes = json.get("itemtypes");
-//        if (itemtypes == null)
-//            return Response.requiredParameter("itemtypes");
-//
-//        JsonNode nameReceived = json.get("nameReceivedInvoiceDetail");
-//        if (nameReceived== null)
-//            return Response.requiredParameter("nameReceivedInvoiceDetail");
-//
-//        JsonNode nameDelivered = json.get("nameDeliveredInvoiceDetail");
-//        if (nameDelivered==  null)
-//            return Response.requiredParameter("nameDeliveredInvoiceDetail");
-//
-//        JsonNode note = json.get("note");
-//
-//        JsonNode freigh = json.get("freigh");
-//        if (freigh==  null)
-//            return Response.requiredParameter("freigh");
-//
-//        JsonNode buyOption = json.get("buyOption");
-//        if (buyOption==  null)
-//            return Response.requiredParameter("buyOption");
-//
-//        if(buyOption.asInt() !=1 && buyOption.asInt() != 2)
-//            return Response.message("buyOption: 1 for buy Harvests And 2 for buy Coffe");
-//
-//        Invoice openInvoice = Invoice.findById(idInvoice.asLong());
-//
-////        if(openInvoice.getStatusDelete()==1)
-////            return Response.message("no es posible modificar");
-//
-//        for (JsonNode itemtypeAux : itemtypes) {
-//
-//
-//            JsonNode Amount = itemtypeAux.get("amount");
-//            if (Amount == null)
-//                return Response.requiredParameter("amount");
-//
-//            JsonNode idItemtype = itemtypeAux.get("idItemType");
-//            if (idItemtype == null)
-//                return Response.requiredParameter("idItemType");
-//
-//            JsonNode idInvoiceDetail = itemtypeAux.get("idInvoiceDetail");
-//            if (idInvoiceDetail == null)
-//                return Response.requiredParameter("idInvoiceDetail");
-//
-//            ItemType itemType = ItemType.findById(idItemtype.asLong());
-//
-//            InvoiceDetail invoiceDetail = InvoiceDetail.findById(idInvoiceDetail.asLong());  //new InvoiceDetail();
-//            invoiceDetail.setItemType(itemType);
-//
-//
-//            if (buyOption.asInt() == 1) {
-//                JsonNode idLot = json.get("idLot");
-//                if (idLot == null)
-//                    return Response.requiredParameter("idLot");
-//
-//                Lot lot = Lot.findById(idLot.asLong());
-//
-//                invoiceDetail.setLot(lot);
-//                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
-//
-//                monto = Amount.decimalValue().multiply( lot.getPrice_lot());
-//            } else {
-//                JsonNode price = itemtypeAux.get("price");
-//                if (price == null)
-//                    return Response.requiredParameter("price");
-//
-//                invoiceDetail.setCostItemType(price.decimalValue());
-//
-//                JsonNode id_store = itemtypeAux.get("id_store");
-//                if (id_store == null)
-//                    return Response.requiredParameter("id_store");
-//
-//                invoiceDetail.setStore(Store.findById(id_store.asLong()));
-//
-//                monto = Amount.decimalValue().multiply(price.decimalValue());
-//                /*
-//                monto = Amount.asInt() * itemType.getCostItemType();
-//
-//                int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
-//                invoiceDetailPurity.setDiscountRatePurity(Discount);
-//
-//                monto = monto+Discount;*/
-//            }
-//
-//            invoiceDetail.setAmountInvoiceDetail(Amount.decimalValue());
-//            invoiceDetail.setFreightInvoiceDetail(freigh.asBoolean());
-//            invoiceDetail.setNameDeliveredInvoiceDetail(nameDelivered.asText());
-//            invoiceDetail.setNameReceivedInvoiceDetail(nameReceived.asText());
-//            invoiceDetail.setNoteInvoiceDetail(note.asText());
-//
-////            DateTime startDatetime;
-////            startDatetime = Request.dateTimeFormatter.parseDateTime(startDate.asText());
-////            invoiceDetail.setStartDateInvoiceDetail(startDatetime);
-////
-////            openInvoice.setStartDateInvoice(startDatetime);
-////            openInvoice.setClosedDateInvoice(startDatetime);
-//            openInvoice.setProvider(Provider.findById(idProvider.asLong()));
-//            openInvoice.setTotalInvoice(monto);
-//
-//            List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
-//
-//            invoiceDetails.add(invoiceDetail);
-//            openInvoice.setInvoiceDetails(invoiceDetails);
-//
-//            openInvoice.update();// = invoiceDao.update(openInvoice);
-//
-//            invoiceDetail.setInvoice(openInvoice);
-//            invoiceDetail.update();// = invoiceDetailDao.update(invoiceDetail);
-//
-//            if(buyOption.asInt() == 2){
-//                JsonNode purities = itemtypeAux.get("purities");
-//                if (purities == null)
-//                    return Response.requiredParameter("purities");
-//                for(JsonNode purity : purities){
-//                    JsonNode idPurity = purity.get("idPurity");
-//                    if (idPurity == null)
-//                        return Response.requiredParameter("idPurity");
-//
-//                    JsonNode valueRateInvoiceDetailPurity = purity.get("valueRateInvoiceDetailPurity");
-//                    if (valueRateInvoiceDetailPurity == null)
-//                        return Response.requiredParameter("valueRateInvoiceDetailPurity");
-//
-//                    Purity puritys = Purity.findById(idPurity.asLong());
-//
-//                    invoiceDetailPurity = InvoiceDetailPurity.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
-//
-//                    if(invoiceDetailPurity==null){
-//                        invoiceDetailPurity = new InvoiceDetailPurity();
-//                        auxCreate=true;
-//                    }
-//
-//                    invoiceDetailPurity.setPurity(puritys);
-//                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
-//                    invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-//                    if(auxCreate) invoiceDetailPurity.save();//invoiceDetailPurityDao.create(invoiceDetailPurity);
-//                    else invoiceDetailPurity.update();//invoiceDetailPurityDao.update(invoiceDetailPurity);
-//                }
-//
-//            }
-//
-//        }
-//
-//        openInvoice.setTotalInvoice(Invoice.calcularTotalInvoice(openInvoice.getIdInvoice()));
-//        openInvoice.update();
-////        invoiceDao.update(openInvoice);
-//        return Response.updatedEntity(Json.toJson(openInvoice));
-//    }
+//            openInvoice.setStartDateInvoice(startDatetime);
+//            openInvoice.setClosedDateInvoice(startDatetime);
+            openInvoice.setProvider(Provider.findById(idProvider.asLong()));
+            openInvoice.setTotalInvoice(monto);
+
+            List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
+
+            invoiceDetails.add(invoiceDetail);
+            openInvoice.setInvoiceDetails(invoiceDetails);
+
+            openInvoice.update();// = invoiceDao.update(openInvoice);
+
+            invoiceDetail.setInvoice(openInvoice);
+            invoiceDetail.update();// = invoiceDetailDao.update(invoiceDetail);
+
+            if(buyOption.asInt() == 2){
+                JsonNode purities = itemtypeAux.get("purities");
+                if (purities == null)
+                    return Response.requiredParameter("purities");
+                for(JsonNode purity : purities){
+                    JsonNode idPurity = purity.get("idPurity");
+                    if (idPurity == null)
+                        return Response.requiredParameter("idPurity");
+
+                    JsonNode valueRateInvoiceDetailPurity = purity.get("valueRateInvoiceDetailPurity");
+                    if (valueRateInvoiceDetailPurity == null)
+                        return Response.requiredParameter("valueRateInvoiceDetailPurity");
+
+                    Purity puritys = Purity.findById(idPurity.asLong());
+
+                    invoiceDetailPurity = InvoiceDetailPurity.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
+
+                    if(invoiceDetailPurity==null){
+                        invoiceDetailPurity = new InvoiceDetailPurity();
+                        auxCreate=true;
+                    }
+
+                    invoiceDetailPurity.setPurity(puritys);
+                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                    invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
+                    if(auxCreate) invoiceDetailPurity.save();//invoiceDetailPurityDao.create(invoiceDetailPurity);
+                    else invoiceDetailPurity.update();//invoiceDetailPurityDao.update(invoiceDetailPurity);
+                }
+
+            }
+
+        }
+
+        openInvoice.setTotalInvoice(Invoice.calcularTotalInvoice(openInvoice.getIdInvoice()));
+        openInvoice.update();// invoiceDao.update(openInvoice);
+        return Response.updatedEntity(Json.toJson(openInvoice));
+    }
 
 //    @CoffeAppsecurity
     public  Result createReceipt(Long idInvoice)  {

@@ -64,26 +64,26 @@ public class User extends AbstractEntity {
 
     private static Finder<Long, User> finder = new Finder<>(User.class);
 
-//    @PrePersist
-////    public void createAuthUser() throws MySQLIntegrityConstraintViolationException {
-////        if(this.authUser != null) {
-////            this.authUser.setPassword(this.authUser.getPassword()); //TODO ENCRYP
-////            this.authUser.insert();
-////            this.id = this.authUser.getId();
-////        }else{
-////            throw new MySQLIntegrityConstraintViolationException("Violation constrain: Cannot add or update a child row: a foreign key constraint fails");
-////        }
-////    }
-////
-////    @PreUpdate
-////    public void updateAuthUser(){
-////        if(this.id != null) {
-////            AuthUser authUser = User.findById(this.id).getAuthUser();
-////            authUser.setEmail(this.authUser.getEmail());
-////            authUser.update();
-////            this.authUser = authUser;
-////        }
-////    }
+    @PrePersist
+    public void createAuthUser() throws MySQLIntegrityConstraintViolationException {
+        if(this.authUser != null) {
+            this.authUser.setPassword(this.authUser.getPassword()); //TODO ENCRYP
+            this.authUser.insert();
+            this.id = this.authUser.getId();
+        }else{
+            throw new MySQLIntegrityConstraintViolationException("Violation constrain: Cannot add or update a child row: a foreign key constraint fails");
+        }
+    }
+
+    @PreUpdate
+    public void updateAuthUser(){
+        if(this.id != null) {
+            AuthUser authUser = User.findById(this.id).getAuthUser();
+            authUser.setEmail(this.authUser.getEmail());
+            authUser.update();
+            this.authUser = authUser;
+        }
+    }
 
     //No clear
     public static User findById(Long id){
