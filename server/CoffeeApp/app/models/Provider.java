@@ -197,9 +197,6 @@ public class Provider extends AbstractEntity{
         if(idProviderType != 0L)
             expressionList.eq("providerType.idProviderType", idProviderType);
 
-        if(status != null)
-            expressionList.eq("statusProvider", status);
-
         if(identificationDocProvider != null)
            expressionList.startsWith("identificationDocProvider", identificationDocProvider);
 
@@ -212,7 +209,7 @@ public class Provider extends AbstractEntity{
         if(phoneNumberProvider != null)
            expressionList.eq("phoneNumberProvider", phoneNumberProvider);
 
-        if(status != null)
+        if(emailProvider != null)
            expressionList.eq("emailProvider", emailProvider);
 
         if(contactNameProvider != null)
@@ -227,6 +224,9 @@ public class Provider extends AbstractEntity{
             }
         }
 
+        if(status != null)
+            expressionList.eq("statusProvider", status);
+
         if( deleted )
             expressionList.setIncludeSoftDeletes();
 
@@ -239,37 +239,6 @@ public class Provider extends AbstractEntity{
                 size);
     }
 
-
-
-    public static ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties
-            pathProperties, boolean all, Integer listAll, boolean inside, Integer idProviderType) {
-
-        ExpressionList expressionList;
-
-        if(inside){
-            if (all) expressionList = finder.query().where();
-            else expressionList = finder.query().where().eq("status_delete", 0);
-        }else{
-            if(listAll.equals(1)){
-                if(idProviderType.equals(-1)) expressionList = finder.query().where().eq("status_delete",0);
-                else expressionList = finder.query().where().eq("status_delete",0).eq("id_providertype",idProviderType);
-            }
-            else  expressionList = finder.query().where().eq("status_delete",0).eq("status_provider",1);
-        }
-
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-        if(name != null)
-            expressionList.icontains("fullName_provider", name);
-
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
 
 
     public static Provider getByIdentificationDoc(String IdentificationDoc){

@@ -88,33 +88,17 @@ public class ProviderTypes {
 //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            ProviderType providerType = ProviderType.findById(id);
-            //TODO validation
-            if(providerType.getProviders() != null){
-                ListIterator<Provider> aux = providerType.getProviders().listIterator();
-                while (aux.hasNext()){
-                    Provider provider = aux.next();
-//                    provider.setStatusDelete(1);
-                    provider.update();
-                }
-            }
-//            providerType.setStatusDelete(1);
-            providerType.update();
-            return Response.updatedEntity(Json.toJson(providerType));//deletedEntity();
+            Ebean.delete(ProviderType.findById(id));
+            return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result deletes() {
         try {
-            JsonNode json = request().body().asJson();
-            if (json == null)
-                return Response.requiredJson();
-
-            Ebean.delete(ProviderType.class, JsonUtils.toArrayLong(json, "ids"));
-
+            Ebean.delete(ProviderType.finder.query().findList());
             return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
@@ -125,7 +109,6 @@ public class ProviderTypes {
     public Result findById(Long id) {
         try {
             ProviderType providerType = ProviderType.findById(id);
-            System.out.println(providerType.getNameProviderType());
             return Response.foundEntity(Json.toJson(providerType));
         }catch (Exception e) {
             return NsExceptionsUtils.find(e);
@@ -133,34 +116,15 @@ public class ProviderTypes {
     }
 
     //@CoffeAppsecurity
-    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status){
+    public Result findAll( Integer index, Integer size, String collection,
+                           String sort, String name, Integer status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = ProviderType.findAll(name, index, size, sort, pathProperties, status);
-
+            ListPagerCollection listPager = ProviderType.findAll(index, size, pathProperties, sort, name, status, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
     }
 
-//    @CoffeAppsecurity
-    public Result  getProviderTypesByName( String name, String order){
-        String strOrder = "ASC";
-        try {
-
-            if (name.equals("-1")) name = "";
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-            ProviderType providerTypes = ProviderType.findByName(name);
-
-            return Response.foundEntity(Json.toJson(providerTypes));
-        } catch (Exception e) {
-            return NsExceptionsUtils.find(e);
-        }
-    }
 }
