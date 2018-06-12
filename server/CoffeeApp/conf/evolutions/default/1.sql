@@ -203,6 +203,7 @@ create table purities (
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   status_delete                 tinyint(1) default 0 not null,
+  constraint uq_purities_name_purity unique (name_purity),
   constraint pk_purities primary key (id_purity)
 );
 

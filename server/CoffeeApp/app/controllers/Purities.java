@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
 import models.Purity;
@@ -63,7 +64,6 @@ public class Purities extends Controller{
             Purity purity = Json.fromJson(json, Purity.class);
             purity.save();
             return Response.createdEntity(Json.toJson(purity));
-
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
         }
@@ -101,9 +101,7 @@ public class Purities extends Controller{
 //    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            Purity purity = Purity.findById(id);
-//            purity.setStatusDelete(1);
-            purity.update();
+            Ebean.delete(Purity.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);
@@ -118,54 +116,13 @@ public class Purities extends Controller{
             return Response.internalServerErrorLF();
         }
     }
-
-    public Result getByNamePurity(String NamePurity, String order)
-    {
-        String strOrder = "ASC";
-        try {
-
-            if (NamePurity.equals("-1")) NamePurity = "";
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-            if(NamePurity.equals(""))
-                return Response.message("Falta el atributo [name]");
-
-            List<Purity> purities = Purity.getByNamePurity(NamePurity,strOrder);
-            return Response.foundEntity(Json.toJson(purities));
-
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
-    public Result getByStatusPurity(String StatusPurity, String order)
-    {
-        String strOrder = "ASC";
-        try {
-
-            if(!order.equals("-1")) strOrder = order;
-
-            if(!strOrder.equals("ASC") && !strOrder.equals("DESC"))
-                return Response.requiredParameter("order (ASC o DESC)");
-
-
-            List<Purity> purities = Purity.getByStatusPurity(StatusPurity,strOrder);
-            return Response.foundEntity(Json.toJson(purities));
-
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
-        }
-    }
-
+    
     //@CoffeAppsecurity
-    public Result findAll(String name, Integer index, Integer size, String sort, String collection,  Integer status){
+    public Result findAll(Integer index, Integer size, String collection, String sort, String name, Integer status,
+                          boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Purity.findAll(name, index, size, sort, pathProperties, status);
+            ListPagerCollection listPager = Purity.findAll(index, size, pathProperties, sort, name, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -173,17 +130,5 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
-    public Result findAllSearch(String name, Integer index, Integer size, String sort, String collection) {
-        try {
-
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Purity.findAllSearch(name, index, size, sort, pathProperties);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-        }catch(Exception e){
-            return ExceptionsUtils.find(e);
-        }
-    }
 
 }

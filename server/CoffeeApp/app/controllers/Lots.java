@@ -123,7 +123,7 @@ public class Lots extends Controller {
 //    @CoffeAppsecurity
     public Result deletes() {
         try {
-           Ebean.deleteAll(Lot.class, Lot.finder.query().findList());
+           Ebean.deleteAll(Lot.finder.query().findList());
             return Response.deletedEntity();
         } catch (Exception e) {
             return ExceptionsUtils.find(e);
@@ -145,7 +145,8 @@ public class Lots extends Controller {
                            String name, Long idFarm, Integer status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize, pathProperties, sort, name,  idFarm, status, deleted);
+            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize, pathProperties, sort, name, idFarm,
+                                                        status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

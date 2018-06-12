@@ -24,7 +24,7 @@ public class Purity extends AbstractEntity{
     private Long idPurity;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_purity")
+    @Column(nullable = false, name = "name_purity", unique = true)
     private String NamePurity;
 
     @Constraints.Required
@@ -94,13 +94,6 @@ public class Purity extends AbstractEntity{
     }
 
 
-    public static int getExist(String name_purity){
-        if(finder.query().where().eq("name_purity",name_purity).eq("status_delete",0).findUnique()!=null) return 0;
-        else{
-            if(finder.query().where().eq("name_purity",name_purity).eq("status_delete",1).findUnique()!=null)  return 1;
-            else return 2;
-        }
-    }
 
     public static List<Purity> getByNamePurity(String NamePurity, String order){
         String sql="select t0.id_purity c0, t0.status_delete c1, t0.name_purity c2, t0.status_purity c3," +
@@ -153,44 +146,38 @@ public class Purity extends AbstractEntity{
         return purities;
     }
 
-    public static  ListPagerCollection findAllSearch(String name, Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties) {
-        ExpressionList expressionList = finder.query().where().eq("status_delete",0);
 
-        if(pathProperties != null)
-            expressionList.apply(pathProperties);
-
-        if(name != null)
-            expressionList.icontains("name_purity", name);
-
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
-
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(), expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(), pageIndex, pageSize);
-    }
-
-
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort,PathProperties pathProperties,  Integer status){
+    public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties, String sort,
+                                               String name,  Integer status, boolean deleted){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(status != null)
-            expressionList.eq("status_purity",status);
+            expressionList.eq("statusPurity",status);
 
         if(name != null)
-            expressionList.icontains("name_purity", name);
+            expressionList.icontains("NamePurity", name);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idPurity", sort));
+            }
+        }
+
+        if( deleted )
+            expressionList.setIncludeSoftDeletes();
 
         if(index == null || size == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+            return new ListPagerCollection(expressionList.findList());
+
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(index).setMaxRows(size).findCount(),
+                expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
     }

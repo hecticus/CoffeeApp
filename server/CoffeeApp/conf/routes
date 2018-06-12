@@ -96,11 +96,11 @@ DELETE  /invoiceDetail/:id                                                      
 ###############################################################################
 #·······                       ItemType                             ··········#
 ###############################################################################
-GET     /itemType                                                               controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  id_providerType: Long ?= 0L, status: Integer?= null,  deleted: Boolean ?= false)
-GET     /itemType/search                                                        controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  id_providerType: Long ?= 0L, status: Integer?= null,  deleted: Boolean ?= false)
+GET     /itemType                                                               controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, id_providerType: Long ?= 0L, status: Integer?= null, deleted: Boolean ?= false)
+GET     /itemType/search                                                        controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, id_providerType: Long ?= 0L, status: Integer?= null, deleted: Boolean ?= false)
 GET     /itemType/new                                                           controllers.ItemTypes.preCreate()
-GET     /itemType/getByProviderTypeId/:id_ProviderType/:status                  controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  id_ProviderType: Long      , status: Integer       ,  deleted: Boolean ?= false)
-GET     /itemType/getByNameItemType/:NameItemType/:order                        controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , NameItemType: String,  id_providerType: Long ?= 0L, status: Integer?= null,  deleted: Boolean ?= false)
+GET     /itemType/getByProviderTypeId/:id_ProviderType/:status                  controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, id_ProviderType: Long      , status: Integer       , deleted: Boolean ?= false)
+GET     /itemType/getByNameItemType/:NameItemType/:order                        controllers.ItemTypes.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , NameItemType: String, id_providerType: Long ?= 0L, status: Integer?= null, deleted: Boolean ?= false)
 GET     /itemType/:id                                                           controllers.ItemTypes.findById(id : Long)
 POST    /itemType                                                               controllers.ItemTypes.create()
 PUT     /itemType                                                               controllers.ItemTypes.update()
@@ -109,14 +109,13 @@ DELETE  /itemType/:id                                                           
 ###############################################################################
 #·······                          lot                               ··········#
 ###############################################################################
-GET     /lot                                                                    controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null,  collection: String ?= null, sort: String ?= null, name: String ?= null,  idFarm:  Long ?= 0L, status: Integer ?= null,deleted: Boolean ?= false)
+GET     /lot                                                                    controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, idFarm:  Long ?= 0L, status: Integer ?= null, deleted: Boolean ?= false)
 GET     /lot/new                                                                controllers.Lots.preCreate()
-GET     /lot/search                                                             controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null,  collection: String ?= null, sort: String ?= null, name: String ?= null,  idFarm:  Long ?= 0L, status: Integer ?= null,deleted: Boolean ?= false)
-GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null,  collection: String ?= null, order: String       , NameLot: String     ,  idFarm:  Long ?= 0L, status: Integer ?= null,deleted: Boolean ?= false)
-GET     /lot/getByStatusLot/:StatusLot/:order                                   controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null,  collection: String ?= null, order: String       , name: String ?= null,  idFarm:  Long ?= 0L, StatusLot: Integer     ,deleted: Boolean ?= false)
+GET     /lot/search                                                             controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, idFarm:  Long ?= 0L, status: Integer ?= null, deleted: Boolean ?= false)
+GET     /lot/getByNameLot/:NameLot/:order                                       controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , NameLot: String     , idFarm:  Long ?= 0L, status: Integer ?= null, deleted: Boolean ?= false)
+GET     /lot/getByStatusLot/:StatusLot/:order                                   controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , name: String ?= null, idFarm:  Long ?= 0L, StatusLot: Integer     , deleted: Boolean ?= false)
 GET     /lot/:id                                                                controllers.Lots.findById(id : Long)
 POST    /lot                                                                    controllers.Lots.create()
-#TODO
 PUT     /lot                                                                    controllers.Lots.update()
 POST    /lot/deletes                                                            controllers.Lots.deletes()
 DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
@@ -124,11 +123,11 @@ DELETE  /lot/:id                                                                
 ###############################################################################
 #·······                        Purity                              ··········#
 ###############################################################################
-GET     /purity                                                                 controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /purity                                                                 controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
 GET     /purity/new                                                             controllers.Purities.preCreate()
-GET     /purity/search                                                          controllers.Purities.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.getByNamePurity(NamePurity: String, order:String )
-GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.getByStatusPurity(StatusPurity: String, order:String )
+GET     /purity/search                                                          controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
+GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , NamePurity: String  ,  status: Integer ?= null, deleted: Boolean ?= false)
+GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , name: String ?= null,  StatusPurity: Integer  , deleted: Boolean ?= false)
 GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
 PUT     /purity                                                                 controllers.Purities.update()
 POST    /purity                                                                 controllers.Purities.create()
