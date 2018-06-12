@@ -159,10 +159,10 @@ GET     /providerType/findAll/:index/:size                                      
 GET     /providerType/getProviderTypesByName/:name/:order                       controllers.ProviderTypes.findAll( index: Integer ?= null, size: Integer ?= null, collection: String ?= null, order: String       , name: String        ,  status: Integer ?= null, deleted: Boolean ?= false)
 GET     /providerType/:id                                                       controllers.ProviderTypes.findById(id : Long)
 #New creates by sm21
-POST    /providerType                                                            controllers.ProviderTypes.create()
-POST    /providerType/deletes                                                    controllers.ProviderTypes.deletes()
-PUT     /providerType/:id                                                        controllers.ProviderTypes.update(id : Long)
-DELETE  /providerType/:id                                                        controllers.ProviderTypes.delete(id : Long)
+POST    /providerType                                                           controllers.ProviderTypes.create()
+POST    /providerType/deletes                                                   controllers.ProviderTypes.deletes()
+PUT     /providerType/:id                                                       controllers.ProviderTypes.update(id : Long)
+DELETE  /providerType/:id                                                       controllers.ProviderTypes.delete(id : Long)
 
 ###############################################################################
 #·······                     Store                                  ··········#
@@ -180,8 +180,8 @@ DELETE  /store/:id                                                              
 ###############################################################################
 #·······                       Unit                                 ··········#
 ###############################################################################
-GET     /unit                                                                   controllers.Units.findAll(name: String ?= null, index: Integer ?= null, size: Integer ?= null, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
-GET     /unit/findAll/:index/:size                                              controllers.Units.findAll(name: String ?= null, index: Integer, size: Integer, sort: String ?= null, collection: String ?= null, status: Integer ?= null)
+GET     /unit                                                                   controllers.Units.findAll( index: Integer ?= null, size: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
+GET     /unit/findAll/:index/:size                                              controllers.Units.findAll( index: Integer        , size: Integer        , collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
 GET     /unit/:id                                                               controllers.Units.findById(id : Long)
 PUT     /unit                                                                   controllers.Units.update()
 POST    /unit                                                                   controllers.Units.create()

@@ -41,6 +41,7 @@ public class Unit extends AbstractEntity {
         itemTypes = new ArrayList<>();
     }
 
+    //Setter and Getter
     public Long getIdUnit() {
         return idUnit;
     }
@@ -74,45 +75,41 @@ public class Unit extends AbstractEntity {
         this.itemTypes = itemTypes;
     }
 
+    //Metodos Definidos
     public static Unit findById(Long id){
         return finder.byId(id);
     }
 
-    public static int getExist(String name_unit){
-        if(finder.query().where().eq("name_unit",name_unit).eq("status_delete",0).findUnique()!=null) return 0;
-        else{
-            if(finder.query().where().eq("name_unit",name_unit).eq("status_delete",1).findUnique()!=null)  return 1;
-            else return 2;
-        }
-    }
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+                                              String sort, String name, Integer status, boolean deleted){
 
-    public static boolean existName(String name_unit){
-        if(finder.query().where().eq("name_unit",name_unit).findUnique()!= null) return true;
-        return false;
-    }
-
-    public static boolean existId(Long id) {
-        if(InvoiceDetail.findById(id) != null ) return true;
-        return false;
-    }
-
-    public static ListPagerCollection findAll(String name, Integer index, Integer size, String sort, PathProperties pathProperties, Integer status){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
-        if(status != null)
-            expressionList.eq("status_unit",status);
-
         if(name != null)
             expressionList.icontains("name_unit", name);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
+        if(deleted)
+            expressionList.setIncludeSoftDeletes();
+
+        if(sort != null) {
+            if(sort.contains(" ")) {
+                String []  aux = sort.split(" ", 2);
+                expressionList.orderBy(sort( aux[0], aux[1]));
+            }else {
+                expressionList.orderBy(sort("idStore", sort));
+            }
+        }
+
+        if(status != null)
+            expressionList.eq("statusStore", status );
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
+
+
         return new ListPagerCollection(
                 expressionList.setFirstRow(index).setMaxRows(size).findList(),
                 expressionList.setFirstRow(index).setMaxRows(size).findCount(),

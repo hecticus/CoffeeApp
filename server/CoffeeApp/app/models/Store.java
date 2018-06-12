@@ -41,6 +41,7 @@ public class Store extends AbstractEntity{
         invoiceDetails = new ArrayList<>();
     }
 
+    //Setter and Getter
     public Long getIdStore() {
         return idStore;
     }
@@ -74,6 +75,7 @@ public class Store extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
+    //Metodos Definidos
     public static Store findById(Long id){
         return finder.byId(id);
     }
