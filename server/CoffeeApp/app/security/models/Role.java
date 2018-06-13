@@ -2,6 +2,7 @@ package security.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import controllers.utils.ListPagerCollection;
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
@@ -41,50 +42,6 @@ public class Role extends AbstractEntity{
 
     private static Finder<Long, Role> finder = new Finder<>(Role.class);
 
-    public static Role findById(Long id){
-        return finder.byId(id);
-    }
-
-    public static Role findByName(String name){
-        return finder.query().where().eq("name", name).findUnique();
-    }
-
-    public static List<Role> findAllByUserId(Long authUserId){
-        List<Role> roles = finder
-                .query()
-                .where()
-                .eq("authUsers.id", authUserId)
-                .findList();
-
-        roles.addAll(finder
-                .query()
-                .where()
-                .eq("groups.authUsers.id", authUserId)
-                .findList());
-        return roles;
-    }
-
-    //Se modifico no estoy muy claro Page List
-    public static PagedList findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
-        ExpressionList expressionList = finder.query().where();
-
-        if(pathProperties.hasPath(pathProperties.toString()))
-            expressionList.apply(pathProperties);
-
-        if(sort != null)
-            expressionList.orderBy(sort.startsWith("-") ? sort.substring(1) + " desc" : sort + " asc");
-
-        if(pageIndex == null || pageSize == null)
-            return expressionList.findPagedList();
-        return expressionList.findPagedList();
-    }
-
-    public static void deleteAll(){
-        List<Role> roles = finder.all();
-        if( roles != null && !roles.isEmpty())
-            Ebean.deleteAll(roles);
-    }
-
     public String getName() {
         return name;
     }
@@ -123,5 +80,67 @@ public class Role extends AbstractEntity{
 
     public void setAuthUsers(List<AuthUser> authUsers) {
         this.authUsers = authUsers;
+    }
+
+    public static void deleteAll(){
+        List<Role> roles = finder.all();
+        if(roles != null && !roles.isEmpty())
+            Ebean.deleteAll(roles);
+    }
+
+    public static Role findById(Long id){
+        return finder.byId(id);
+    }
+
+    public static Role findByName(String name){
+        return finder.query().where().eq("name", name).findUnique();
+    }
+
+    public static List<Role> findAllByUserId(Long authUserId){
+        List<Role> roles = finder
+                .query()
+                .where()
+                .eq("authUsers.id", authUserId)
+                .findList();
+
+        roles.addAll(finder
+                .query()
+                .where()
+                .eq("groups.authUsers.id", authUserId)
+                .findList());
+        return roles;
+    }
+
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+                                              String sort, String name, boolean deleted) {
+
+        ExpressionList expressionList = finder.query().where();
+
+        if (pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if (name != null)
+            expressionList.startsWith("name", name);
+
+        if (deleted)
+            expressionList.setIncludeSoftDeletes();
+
+        if (sort != null) {
+            if (sort.contains(" ")) {
+                String[] aux = sort.split(" ", 2);
+                expressionList.orderBy(sort(aux[0], aux[1]));
+            } else {
+                expressionList.orderBy(sort("name", sort));
+            }
+        }
+
+        if (index == null || size == null)
+            return new ListPagerCollection(expressionList.findList());
+
+
+        return new ListPagerCollection(expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                index, size);
+
     }
 }

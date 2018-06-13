@@ -3,10 +3,14 @@ package models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+import controllers.utils.ListPagerCollection;
+import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
 import controllers.multimediaUtils.Multimedia;
+import io.ebean.annotation.JsonIgnore;
+import io.ebean.text.PathProperties;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
@@ -32,9 +36,10 @@ public class User extends AbstractEntity {
     private Long id;
 
     @Constraints.Required
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)//, cascade = CascadeType.ALL)
     @JoinColumn(name = "auth_user_id", referencedColumnName = "id", updatable = false ) // se debe especificar "name" y "referencedColumnName" para que "updatable" funcione
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private AuthUser authUser;
 
     @Formula(select="(select concat(first_name,' ',last_name) from user u where u.id = ${ta}.id) ")
@@ -63,36 +68,6 @@ public class User extends AbstractEntity {
     protected DateTime lastLogin;
 
     private static Finder<Long, User> finder = new Finder<>(User.class);
-
-    @PrePersist
-    public void createAuthUser() throws MySQLIntegrityConstraintViolationException {
-        if(this.authUser != null) {
-            this.authUser.setPassword(this.authUser.getPassword()); //TODO ENCRYP
-            this.authUser.insert();
-            this.id = this.authUser.getId();
-        }else{
-            throw new MySQLIntegrityConstraintViolationException("Violation constrain: Cannot add or update a child row: a foreign key constraint fails");
-        }
-    }
-
-    @PreUpdate
-    public void updateAuthUser(){
-        if(this.id != null) {
-            AuthUser authUser = User.findById(this.id).getAuthUser();
-            authUser.setEmail(this.authUser.getEmail());
-            authUser.update();
-            this.authUser = authUser;
-        }
-    }
-
-    //No clear
-    public static User findById(Long id){
-        return finder.byId(id);
-    }
-
-    public static User findByMediaProfileId(Long mediaProfileId){
-        return finder.query().where().eq("mediaProfile.id", mediaProfileId).findUnique();
-    }
 
     public Long getId() {
         return id;
@@ -142,39 +117,57 @@ public class User extends AbstractEntity {
         this.lastLogin = lastLogin;
     }
 
-    public User findByEmail(String email){
-        List<User> users = finder.query()
-                .where()
-                .eq("email", email)
-                .findList();
-
-        if(!users.isEmpty())
-            return users.get(0);
-        return null;
-    }
-
-    public User findUniqueByEmail(String email){
-        return finder.query()
-                .where()
-                .eq("email", email)
-                .findUnique();
-    }
-
-    public User findUniqueByEmail(String email, Long id){
-        return finder.query()
-                .where()
-                .ne("id", id)
-                .eq("email", email)
-                .findUnique();
-    }
-
-    
-    public static JsonNode uploadPhoto(JsonNode request)
-    {
+    public static JsonNode uploadPhoto(JsonNode request) {
         Multimedia multimedia = new Multimedia();
-
         return multimedia.uploadPhoto(request);
+    }
+
+    public static User findById(Long id){
+        return finder.byId(id);
+    }
+
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+                                              String sort, String name, String firstName, String lastName, boolean deleted) {
+
+        ExpressionList expressionList = finder.query().where();
+
+        if (pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if (name != null)
+            expressionList.startsWith("name", name);
+
+        if (firstName != null)
+            expressionList.startsWith("firstName", name);
+
+        if (lastName != null)
+            expressionList.startsWith("lastName", name);
+
+        if (deleted)
+            expressionList.setIncludeSoftDeletes();
+
+        if (sort != null) {
+            if (sort.contains(" ")) {
+                String[] aux = sort.split(" ", 2);
+                expressionList.orderBy(sort(aux[0], aux[1]));
+            } else {
+                expressionList.orderBy(sort("id", sort));
+            }
+        }
+
+        if (index == null || size == null)
+            return new ListPagerCollection(expressionList.findList());
+
+
+        return new ListPagerCollection(expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                index, size);
 
     }
+
+    public static User findByMediaProfileId(Long mediaProfileId) {
+        return finder.query().where().eq("mediaProfile.id", mediaProfileId).findUnique();
+    }
+
 }
 

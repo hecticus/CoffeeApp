@@ -3,9 +3,14 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.responseUtils.ResponseCollection;
+import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
+import io.ebean.Ebean;
+import io.ebean.annotation.Transactional;
+import io.ebean.text.PathProperties;
 import models.User;
 
 import controllers.responseUtils.ExceptionsUtils;
@@ -34,7 +39,7 @@ public class Users extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-
+    @Transactional
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -47,17 +52,16 @@ public class Users extends Controller {
                 return Response.invalidParameter(formAuth.errorsAsJson());
 
             AuthUser authUsers = Json.fromJson(authUserNode, AuthUser.class);
-            authUsers.insert();
+            authUsers.save();
 
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
-
             node.set("authUser",  Json.toJson(authUsers));
 
             Form<User> form = formFactory.form(User.class).bind(node);
             if (form.hasErrors())
                 return Response.invalidParameter(form.errorsAsJson());
             User user = Json.fromJson(node, User.class);
-            user.insert();
+            user.save();
             return Response.createdEntity(Json.toJson(user));
         } catch (Exception e) {
             return NsExceptionsUtils.create(e);
@@ -77,7 +81,6 @@ public class Users extends Controller {
             user.setId(idUser);
             user.update();
 
-
             return Response.createdEntity(Json.toJson(user));
         } catch (Exception e) {
             return NsExceptionsUtils.create(e);
@@ -86,12 +89,9 @@ public class Users extends Controller {
 
     public Result delete(Long id) {
         try {
-            User user = User.findById(id);
-//            user.setStatusDelete(1);
-            user.getAuthUser().setDeleted(true);
-            user.getAuthUser().update();
-            user.update();
-            return Response.foundEntity(Json.toJson(user));
+            Ebean.delete(User.findById(id).getAuthUser());
+            Ebean.delete(User.findById(id));
+            return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.find(e);
         }
@@ -106,6 +106,17 @@ public class Users extends Controller {
         }
     }
 
+    //@CoffeAppsecurity
+    public Result findAll(Integer index, Integer size, String collection,
+                          String sort, String name, String firstName, String lastName, boolean deleted){
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = User.findAll(index, size, pathProperties, sort, name, firstName, lastName, deleted);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
 
     @CoffeAppsecurity
     public Result uploadPhoto(JsonNode request) {

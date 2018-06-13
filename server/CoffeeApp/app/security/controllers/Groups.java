@@ -1,13 +1,14 @@
 package security.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ResponseCollection;
+import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
-import models.User;
+import io.ebean.Ebean;
+import io.ebean.text.PathProperties;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -64,15 +65,14 @@ public class Groups  extends Controller {
         }
     }
 
-//    public Result delete(Long id) {
-//        try {
-//            Group group = Group.findById(id);
-//            group.delete();
-//            return Response.foundEntity(Json.toJson(user));
-//        } catch (Exception e) {
-//            return NsExceptionsUtils.find(e);
-//        }
-//    }
+    public Result delete(Long id) {
+        try {
+            Ebean.delete(Group.findById(id));
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.find(e);
+        }
+    }
 
     public Result findById(Long id) {
         try {
@@ -82,7 +82,17 @@ public class Groups  extends Controller {
         }
     }
 
-
+    //@CoffeAppsecurity
+    public Result findAll(Integer index, Integer size, String collection,
+                          String sort, String name, boolean deleted){
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = Group.findAll(index, size, pathProperties, sort, name, deleted);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
 
 
 }

@@ -1,8 +1,10 @@
 package security.models;
 
 //import com.avaje.ebean.Ebean;
+import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -78,5 +80,38 @@ public class Group extends AbstractEntity {
 
     public void setAuthUsers(List<AuthUser> authUsers) {
         this.authUsers = authUsers;
+    }
+
+    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+                                              String sort, String name, boolean deleted) {
+
+        ExpressionList expressionList = finder.query().where();
+
+        if (pathProperties != null && !pathProperties.getPathProps().isEmpty())
+            expressionList.apply(pathProperties);
+
+        if (name != null)
+            expressionList.startsWith("name", name);
+
+        if (deleted)
+            expressionList.setIncludeSoftDeletes();
+
+        if (sort != null) {
+            if (sort.contains(" ")) {
+                String[] aux = sort.split(" ", 2);
+                expressionList.orderBy(sort(aux[0], aux[1]));
+            } else {
+                expressionList.orderBy(sort("name", sort));
+            }
+        }
+
+        if (index == null || size == null)
+            return new ListPagerCollection(expressionList.findList());
+
+
+        return new ListPagerCollection(expressionList.setFirstRow(index).setMaxRows(size).findList(),
+                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
+                index, size);
+
     }
 }

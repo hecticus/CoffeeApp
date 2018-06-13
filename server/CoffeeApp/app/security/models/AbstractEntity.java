@@ -59,4 +59,14 @@ public abstract class AbstractEntity extends Model {
         this.updatedAt = updatedAt;
     }
 
+    public static String sort(String sort, String order) {
+        if (order.equalsIgnoreCase("asc")  || order.equalsIgnoreCase("desc")) {
+            if (order.equalsIgnoreCase("desc") )
+                return sort + " desc" ;
+            return sort + " asc";
+        }else{
+            return null;
+        }
+    }
+
 }

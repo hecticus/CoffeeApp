@@ -99,12 +99,12 @@ public class Unit extends AbstractEntity {
                 String []  aux = sort.split(" ", 2);
                 expressionList.orderBy(sort( aux[0], aux[1]));
             }else {
-                expressionList.orderBy(sort("idStore", sort));
+                expressionList.orderBy(sort("idUnit", sort));
             }
         }
 
         if(status != null)
-            expressionList.eq("statusStore", status );
+            expressionList.eq("statusUnit", status );
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());

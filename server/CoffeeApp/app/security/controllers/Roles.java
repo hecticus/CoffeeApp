@@ -4,9 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ResponseCollection;
+import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
+import io.ebean.Ebean;
+import io.ebean.text.PathProperties;
 import models.User;
 import play.data.Form;
 import play.data.FormFactory;
@@ -64,18 +68,14 @@ public class Roles extends Controller {
         }
     }
 
-//    public Result delete(Long id) {
-//        try {
-//            User user = User.findById(id);
-//            user.setStatusDelete(1);
-//            user.getAuthUser().setDeleted(true);
-//            user.getAuthUser().update();
-//            user.update();
-//            return Response.foundEntity(Json.toJson(user));
-//        } catch (Exception e) {
-//            return NsExceptionsUtils.find(e);
-//        }
-//    }
+    public Result delete(Long id) {
+        try {
+            Ebean.delete(Role.findById(id));
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.find(e);
+        }
+    }
 
     public Result findById(Long id) {
         try {
@@ -85,6 +85,16 @@ public class Roles extends Controller {
         }
     }
 
-
+    //@CoffeAppsecurity
+    public Result findAll(Integer index, Integer size, String collection,
+                          String sort, String name, boolean deleted){
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = Role.findAll(index, size, pathProperties, sort, name, deleted);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
 
 }

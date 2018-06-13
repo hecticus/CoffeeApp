@@ -26,31 +26,31 @@ POST    /oauth/revokeToken                                                      
 #POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
 
 ###############################################################################
-#·······                     oAuthUser                              ··········#
+#·······                     User                                   ··········#
 ###############################################################################
-#GET     /user                                                                   controllers.user.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+GET     /user                                                                   controllers.Users.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, firstName: String ?= null, lastName: String ?= null,  deleted: Boolean ?= false )
 GET     /user/:id                                                               controllers.Users.findById(id : Long)
 POST    /user                                                                   controllers.Users.create()
 PUT     /user/:id                                                               controllers.Users.update(id : Long)
 DELETE  /user/:id                                                               controllers.Users.delete(id : Long)
 
 ###############################################################################
-#·······                     oAuthUser                              ··········#
+#·······                     Roles                                  ··········#
 ###############################################################################
-#GET     /roles                                                                   security.controllers.Roles.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+GET     /roles                                                                   security.controllers.Roles.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, deleted: Boolean ?= false )
 GET     /roles/:id                                                               security.controllers.Roles.findById(id : Long)
 POST    /roles                                                                   security.controllers.Roles.create()
 PUT     /roles/:id                                                               security.controllers.Roles.update(id : Long)
-#DELETE  /roles/:id                                                               security.controllers.Roles.delete(id : Long)
+DELETE  /roles/:id                                                               security.controllers.Roles.delete(id : Long)
 
 ###############################################################################
-#·······                     oAuthUser                              ··········#
+#·······                     Group                                  ··········#
 ###############################################################################
-#GET     /group                                                                   controllers.Group.findAll(name: String ?= null, pageindex: Integer ?= null, pagesize: Integer ?= null, sort: String ?= null, collection: String ?= null, id_provider: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, all: Integer ?= 0)
+GET     /group                                                                   security.controllers.Groups.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, deleted: Boolean ?= false )
 GET     /group/:id                                                               security.controllers.Groups.findById(id : Long)
 POST    /group                                                                   security.controllers.Groups.create()
 PUT     /group/:id                                                               security.controllers.Groups.update(id : Long)
-#DELETE  /group/:id                                                               security.controllers.Groups.delete(id : Long)
+DELETE  /group/:id                                                               security.controllers.Groups.delete(id : Long)
 
 ###############################################################################
 #·······                        Farm                                ··········#
