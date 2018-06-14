@@ -22,8 +22,6 @@ public class CoffeeSecurity  extends Action<CoffeeSecurity>{
     @Inject
     public BaseGrant baseGrant;
 
-
-
     //Aqui debo crear el nuevo rbac
     @Inject
         CoffeeSecurity(Config config){

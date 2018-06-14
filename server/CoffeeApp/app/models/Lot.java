@@ -45,14 +45,14 @@ public class Lot extends AbstractEntity{
     @Column(nullable = false, name = "heigh_lot")
     private Double heighLot;
 
-    @Range(min = 0, max = 1)
-    @Column(columnDefinition = "integer default 1" , name = "status_lot")
-    private Integer statusLot;
-
     @Constraints.Required
     @Constraints.Min(0)
     @Column(nullable = false, name = "price_lot")
     private BigDecimal priceLot;
+
+    @Range(min = 0, max = 1)
+    @Column(columnDefinition = "integer default 1" , name = "status_lot")
+    private Integer statusLot;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails;
