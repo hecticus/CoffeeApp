@@ -10,6 +10,7 @@ import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
 import controllers.multimediaUtils.Multimedia;
 import io.ebean.annotation.JsonIgnore;
+import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
 import org.joda.time.DateTime;
 import play.data.format.Formats;
@@ -17,6 +18,7 @@ import play.data.validation.Constraints;
 import security.models.AuthUser;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /*
@@ -36,7 +38,7 @@ public class User extends AbstractEntity {
     private Long id;
 
     @Constraints.Required
-    @OneToOne(optional = false)//, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     @JoinColumn(name = "auth_user_id", referencedColumnName = "id", updatable = false ) // se debe especificar "name" y "referencedColumnName" para que "updatable" funcione
     @PrimaryKeyJoinColumn
     @JsonIgnore
@@ -61,11 +63,12 @@ public class User extends AbstractEntity {
     @Embedded
     private Contact contact;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreatedTimestamp
-    @Column(columnDefinition = "datetime", updatable = false, nullable = false)//, insertable = false)
-    protected DateTime lastLogin;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+    @UpdatedTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    protected ZonedDateTime lastLogin;
 
     private static Finder<Long, User> finder = new Finder<>(User.class);
 
@@ -109,11 +112,11 @@ public class User extends AbstractEntity {
         this.lastName = lastName;
     }
 
-    public DateTime getLastLogin() {
+    public ZonedDateTime getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(DateTime lastLogin) {
+    public void setLastLogin(ZonedDateTime lastLogin) {
         this.lastLogin = lastLogin;
     }
 

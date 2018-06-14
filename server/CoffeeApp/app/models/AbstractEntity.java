@@ -20,6 +20,9 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
 
+    @SoftDelete
+    private boolean statusDelete;
+
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp
@@ -31,12 +34,6 @@ public abstract class AbstractEntity extends Model {
     @UpdatedTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
-
-//    @Column(nullable = false)
-//    private Integer statusDelete;
-
-    @SoftDelete
-    private boolean statusDelete;
 
     public boolean isStatusDelete() {
         return statusDelete;
@@ -50,7 +47,6 @@ public abstract class AbstractEntity extends Model {
         return createdAt;
     }
 
-    //@JsonIgnore
     public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -59,7 +55,6 @@ public abstract class AbstractEntity extends Model {
         return updatedAt;
     }
 
-    //@JsonIgnore
     public void setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }

@@ -32,17 +32,17 @@ public class SecurityPin extends AbstractEntity {
     @JsonIgnore
     private String pin;
 
+    @Transient
+    private Integer expiresIn;
+
+    private Integer tries;
+
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime expiration;
-
-    @Transient
-    private Integer expiresIn;
-
-    private Integer tries;
 
     private static Finder<Long, SecurityPin> finder = new Finder<>(SecurityPin.class);
 

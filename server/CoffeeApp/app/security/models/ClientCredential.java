@@ -47,6 +47,7 @@ public class ClientCredential extends AbstractEntity {
     @Column(columnDefinition = "text")
     private String authCallbackUri;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     private static Finder<Long, ClientCredential> finder = new Finder<>(ClientCredential.class);

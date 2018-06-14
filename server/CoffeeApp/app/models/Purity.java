@@ -28,13 +28,13 @@ public class Purity extends AbstractEntity{
     private String NamePurity;
 
     @Constraints.Required
+    @Column(nullable = false, name = "discountRate_purity")
+    private Integer DiscountRatePurity;
+
+    @Constraints.Required
     @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_purity")
     private Integer statusPurity;
-
-    @Constraints.Required
-    @Column(nullable = false, name = "discountRate_purity")
-    private Integer DiscountRatePurity;
 
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurities;

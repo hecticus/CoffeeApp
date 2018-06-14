@@ -25,6 +25,11 @@ public class Lot extends AbstractEntity{
     @Column(name = "id_lot")
     private Long idLot;
 
+    @ManyToOne
+    @Constraints.Required
+    @JoinColumn(name = "id_farm", nullable = false)
+    private Farm farm;
+
     @Constraints.Required
     @Constraints.MaxLength(255)
     @Column(nullable = false, name = "name_lot", length = 255)
@@ -43,11 +48,6 @@ public class Lot extends AbstractEntity{
     @Range(min = 0, max = 1)
     @Column(columnDefinition = "integer default 1" , name = "status_lot")
     private Integer statusLot;
-
-    @ManyToOne
-    @Constraints.Required
-    @JoinColumn(name = "id_farm", nullable = false)
-    private Farm farm;
 
     @Constraints.Required
     @Constraints.Min(0)

@@ -25,6 +25,17 @@ public class ItemType extends AbstractEntity{
     @Column(name = "id_itemType")
     private Long idItemType;
 
+    @ManyToOne
+    @JsonBackReference
+    @Constraints.Required
+    @JoinColumn(name = "id_providerType", nullable = false)
+    private ProviderType providerType;
+
+    @ManyToOne
+    @Constraints.Required
+    @JoinColumn(name = "id_unit", nullable = false)
+    private Unit unit;
+
     @Constraints.Required
     @Column(nullable = false, name = "name_itemType", unique = true)
     private String nameItemType;
@@ -38,21 +49,8 @@ public class ItemType extends AbstractEntity{
     @Column(nullable = false, name = "status_itemType")
     private Integer statusItemType;
 
-    @ManyToOne
-    @JsonBackReference
-    @Constraints.Required
-    @JoinColumn(name = "id_providerType", nullable = false)
-    private ProviderType providerType;
-
-    @ManyToOne
-    @Constraints.Required
-    @JoinColumn(name = "id_unit", nullable = false)
-    private Unit unit;
-
     @OneToMany(mappedBy = "itemType", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails;
-
-
 
     private static Finder<Long, ItemType> finder = new Finder<>(ItemType.class);
 

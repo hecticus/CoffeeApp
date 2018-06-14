@@ -44,15 +44,12 @@ public class Invoice extends AbstractEntity{
     @Constraints.Required
     private Provider provider;
 
+    @Formula(select = "(SELECT SUM( t.amount_invoiceDetail*t.price_ItemTypeByLot + t.amount_invoiceDetail*cost_ItemType) FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
+    private BigDecimal totalInvoice;
+
     @Column( name = "status_invoice")
     @Range(min = 0, max = 3)
     private Integer statusInvoice;
-
-    @OneToMany(mappedBy = "invoice")
-    private List<InvoiceDetail> invoiceDetails;
-
-    @Formula(select = "(SELECT SUM( t.amount_invoiceDetail*t.price_ItemTypeByLot + t.amount_invoiceDetail*cost_ItemType) FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
-    private BigDecimal totalInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -65,6 +62,9 @@ public class Invoice extends AbstractEntity{
     @UpdatedTimestamp
     @Column(name = "closedDate_invoice", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private ZonedDateTime closedDateInvoice;
+
+    @OneToMany(mappedBy = "invoice")
+    private List<InvoiceDetail> invoiceDetails;
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);

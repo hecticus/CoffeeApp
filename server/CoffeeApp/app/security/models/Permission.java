@@ -20,6 +20,7 @@ public class Permission extends AbstractEntity  {
     @Column(length = 100, nullable = false, unique = true)
     private String name;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     @ManyToMany(cascade = CascadeType.ALL)

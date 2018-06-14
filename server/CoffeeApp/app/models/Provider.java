@@ -34,6 +34,11 @@ public class Provider extends AbstractEntity{
     @Column(name = "id_Provider")
     private Long idProvider;
 
+    @ManyToOne(optional = false)
+    @JsonBackReference
+    @Constraints.Required
+    private ProviderType providerType;
+
     @Constraints.Required
     @Constraints.MaxLength(255)
     @Column(unique=true, nullable = false, name = "identificationDoc_Provider")
@@ -63,11 +68,6 @@ public class Provider extends AbstractEntity{
     @Column(name = "photo_Provider")
     private String photoProvider;
 
-    @ManyToOne(optional = false)
-    @JsonBackReference
-    @Constraints.Required
-    private ProviderType providerType;
-
     @Constraints.Required
     @Constraints.MaxLength(50)
     @Column(nullable = false, name = "contactName_Provider", length = 50, unique = true)
@@ -87,7 +87,6 @@ public class Provider extends AbstractEntity{
         statusProvider = 1;
         invoices = new ArrayList<>();
     }
-
 
     public Long getIdProvider() {
         return idProvider;

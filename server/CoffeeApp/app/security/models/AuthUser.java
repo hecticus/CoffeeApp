@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.ebean.Ebean;
 import io.ebean.Finder;
-import io.ebean.PagedList;
 import io.ebean.annotation.SoftDelete;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
@@ -36,28 +35,25 @@ public class AuthUser extends AbstractEntity{
     @Column(columnDefinition = "text", nullable = false) //TODO cambiar a BLOB
     protected String password;
 
-//    @Constraints.Required
-////    @Column(columnDefinition = "tinyint default 0",  insertable = false) //nullable = false,
-////    protected Boolean archived = false;
     @SoftDelete
-    boolean deleted;
+    private boolean deleted;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
     protected ZonedDateTime lastLogin;
+
+    @OneToOne(mappedBy = "authUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    protected SecurityPin SecurityPin;
 
     @ManyToMany
     protected List<Role> roles;
 
     @ManyToMany
     protected List<Group> groups;
-
-    @OneToOne(mappedBy = "authUser", cascade = CascadeType.ALL)
-    @JsonIgnore
-    protected SecurityPin SecurityPin;
 
     @OneToMany(mappedBy = "authUser", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -76,6 +72,13 @@ public class AuthUser extends AbstractEntity{
             Ebean.deleteAll(authUsers);
     }
 
+    public boolean isStatusDelete() {
+        return deleted;
+    }
+
+    public void setStatusDelete(boolean statusDelete) {
+        this.deleted = statusDelete;
+    }
 
     public String getUsername() {
         return username;
@@ -110,7 +113,6 @@ public class AuthUser extends AbstractEntity{
                 .findUnique();
     }
 
-
     public static void delete(Long id) {
         AuthUser entity = finder.byId(id);
         if(entity != null)
@@ -137,14 +139,6 @@ public class AuthUser extends AbstractEntity{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public ZonedDateTime getLastLogin() {
@@ -187,13 +181,6 @@ public class AuthUser extends AbstractEntity{
         this.securityTokens = securityTokens;
     }
 
-//    public PagedList findAll(String name, Integer pageindex, Integer pagesize, String sort, String username, String email,
-//                             String password, Boolean archived, String collection, List<Role> roles, List<Group> groups ){
-//
-//
-//
-//
-//
-//    }
+
 }
 

@@ -66,9 +66,6 @@ public class InvoiceDetail  extends AbstractEntity{
     @Column(nullable = false, name = "amount_invoiceDetail")
     private BigDecimal amountInvoiceDetail; // cantidad por la que multiplica
 
-    @Column(name = "note_invoiceDetail", columnDefinition = "text")
-    private String noteInvoiceDetail;
-
     @Constraints.Required
     @Constraints.MaxLength(100)
     @Column(nullable = false, name = "nameReceived_invoiceDetail", length = 100)
@@ -78,6 +75,9 @@ public class InvoiceDetail  extends AbstractEntity{
     @Constraints.MaxLength(100)
     @Column(nullable = false, name = "nameDelivered_invoiceDetail", length = 100)
     private String nameDeliveredInvoiceDetail;
+
+    @Column(name = "note_invoiceDetail", columnDefinition = "text")
+    private String noteInvoiceDetail;
 
     @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_invoiceDetail")

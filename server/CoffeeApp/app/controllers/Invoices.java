@@ -246,7 +246,7 @@ public class Invoices extends Controller {
 
             List<Invoice> invoices = Invoice.getOpenByProviderId(idProvider);
 
-            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd HH:mm:ss").equals(
+            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString().equals(
                     invoices.get(0).getStartDateInvoice())){
                 openInvoice = invoices.get(0);
             } else {
@@ -260,7 +260,7 @@ public class Invoices extends Controller {
             invoiceDetails.add(invoiceDetail);
             openInvoice.setInvoiceDetails(invoiceDetails);
 
-            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString("yyyy-MM-dd HH:mm:ss").equals(
+            if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString().equals(
                     invoices.get(0).getStartDateInvoice())){
                 openInvoice.update();
             } else {

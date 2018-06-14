@@ -27,23 +27,22 @@ public class InvoiceDetailPurity  extends AbstractEntity{
     @JoinColumn(name = "id_purity", nullable = false)
     private Purity purity;
 
-    @Constraints.Required
-    @Column(nullable = false, name = "valueRate_invoiceDetail_purity")
-    private Integer valueRateInvoiceDetailPurity;
-
-    @Constraints.Required
-    @Column(nullable = false, name = "totalDiscount_purity")
-    private Integer totalDiscountPurity;
-
-    @Constraints.Required
-    @Column(nullable = false, name = "discountRate_purity")
-    private Integer discountRatePurity;
-
     @ManyToOne
     @JoinColumn(name = "id_invoiceDetail")
     @Constraints.Required
     private InvoiceDetail invoiceDetail;
 
+    @Constraints.Required
+    @Column(nullable = false, name = "valueRate_invoiceDetail_purity")
+    private Integer valueRateInvoiceDetailPurity;
+
+    @Constraints.Required
+    @Column(nullable = false, name = "discountRate_purity")
+    private Integer discountRatePurity;
+
+    @Constraints.Required
+    @Column(nullable = false, name = "totalDiscount_purity")
+    private Integer totalDiscountPurity;
 
     @Constraints.Required
     @Range(min = 0, max = 1)
