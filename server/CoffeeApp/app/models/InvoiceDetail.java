@@ -8,7 +8,6 @@ import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.text.PathProperties;
-import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.libs.Json;
@@ -16,6 +15,7 @@ import play.libs.Json;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,27 +54,17 @@ public class InvoiceDetail  extends AbstractEntity{
     @Constraints.Min(0)
     @Constraints.Required
     @Column(nullable = false, name = "price_ItemTypeByLot")
-    private BigDecimal priceItemTypeByLot; //esta en lote desconozco la relacion
+    private BigDecimal priceItemTypeByLot; //esta en lote desconozco la relacion Toma de Cosecha
 
     @Constraints.Required
     @Constraints.Min(0)
     @Column(nullable = false, name = "cost_ItemType")
-    private BigDecimal costItemType;//esta en Item Type desconozco la relacion
-
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreatedTimestamp
-    @Column(nullable = false, name = "dueDate_invoiceDetail", columnDefinition =
-            "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)  //, insertable = false)
-    private DateTime startDateInvoiceDetail;
+    private BigDecimal costItemType;//esta en Item Type desconozco la relacion Toma del app para vender
 
     @Constraints.Required
     @Constraints.Min(0)
     @Column(nullable = false, name = "amount_invoiceDetail")
-    private BigDecimal amountInvoiceDetail;
-
-    @Column(name = "isFreight_invoiceDetail")
-    private boolean freightInvoiceDetail;
+    private BigDecimal amountInvoiceDetail; // cantidad por la que multiplica
 
     @Column(name = "note_invoiceDetail", columnDefinition = "text")
     private String noteInvoiceDetail;
@@ -92,6 +82,16 @@ public class InvoiceDetail  extends AbstractEntity{
     @Range(min = 0, max = 1)
     @Column(nullable = false, name = "status_invoiceDetail")
     private Integer statusInvoiceDetail;
+
+    @Column(name = "isFreight_invoiceDetail")
+    private boolean freightInvoiceDetail;
+
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedTimestamp
+    @Column(nullable = false, name = "dueDate_invoiceDetail", columnDefinition =
+            "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false, insertable = false)
+    private ZonedDateTime startDateInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
@@ -163,11 +163,11 @@ public class InvoiceDetail  extends AbstractEntity{
         this.costItemType = costItemType;
     }
 
-    public DateTime getStartDateInvoiceDetail() {
+    public ZonedDateTime getStartDateInvoiceDetail() {
         return startDateInvoiceDetail;
     }
 
-    public void setStartDateInvoiceDetail(DateTime startDateInvoiceDetail) {
+    public void setStartDateInvoiceDetail(ZonedDateTime startDateInvoiceDetail) {
         this.startDateInvoiceDetail = startDateInvoiceDetail;
     }
 

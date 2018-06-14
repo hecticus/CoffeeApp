@@ -295,7 +295,6 @@ public class Invoices extends Controller {
                 }
             }
         }
-
         openInvoice.setTotalInvoice(Invoice.calcularTotalInvoice(openInvoice.getIdInvoice()));
         openInvoice.update();
         return Response.createdEntity(Json.toJson(openInvoice));

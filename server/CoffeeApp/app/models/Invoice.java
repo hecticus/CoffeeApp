@@ -22,6 +22,7 @@ import play.data.validation.Constraints;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,23 +48,23 @@ public class Invoice extends AbstractEntity{
     @Range(min = 0, max = 3)
     private Integer statusInvoice;
 
+    @OneToMany(mappedBy = "invoice")
+    private List<InvoiceDetail> invoiceDetails;
+
+    @Formula(select = "(SELECT SUM( t.amount_invoiceDetail*t.price_ItemTypeByLot + t.amount_invoiceDetail*cost_ItemType) FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
+    private BigDecimal totalInvoice;
+
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp
     @Column(name = "dueDate_invoice", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private DateTime startDateInvoice;
+    private ZonedDateTime startDateInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
     @Column(name = "closedDate_invoice", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private DateTime closedDateInvoice;
-
-    @OneToMany(mappedBy = "invoice")
-    private List<InvoiceDetail> invoiceDetails;
-
-    @Formula(select = "(SELECT SUM( t.amount_invoiceDetail) FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
-    private BigDecimal totalInvoice;
+    private ZonedDateTime closedDateInvoice;
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
@@ -97,21 +98,19 @@ public class Invoice extends AbstractEntity{
         this.statusInvoice = statusInvoice;
     }
 
-    @JsonIgnore
-    public DateTime getStartDateInvoice() {
+    public ZonedDateTime getStartDateInvoice() {
         return startDateInvoice;
     }
 
-    public void setStartDateInvoice(DateTime startDateInvoice) {
+    public void setStartDateInvoice(ZonedDateTime startDateInvoice) {
         this.startDateInvoice = startDateInvoice;
     }
 
-    @JsonIgnore
-    public DateTime getClosedDateInvoice() {
+    public ZonedDateTime getClosedDateInvoice() {
         return closedDateInvoice;
     }
 
-    public void setClosedDateInvoice(DateTime closedDateInvoice) {
+    public void setClosedDateInvoice(ZonedDateTime closedDateInvoice) {
         this.closedDateInvoice = closedDateInvoice;
     }
 
@@ -212,13 +211,13 @@ public class Invoice extends AbstractEntity{
                 Date d = sdf.parse(sqlRows.get(i).getString("start_date"));
                 String formattedTime = output.format(d);
 
-                invoice.setStartDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
+//                invoice.setStartDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
 
 
-                d = sdf.parse(sqlRows.get(i).getString("closed_date"));
-                formattedTime = output.format(d);
+//                d = sdf.parse(sqlRows.get(i).getString("closed_date"));
+//                formattedTime = output.format(d);
 
-                invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
+//                invoice.setClosedDateInvoice(Request.dateTimeFormatter.parseDateTime(formattedTime));
                 invoice.setTotalInvoice(sqlRows.get(i).getBigDecimal("total"));
 
                 invoices.add(invoice);
