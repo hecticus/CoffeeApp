@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/CoffeeApp.iml" filepath="$PROJECT_DIR$/CoffeeApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eleta.iml" filepath="$PROJECT_DIR$/eleta.iml" />
     </modules>
   </component>
 </project>
