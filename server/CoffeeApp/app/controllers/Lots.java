@@ -1,76 +1,159 @@
 package controllers;
 
-import models.Security.HSecurity;
-import models.manager.LotManager;
-import models.manager.impl.LotManagerImpl;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
+import io.ebean.text.PathProperties;
+import models.Farm;
+import models.InvoiceDetail;
+import models.Lot;
+import controllers.requestUtils.Request;
+import controllers.responseUtils.*;
+import play.data.Form;
+import play.data.FormFactory;
+import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
-import models.manager.requestUtils.queryStringBindable.Pager;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
- * Created by drocha on 26/04/17.
+ * Created by sm21 on 10/05/18.
  */
-public class Lots {
+public class Lots extends Controller {
 
+    @Inject
+    private FormFactory formFactory;
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    private static LotManager lotManager = new LotManagerImpl();
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result create() {
-        return lotManager.create();
+    public Lots(){
+        propertiesCollection.putPropertiesCollection("s", "(idLot, nameLot)");
+        propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result update() {
-        return lotManager.update();
-    }
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result delete(Long id) {
-        return lotManager.delete(id);
-    }
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findById(Long id) {
-        return lotManager.findById(id);
-    }
-
-   /* @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAll(Integer index, Integer size) {
-        return lotManager.findAll(index, size);
-    }*/
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result getByNameLot(String NameLot, String order) {
-        return lotManager.getByNameLot(NameLot, order);
-    }
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result getByStatusLot(String StatusLot, String order) {
-        return lotManager.getByStatusLot(StatusLot, order);
-    }
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAll(Pager pager, String sort, String collection) {
-        return lotManager.findAll(pager.index, pager.size, sort, collection);
-    }
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public Result findAllSearch(String name, Pager pager, String sort, String collection, Integer all, Integer idFarm) {
-        return lotManager.findAllSearch(name, pager.index, pager.size, sort, collection, all, idFarm);
-    }
-
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    //@CoffeAppsecurity
     public Result preCreate() {
-        return lotManager.preCreate();
+        try {
+            Farm farm = new Farm();
+            Lot lot = new Lot();
+            lot.setFarm(farm);
+
+            return Response.foundEntity(
+                    Json.toJson(lot));
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
+    //@CoffeAppsecurity
+    public Result create() {
+        try {
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return Response.requiredJson();
+
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.set("nameLot", json.findValue("name"));
+            node.set("priceLot", json.findValue("price_lot"));
+
+            //farm
+            ObjectNode farmNode = Json.newObject();
+            farmNode.set("idFarm", json.findValue("farm"));
+            node.set("farm", farmNode);
+
+            Form<Lot> form = formFactory.form(Lot.class).bind(node);
+            if(form.hasErrors())
+                return badRequest(form.errorsAsJson());
+
+            Lot lot = Json.fromJson(node, Lot.class);
+            lot.save();
+            return  Response.updatedEntity(Json.toJson(lot));
+
+        }catch(Exception e){
+            return Response.responseExceptionCreated(e);
+        }
+    }
+
+//    @CoffeAppsecurity
+    public Result update() {
+        try{
+            JsonNode json = request().body().asJson();
+            if(json == null)
+                return badRequest("Expecting Json data");
+
+            Long id = json.get("idLot").asLong();
+            if (id == null )
+                return badRequest("Missing parameter idLot");
+
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.set("nameLot", json.findValue("name"));
+            node.set("priceLot", json.findValue("price_lot"));
+            ObjectNode farmNode = Json.newObject();
+            farmNode.set("idFarm", json.findValue("farm"));
+            node.set("farm", farmNode);
+
+            Form<Lot> form = formFactory.form(Lot.class).bind(node);
+            if(form.hasErrors())
+                return badRequest(form.errorsAsJson());
+
+            Lot lot = Json.fromJson(node, Lot.class);
+            lot.setIdLot(id);
+            lot.update();
+            return  Response.updatedEntity(Json.toJson(lot));
+        }catch(Exception e){
+            return Response.responseExceptionUpdated(e);
+        }
+    }
+
+//    @CoffeAppsecurity
+    public Result delete(Long id) {
+        try{
+            Ebean.delete(Lot.findById(id));
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return Response.responseExceptionDeleted(e);
+        }
+    }
+
+//    @CoffeAppsecurity
     public Result deletes() {
-        return lotManager.deletes();
+        try {
+           Ebean.deleteAll(Lot.finder.query().findList());
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return ExceptionsUtils.find(e);
+        }
     }
 
-    @HSecurity("/user/verify/@Ordenes,Reportes,SuperUsuario,Basic")
-    public  Result getByIdFarm(Long id_farm, Pager pager,  String sort, String collection){
-        return lotManager.getByIdFarm(id_farm, pager.index, pager.size, sort, collection);
+//    @CoffeAppsecurity
+    public Result findById(Long id) {
+        try {
+            Lot lot = Lot.findById(id);
+            return Response.foundEntity(Response.toJson(lot, Lot.class));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
     }
+
+    //    @CoffeAppsecurity
+    public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
+                           String name, Long idFarm, Integer status, boolean deleted){
+        try {
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize, pathProperties, sort, name, idFarm,
+                                                        status, deleted);
+
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+        }catch(Exception e){
+            return ExceptionsUtils.find(e);
+        }
+    }
+
+
+
 }

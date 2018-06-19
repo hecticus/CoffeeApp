@@ -3,29 +3,32 @@ name := "CoffeeApp"
 
 version := "1.0"
 
-lazy val `root` = (project in file(".")).enablePlugins(
-  PlayJava,
-  PlayEbean)
+lazy val myProject = (project in file("."))
+  .enablePlugins(PlayJava, PlayEbean)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
+  guice,
+  evolutions,
   jdbc,
-  cache,
-  javaWs,
-  specs2 % Test,
-  "org.pac4j" % "play-pac4j" % "3.0.1",
-  "org.pac4j" % "pac4j-config" % "2.0.0",
-
+  ehcache,
+  ws,
+  javaJdbc,
+  "be.objectify" %% "deadbolt-java" % "2.6.1",
+  "org.avaje" % "ebean" % "2.7.3",
+  "javax.persistence" % "persistence-api" % "1.0.2",
   "mysql" % "mysql-connector-java" % "5.1.38",
   "org.modelmapper" % "modelmapper" % "0.7.7",
   "com.typesafe.play" % "play-mailer_2.11" % "5.0.0",
   "io.jsonwebtoken" % "jjwt" % "0.7.0",
+  "org.apache.jclouds" % "jclouds-all" % "2.0.1",
+  "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.9.4",
   filters
 )
 
-unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
-routesImport += "models.manager.requestUtils.requestObject.DateParameter"
+resolvers += "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
