@@ -33,7 +33,7 @@ public class ItemTypes extends Controller {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result preCreate() {
         try {
             ItemType itemtype = new ItemType();
@@ -44,7 +44,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -78,7 +78,7 @@ public class ItemTypes extends Controller {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update() {
         try {
             JsonNode json = request().body().asJson();
@@ -115,7 +115,7 @@ public class ItemTypes extends Controller {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(ItemType.findById(id));
@@ -136,7 +136,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection,
                           String sort, String name, Long idProviderType, Integer status, boolean deleted ) {
         try {

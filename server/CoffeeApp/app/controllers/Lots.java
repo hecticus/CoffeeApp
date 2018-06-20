@@ -79,7 +79,7 @@ public class Lots extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update() {
         try{
             JsonNode json = request().body().asJson();
@@ -110,7 +110,7 @@ public class Lots extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Lot.findById(id));
@@ -120,7 +120,7 @@ public class Lots extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result deletes() {
         try {
            Ebean.deleteAll(Lot.finder.query().findList());
@@ -130,7 +130,7 @@ public class Lots extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Lot lot = Lot.findById(id);
@@ -140,7 +140,7 @@ public class Lots extends Controller {
         }
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
                            String name, Long idFarm, Integer status, boolean deleted){
         try {

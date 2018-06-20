@@ -38,7 +38,7 @@ public class InvoiceDetails extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result preCreate() {
         try {
             InvoiceDetail invoiceDetail = new InvoiceDetail();
@@ -59,7 +59,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -100,7 +100,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update() {
         try {
             JsonNode json = request().body().asJson();
@@ -147,7 +147,7 @@ public class InvoiceDetails extends Controller {
 
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(InvoiceDetail.findById(id));
@@ -157,7 +157,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date) {
         try {
             List invoiceDetails = InvoiceDetail.findAll(null, null, null, null,
@@ -182,7 +182,7 @@ public class InvoiceDetails extends Controller {
 
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
                           String startDateInvoiceDetail, Integer status, boolean deleted){

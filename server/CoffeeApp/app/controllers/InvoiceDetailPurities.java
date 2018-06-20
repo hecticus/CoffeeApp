@@ -23,7 +23,7 @@ public class InvoiceDetailPurities  extends Controller {
     private static Purity purityDao = new Purity();
     private static InvoiceDetail invoiceDetailDao = new InvoiceDetail();
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public  Result create() {
         try
         {
@@ -66,7 +66,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public Result update() {
         try
         {
@@ -97,7 +97,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.findById(id);
@@ -126,7 +126,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }*/
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.findById(id);
@@ -136,7 +136,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public Result findAll(Integer index, Integer size) {
         try {
             List<InvoiceDetailPurity> invoiceDetailPuritys = invoiceDetailPurityDao.findAll(index, size);
