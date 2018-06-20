@@ -6,5 +6,5 @@
 export const environment = {
   production: false,
   // backendUrl: 'https://dev.api.coffee.hecticus.com'
-  //backendUrl: 'http://localhost:9000
+  backendUrl: 'http://localhost:9000'
 };

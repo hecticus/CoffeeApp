@@ -21,14 +21,14 @@ export class LoginComponent extends BaseService implements OnInit {
 
   private urlUser: string= this.HOST+'/user';
   constructor(
-    public router: Router, 
-    public http: Http, 
+    private router: Router,
+    private http: Http,
     private notificationService: NotificationService
   ) {
-    
+
     super();
 
-    this.http.get(this.urlUser+'/logout', { headers: contentHeaders })
+    /*this.http.get(this.urlUser+'/logout', { headers: contentHeaders })
        .subscribe(
         response => {
           if (response.json().message=="OK")
@@ -47,23 +47,26 @@ export class LoginComponent extends BaseService implements OnInit {
        sessionStorage.clear();
        localStorage.clear();
        contentHeaders.delete("Authorization");
-       console.log("pase");
+       console.log("pase");*/
   }
-  
+
   	ngOnInit() {
      }
 
   login(event, email, password) {
+    console.log("login");
+    this.router.navigate(['./home']);
+
         //console.log(this.urlUser);
     event.preventDefault();
-    let body = JSON.stringify({ email, password });
+    /*let body = JSON.stringify({ email, password });
     this.http.post(this.urlUser+'/login', body, { headers: contentHeaders })
        .subscribe(
         response => {
           if (response.json().result=="null")
           {
             alert(response.json().message);
-            
+
           }
           console.log(response.json().result.token);
           localStorage.setItem('token', response.json().result.token);
@@ -84,9 +87,9 @@ export class LoginComponent extends BaseService implements OnInit {
 		      	            if(errorAux["error"]==935)	this.notificationService.alert(errorAux["message"])
 			                  else this.notificationService.error(errorAux["message"])
                     }
-         
+
       }
-       );
+       );*/
   }
 
 forgotPassword(event, emailM)
@@ -108,10 +111,10 @@ event.preventDefault();
           }
         }
        );
-                  
+
 }
   signup(event) {
     event.preventDefault();
-    
+
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit  } from '@angular/core';
-import { Http } from '@angular/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpParams, HttpClientModule } from '@angular/common/http';
 
 import { NotificationService } from '../common/notification/notification.service';
 
@@ -17,5 +16,5 @@ export class HomeComponent implements OnInit {
 
       constructor() { }
       ngOnInit() { }
-   
+
 }

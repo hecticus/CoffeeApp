@@ -12,7 +12,7 @@ export const homeRoutes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        canActivate: [AuthGuard],
+        //canActivate: [AuthGuard],
         children: [
            ...lotRoutes,
            ...providerRoutes,
@@ -22,9 +22,9 @@ export const homeRoutes: Routes = [
             breadcrumb: "home",
             icon: "home"
         },
-    }, 
-      
-]; 
+    },
+
+];
 
 export const homeRouting = RouterModule.forChild(homeRoutes);
 

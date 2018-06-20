@@ -5,10 +5,10 @@ import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute } from '@angular/router';
 
 
-export class BaseService{ 
+export class BaseService{
 
-  public HOST: string = 'https://dev.api.coffee.hecticus.com';
-  //  public HOST: string = 'http://localhost:9000';
+  //public HOST: string = 'https://dev.api.coffee.hecticus.com';
+    public HOST: string = 'http://localhost:9000';
     public PAGE_SIZE: string = "4";
 
 
@@ -26,7 +26,7 @@ export class BaseService{
         return res.headers;
     }
 
-    public extractDataAndHeaders(res: Response) { 
+    public extractDataAndHeaders(res: Response) {
         let body = res.json();
         return { data: body.result || { }, headers: res.headers };
     }
@@ -58,7 +58,7 @@ export class BaseService{
             let keySplits = key.split('.');
 
             for(var i = 0; i < keySplits.length-1; ++i){
-                let keySplit = keySplits[i];  
+                let keySplit = keySplits[i];
                 if( !innerObj[keySplit] ) innerObj[keySplit] = {};
                     innerObj = innerObj[keySplit];
             }
@@ -97,7 +97,7 @@ export class BaseService{
 
         if(all!=undefined)
         {
-           params.set('all', all); 
+           params.set('all', all);
         }
         for (var key in filter){
             params.set(key, filter[key].toString());
