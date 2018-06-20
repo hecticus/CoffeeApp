@@ -35,7 +35,7 @@ public class Providers extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result preCreate() {
         try {
             ProviderType providerType = new ProviderType();
@@ -48,7 +48,7 @@ public class Providers extends Controller {
         }
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -74,7 +74,7 @@ public class Providers extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update() {
         try {
             JsonNode json = request().body().asJson();
@@ -101,7 +101,7 @@ public class Providers extends Controller {
         }
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Provider.findById(id));
@@ -112,7 +112,7 @@ public class Providers extends Controller {
     }
 
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result deletes(){
         try {
             Ebean.deleteAll(Provider.finder.query().findList());
@@ -123,7 +123,7 @@ public class Providers extends Controller {
     }
 
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result  uploadPhotoProvider(){
         try  {
             JsonNode json = request().body().asJson();
@@ -181,7 +181,7 @@ public class Providers extends Controller {
     }
 
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Provider provider = Provider.findById(id);
@@ -191,7 +191,7 @@ public class Providers extends Controller {
         }
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String sort, String name,  Long idProviderType,
                            String identificationDocProvider, String addressProvider,

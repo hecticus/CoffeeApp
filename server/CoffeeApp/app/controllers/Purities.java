@@ -37,7 +37,7 @@ public class Purities extends Controller{
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    //    @CoffeAppsecurity
+    ////@CoffeAppsecurity
     public Result preCreate() {
         try {
             return Response.foundEntity(Json.toJson(new Purity()));
@@ -46,7 +46,7 @@ public class Purities extends Controller{
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -69,7 +69,7 @@ public class Purities extends Controller{
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update() {
         try {
             JsonNode json = request().body().asJson();
@@ -98,7 +98,7 @@ public class Purities extends Controller{
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Purity.findById(id));
@@ -108,7 +108,7 @@ public class Purities extends Controller{
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson( Purity.findById(id)));

@@ -118,7 +118,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public Result uploadPhoto(JsonNode request) {
         try {
             JsonNode jracksPhoto = User.uploadPhoto(request);

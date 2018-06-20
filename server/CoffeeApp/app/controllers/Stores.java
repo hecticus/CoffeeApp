@@ -35,7 +35,7 @@ public class Stores {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result preCreate() {
         try {
             Store store = new Store();
@@ -46,7 +46,7 @@ public class Stores {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -66,7 +66,7 @@ public class Stores {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update() {
         try
         {
@@ -92,7 +92,7 @@ public class Stores {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Store.findById(id));
@@ -102,7 +102,7 @@ public class Stores {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Store store = Store.findById(id);

@@ -39,7 +39,7 @@ public class Invoices extends Controller {
                 " phoneNumber_Provider,email_Provider, providerType(id_ProviderType, name_ProviderType))");
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public    Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -64,7 +64,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public  Result update() {
         JsonNode json = request().body().asJson();
         if(json== null)
@@ -95,7 +95,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public  Result delete(Long id) {
         try{
             Ebean.delete(Invoice.findById(id));
@@ -105,7 +105,7 @@ public class Invoices extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public  Result findById(Long id) {
         try {
             Invoice invoice = Invoice.findById(id);
@@ -115,7 +115,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+//@CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
                                     String sort, Long id_provider, Long id_providertype, String startDate,
                                     String endDate, Integer status ,Boolean deleted){
@@ -131,7 +131,7 @@ public class Invoices extends Controller {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public  Result buyHarvestsAndCoffe(){
         BigDecimal monto;
         InvoiceDetailPurity invoiceDetailPurity;
@@ -301,7 +301,7 @@ public class Invoices extends Controller {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public  Result updateBuyHarvestsAndCoffe() {
         BigDecimal monto;
         boolean auxCreate = false;
@@ -463,7 +463,7 @@ public class Invoices extends Controller {
         return Response.updatedEntity(Json.toJson(openInvoice));
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();

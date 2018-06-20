@@ -40,7 +40,7 @@ public class ProviderTypes {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -62,7 +62,7 @@ public class ProviderTypes {
     }
 
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result update(Long id) {
         try{
             JsonNode json = request().body().asJson();
@@ -85,7 +85,7 @@ public class ProviderTypes {
     }
 
 //
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(ProviderType.findById(id));
@@ -95,7 +95,7 @@ public class ProviderTypes {
         }
     }
 
-//    @CoffeAppsecurity
+////@CoffeAppsecurity
     public Result deletes() {
         try {
             Ebean.delete(ProviderType.finder.query().findList());
