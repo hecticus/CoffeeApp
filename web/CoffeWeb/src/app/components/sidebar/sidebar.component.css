@@ -1,0 +1,77 @@
+#side-nav {
+    width: 250px;
+    height: 100%;
+    background: black;
+    border-right: 1px solid black;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0px;
+    overflow: auto;
+    color: white;
+}
+
+header {
+    height: 64px;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+}
+
+header #logo {
+    height: 60px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    cursor: pointer;
+}
+
+.item {
+    padding: 15px 15px 15px 22px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .2s linear;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-list>.item {
+    font-weight: bold;
+}
+
+.options>.item {
+    padding-left: 44px;
+}
+
+.item.selected {
+    color: #0099cc;
+}
+
+.item:hover {
+    background-color: hsl(0, 1%, 19%);
+}
+
+.options {
+    will-change: height;
+    overflow-y: hidden;
+    height: 100%;
+    max-height: 0;
+    transition: max-height .5s ease-in-out;
+}
+
+.item.expanded+.options {
+    max-height: 1000px;
+}
+
+.item .material-icons {
+    font-size: 20px;
+    -webkit-transition: transform .2s linear;
+    transition: transform .2s linear;
+}
+
+.item.expanded .material-icons {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}

@@ -1,0 +1,25 @@
+<div id="side-nav">
+    <header>
+        <img id="logo" src="./assets/images/eleta.jpg" routerLink="/home" />
+    </header>
+
+    <nav class="item-list">
+        <div class="item" data-link="#" data-menu-item="orderGroups" [ngClass]="{'selected': dataMenuItem == 'orderGroups'}" (click)="select($event)" routerLink="#"> <span>Ordenes y Servicios</span></div>
+        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Proveedores</div>
+        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Lotes</div>
+        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Ordenes</div>
+
+        <nav class="item-list">
+            <div class="item header" (click)="select($event)" [ngClass]="{'selected': dataMenuItem == 'List' || dataMenuItem == 'Create' }">
+                <!-- (click)="toogleExpand($event)" -->
+                <span>Users</span>
+                <i class="material-icons"></i>
+            </div>
+            <div class="options">
+                <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == 'List'}" (click)="select($event)" routerLink="./List">List</div>
+                <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == 'Create'}" (click)="select($event)" routerLink="./Create">Create</div>
+            </div>
+        </nav>
+        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Salir</div>
+    </nav>
+</div>

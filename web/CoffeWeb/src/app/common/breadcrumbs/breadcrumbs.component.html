@@ -1,9 +1,0 @@
-<ul id="breadcrumb">
-	<li *ngFor="let breadcrumb of breadcrumbs">
-		<!--<a [routerLink]="[breadcrumb.url, breadcrumb.params]">-->
-		<a [routerLink]="[breadcrumb.url]">
-			<div *ngIf="breadcrumb.icon" [ngClass]="['icon', breadcrumb.icon]"></div>
-			<div class="name">{{breadcrumb.label}}</div>
-		</a>
-	</li>	
-</ul>

@@ -1,8 +1,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -13,23 +13,8 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2016",
+      "es2017",
       "dom"
     ]
-  },
-  "files": [
-    "typings/tsd.d.ts",  
-    "src/app/app.ts",
-    "src/app/signup/index.ts",
-    "src/index.ts",
-    "src/app/common/headers.ts",
-    "src/app/common/auth.guard.ts"
-  ],
-    "filesGlob": [
-    "./src/**/*.ts",
-    "!./node_modules/**/*.ts"
-  ],
-  "buildOnSave": false,
-  "atom": { "rewriteTsconfig": true }
-  
+  }
 }
