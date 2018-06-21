@@ -4,7 +4,6 @@
     </header>
 
     <nav class="item-list">
-        <div class="item" data-link="#" data-menu-item="orderGroups" [ngClass]="{'selected': dataMenuItem == 'orderGroups'}" (click)="select($event)" routerLink="#"> <span>Ordenes y Servicios</span></div>
         <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Proveedores</div>
         <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Lotes</div>
         <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Ordenes</div>

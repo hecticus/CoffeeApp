@@ -1,0 +1,82 @@
+/* https://codepen.io/firatcftc/pen/sHlnK */
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .6);
+}
+
+li {
+    float: left;
+    margin-right: 1px;
+}
+
+#breadcrumb li a {
+    color: #fff;
+    background: #3fa3e0;
+    text-decoration: none;
+    position: relative;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+#breadcrumb li:first-child a:before {
+    border: none;
+}
+
+#breadcrumb li a:before,
+#breadcrumb li a:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    border: 0 solid #3fa3e0;
+    border-width: 16px 10px;
+    width: 0;
+    height: 0;
+}
+
+#breadcrumb li a:before {
+    right: 100%;
+    border-left-color: transparent;
+    transform: translateX(50%);
+}
+
+#breadcrumb li a:after {
+    left: 100%;
+    border-color: transparent;
+    border-left-color: #3fa3e0;
+}
+
+#breadcrumb li a:hover,
+#breadcrumb li:last-child a {
+    background-color: #1abc9c;
+}
+
+#breadcrumb li a:hover:before,
+#breadcrumb li:last-child a:before {
+    border-color: #1abc9c;
+    border-left-color: transparent;
+}
+
+#breadcrumb li a:hover:after,
+#breadcrumb li:last-child a:after {
+    border-left-color: #1abc9c;
+}
+
+.material-icons {
+    margin-right: 5px;
+}
+
+.material-icons,
+span {
+    color: #fff;
+    font-size: 12px;
+    line-height: 32px;
+}

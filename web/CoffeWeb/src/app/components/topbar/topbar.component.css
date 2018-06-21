@@ -1,9 +1,11 @@
 .top-bar {
+    top: 0cm;
+    right: 0cm;
+    left: 250px;
+    height: 84px;
+    bottom: 4px;
     position: absolute;
-    bottom: 5px;
-    right: 10px;
     color: white;
     font-size: 14px;
-    color: #fff;
     background: black;
 }

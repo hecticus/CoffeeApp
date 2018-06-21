@@ -2,7 +2,7 @@
     width: 250px;
     height: 100%;
     background: black;
-    border-right: 1px solid black;
+    border-right: 2px solid white;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -12,13 +12,13 @@
 }
 
 header {
-    height: 64px;
-    border-bottom: 1px solid #e0e0e0;
+    height: 84px;
+    border-bottom: 2px solid #e0e0e0;
     position: relative;
 }
 
 header #logo {
-    height: 60px;
+    height: 80px;
     position: absolute;
     top: 0;
     bottom: 0;
