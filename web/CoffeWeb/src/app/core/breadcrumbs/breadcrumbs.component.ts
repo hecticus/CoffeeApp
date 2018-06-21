@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 interface IBreadcrumb {
   label: string;
-  params?: Params;
+  // params?: Params;
   url: string;
   icon: string;
 }
@@ -13,7 +13,13 @@ interface IBreadcrumb {
   styleUrls: ['./breadcrumbs.component.css']
 })
 export class BreadcrumbsComponent implements OnInit {
-  public breadcrumbs: IBreadcrumb[];
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+ /*  public breadcrumbs: IBreadcrumb[];
 
   constructor(
   ) {
@@ -52,5 +58,5 @@ export class BreadcrumbsComponent implements OnInit {
       route = route.firstChild;
     }
     return breadcrumbs;
-  }
+  } */
 }

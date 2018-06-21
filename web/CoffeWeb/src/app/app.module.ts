@@ -2,18 +2,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { FarmComponent } from './components/farm/farm.component';
-import { TopbarComponent } from './components/topbar/topbar.component';
-import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
+import { SidebarComponent } from './core/sidebar/sidebar.component';
+import { TopbarComponent } from './core/topbar/topbar.component';
+import { BreadcrumbsComponent } from './core/breadcrumbs/breadcrumbs.component';
+import { FarmComponent } from 'src/app/components/farm/farm.component';
+import { Resolution } from 'src/app/core/models/resolution';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SidebarComponent,
+    //  ImportComponets
     FarmComponent,
+
+    // ImportCore
+    SidebarComponent,
     TopbarComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
   ],
   imports: [
     BrowserModule
