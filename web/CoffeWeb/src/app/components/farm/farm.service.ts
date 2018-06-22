@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from 'selenium-webdriver/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { BaseService } from '../../core/base.service';
 import { Observable } from 'rxjs';
+import { Farm } from '../../core/models/farm';
 
 @Injectable({
   providedIn: 'root'
@@ -10,27 +11,22 @@ export class FarmService {
   private static readonly BASE_URL: string = BaseService.HOST + '/farm';
 
   constructor(
-    private http: HttpClient,
-    private fb: FormBuilder
+    private http: HttpClient
   ) { }
 
   getById(id: number): Observable<Farm> {
-    return this.http.get( FarmService.BASE_URL + '/' + id, {headers: BaseService})
-        .catch(BaseService.handleError);
+    console.log(this.http.get<Farm>( FarmService.BASE_URL + '/' + id));
+    return this.http.get<Farm>( FarmService.BASE_URL + '/' + id);
   }
 
-  getAll(params: HttpParams): Observable<any> {
-    return this.http.get(this.urlFarm+'', requestOptions)
-        .map(this.extractDataFull)
-        .catch(this.handleError);
+
+  getAll(params: HttpParams): Observable<Farm[]> {
+    return this.http.get<Farm[]>(FarmService.BASE_URL + '', {params: params});
   }
 
-  getAllSearch(requestOptions: RequestOptions = new RequestOptions()): Observable<Farm[]>{
-    requestOptions.headers = contentHeaders;
-    // console.log(requestOptions);
-    return this.http.get(this.urlFarm + '/search', requestOptions)
-        .map(this.extractDataFull)
-        .catch(this.handleError);
+  getAllSearch(params: HttpParams): Observable<Farm[]> {
+    return this.http.get<Farm[]>(FarmService.BASE_URL + '/search', {params: params});
   }
+
 }
 

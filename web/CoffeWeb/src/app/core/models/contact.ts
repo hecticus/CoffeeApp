@@ -1,4 +1,4 @@
-export class Contact {
+export interface Contact {
     latitude: number;
     longitude: number;
     address: string;

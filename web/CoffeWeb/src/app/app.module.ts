@@ -6,9 +6,9 @@ import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { TopbarComponent } from './core/topbar/topbar.component';
 import { BreadcrumbsComponent } from './core/breadcrumbs/breadcrumbs.component';
 import { FarmComponent } from 'src/app/components/farm/farm.component';
-import { Resolution } from 'src/app/core/models/resolution';
+import { HttpClientModule } from '@angular/common/http';
 
-@NgModule({
+@NgModule ({
   declarations: [
     AppComponent,
     //  ImportComponets
@@ -20,9 +20,11 @@ import { Resolution } from 'src/app/core/models/resolution';
     BreadcrumbsComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

@@ -1,5 +1,6 @@
-export class BaseModel {
+export interface BaseModel {
     id: number;
     createdAt: string;
     updatedAt: string;
+    deleted: boolean;
 }

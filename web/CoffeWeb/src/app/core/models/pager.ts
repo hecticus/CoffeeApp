@@ -1,4 +1,4 @@
-export class Pager {
+export interface Pager {
     totalEntities?: number;
     totalEntitiesPerPage?: number;
     pageIndex: number;
