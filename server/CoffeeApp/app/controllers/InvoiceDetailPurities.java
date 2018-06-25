@@ -1,6 +1,11 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.PropertiesCollection;
+import controllers.responseUtils.ResponseCollection;
+import controllers.utils.ListPagerCollection;
+import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
 import models.InvoiceDetailPurity;
 import models.Purity;
@@ -10,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -18,10 +24,7 @@ import java.util.List;
  */
 public class InvoiceDetailPurities  extends Controller {
 
-    
-    private static InvoiceDetailPurity invoiceDetailPurityDao = new InvoiceDetailPurity();
-    private static Purity purityDao = new Purity();
-    private static InvoiceDetail invoiceDetailDao = new InvoiceDetail();
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
 //@CoffeAppsecurity
     public  Result create() {
@@ -136,13 +139,16 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-//@CoffeAppsecurity
-    public Result findAll(Integer index, Integer size) {
+    ////@CoffeAppsecurity
+    public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
+                          Long purity, Long invoiceDetail, boolean deleted){
         try {
-            List<InvoiceDetailPurity> invoiceDetailPuritys = invoiceDetailPurityDao.findAll(index, size);
-            return Response.foundEntity(Json.toJson(invoiceDetailPuritys));
+            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            ListPagerCollection listPager = InvoiceDetailPurity.findAll(pageIndex, pageSize, pathProperties, sort,
+                                                purity, invoiceDetail, deleted);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return Response.internalServerErrorLF();
+            return ExceptionsUtils.find(e);
         }
     }
 

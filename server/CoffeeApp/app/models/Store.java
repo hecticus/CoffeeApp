@@ -18,18 +18,13 @@ import java.util.List;
 @Table(name="stores")
 public class Store extends AbstractEntity{
 
-    @Id
-    @Column(name = "id_store")
-    private Long idStore;
-
     @Constraints.Required
     @Constraints.MaxLength(50)
-    @Column(nullable = false, name = "name_store", unique = true, length = 50)
-    private String NameStore;
+    @Column(nullable = false, unique = true, length = 50)
+    private String nameStore;
 
-    @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_store", columnDefinition = "integer default 1")
-    private Integer statusStore;
+    @ManyToOne
+    private StatusStore statusStore;
 
     @OneToMany(mappedBy = "store", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails;
@@ -37,32 +32,24 @@ public class Store extends AbstractEntity{
     private static Finder<Long, Store> finder = new Finder<>(Store.class);
 
     public Store() {
-        statusStore = 1;
         invoiceDetails = new ArrayList<>();
     }
 
     //Setter and Getter
-    public Long getIdStore() {
-        return idStore;
-    }
-
-    public void setIdStore(Long idStore) {
-        this.idStore = idStore;
-    }
 
     public String getNameStore() {
-        return NameStore;
+        return nameStore;
     }
 
     public void setNameStore(String nameStore) {
-        NameStore = nameStore;
+        nameStore = nameStore;
     }
 
-    public Integer getStatusStore() {
+    public StatusStore getStatusStore() {
         return statusStore;
     }
 
-    public void setStatusStore(Integer statusStore) {
+    public void setStatusStore(StatusStore statusStore) {
         this.statusStore = statusStore;
     }
 
@@ -142,10 +129,10 @@ public class Store extends AbstractEntity{
         {
             Store = new Store();
 
-            Store.setIdStore(sqlRows.get(i).getLong("c0"));
+            Store.setId(sqlRows.get(i).getLong("c0"));
 //            Store.setStatusDelete(sqlRows.get(i).getInteger("c1"));
             Store.setNameStore(sqlRows.get(i).getString("c2"));
-            Store.setStatusStore(sqlRows.get(i).getInteger("c3"));
+//            Store.setStatusStore(sqlRows.get(i).getInteger("c3"));
 
             stores.add(Store);
         }

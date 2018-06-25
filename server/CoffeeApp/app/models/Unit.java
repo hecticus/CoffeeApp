@@ -19,17 +19,9 @@ import java.util.List;
 @Table(name="units")
 public class Unit extends AbstractEntity {
 
-    @Id
-    @Column(name = "id_unit")
-    private Long idUnit;
-
     @Constraints.Required
-    @Column(nullable = false, name = "name_unit", unique = true)
-    private String NameUnit;
-
-    @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_unit")
-    private Integer statusUnit;
+    @Column(nullable = false, unique = true)
+    private String nameUnit;
 
     @OneToMany(mappedBy = "unit", cascade= CascadeType.ALL)
     private List<ItemType> itemTypes;
@@ -37,33 +29,16 @@ public class Unit extends AbstractEntity {
     private static Finder<Long, Unit> finder = new Finder<>(Unit.class);
 
     public Unit() {
-        statusUnit = 1;
         itemTypes = new ArrayList<>();
     }
 
     //Setter and Getter
-    public Long getIdUnit() {
-        return idUnit;
-    }
-
-    public void setIdUnit(Long idUnit) {
-        this.idUnit = idUnit;
-    }
-
     public String getNameUnit() {
-        return NameUnit;
+        return nameUnit;
     }
 
     public void setNameUnit(String nameUnit) {
-        NameUnit = nameUnit;
-    }
-
-    public Integer getStatusUnit() {
-        return statusUnit;
-    }
-
-    public void setStatusUnit(Integer statusUnit) {
-        this.statusUnit = statusUnit;
+        this.nameUnit = nameUnit;
     }
 
     @JsonIgnore
@@ -89,7 +64,7 @@ public class Unit extends AbstractEntity {
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.icontains("name_unit", name);
+            expressionList.icontains("nameUnit", name);
 
         if(deleted)
             expressionList.setIncludeSoftDeletes();

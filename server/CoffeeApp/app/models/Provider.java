@@ -30,70 +30,56 @@ import java.util.List;
 @Table(name="providers")
 public class Provider extends AbstractEntity{
 
-    @Id
-    @Column(name = "id_Provider")
-    private Long idProvider;
-
     @ManyToOne(optional = false)
     @JsonBackReference
     @Constraints.Required
+    @JoinColumn(name = "id", nullable = false)
     private ProviderType providerType;
 
     @Constraints.Required
     @Constraints.MaxLength(255)
-    @Column(unique=true, nullable = false, name = "identificationDoc_Provider")
+    @Column(unique=true, nullable = false)
     private String identificationDocProvider;
 
     @Constraints.Required
     @Constraints.MaxLength(60)
-    @Column(nullable = false, name = "fullName_Provider", length = 60)
+    @Column(nullable = false, length = 60)
     private String fullNameProvider;
 
     @Constraints.Required
     @Constraints.MaxLength(60)
-    @Column(nullable = false, name = "address_Provider", length = 60)
+    @Column(nullable = false,length = 60)
     private String addressProvider;
 
     @Constraints.Required
     @Constraints.MaxLength(20)
-    @Column(nullable = false, name = "phoneNumber_Provider", length = 20)
+    @Column(nullable = false, length = 20)
     private String phoneNumberProvider;
 
     @Constraints.Email
     @Constraints.Required
-    @Column(name = "email_Provider", nullable = false)
+    @Column( nullable = false)
     private String emailProvider;
 
     @Constraints.MaxLength(255)
-    @Column(name = "photo_Provider")
     private String photoProvider;
 
     @Constraints.Required
     @Constraints.MaxLength(50)
-    @Column(nullable = false, name = "contactName_Provider", length = 50, unique = true)
+    @Column(nullable = false, length = 50, unique = true)
     private String contactNameProvider;
 
-    @Range(min = 0, max = 1)
-    @Column( name = "status_Provider", columnDefinition = "integer default 1")
-    private Integer statusProvider;
+    @ManyToOne
+    private StatusProvider statusProvider;
 
-    @OneToMany(mappedBy = "provider", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "provider")
     @JsonManagedReference
     private List<Invoice> invoices;
 
     public static Finder<Long, Provider> finder = new Finder<>(Provider.class);
 
     public Provider() {
-        statusProvider = 1;
         invoices = new ArrayList<>();
-    }
-
-    public Long getIdProvider() {
-        return idProvider;
-    }
-
-    public void setIdProvider(Long idProvider) {
-        this.idProvider = idProvider;
     }
 
     public String getIdentificationDocProvider() {
@@ -160,14 +146,6 @@ public class Provider extends AbstractEntity{
         this.contactNameProvider = contactNameProvider;
     }
 
-    public Integer getStatusProvider() {
-        return statusProvider;
-    }
-
-    public void setStatusProvider(Integer statusProvider) {
-        this.statusProvider = statusProvider;
-    }
-
     public List<Invoice> getInvoices() {
         return invoices;
     }
@@ -186,7 +164,7 @@ public class Provider extends AbstractEntity{
                                                String sort, String name,  Long idProviderType,
                                                String identificationDocProvider, String addressProvider,
                                                String phoneNumberProvider, String emailProvider,
-                                               String contactNameProvider, Integer status, boolean deleted){
+                                               String contactNameProvider, boolean deleted){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -222,9 +200,6 @@ public class Provider extends AbstractEntity{
                 expressionList.orderBy(sort("idProvider", sort));
             }
         }
-
-        if(status != null)
-            expressionList.eq("statusProvider", status);
 
         if( deleted )
             expressionList.setIncludeSoftDeletes();
@@ -298,7 +273,7 @@ public class Provider extends AbstractEntity{
             provider.setPhoneNumberProvider(sqlRows.get(i).getString("phone_number"));
             provider.setIdentificationDocProvider(sqlRows.get(i).getString("identification_doc"));
             provider.setAddressProvider(sqlRows.get(i).getString("address"));
-            provider.setIdProvider(sqlRows.get(i).getLong("prov_id"));
+            provider.setId(sqlRows.get(i).getLong("prov_id"));
             provider.setEmailProvider(sqlRows.get(i).getString("email"));
             provider.setPhotoProvider(sqlRows.get(i).getString("photo"));
             provider.setProviderType(ProviderType.findById(sqlRows.get(i).getLong("providerType")));
@@ -317,7 +292,7 @@ public class Provider extends AbstractEntity{
         else
         {
 //            aux.add(0,provider.getStatusDelete());
-            aux.add(1,Integer.parseInt(provider.getIdProvider().toString()));
+            aux.add(1,Integer.parseInt(provider.getId().toString()));
         }
         return aux;
     }

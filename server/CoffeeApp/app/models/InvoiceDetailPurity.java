@@ -18,36 +18,28 @@ import java.util.List;
 @Entity
 @Table(name="invoicesdetails_purities")
 public class InvoiceDetailPurity  extends AbstractEntity{
-    @Id
-    @Column(name = "id_invoiceDetail_purity")
-    private Long idInvoiceDetailPurity;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id_purity", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private Purity purity;
 
     @ManyToOne
-    @JoinColumn(name = "id_invoiceDetail")
+    @JoinColumn(name = "id")
     @Constraints.Required
     private InvoiceDetail invoiceDetail;
 
     @Constraints.Required
-    @Column(nullable = false, name = "valueRate_invoiceDetail_purity")
+    @Column(nullable = false)
     private Integer valueRateInvoiceDetailPurity;
 
     @Constraints.Required
-    @Column(nullable = false, name = "discountRate_purity")
+    @Column(nullable = false)
     private Integer discountRatePurity;
 
     @Constraints.Required
-    @Column(nullable = false, name = "totalDiscount_purity")
+    @Column(nullable = false)
     private Integer totalDiscountPurity;
-
-    @Constraints.Required
-    @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status__invoiceDetail_purity")
-    private Integer statusInvoiceDetailPurity;
 
     private static Finder<Long, InvoiceDetailPurity> finder = new Finder<>(InvoiceDetailPurity.class);
 
@@ -55,16 +47,6 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         totalDiscountPurity = 0;
         discountRatePurity = 0;
         valueRateInvoiceDetailPurity = 0;
-        statusInvoiceDetailPurity = 1;
-    }
-
-
-    public Long getIdInvoiceDetailPurity() {
-        return idInvoiceDetailPurity;
-    }
-
-    public void setIdInvoiceDetailPurity(Long idInvoiceDetailPurity) {
-        this.idInvoiceDetailPurity = idInvoiceDetailPurity;
     }
 
     public Purity getPurity() {
@@ -108,14 +90,6 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         this.invoiceDetail = invoiceDetail;
     }
 
-    public Integer getStatusInvoiceDetailPurity() {
-        return statusInvoiceDetailPurity;
-    }
-
-    public void setStatusInvoiceDetailPurity(Integer statusInvoiceDetailPurity) {
-        this.statusInvoiceDetailPurity = statusInvoiceDetailPurity;
-    }
-
     public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
         return finder.query().where()
                 .eq("id_invoicedetail",IdInvopiceDetail)
@@ -126,14 +100,24 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         return finder.byId(id);
     }
 
-    public ListPagerCollection findAll(Integer pageIndex, Integer pageSize, String sort, PathProperties pathProperties){
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties, String sort,
+                                       Long purity, Long invoiceDetail, boolean deleted){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
+        if(purity != 0L)
+            expressionList.eq("purity.id", purity );
+
+        if(invoiceDetail != 0L)
+            expressionList.eq("invoiceDetail.id", invoiceDetail );
+
         if(sort != null)
             expressionList.orderBy(sort(sort));
+
+        if(deleted)
+            expressionList.setIncludeSoftDeletes();
 
         if(pageIndex == null || pageSize == null)
             return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
@@ -143,17 +127,6 @@ public class InvoiceDetailPurity  extends AbstractEntity{
                 expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
                 pageIndex,
                 pageSize);
-    }
-
-    public List<InvoiceDetailPurity> findAll(Integer pageIndex, Integer pageSize){
-        List<InvoiceDetailPurity> entities;
-        if(pageIndex != -1 && pageSize != -1)
-            //    entities = find.setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-            entities = finder.query().where().eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList();
-        else
-            // entities =  find.all();
-            entities = finder.query().where().eq("status_delete",0).findList();
-        return entities;
     }
 
 

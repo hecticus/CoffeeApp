@@ -149,14 +149,9 @@ public class User extends AbstractEntity {
         if (deleted)
             expressionList.setIncludeSoftDeletes();
 
-        if (sort != null) {
-            if (sort.contains(" ")) {
-                String[] aux = sort.split(" ", 2);
-                expressionList.orderBy(sort(aux[0], aux[1]));
-            } else {
-                expressionList.orderBy(sort("id", sort));
-            }
-        }
+        if (sort != null)
+            expressionList.orderBy(sort( sort));
+
 
         if (index == null || size == null)
             return new ListPagerCollection(expressionList.findList());

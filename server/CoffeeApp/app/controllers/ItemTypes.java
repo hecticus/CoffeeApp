@@ -142,7 +142,7 @@ public class ItemTypes extends Controller {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = ItemType.findAll( pageIndex, pageSize, pathProperties,
-                    sort, name, idProviderType, status, deleted);
+                    sort, name, idProviderType, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

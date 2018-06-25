@@ -185,7 +185,7 @@ public class InvoiceDetails extends Controller {
 ////@CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
-                          String startDateInvoiceDetail, Integer status, boolean deleted){
+                          String startDateInvoiceDetail, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,

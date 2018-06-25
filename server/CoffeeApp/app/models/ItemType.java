@@ -21,33 +21,25 @@ import java.util.List;
 @Table(name="item_types")
 public class ItemType extends AbstractEntity{
 
-    @Id
-    @Column(name = "id_itemType")
-    private Long idItemType;
-
     @ManyToOne
     @JsonBackReference
     @Constraints.Required
-    @JoinColumn(name = "id_providerType", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private ProviderType providerType;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id_unit", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private Unit unit;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_itemType", unique = true)
+    @Column(nullable = false, unique = true)
     private String nameItemType;
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(nullable = false, name = "cost_itemType")
+    @Column(nullable = false)
     private BigDecimal costItemType;
-
-    @Range(min = 0, max = 3)
-    @Column(nullable = false, name = "status_itemType")
-    private Integer statusItemType;
 
     @OneToMany(mappedBy = "itemType", cascade= CascadeType.ALL)
     private List<InvoiceDetail> invoiceDetails;
@@ -55,19 +47,10 @@ public class ItemType extends AbstractEntity{
     private static Finder<Long, ItemType> finder = new Finder<>(ItemType.class);
 
     public ItemType() {
-        statusItemType = 1;
         invoiceDetails = new ArrayList<>();
     }
 
     //GETTER AND SETTER
-    public Long getIdItemType() {
-        return idItemType;
-    }
-
-    public void setIdItemType(Long idItemType) {
-        this.idItemType = idItemType;
-    }
-
     public String getNameItemType() {
         return nameItemType;
     }
@@ -82,14 +65,6 @@ public class ItemType extends AbstractEntity{
 
     public void setCostItemType(BigDecimal costItemType) {
         this.costItemType = costItemType;
-    }
-
-    public Integer getStatusItemType() {
-        return statusItemType;
-    }
-
-    public void setStatusItemType(Integer statusItemType) {
-        this.statusItemType = statusItemType;
     }
 
     public ProviderType getProviderType() {
@@ -125,8 +100,7 @@ public class ItemType extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
-                                              String sort, String name, Long id_ProviderType, Integer status,
-                                              boolean deleted ){
+                                              String sort, String name, Long providerType, Long unit, boolean deleted ){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
@@ -135,20 +109,14 @@ public class ItemType extends AbstractEntity{
         if(name != null)
             expressionList.startsWith("nameItemType", name);
 
-        if(status != null)
-            expressionList.eq("statusItemType", status);
+        if(sort != null)
+            expressionList.orderBy(sort(sort));
 
-        if(sort != null) {
-            if(sort.contains(" ")) {
-                String []  aux = sort.split(" ", 2);
-                expressionList.orderBy(sort( aux[0], aux[1]));
-            }else {
-                expressionList.orderBy(sort("idItemType", sort));
-            }
-        }
+        if(providerType != 0L )
+            expressionList.eq("providerType.id", providerType);
 
-        if(id_ProviderType != 0L )
-            expressionList.eq("providerType.idProviderType", id_ProviderType);
+        if(unit != 0L )
+            expressionList.eq("unit.id", providerType);
 
         if( deleted )
             expressionList.setIncludeSoftDeletes();
@@ -163,60 +131,5 @@ public class ItemType extends AbstractEntity{
                 pageSize);
     }
 
-
-    public static List<ItemType> getByProviderTypeId(Long idProviderType, Integer status){
-        String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
-                " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
-                " item.updated_at c6, item.id_providertype c7, item.id_unit c8  " +
-                " FROM item_types item "+
-                " inner join provider_type protype on protype.id_providertype=item.id_providertype " +
-                " where item.status_delete=0  and item.id_providertype= :idprovidertype ";
-
-        if(status!=-1) sql+= " and protype.status_delete=:status ";
-
-        SqlQuery query = Ebean.createSqlQuery(sql)
-                .setParameter("idprovidertype", idProviderType )
-                .setParameter("status",status);
-
-        List<SqlRow>   results = query.findList();
-
-        return toItemTypes(results);
-    }
-
-    public static List<ItemType> getByNameItemType(String NameItemType, String order)
-    {
-        String sql="SELECT item.id_itemtype  c0, item.status_delete c1, item.name_itemtype   c2, " +
-                " item.cost_itemtype c3, item.status_itemtype c4, item.created_at c5, " +
-                " item.updated_at c6, item.id_providertype c7, item.id_unit c8  " +
-                " FROM item_types item "+
-                " where item.status_delete=0  and item.name_itemtype like '%"+NameItemType+"%' "+
-                " order by item.id_itemtype   "+order;
-
-        SqlQuery query = Ebean.createSqlQuery(sql);
-
-        List<SqlRow>   results = query.findList();
-
-        return toItemTypes(results);
-    }
-
-    public static List<ItemType> toItemTypes(List<SqlRow>  sqlRows)
-    {
-        List<ItemType> itemTypes = new ArrayList<>();
-
-        ItemType itemType;
-        for(int i=0; i < sqlRows.size(); ++i)
-        {
-            itemType = new ItemType();
-
-            itemType.setIdItemType(sqlRows.get(i).getLong("c0"));
-            itemType.setNameItemType(sqlRows.get(i).getString("c2"));
-            itemType.setCostItemType(sqlRows.get(i).getBigDecimal("c3"));
-            itemType.setUnit(Unit.findById(sqlRows.get(i).getLong("c8")));
-            itemType.setStatusItemType(sqlRows.get(i).getInteger("c4"));
-            itemTypes.add(itemType);
-        }
-
-        return itemTypes;
-    }
 
 }

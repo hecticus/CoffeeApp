@@ -15,7 +15,13 @@ import javax.persistence.Id;
 public class Config extends Model {
 
     @Id
-    private Long idConfig;
+    @Column(length = 50, unique = true, nullable = false)
+    private Long config;
+
+    @Constraints.Required
+    @Constraints.MaxLength(20)
+    @Column(nullable = false, length = 20, unique = true)
+    private String nameConfig;
 
     @Constraints.Required
     @Constraints.MaxLength(50)
@@ -29,16 +35,7 @@ public class Config extends Model {
     @Column(columnDefinition = "text")
     private String description;
 
-
     public static Finder<Long, Config> finder = new Finder<Long, Config>(Config.class);
-
-    public Long getIdConfig() {
-        return idConfig;
-    }
-
-    public void setIdConfig(Long idConfig) {
-        this.idConfig = idConfig;
-    }
 
     public String getConfigKey() {
         return configKey;

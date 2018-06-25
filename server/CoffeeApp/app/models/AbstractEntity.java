@@ -8,6 +8,7 @@ import io.ebean.annotation.UpdatedTimestamp;
 import play.data.format.Formats;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
 
@@ -19,6 +20,9 @@ import java.time.ZonedDateTime;
  */
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
+
+    @Id
+    protected Long id;
 
     @SoftDelete
     private boolean statusDelete;
@@ -35,12 +39,20 @@ public abstract class AbstractEntity extends Model {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
 
-    public boolean isStatusDelete() {
-        return statusDelete;
+    public Long getId() {
+        return id;
     }
 
-    public void setStatusDeleted(boolean statusDelete) {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatusDelete(boolean statusDelete) {
         this.statusDelete = statusDelete;
+    }
+
+    public boolean isStatusDelete() {
+        return statusDelete;
     }
 
     public ZonedDateTime getCreatedAt() {

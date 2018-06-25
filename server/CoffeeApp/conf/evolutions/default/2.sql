@@ -1,4 +1,4 @@
-# --- !Ups
+--# --- !Ups
 
 INSERT INTO `provider_type` (`id_providertype`,`status_delete`,`name_providertype`)  VALUES
 (1, 0, 'Vendedor'),
@@ -215,7 +215,7 @@ INSERT INTO `invoicesdetails_purities` (`id_invoicedetail_purity`,`status_delete
 (40, 0, 2, 10,0,0,1262,  1),
 (41, 0, 1, 25,0,0,1262,  1);
 
-# --- !Downs
+--# --- !Downs
 
 SET FOREIGN_KEY_CHECKS = 0;
 

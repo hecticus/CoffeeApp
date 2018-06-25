@@ -19,22 +19,13 @@ import java.util.List;
 @Table(name="purities")
 public class Purity extends AbstractEntity{
 
-    @Id
-    @Column(name = "id_purity")
-    private Long idPurity;
+    @Constraints.Required
+    @Column(nullable = false, unique = true)
+    private String namePurity;
 
     @Constraints.Required
-    @Column(nullable = false, name = "name_purity", unique = true)
-    private String NamePurity;
-
-    @Constraints.Required
-    @Column(nullable = false, name = "discountRate_purity")
-    private Integer DiscountRatePurity;
-
-    @Constraints.Required
-    @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_purity")
-    private Integer statusPurity;
+    @Column(nullable = false)
+    private Integer discountRatePurity;
 
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurities;
@@ -42,42 +33,26 @@ public class Purity extends AbstractEntity{
     private static Finder<Long, Purity> finder = new Finder<>(Purity.class);
 
     public Purity() {
-        statusPurity = 1;
-        DiscountRatePurity = 0;
+        discountRatePurity = 0;
         invoiceDetailPurities = new ArrayList<>();
     }
 
     //Setter and Getter
-    public Long getIdPurity() {
-        return idPurity;
-    }
-
-    public void setIdPurity(Long idPurity) {
-        this.idPurity = idPurity;
-    }
 
     public String getNamePurity() {
-        return NamePurity;
+        return namePurity;
     }
 
     public void setNamePurity(String namePurity) {
-        NamePurity = namePurity;
-    }
-
-    public Integer getStatusPurity() {
-        return statusPurity;
-    }
-
-    public void setStatusPurity(Integer statusPurity) {
-        this.statusPurity = statusPurity;
+        this.namePurity = namePurity;
     }
 
     public Integer getDiscountRatePurity() {
-        return DiscountRatePurity;
+        return discountRatePurity;
     }
 
     public void setDiscountRatePurity(Integer discountRatePurity) {
-        DiscountRatePurity = discountRatePurity;
+        discountRatePurity = discountRatePurity;
     }
 
     @JsonIgnore

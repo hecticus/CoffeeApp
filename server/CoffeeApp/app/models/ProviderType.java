@@ -18,23 +18,15 @@ import java.util.List;
 @Entity
 @Table(name="provider_type")
 public class ProviderType  extends AbstractEntity {
-    @Id
-    @Column(name = "id_ProviderType", length = 100, nullable = false)
-    private Long idProviderType;
 
     @Constraints.Required
     @Constraints.MaxLength(60)
-    @Column(nullable = false, unique = true, name = "name_ProviderType", length = 60)
+    @Column(nullable = false, unique = true, length = 60)
     private String nameProviderType;
-
-    @Range(min = 0, max = 1)
-    @Column(name = "status_ProviderType", columnDefinition = "integer default 1")
-    private Integer statusProviderType;
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Provider> providers;
-
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -43,19 +35,11 @@ public class ProviderType  extends AbstractEntity {
     public static Finder<Long, ProviderType> finder = new Finder<>(ProviderType.class);
 
     public ProviderType() {
-        statusProviderType = 1;
         itemTypes = new ArrayList<>();
         providers = new ArrayList<>();
     }
 
     //Setter and Getter
-    public Long getIdProviderType() {
-        return idProviderType;
-    }
-
-    public void setIdProviderType(Long idProviderType) {
-        this.idProviderType = idProviderType;
-    }
 
     public String getNameProviderType() {
         return nameProviderType;
@@ -63,14 +47,6 @@ public class ProviderType  extends AbstractEntity {
 
     public void setNameProviderType(String nameProviderType) {
         this.nameProviderType = nameProviderType;
-    }
-
-    public Integer getStatusProviderType() {
-        return statusProviderType;
-    }
-
-    public void setStatusProviderType(Integer statusProviderType) {
-        this.statusProviderType = statusProviderType;
     }
 
     public List<Provider> getProviders() {
