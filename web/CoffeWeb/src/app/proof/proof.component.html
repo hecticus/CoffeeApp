@@ -1,0 +1,55 @@
+<div>
+<p>
+  Tamaño del lado {{lado}}
+</p>
+<p>
+  1 way binding <input type="text" [ngModel]="lado">
+</p>
+<p>
+  2 way binding: <input type="text" [(ngModel)]="lado">
+</p>
+
+<p>
+<img [src]="hh" >Estoy activado o desactivado><span></span>
+</p>
+
+
+
+<table>
+    <tr>
+      <th>Nombre</th>
+      <th>Lados</th>
+      <th [attr.colspan]="poligono.figuras.length" >Figuras</th>
+      <th [attr.colspan]="poligono.puntos.length">Puntos</th>
+    </tr>
+    <tr>
+      <td>{{poligono.nombre}}</td>
+      <td>{{poligono.puntos.length}}</td>
+      <td *ngFor="let figura of poligono.figuras ">{{figura.x + figura.y}}</td>
+      <td *ngFor="let punto of poligono.puntos">{{punto.x}},{{punto.y}}</td>
+    </tr>
+</table>
+<span></span>
+</div>
+
+<div>
+  <button (click)="procesarEvento($event)">Transmito el objeto evento</button>
+
+
+  <div (click)="poligono.nombre = 'Shamuel'">Marcado Cliente</div>
+
+  <article
+  *ngFor="let contactoItem of contactos"
+  (click)="seleccionaContacto(contactoItem)"
+>
+  {{ contactoItem }}
+</article>
+<h2>jola liente</h2>
+<app-cliente
+  [nombre]="cliente.nombre"
+  [cif]="cliente.cif"
+  [direccion]="cliente.direccion"
+></app-cliente>
+</div>
+
+<button (click)="cliente.cif='ESB9922'">Cambiar CIF</button>

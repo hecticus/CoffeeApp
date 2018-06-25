@@ -1,0 +1,30 @@
+button {
+  padding: 15px;
+  font-size: 1.2em;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  width: 70px;
+  height: 60px;
+}
+.si{
+  background-color: #6c5;
+}
+.no{
+  background-color: #933;
+}
+
+table {
+  border: 1px solid darkgoldenrod;
+  margin: 20px;
+}
+th {
+  background-color: rgb(220, 224, 152);
+  text-align: center;
+  padding: 10px;
+}
+td {
+  padding: 5px;
+  border: 1px solid #ddd;
+}
+

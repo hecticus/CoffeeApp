@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+
 import { BaseService } from '../../core/base.service';
-import { Observable } from 'rxjs/internal/Observable';
+import { Injectable } from '@angular/core';
 import { Lot } from '../../core/models/lot';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,7 @@ export class LotService {
   new(): Observable<Lot> {
       return this.http.get<Lot>(LotService.BASE_URL + '/new');
   }
-
+/* 
   getQuestions(lot: Lot) {
         let dropdownQuestionFarm = new DropdownQuestion({
           key: 'farm',
@@ -187,7 +188,7 @@ export class LotService {
           }),
       ];
       return answers;
-  }
+  } */
 }
 
 

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title: boolean;
+  title = 'Manual de Angular de DesarrolloWeb.com';
 }
