@@ -27,6 +27,30 @@ public class StatusInvoice extends Status {
     @JsonIgnore
     private List<Invoice> invoices = new ArrayList<>();
 
+    public static String getAPPROVED() {
+        return APPROVED;
+    }
+
+    public static String getREJECTED() {
+        return REJECTED;
+    }
+
+    public static String getCLOSED() {
+        return CLOSED;
+    }
+
+    public static String getCANCELLED() {
+        return CANCELLED;
+    }
+
+    public List<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
     private static Finder<String, StatusInvoice> finder = new Finder<>(StatusInvoice.class);
 
     public static StatusInvoice findById(String id){

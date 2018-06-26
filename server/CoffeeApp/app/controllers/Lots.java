@@ -37,40 +37,17 @@ public class Lots extends Controller {
     }
 
     //@CoffeAppsecurity
-    public Result preCreate() {
-        try {
-            Farm farm = new Farm();
-            Lot lot = new Lot();
-            lot.setFarm(farm);
-
-            return Response.foundEntity(
-                    Json.toJson(lot));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-    //@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("nameLot", json.findValue("name"));
-            node.set("priceLot", json.findValue("price_lot"));
-
-            //farm
-            ObjectNode farmNode = Json.newObject();
-            farmNode.set("idFarm", json.findValue("farm"));
-            node.set("farm", farmNode);
-
-            Form<Lot> form = formFactory.form(Lot.class).bind(node);
+            Form<Lot> form = formFactory.form(Lot.class).bind(json);
             if(form.hasErrors())
                 return badRequest(form.errorsAsJson());
 
-            Lot lot = Json.fromJson(node, Lot.class);
+            Lot lot = Json.fromJson(json, Lot.class);
             lot.save();
             return  Response.updatedEntity(Json.toJson(lot));
 
@@ -80,29 +57,18 @@ public class Lots extends Controller {
     }
 
 ////@CoffeAppsecurity
-    public Result update() {
+    public Result update(Long id) {
         try{
             JsonNode json = request().body().asJson();
             if(json == null)
                 return badRequest("Expecting Json data");
 
-            Long id = json.get("idLot").asLong();
-            if (id == null )
-                return badRequest("Missing parameter idLot");
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("nameLot", json.findValue("name"));
-            node.set("priceLot", json.findValue("price_lot"));
-            ObjectNode farmNode = Json.newObject();
-            farmNode.set("idFarm", json.findValue("farm"));
-            node.set("farm", farmNode);
-
-            Form<Lot> form = formFactory.form(Lot.class).bind(node);
+            Form<Lot> form = formFactory.form(Lot.class).bind(json);
             if(form.hasErrors())
                 return badRequest(form.errorsAsJson());
 
-            Lot lot = Json.fromJson(node, Lot.class);
-            lot.setIdLot(id);
+            Lot lot = Json.fromJson(json, Lot.class);
+            lot.setId(id);
             lot.update();
             return  Response.updatedEntity(Json.toJson(lot));
         }catch(Exception e){
@@ -133,8 +99,7 @@ public class Lots extends Controller {
 ////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Lot lot = Lot.findById(id);
-            return Response.foundEntity(Response.toJson(lot, Lot.class));
+            return Response.foundEntity(Response.toJson(Lot.findById(id), Lot.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -142,7 +107,7 @@ public class Lots extends Controller {
 
     ////@CoffeAppsecurity
     public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
-                           String name, Long idFarm, Integer status, boolean deleted){
+                           String name, Long idFarm, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize, pathProperties, sort, name, idFarm,

@@ -36,15 +36,11 @@ public class Units extends Controller {
             if(json == null)
                 return Response.requiredJson();
 
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("NameUnit", json.findValue("name"));
-
             Form<Unit> form = formFactory.form(Unit.class).bind(json);
             if(form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            // mapping object-json
-            Unit unit = Json.fromJson(node, Unit.class);
+            Unit unit = Json.fromJson(json, Unit.class);
             unit.save();
             return Response.createdEntity(Json.toJson(unit));
 
@@ -54,27 +50,17 @@ public class Units extends Controller {
     }
 
 ////@CoffeAppsecurity
-    public  Result update(){
+    public  Result update(Long id){
         try{
             JsonNode json = request().body().asJson();
-
             if(json == null)
                 return badRequest("Expecting Json data");
-
-            JsonNode id = json.get("idUnit");
-            if(id == null )
-                return badRequest("Missing parameter idUnit");
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("NameUnit", json.findValue("name"));
-
             Form<Unit> form = formFactory.form(Unit.class).bind(json);
             if(form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            // mapping object-json
-            Unit unit = Json.fromJson(node, Unit.class);
-            unit.setIdUnit(id.asLong());
+            Unit unit = Json.fromJson(json, Unit.class);
+            unit.setId(id);
             unit.update();
             return Response.createdEntity(Json.toJson(unit));
         }catch (Exception e){
@@ -95,8 +81,7 @@ public class Units extends Controller {
 ////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Unit unit = Unit.findById(id);
-            return Response.foundEntity(Response.toJson(unit, Unit.class));
+            return Response.foundEntity(Response.toJson(Unit.findById(id), Unit.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -104,10 +89,10 @@ public class Units extends Controller {
 
     //@CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
-                          String sort, String name, Integer status, boolean deleted){
+                          String sort, String name,  boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Unit.findAll(index, size, pathProperties, sort, name, status, deleted);
+            ListPagerCollection listPager = Unit.findAll(index, size, pathProperties, sort, name,  deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);

@@ -25,7 +25,7 @@ public abstract class AbstractEntity extends Model {
     protected Long id;
 
     @SoftDelete
-    private boolean statusDelete;
+    private boolean deleted;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -47,12 +47,12 @@ public abstract class AbstractEntity extends Model {
         this.id = id;
     }
 
-    public void setStatusDelete(boolean statusDelete) {
-        this.statusDelete = statusDelete;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public boolean isStatusDelete() {
-        return statusDelete;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public ZonedDateTime getCreatedAt() {
@@ -79,13 +79,4 @@ public abstract class AbstractEntity extends Model {
         return sort + " asc";
     }
 
-    public static String sort(String sort, String order) {
-        if (order.equalsIgnoreCase("asc")  || order.equalsIgnoreCase("desc")) {
-            if (order.equalsIgnoreCase("desc") )
-                return sort + " desc" ;
-            return sort + " asc";
-        }else{
-            return null;
-        }
-    }
 }

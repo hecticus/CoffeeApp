@@ -53,9 +53,7 @@ public class Purities extends Controller{
             if(json == null)
                 return Response.requiredJson();
 
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("NamePurity", json.findValue("namePurity"));
-            Form<Purity> form = formFactory.form(Purity.class).bind(node);
+            Form<Purity> form = formFactory.form(Purity.class).bind(json);
             if (form.hasErrors()){
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
@@ -70,26 +68,18 @@ public class Purities extends Controller{
     }
 
 ////@CoffeAppsecurity
-    public Result update() {
+    public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("idPurity");
-            if (id == null)
-                return Response.requiredParameter("idPurity");
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("NamePurity", json.findValue("namePurity"));
-            Form<Purity> form = formFactory.form(Purity.class).bind(node);
-            if (form.hasErrors()){
+            Form<Purity> form = formFactory.form(Purity.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
 
-            // mapping object-json
             Purity purity = Json.fromJson(json, Purity.class);
-            purity.setIdPurity(id.asLong());
+            purity.setId(id);
             purity.update();
             return Response.updatedEntity(Json.toJson(purity));
 
@@ -111,19 +101,17 @@ public class Purities extends Controller{
 ////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            return Response.foundEntity(Json.toJson( Purity.findById(id)));
+            return Response.foundEntity(Json.toJson(Purity.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
     //@CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String collection, String sort, String name, Integer status,
-                          boolean deleted){
+    public Result findAll(Integer index, Integer size, String collection, String sort, String name, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Purity.findAll(index, size, pathProperties, sort, name, status, deleted);
-
+            ListPagerCollection listPager = Purity.findAll(index, size, pathProperties, sort, name, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);

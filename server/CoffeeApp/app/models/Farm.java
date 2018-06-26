@@ -69,7 +69,7 @@ public class Farm extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
-                                    String name, String sort, Long status, boolean deleted){
+                                    String name, String sort, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -82,10 +82,10 @@ public class Farm extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort);
 
-        if(status != 0l)
+        if(status != 0L)
             expressionList.eq("statusFarm.id",status);
 
-        if( deleted )
+        if( delete )
             expressionList.setIncludeSoftDeletes();
 
         if(index == null || size == null)

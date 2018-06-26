@@ -100,7 +100,7 @@ public class ItemType extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
-                                              String sort, String name, Long providerType, Long unit, boolean deleted ){
+                                              String sort, String name, Long providerType, Long unit, boolean delete ){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
@@ -109,16 +109,16 @@ public class ItemType extends AbstractEntity{
         if(name != null)
             expressionList.startsWith("nameItemType", name);
 
-        if(sort != null)
-            expressionList.orderBy(sort(sort));
-
         if(providerType != 0L )
             expressionList.eq("providerType.id", providerType);
 
         if(unit != 0L )
             expressionList.eq("unit.id", providerType);
 
-        if( deleted )
+        if(sort != null)
+            expressionList.orderBy(sort(sort));
+
+        if( delete )
             expressionList.setIncludeSoftDeletes();
 
         if(pageIndex == null || pageSize == null)

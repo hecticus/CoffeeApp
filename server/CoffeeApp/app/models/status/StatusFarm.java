@@ -14,13 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("statusFarm")
+@DiscriminatorValue("farm")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusFarm.class)
 public class StatusFarm extends Status {
 
     @OneToMany(mappedBy = "statusFarm")
     @JsonIgnore
     private List<Farm> farms = new ArrayList<>();
+
+    public List<Farm> getFarms() {
+        return farms;
+    }
+
+    public void setFarms(List<Farm> farms) {
+        this.farms = farms;
+    }
 
     private static Finder<String, StatusFarm> finder = new Finder<>(StatusFarm.class);
 

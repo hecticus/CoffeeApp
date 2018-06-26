@@ -53,9 +53,7 @@ public class ProviderTypes {
 
             ProviderType providerType = form.get();
             providerType.save();
-
             return Response.createdEntity(Json.toJson(providerType));
-
         }catch(Exception e){
             return NsExceptionsUtils.create(e);
         }
@@ -74,11 +72,9 @@ public class ProviderTypes {
                 return Response.invalidParameter(form.errorsAsJson());
 
             ProviderType providerType = Json.fromJson(json, ProviderType.class);
-            providerType.setIdProviderType(id);
+            providerType.setId(id);
             providerType.update();
-
             return Response.updatedEntity(Json.toJson(providerType));
-
         }catch(Exception e){
             return NsExceptionsUtils.update(e);
         }
@@ -117,10 +113,10 @@ public class ProviderTypes {
 
     //@CoffeAppsecurity
     public Result findAll( Integer index, Integer size, String collection,
-                           String sort, String name, Integer status, boolean deleted){
+                           String sort, String name, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = ProviderType.findAll(index, size, pathProperties, sort, name, status, deleted);
+            ListPagerCollection listPager = ProviderType.findAll(index, size, pathProperties, sort, name, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);

@@ -70,7 +70,7 @@ public class ProviderType  extends AbstractEntity {
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
-                                               String sort, String name, boolean deleted){
+                                               String sort, String name, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -83,7 +83,7 @@ public class ProviderType  extends AbstractEntity {
         if(sort != null)
             expressionList.orderBy(sort( sort));
 
-        if( deleted )
+        if( delete )
             expressionList.setIncludeSoftDeletes();
 
         if(index == null || size == null)

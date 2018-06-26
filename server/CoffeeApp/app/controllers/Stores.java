@@ -36,17 +36,6 @@ public class Stores {
 
 
 ////@CoffeAppsecurity
-    public Result preCreate() {
-        try {
-            Store store = new Store();
-            return Response.foundEntity(
-                    Json.toJson(store));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-////@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -57,7 +46,6 @@ public class Stores {
             if(form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            // mapping object-json
             Store store = Json.fromJson(json, Store.class);
             store.save();
             return Response.createdEntity(Json.toJson(store));
@@ -67,23 +55,18 @@ public class Stores {
     }
 
 ////@CoffeAppsecurity
-    public Result update() {
-        try
-        {
+    public Result update(Long id) {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
-
-            JsonNode id = json.get("idStore");
-            if (id == null)
-                return Response.requiredParameter("idStore");
 
             Form<Store> form = formFactory.form(Store.class).bind(json);
             if(form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            // mapping object-json
             Store store = Json.fromJson(json, Store.class);
+            store.setId(id);
             store.update();
             return Response.updatedEntity(Json.toJson(store));
 
@@ -105,8 +88,7 @@ public class Stores {
 ////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Store store = Store.findById(id);
-            return Response.foundEntity(Response.toJson(store, Store.class));
+            return Response.foundEntity(Response.toJson(Store.findById(id), Store.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

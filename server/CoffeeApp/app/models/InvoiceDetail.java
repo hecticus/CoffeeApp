@@ -181,12 +181,12 @@ public class InvoiceDetail  extends AbstractEntity{
         this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
-    public StatusInvoiceDetail getStatusInvoiceDetail() {
+    public StatusInvoiceDetail getInvoiceDetail() {
         return statusInvoiceDetail;
     }
 
-    public void setStatusInvoiceDetail(StatusInvoiceDetail statusInvoiceDetail) {
-        this.statusInvoiceDetail = statusInvoiceDetail;
+    public void setInvoiceDetail(StatusInvoiceDetail invoiceDetail) {
+        this.statusInvoiceDetail = invoiceDetail;
     }
 
     //Metodos Creados
@@ -196,7 +196,7 @@ public class InvoiceDetail  extends AbstractEntity{
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
                                               Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
-                                              String startDateInvoiceDetail, Long status, boolean deleted){
+                                              String startDateInvoiceDetail, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -221,7 +221,7 @@ public class InvoiceDetail  extends AbstractEntity{
         if(startDateInvoiceDetail != null)
             expressionList.startsWith("createdAt", startDateInvoiceDetail );
 
-        if(deleted)
+        if(delete)
             expressionList.setIncludeSoftDeletes();
 
         if(sort != null)

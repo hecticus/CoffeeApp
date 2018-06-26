@@ -90,18 +90,12 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         this.invoiceDetail = invoiceDetail;
     }
 
-    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity){
-        return finder.query().where()
-                .eq("id_invoicedetail",IdInvopiceDetail)
-                .eq("id_purity",IdPurity).findUnique();
-    }
-
     public static  InvoiceDetailPurity findById(Long id){
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties, String sort,
-                                       Long purity, Long invoiceDetail, boolean deleted){
+    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+                                              String sort, Long purity, Long invoiceDetail, boolean delete){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
@@ -116,7 +110,7 @@ public class InvoiceDetailPurity  extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-        if(deleted)
+        if(delete)
             expressionList.setIncludeSoftDeletes();
 
         if(pageIndex == null || pageSize == null)

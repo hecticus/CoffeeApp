@@ -36,13 +36,12 @@ public class Store extends AbstractEntity{
     }
 
     //Setter and Getter
-
     public String getNameStore() {
         return nameStore;
     }
 
     public void setNameStore(String nameStore) {
-        nameStore = nameStore;
+        this.nameStore = nameStore;
     }
 
     public StatusStore getStatusStore() {
@@ -68,23 +67,23 @@ public class Store extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
-                                              String sort, String name, Integer status, boolean deleted){
+                                              String sort, String name, Integer status, boolean delete){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.startsWith("NameStore", name);
+            expressionList.startsWith("nameStore", name);
 
-        if(deleted)
+        if(delete)
             expressionList.setIncludeSoftDeletes();
 
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
         if(status != 0L)
-            expressionList.eq("statusStore", status );
+            expressionList.eq("statusStore.id", status );
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());

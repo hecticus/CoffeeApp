@@ -103,7 +103,7 @@ public class Invoice extends AbstractEntity{
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long providerType, String startDate,
-                                         String endDate, Long status ,Boolean deleted){
+                                         String endDate, Long status ,Boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -117,10 +117,10 @@ public class Invoice extends AbstractEntity{
             expressionList.eq("provider.providerType.id", providerType);
 
         if(startDate != null)
-            expressionList.eq("createdAt", startDate);
+            expressionList.startsWith("createdAt", startDate);
 
         if(endDate!= null)
-            expressionList.eq("closedDateInvoice", endDate);
+            expressionList.startsWith("closedDateInvoice", endDate);
 
         if(sort != null)
             expressionList.orderBy(sort( sort));
@@ -128,7 +128,7 @@ public class Invoice extends AbstractEntity{
         if(status != 0L)
             expressionList.eq("statusInvoice.id", status);
 
-        if( deleted )
+        if( delete )
             expressionList.setIncludeSoftDeletes();
 
         if(pageIndex == null || pageSize == null)

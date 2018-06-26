@@ -22,6 +22,14 @@ public class StatusInvoiceDetail extends Status {
     @JsonIgnore
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
+    public List<InvoiceDetail> getInvoiceDetails() {
+        return invoiceDetails;
+    }
+
+    public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
+        this.invoiceDetails = invoiceDetails;
+    }
+
     private static Finder<String, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
 
     public static StatusInvoiceDetail findById(String id){

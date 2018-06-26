@@ -5,18 +5,19 @@ import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.ResponseCollection;
 import controllers.utils.ListPagerCollection;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
 import models.InvoiceDetailPurity;
-import models.Purity;
 import controllers.responseUtils.Response;
+import play.data.Form;
+import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
-import java.util.Collection;
-import java.util.List;
+import javax.inject.Inject;
 
 
 /**
@@ -24,43 +25,22 @@ import java.util.List;
  */
 public class InvoiceDetailPurities  extends Controller {
 
+    @Inject
+    private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
 //@CoffeAppsecurity
     public  Result create() {
-        try
-        {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
+            Form<InvoiceDetailPurity> form = formFactory.form(InvoiceDetailPurity.class).bind(json);
+            if (form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            JsonNode id_purity = json.get("id_purity");
-            if (id_purity == null)
-                return Response.requiredParameter("id_purity");
-
-            JsonNode id_invoiceDetail = json.get("id_invoiceDetail");
-            if (id_invoiceDetail == null)
-                return Response.requiredParameter("id_invoiceDetail");
-
-
-            JsonNode valueRateInvoiceDetailPurity = json.get("valueRateInvoiceDetailPurity");
-            if (valueRateInvoiceDetailPurity == null)
-                return Response.requiredParameter("valueRateInvoiceDetailPurity");
-
-
-            JsonNode totalDiscountPurity = json.get("totalDiscountPurity");
-            if (totalDiscountPurity == null)
-                return Response.requiredParameter("totalDiscountPurity");
-
-
-            // mapping object-json
             InvoiceDetailPurity invoiceDetailPurity = Json.fromJson(json, InvoiceDetailPurity.class);
-
-            invoiceDetailPurity.setPurity(purityDao.findById(id_purity.asLong()));
-            invoiceDetailPurity.setInvoiceDetail(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
-
-            //invoiceDetailPurity = invoiceDetailPurityDao.save();//.create(invoiceDetailPurity);
             invoiceDetailPurity.save();
             return Response.createdEntity(Json.toJson(invoiceDetailPurity));
 
@@ -70,29 +50,20 @@ public class InvoiceDetailPurities  extends Controller {
     }
 
 //@CoffeAppsecurity
-    public Result update() {
-        try
-        {
+    public Result update(Long id) {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("idInvoiceDetailPurity");
-            if (id == null)
-                return Response.requiredParameter("idInvoiceDetailPurity");
+            Form<InvoiceDetailPurity> form = formFactory.form(InvoiceDetailPurity.class).bind(json);
+            if (form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            InvoiceDetailPurity invoiceDetailPurity =  Json.fromJson(json, InvoiceDetailPurity.class);
+            InvoiceDetailPurity invoiceDetailPurity = Json.fromJson(json, InvoiceDetailPurity.class);
+            invoiceDetailPurity.setId(id);
 
-            JsonNode id_purity = json.get("id_purity");
-            if (id_purity != null)
-                invoiceDetailPurity.setPurity(purityDao.findById(id_purity.asLong()));
-
-
-            JsonNode id_invoiceDetail = json.get("id_invoiceDetail");
-            if (id_invoiceDetail != null)
-                invoiceDetailPurity.setInvoiceDetail(invoiceDetailDao.findById(id_invoiceDetail.asLong()));
-
-            invoiceDetailPurity.update();// = invoiceDetailPurityDao.update(invoiceDetailPurity);
+            invoiceDetailPurity.update();
             return Response.updatedEntity(Json.toJson(invoiceDetailPurity));
 
         }catch(Exception e){
@@ -103,36 +74,17 @@ public class InvoiceDetailPurities  extends Controller {
 //@CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.findById(id);
-            if(invoiceDetailPurity != null) {
-
-//                invoiceDetailPurity.setStatusDelete(1);
-//                invoiceDetailPurity = invoiceDetailPurityDao.update(invoiceDetailPurity);
-                invoiceDetailPurity.update();
-                return Response.deletedEntity();
-            } else {
-                return  Response.message("Successful no existe el registro a eliminar");
-            }
+            Ebean.delete(InvoiceDetail.findById(id));
+            return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return Response.responseExceptionUpdated(e);
         }
     }
-    /*public Result delete(Long id) {
-        try {
-
-            InvoiceDetailPurity invoiceDetailPurity = findById(id);
-            //    invoiceDetailPurityDao.delete(id);
-            return Response.deletedEntity();
-
-        } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
-        }
-    }*/
 
 //@CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            InvoiceDetailPurity invoiceDetailPurity = invoiceDetailPurityDao.findById(id);
+            InvoiceDetailPurity invoiceDetailPurity = InvoiceDetailPurity.findById(id);
             return Response.foundEntity(Response.toJson(invoiceDetailPurity, InvoiceDetailPurity.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();

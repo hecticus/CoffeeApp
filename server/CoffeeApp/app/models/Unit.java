@@ -56,7 +56,7 @@ public class Unit extends AbstractEntity {
     }
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
-                                              String sort, String name, Integer status, boolean deleted){
+                                              String sort, String name, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -66,18 +66,14 @@ public class Unit extends AbstractEntity {
         if(name != null)
             expressionList.startsWith("nameUnit", name);
 
-        if(deleted)
+        if(delete)
             expressionList.setIncludeSoftDeletes();
 
         if(sort != null)
             expressionList.orderBy(sort( sort));
 
-        if(status != 0L)
-            expressionList.eq("statusUnit", status );
-
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
-
 
         return new ListPagerCollection(
                 expressionList.setFirstRow(index).setMaxRows(size).findList(),

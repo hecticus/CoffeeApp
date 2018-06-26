@@ -20,7 +20,8 @@ import java.util.List;
 public class Purity extends AbstractEntity{
 
     @Constraints.Required
-    @Column(nullable = false, unique = true)
+    @Constraints.MaxLength(20)
+    @Column(nullable = false, length = 20, unique = true)
     private String namePurity;
 
     @Constraints.Required
@@ -38,6 +39,7 @@ public class Purity extends AbstractEntity{
     }
 
     //Setter and Getter
+
 
     public String getNamePurity() {
         return namePurity;
@@ -70,22 +72,19 @@ public class Purity extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties, String sort,
-                                               String name,  Long status, boolean deleted){
+                                               String name, boolean delete){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
-        if(status != 0L)
-            expressionList.eq("statusPurity",status);
-
         if(name != null)
             expressionList.startsWith("NamePurity", name);
 
         if(sort != null)
-            expressionList.orderBy(sort( sort));
+            expressionList.orderBy(sort(sort));
 
-        if( deleted )
+        if( delete )
             expressionList.setIncludeSoftDeletes();
 
         if(index == null || size == null)

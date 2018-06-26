@@ -22,6 +22,14 @@ public class StatusProvider extends Status {
     @JsonIgnore
     private List<Provider> providers = new ArrayList<>();
 
+    public List<Provider> getProviders() {
+        return providers;
+    }
+
+    public void setProviders(List<Provider> providers) {
+        this.providers = providers;
+    }
+
     private static Finder<String, StatusProvider> finder = new Finder<>(StatusProvider.class);
 
     public static StatusProvider findById(String id){

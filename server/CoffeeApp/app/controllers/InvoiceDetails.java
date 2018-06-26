@@ -39,60 +39,17 @@ public class InvoiceDetails extends Controller {
     }
 
 ////@CoffeAppsecurity
-    public Result preCreate() {
-        try {
-            InvoiceDetail invoiceDetail = new InvoiceDetail();
-            Invoice invoice = new Invoice();
-            ItemType itemType = new ItemType ();
-            Store store = new Store();
-            Lot lot = new Lot();
-
-            invoiceDetail.setInvoice(invoice);
-            invoiceDetail.setItemType(itemType);
-            invoiceDetail.setStore(store);
-            invoiceDetail.setLot(lot);
-
-            return Response.foundEntity(
-                    Json.toJson(invoiceDetail));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-////@CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
 
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            //invoice
-            ObjectNode invoiceNode = Json.newObject();
-            invoiceNode.set("idInvoice", json.findValue("id_invoice"));
-            node.set("invoice", invoiceNode);
-
-            //itemType
-            ObjectNode itemTypeNode = Json.newObject();
-            itemTypeNode.set("idItemType", json.findValue("id_itemType"));
-            node.set("itemType", itemTypeNode);
-
-            //lot
-            ObjectNode lotNode = Json.newObject();
-            lotNode.set("idLot", json.findValue("id_lot"));
-            node.set("lot", lotNode);
-
-            //store
-            ObjectNode storeNode = Json.newObject();
-            storeNode.set("idStore", json.findValue("id_store"));
-            node.set("store", storeNode);
-
-            Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(node);
-            if (form.hasErrors()){
+            Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
 
-            InvoiceDetail invoiceDetail = Json.fromJson(node, InvoiceDetail.class);
+            InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
             invoiceDetail.save();
             return  Response.createdEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
@@ -101,43 +58,19 @@ public class InvoiceDetails extends Controller {
     }
 
 ////@CoffeAppsecurity
-    public Result update() {
+    public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("idInvoiceDetail");
-            if (id == null )
-                return Response.invalidParameter("Missing parameter idInvoiceDetail");
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            //invoice
-            ObjectNode invoiceNode = Json.newObject();
-            invoiceNode.set("idInvoice", json.findValue("id_invoice"));
-            node.set("invoice", invoiceNode);
-
-            //itemType
-            ObjectNode itemTypeNode = Json.newObject();
-            itemTypeNode.set("idItemType", json.findValue("id_itemType"));
-            node.set("itemType", itemTypeNode);
-
-            //lot
-            ObjectNode lotNode = Json.newObject();
-            lotNode.set("idLot", json.findValue("id_lot"));
-            node.set("lot", lotNode);
-
-            //store
-            ObjectNode storeNode = Json.newObject();
-            storeNode.set("idStore", json.findValue("id_store"));
-            node.set("store", storeNode);
-
-            Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(node);
+            Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
             if (form.hasErrors()){
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
 
-            InvoiceDetail invoiceDetail = Json.fromJson(node, InvoiceDetail.class);
+            InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
+            invoiceDetail.setId(id);
             invoiceDetail.update();
 
             return  Response.createdEntity(Json.toJson(invoiceDetail));
@@ -162,7 +95,7 @@ public class InvoiceDetails extends Controller {
         try {
             List invoiceDetails = InvoiceDetail.findAll(null, null, null, null,
                     IdInvoice, null, null,null, null,
-                    date, null, false).entities;
+                    date, 0L, false).entities;
             Ebean.deleteAll((List<InvoiceDetail>) invoiceDetails);
             return Response.deletedEntity();
         }catch(Exception e){
@@ -189,8 +122,8 @@ public class InvoiceDetails extends Controller {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
-                    invoice, itemType, lot,store, nameReceivedInvoiceDetail,
-                     startDateInvoiceDetail, status, deleted);
+                                                                invoice, itemType, lot,store, nameReceivedInvoiceDetail,
+                                                                startDateInvoiceDetail, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

@@ -163,7 +163,7 @@ public class Provider extends AbstractEntity{
                                                String sort, String name,  Long idProviderType,
                                                String identificationDocProvider, String addressProvider,
                                                String phoneNumberProvider, String emailProvider,
-                                               String contactNameProvider, Long status, boolean deleted){
+                                               String contactNameProvider, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -194,10 +194,10 @@ public class Provider extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-        if(status != null)
-            expressionList.eq("statusProvider", status);
+        if(status != 0L)
+            expressionList.eq("statusProvider.id", status);
 
-        if( deleted )
+        if( delete)
             expressionList.setIncludeSoftDeletes();
 
         if(index == null || size == null)

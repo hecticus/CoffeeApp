@@ -22,6 +22,14 @@ public class StatusLot extends Status {
     @JsonIgnore
     private List<Lot> lots = new ArrayList<>();
 
+    public List<Lot> getLots() {
+        return lots;
+    }
+
+    public void setLots(List<Lot> lots) {
+        this.lots = lots;
+    }
+
     private static Finder<String, StatusLot> finder = new Finder<>(StatusLot.class);
 
     public static StatusLot findById(String id){

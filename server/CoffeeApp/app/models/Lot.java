@@ -128,8 +128,8 @@ public class Lot extends AbstractEntity{
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, PathProperties pathProperties, String sort,
-                                        String name, Long idFarm, Long status, boolean deleted){
+    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+                                               String sort, String name, Long idFarm, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -145,7 +145,7 @@ public class Lot extends AbstractEntity{
         if(status != 0L)
             expressionList.eq("statusLot.id", status);
 
-        if (deleted)
+        if (delete)
             expressionList.setIncludeSoftDeletes();
 
         if(sort != null)
