@@ -70,26 +70,20 @@ public class Purity extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties, String sort,
-                                               String name,  Integer status, boolean deleted){
+                                               String name,  Long status, boolean deleted){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
             expressionList.apply(pathProperties);
 
-        if(status != null)
+        if(status != 0L)
             expressionList.eq("statusPurity",status);
 
         if(name != null)
-            expressionList.icontains("NamePurity", name);
+            expressionList.startsWith("NamePurity", name);
 
-        if(sort != null) {
-            if(sort.contains(" ")) {
-                String []  aux = sort.split(" ", 2);
-                expressionList.orderBy(sort( aux[0], aux[1]));
-            }else {
-                expressionList.orderBy(sort("idPurity", sort));
-            }
-        }
+        if(sort != null)
+            expressionList.orderBy(sort( sort));
 
         if( deleted )
             expressionList.setIncludeSoftDeletes();

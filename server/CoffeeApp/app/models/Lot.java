@@ -1,11 +1,10 @@
 package models;
 
-import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
+import models.status.StatusLot;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -23,7 +22,7 @@ public class Lot extends AbstractEntity{
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(nullable = false)
     private Farm farm;
 
     @Constraints.Required
@@ -141,9 +140,9 @@ public class Lot extends AbstractEntity{
             expressionList.eq("farm.id", idFarm);
 
         if(name != null )
-            expressionList.eq("nameLot", name);
+            expressionList.startsWith("nameLot", name);
 
-        if(status != null)
+        if(status != 0L)
             expressionList.eq("statusLot.id", status);
 
         if (deleted)

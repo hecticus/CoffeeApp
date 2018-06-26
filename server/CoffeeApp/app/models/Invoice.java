@@ -8,6 +8,7 @@ import io.ebean.*;
 import io.ebean.annotation.Formula;
 import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
+import models.status.StatusInvoice;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -25,7 +26,7 @@ import java.util.List;
 public class Invoice extends AbstractEntity{
 
     @ManyToOne
-    @JoinColumn( name = "id", nullable = false)
+    @JoinColumn( nullable = false)
     @JsonBackReference
     @Constraints.Required
     private Provider provider;
@@ -37,14 +38,14 @@ public class Invoice extends AbstractEntity{
             "FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
     private BigDecimal totalInvoice;
 
+    @OneToMany(mappedBy = "invoice")
+    private List<InvoiceDetail> invoiceDetails;
+
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
     @Column(name = "closedDate_invoice", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private ZonedDateTime closedDateInvoice;
-
-    @OneToMany(mappedBy = "invoice")
-    private List<InvoiceDetail> invoiceDetails;
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
@@ -124,7 +125,7 @@ public class Invoice extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort( sort));
 
-        if(status != null)
+        if(status != 0L)
             expressionList.eq("statusInvoice.id", status);
 
         if( deleted )

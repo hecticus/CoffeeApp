@@ -1,4 +1,4 @@
-package models;
+package models.status;
 
 import io.ebean.Finder;
 import io.ebean.Model;

@@ -5,6 +5,7 @@ import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.text.PathProperties;
+import models.status.StatusFarm;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -81,7 +82,7 @@ public class Farm extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort);
 
-        if(status != null)
+        if(status != 0l)
             expressionList.eq("statusFarm.id",status);
 
         if( deleted )

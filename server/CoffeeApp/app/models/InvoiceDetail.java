@@ -1,21 +1,14 @@
 package models;
 
-import com.avaje.ebean.validation.Range;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
-import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.text.PathProperties;
-import play.data.format.Formats;
+import models.status.StatusInvoiceDetail;
 import play.data.validation.Constraints;
-import play.libs.Json;
 
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,22 +22,22 @@ public class InvoiceDetail  extends AbstractEntity{
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(nullable = false)
     private Invoice invoice;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(nullable = false)
     private ItemType itemType;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id")
+    @JoinColumn(nullable = false)
     private Lot lot;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id")
+    @JoinColumn(nullable = false)
     private Store store;
 
     @Constraints.Min(0)
@@ -223,10 +216,10 @@ public class InvoiceDetail  extends AbstractEntity{
             expressionList.eq("store.id", store );
 
         if(nameReceivedInvoiceDetail != null)
-            expressionList.eq("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
+            expressionList.startsWith("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
 
         if(startDateInvoiceDetail != null)
-            expressionList.eq("createdAt", startDateInvoiceDetail );
+            expressionList.startsWith("createdAt", startDateInvoiceDetail );
 
         if(deleted)
             expressionList.setIncludeSoftDeletes();
@@ -234,7 +227,7 @@ public class InvoiceDetail  extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort(sort));
 
-        if(status != null)
+        if(status != 0L)
             expressionList.eq("statusInvoiceDetail.id", status );
 
         if(index == null || size == null)

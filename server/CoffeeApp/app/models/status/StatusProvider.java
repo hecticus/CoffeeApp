@@ -1,12 +1,11 @@
-package models;
+package models.status;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
+import models.Provider;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

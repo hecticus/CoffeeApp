@@ -1,10 +1,11 @@
-package models;
+package models.status;
 
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
+import models.Farm;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -13,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("incoiceDetail")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoicesDetail.class)
-public class StatusInvoiceDetail extends Status {
+@DiscriminatorValue("statusFarm")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusFarm.class)
+public class StatusFarm extends Status {
 
-    @OneToMany(mappedBy = "statusInvoiceDetail")
+    @OneToMany(mappedBy = "statusFarm")
     @JsonIgnore
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+    private List<Farm> farms = new ArrayList<>();
 
-    private static Finder<String, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
+    private static Finder<String, StatusFarm> finder = new Finder<>(StatusFarm.class);
 
-    public static StatusInvoiceDetail findById(String id){
+    public static StatusFarm findById(String id){
         return finder.byId(id);
     }
 
@@ -37,6 +38,7 @@ public class StatusInvoiceDetail extends Status {
             expressionList.orderBy(sort(sort));
 
         return expressionList.findPagedList();
+
 
     }
 }

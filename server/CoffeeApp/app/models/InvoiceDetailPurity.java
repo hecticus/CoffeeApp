@@ -21,11 +21,11 @@ public class InvoiceDetailPurity  extends AbstractEntity{
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(nullable = false)
     private Purity purity;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(nullable = false)
     @Constraints.Required
     private InvoiceDetail invoiceDetail;
 
@@ -120,11 +120,11 @@ public class InvoiceDetailPurity  extends AbstractEntity{
             expressionList.setIncludeSoftDeletes();
 
         if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.eq("status_delete",0).findList());
+            return new ListPagerCollection(expressionList.findList());
 
         return new ListPagerCollection(
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.eq("status_delete",0).setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
+                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
+                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
                 pageIndex,
                 pageSize);
     }

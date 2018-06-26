@@ -24,12 +24,12 @@ public class ItemType extends AbstractEntity{
     @ManyToOne
     @JsonBackReference
     @Constraints.Required
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(nullable = false)
     private ProviderType providerType;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(nullable = false)
     private Unit unit;
 
     @Constraints.Required

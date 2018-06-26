@@ -1,12 +1,11 @@
-package models;
+package models.status;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
+import models.InvoiceDetail;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -15,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("statusStore")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusFarm.class)
-public class StatusStore extends Status {
+@DiscriminatorValue("incoiceDetail")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoicesDetail.class)
+public class StatusInvoiceDetail extends Status {
 
-    @OneToMany(mappedBy = "statusStore")
+    @OneToMany(mappedBy = "statusInvoiceDetail")
     @JsonIgnore
-    private List<Store> stores = new ArrayList<>();
+    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
-    private static Finder<String, StatusStore> finder = new Finder<>(StatusStore.class);
+    private static Finder<String, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
 
-    public static StatusStore findById(String id){
+    public static StatusInvoiceDetail findById(String id){
         return finder.byId(id);
     }
 
@@ -39,7 +38,6 @@ public class StatusStore extends Status {
             expressionList.orderBy(sort(sort));
 
         return expressionList.findPagedList();
-
 
     }
 }

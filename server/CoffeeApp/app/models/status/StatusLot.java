@@ -1,12 +1,11 @@
-package models;
+package models.status;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
+import models.Lot;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -15,22 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("invoices")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoice.class)
-public class StatusInvoice extends Status {
+@DiscriminatorValue("lot")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusLot.class)
+public class StatusLot extends Status {
 
-    public static final String APPROVED = "in_approved";
-    public static final String REJECTED = "in_rejected";
-    public static final String CLOSED = "in_closed";
-    public static final String CANCELLED = "in_cancelled";
-
-    @OneToMany(mappedBy = "statusInvoice")
+    @OneToMany(mappedBy = "statusLot")
     @JsonIgnore
-    private List<Invoice> invoices = new ArrayList<>();
+    private List<Lot> lots = new ArrayList<>();
 
-    private static Finder<String, StatusInvoice> finder = new Finder<>(StatusInvoice.class);
+    private static Finder<String, StatusLot> finder = new Finder<>(StatusLot.class);
 
-    public static StatusInvoice findById(String id){
+    public static StatusLot findById(String id){
         return finder.byId(id);
     }
 
@@ -47,6 +41,3 @@ public class StatusInvoice extends Status {
 
     }
 }
-
-
-

@@ -64,21 +64,15 @@ public class Unit extends AbstractEntity {
             expressionList.apply(pathProperties);
 
         if(name != null)
-            expressionList.icontains("nameUnit", name);
+            expressionList.startsWith("nameUnit", name);
 
         if(deleted)
             expressionList.setIncludeSoftDeletes();
 
-        if(sort != null) {
-            if(sort.contains(" ")) {
-                String []  aux = sort.split(" ", 2);
-                expressionList.orderBy(sort( aux[0], aux[1]));
-            }else {
-                expressionList.orderBy(sort("idUnit", sort));
-            }
-        }
+        if(sort != null)
+            expressionList.orderBy(sort( sort));
 
-        if(status != null)
+        if(status != 0L)
             expressionList.eq("statusUnit", status );
 
         if(index == null || size == null)
