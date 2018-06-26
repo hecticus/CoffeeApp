@@ -58,20 +58,18 @@ public class InvoiceDetail  extends AbstractEntity{
     @Constraints.Required
     @Constraints.MaxLength(100)
     @Column(nullable = false, length = 100)
-    private String nameReceivedInvoiceDetail;
+    private String nameReceived;
 
     @Constraints.Required
     @Constraints.MaxLength(100)
     @Column(nullable = false, length = 100)
-    private String nameDeliveredInvoiceDetail;
+    private String nameDelivered;
 
     @Column(columnDefinition = "text")
-    private String noteInvoiceDetail;
+    private String note;
 
     @ManyToOne
     private StatusInvoiceDetail statusInvoiceDetail;
-
-    private boolean freightInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
@@ -79,7 +77,6 @@ public class InvoiceDetail  extends AbstractEntity{
     private static Finder<Long, InvoiceDetail> finder = new Finder<>(InvoiceDetail.class);
 
     public InvoiceDetail() {
-        freightInvoiceDetail = false;
         costItemType = BigDecimal.ZERO;
         priceItemTypeByLot = BigDecimal.ZERO;
         invoiceDetailPurity = new ArrayList<>();
@@ -141,36 +138,36 @@ public class InvoiceDetail  extends AbstractEntity{
         this.amountInvoiceDetail = amountInvoiceDetail;
     }
 
-    public boolean isFreightInvoiceDetail() {
-        return freightInvoiceDetail;
-    }
-
-    public void setFreightInvoiceDetail(boolean freightInvoiceDetail) {
-        this.freightInvoiceDetail = freightInvoiceDetail;
-    }
-
     public String getNoteInvoiceDetail() {
-        return noteInvoiceDetail;
+        return note;
     }
 
     public void setNoteInvoiceDetail(String noteInvoiceDetail) {
-        this.noteInvoiceDetail = noteInvoiceDetail;
+        this.note = noteInvoiceDetail;
     }
 
-    public String getNameReceivedInvoiceDetail() {
-        return nameReceivedInvoiceDetail;
+    public String getNameReceived() {
+        return nameReceived;
     }
 
-    public void setNameReceivedInvoiceDetail(String nameReceivedInvoiceDetail) {
-        this.nameReceivedInvoiceDetail = nameReceivedInvoiceDetail;
+    public void setNameReceived(String nameReceived) {
+        this.nameReceived = nameReceived;
     }
 
-    public String getNameDeliveredInvoiceDetail() {
-        return nameDeliveredInvoiceDetail;
+    public String getNameDelivered() {
+        return nameDelivered;
     }
 
-    public void setNameDeliveredInvoiceDetail(String nameDeliveredInvoiceDetail) {
-        this.nameDeliveredInvoiceDetail = nameDeliveredInvoiceDetail;
+    public void setNameDelivered(String nameDelivered) {
+        this.nameDelivered = nameDelivered;
+    }
+
+    public StatusInvoiceDetail getStatusInvoiceDetail() {
+        return statusInvoiceDetail;
+    }
+
+    public void setStatusInvoiceDetail(StatusInvoiceDetail statusInvoiceDetail) {
+        this.statusInvoiceDetail = statusInvoiceDetail;
     }
 
     public BigDecimal getPriceItemTypeByLot() {
@@ -195,8 +192,8 @@ public class InvoiceDetail  extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
-                                              Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
-                                              String startDateInvoiceDetail, Long status, boolean delete){
+                                              Long invoice, Long itemType, Long lot, Long store, String nameReceived,
+                                              String nameDelivered, String startDate, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -215,11 +212,14 @@ public class InvoiceDetail  extends AbstractEntity{
         if(store != 0L)
             expressionList.eq("store.id", store );
 
-        if(nameReceivedInvoiceDetail != null)
-            expressionList.startsWith("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
+        if(nameReceived != null)
+            expressionList.startsWith("nameReceived", nameReceived );
 
-        if(startDateInvoiceDetail != null)
-            expressionList.startsWith("createdAt", startDateInvoiceDetail );
+        if(nameDelivered != null)
+            expressionList.startsWith("nameDelivered", nameDelivered);
+
+        if(startDate != null)
+            expressionList.startsWith("createdAt", startDate );
 
         if(delete)
             expressionList.setIncludeSoftDeletes();

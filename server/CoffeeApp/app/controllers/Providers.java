@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Invoice;
@@ -98,17 +99,20 @@ public class Providers extends Controller {
         }
     }
 
-
-    ////@CoffeAppsecurity
-    public Result deletes(){
+    //@CoffeAppsecurity
+    public Result deletes() {
         try {
-            Ebean.deleteAll(Provider.finder.query().findList());
-            return Response.deletedEntity();
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(Provider.class, controllers.utils.JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
-
 
     ////@CoffeAppsecurity
 //    public Result  uploadPhotoProvider(){

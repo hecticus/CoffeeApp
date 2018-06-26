@@ -29,9 +29,6 @@ import java.time.ZonedDateTime;
 @Table(name = "user")
 public class User extends AbstractEntity {
 
-    @Id
-    private Long id;
-
     @Constraints.Required
     @OneToOne(optional = false)
     @JoinColumn(name = "auth_user_id", referencedColumnName = "id", updatable = false ) // se debe especificar "name" y "referencedColumnName" para que "updatable" funcione

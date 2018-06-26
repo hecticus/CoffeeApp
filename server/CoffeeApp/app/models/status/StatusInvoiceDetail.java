@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("incoiceDetail")
+@DiscriminatorValue("invoiceDetail")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoicesDetail.class)
 public class StatusInvoiceDetail extends Status {
 

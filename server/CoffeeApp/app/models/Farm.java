@@ -45,12 +45,12 @@ public class Farm extends AbstractEntity{
         this.nameFarm = nameFarm;
     }
 
-    public StatusFarm getStatusComun() {
+    public StatusFarm getStatusFarm() {
         return statusFarm;
     }
 
-    public void setStatusComun(StatusFarm statusComun) {
-        this.statusFarm = statusComun;
+    public void setStatusFarm(StatusFarm statusFarm) {
+        this.statusFarm = statusFarm;
     }
 
     @JsonIgnore

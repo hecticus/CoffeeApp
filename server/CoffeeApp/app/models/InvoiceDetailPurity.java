@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="invoicesdetails_purities")
-public class InvoiceDetailPurity  extends AbstractEntity{
+public class InvoiceDetailPurity extends AbstractEntity{
 
     @ManyToOne
     @Constraints.Required

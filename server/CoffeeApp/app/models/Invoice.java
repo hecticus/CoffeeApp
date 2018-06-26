@@ -34,8 +34,8 @@ public class Invoice extends AbstractEntity{
     @ManyToOne
     private StatusInvoice statusInvoice;
 
-    @Formula(select = "(SELECT SUM( t.amount_invoiceDetail*t.price_ItemTypeByLot + t.amount_invoiceDetail*cost_ItemType) " +
-            "FROM  invoice_details t WHERE t.status_delete = 0 AND t.id_invoice = ${ta}.id_invoice)")
+    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
+            "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
     private BigDecimal totalInvoice;
 
     @OneToMany(mappedBy = "invoice")
@@ -103,7 +103,7 @@ public class Invoice extends AbstractEntity{
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long providerType, String startDate,
-                                         String endDate, Long status ,Boolean delete){
+                                         String endDate, Long status ,boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 

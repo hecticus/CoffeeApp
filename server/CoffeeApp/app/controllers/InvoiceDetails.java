@@ -1,9 +1,9 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.*;
@@ -91,15 +91,17 @@ public class InvoiceDetails extends Controller {
     }
 
 //@CoffeAppsecurity
-    public Result deleteAllByIdInvoiceAndDate( Long IdInvoice, String  date) {
+    public Result deletes( ) {
         try {
-            List invoiceDetails = InvoiceDetail.findAll(null, null, null, null,
-                    IdInvoice, null, null,null, null,
-                    date, 0L, false).entities;
-            Ebean.deleteAll((List<InvoiceDetail>) invoiceDetails);
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return Response.requiredJson();
+
+            Ebean.deleteAll(InvoiceDetail.class, JsonUtils.toArrayLong(json, "ids"));
+
             return Response.deletedEntity();
-        }catch(Exception e){
-            return Response.internalServerErrorLF();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -117,12 +119,12 @@ public class InvoiceDetails extends Controller {
 
 ////@CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
-                          Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
-                          String startDateInvoiceDetail, Long status, boolean deleted){
+                          Long invoice, Long itemType, Long lot, Long store, String nameReceived,
+                          String nameDelivered, String startDateInvoiceDetail, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
-                                                                invoice, itemType, lot,store, nameReceivedInvoiceDetail,
+                                                                invoice, itemType, lot,store, nameReceived, nameDelivered,
                                                                 startDateInvoiceDetail, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);

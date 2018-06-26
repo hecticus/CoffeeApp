@@ -3,7 +3,9 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.ItemType;
@@ -83,6 +85,20 @@ public class ItemTypes extends Controller {
         }
     }
 
+    //@CoffeAppsecurity
+    public Result deletes( ) {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return Response.requiredJson();
+
+            Ebean.deleteAll(ItemType.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
+        }
+    }
 
     //@CoffeAppsecurity
     public  Result findById(Long id) {

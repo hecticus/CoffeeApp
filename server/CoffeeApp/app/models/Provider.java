@@ -38,12 +38,12 @@ public class Provider extends AbstractEntity{
     @Constraints.Required
     @Constraints.MaxLength(255)
     @Column(unique=true, nullable = false)
-    private String identificationDocProvider;
+    private String nitProvider;
 
     @Constraints.Required
     @Constraints.MaxLength(60)
     @Column(nullable = false, length = 60)
-    private String fullNameProvider;
+    private String nameProvider;
 
     @Constraints.Required
     @Constraints.MaxLength(60)
@@ -53,7 +53,7 @@ public class Provider extends AbstractEntity{
     @Constraints.Required
     @Constraints.MaxLength(20)
     @Column(nullable = false, length = 20)
-    private String phoneNumberProvider;
+    private String numberProvider;
 
     @Constraints.Email
     @Constraints.Required
@@ -82,19 +82,19 @@ public class Provider extends AbstractEntity{
     }
 
     public String getIdentificationDocProvider() {
-        return identificationDocProvider;
+        return nitProvider;
     }
 
     public void setIdentificationDocProvider(String identificationDocProvider) {
-        this.identificationDocProvider = identificationDocProvider;
+        this.nitProvider = identificationDocProvider;
     }
 
     public String getFullNameProvider() {
-        return fullNameProvider;
+        return nameProvider;
     }
 
     public void setFullNameProvider(String fullNameProvider) {
-        this.fullNameProvider = fullNameProvider;
+        this.nameProvider = fullNameProvider;
     }
 
     public String getAddressProvider() {
@@ -106,11 +106,11 @@ public class Provider extends AbstractEntity{
     }
 
     public String getPhoneNumberProvider() {
-        return phoneNumberProvider;
+        return numberProvider;
     }
 
     public void setPhoneNumberProvider(String phoneNumberProvider) {
-        this.phoneNumberProvider = phoneNumberProvider;
+        this.numberProvider = phoneNumberProvider;
     }
 
     public String getEmailProvider() {
@@ -153,6 +153,13 @@ public class Provider extends AbstractEntity{
         this.invoices = invoices;
     }
 
+    public StatusProvider getStatusProvider() {
+        return statusProvider;
+    }
+
+    public void setStatusProvider(StatusProvider statusProvider) {
+        this.statusProvider = statusProvider;
+    }
 
     public static Provider findById(Long id) {
         return finder.byId(id);
@@ -174,16 +181,16 @@ public class Provider extends AbstractEntity{
             expressionList.eq("providerType.id", idProviderType);
 
         if(identificationDocProvider != null)
-           expressionList.startsWith("identificationDocProvider", identificationDocProvider);
+           expressionList.startsWith("nitProvider", identificationDocProvider);
 
         if(name != null)
-           expressionList.startsWith("fullNameProvider", name);
+           expressionList.startsWith("nameProvider", name);
 
         if(addressProvider != null)
            expressionList.startsWith("addressProvider", addressProvider);
 
         if(phoneNumberProvider != null)
-           expressionList.startsWith("phoneNumberProvider", phoneNumberProvider);
+           expressionList.startsWith("numberProvider", phoneNumberProvider);
 
         if(emailProvider != null)
            expressionList.startsWith("emailProvider", emailProvider);

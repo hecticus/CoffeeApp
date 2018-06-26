@@ -1,15 +1,11 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
-import models.Farm;
-import models.InvoiceDetail;
 import models.Lot;
-import controllers.requestUtils.Request;
 import controllers.responseUtils.*;
 import play.data.Form;
 import play.data.FormFactory;
@@ -18,9 +14,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by sm21 on 10/05/18.
@@ -86,13 +79,18 @@ public class Lots extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    //@CoffeAppsecurity
     public Result deletes() {
         try {
-           Ebean.deleteAll(Lot.finder.query().findList());
-            return Response.deletedEntity();
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(Lot.class, controllers.utils.JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
