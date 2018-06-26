@@ -2,7 +2,9 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.responseUtils.Response;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Store;
@@ -85,6 +87,21 @@ public class Stores {
         }
     }
 
+    //@CoffeAppsecurity
+    public Result deletes() {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(Store.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
+        }
+    }
+
 ////@CoffeAppsecurity
     public Result findById(Long id) {
         try {
@@ -96,7 +113,7 @@ public class Stores {
 
     //@CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
-                          String sort, String name, Integer status, boolean deleted){
+                          String sort, String name, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Store.findAll(index, size, pathProperties, sort, name, status, deleted);

@@ -165,10 +165,10 @@ create table auth_permission_auth_role (
 create table providers (
   id                            bigint auto_increment not null,
   provider_type_id              bigint not null,
-  identification_doc_provider   varchar(255) not null,
-  full_name_provider            varchar(60) not null,
+  nit_provider                  varchar(255) not null,
+  name_provider                 varchar(60) not null,
   address_provider              varchar(60) not null,
-  phone_number_provider         varchar(20) not null,
+  number_provider               varchar(20) not null,
   email_provider                varchar(255) not null,
   photo_provider                varchar(255),
   contact_name_provider         varchar(50) not null,
@@ -176,7 +176,7 @@ create table providers (
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint uq_providers_identification_doc_provider unique (identification_doc_provider),
+  constraint uq_providers_nit_provider unique (nit_provider),
   constraint uq_providers_contact_name_provider unique (contact_name_provider),
   constraint pk_providers primary key (id)
 );

@@ -69,18 +69,28 @@ DELETE  /farm/:id                                                               
 ################################################################################
 ##·······                      Invoice                               ··········#
 ################################################################################
-GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Long ?= 0L, deleted: Boolean ?= false)
+#GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Long ?= 0L, deleted: Boolean ?= false)
 #GET     /invoice/search                                                         controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, ProviderId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 #GET     /invoice/getByDateByProviderId/:ProviderId                              controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, ProviderId: Long      , typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 #GET     /invoice/getByDateByProviderId/:date/:ProviderId                        controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, ProviderId: Long      , typeProvider: Long ?= 0L, date: String             , endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
 #GET     /invoice/getByDateByTypeProvider/:date/:typeProvider/:pageindex/:pagesize controllers.Invoices.findAll( pageindex: Integer      , pagesize: Integer        , collection: String ?= null,sort: String ?= null, ProviderId: Long ?= 0L, typeProvider: Long      , date: String             , endDate: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
-GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
+#GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 ##GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
 #POST    /invoice                                                                controllers.Invoices.create()
 ##POST    /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.buyHarvestsAndCoffe()
 ##PUT     /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.updateBuyHarvestsAndCoffe()
 #PUT     /invoice                                                                controllers.Invoices.update()
 #DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
+#New
+GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, statusInvoice: Long ?= 0L, deleted: Boolean ?= false)
+GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
+#GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
+#POST    /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.buyHarvestsAndCoffe()
+#PUT     /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.updateBuyHarvestsAndCoffe()
+POST    /invoice/deletes                                                        controllers.Invoices.deletes()
+POST    /invoice                                                                controllers.Invoices.create()
+PUT     /invoice/:id                                                            controllers.Invoices.update(id : Long)
+DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
 
 
 ################################################################################
@@ -101,8 +111,18 @@ GET     /invoiceDetail                                                          
 GET     /invoiceDetail/:id                                                      controllers.InvoiceDetails.findById(id : Long)
 POST    /invoiceDetail                                                          controllers.InvoiceDetails.create()
 POST    /invoiceDetail/delete                                                   controllers.InvoiceDetails.deletes()
-PUT     /invoiceDetail                                                          controllers.InvoiceDetails.update(id : Long)
+PUT     /invoiceDetail/:id                                                           controllers.InvoiceDetails.update(id : Long)
 DELETE  /invoiceDetail/:id                                                      controllers.InvoiceDetails.delete(id : Long)
+
+################################################################################
+##·······              InvoiceDetailPurity                           ··········#
+################################################################################
+GET     /invoiceDetailPurity                                                    controllers.InvoiceDetailPurities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,  sort: String ?= null, invoiceDetail: Long ?= 0L, purity: Long ?= 0L, deleted: Boolean ?= false)
+GET     /invoiceDetailPurity/:id                                                controllers.InvoiceDetailPurities.findById(id : Long)
+POST    /invoiceDetailPurity/deletes                                            controllers.InvoiceDetailPurities.deletes()
+POST    /invoiceDetailPurity                                                    controllers.InvoiceDetailPurities.create()
+PUT     /invoiceDetailPurity/:id                                                controllers.InvoiceDetailPurities.update(id : Long)
+DELETE  /invoiceDetailPurity/:id                                                controllers.InvoiceDetailPurities.delete(id : Long)
 
 ################################################################################
 ##·······                       ItemType                             ··········#
@@ -138,32 +158,13 @@ DELETE  /itemType/:id                                                           
 #POST    /lot/deletes                                                            controllers.Lots.deletes()
 #DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
 #NEW
-GET     /lot                                                                    controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, nameLot: String ?= null, farm:  Long ?= 0L, statusLot: Integer ?= null, deleted: Boolean ?= false)
+GET     /lot                                                                    controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, nameLot: String ?= null, farm:  Long ?= 0L, statusLot: Long ?= 0L, deleted: Boolean ?= false)
 GET     /lot/:id                                                                controllers.Lots.findById(id : Long)
 POST    /lot                                                                    controllers.Lots.create()
 POST    /lot/deletes                                                            controllers.Lots.deletes()
 PUT     /lot                                                                    controllers.Lots.update(id : Long)
 DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
 
-################################################################################
-##·······                        Purity                              ··········#
-################################################################################
-#GET     /purity                                                                 controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
-#GET     /purity/new                                                             controllers.Purities.preCreate()
-#GET     /purity/search                                                          controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
-#GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , NamePurity: String  ,  status: Integer ?= null, deleted: Boolean ?= false)
-#GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , name: String ?= null,  StatusPurity: Integer  , deleted: Boolean ?= false)
-#GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
-#PUT     /purity                                                                 controllers.Purities.update()
-#POST    /purity                                                                 controllers.Purities.create()
-#DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
-#New
-GET     /purity                                                                 controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, namePurity: String ?= null, deleted: Boolean ?= false)
-GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
-POST    /purity                                                                 controllers.Purities.create()
-POST    /purity                                                                 controllers.Purities.deletes()
-PUT     /purity                                                                 controllers.Purities.update(id : Long)
-DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
 ################################################################################
 ##·······                          Provider                          ··········#
 ################################################################################
@@ -189,6 +190,7 @@ POST    /provider/deletes                                                       
 #POST    /provider/uploadPhotoProvider                                           controllers.Providers.uploadPhotoProvider()
 PUT     /provider                                                               controllers.Providers.update(id : Long)
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
+
 ################################################################################
 ##·······                 ProviderType                               ··········#
 ################################################################################
@@ -205,6 +207,26 @@ PUT     /providerType/:id                                                       
 DELETE  /providerType/:id                                                       controllers.ProviderTypes.delete(id : Long)
 
 ################################################################################
+##·······                        Purity                              ··········#
+################################################################################
+#GET     /purity                                                                 controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
+#GET     /purity/new                                                             controllers.Purities.preCreate()
+#GET     /purity/search                                                          controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null,  status: Integer ?= null, deleted: Boolean ?= false)
+#GET     /purity/getByNamePurity/:NamePurity/:order                              controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , NamePurity: String  ,  status: Integer ?= null, deleted: Boolean ?= false)
+#GET     /purity/getByStatusPurity/:StatusPurity/:order                          controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, order: String       , name: String ?= null,  StatusPurity: Integer  , deleted: Boolean ?= false)
+#GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
+#PUT     /purity                                                                 controllers.Purities.update()
+#POST    /purity                                                                 controllers.Purities.create()
+#DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
+#New
+GET     /purity                                                                 controllers.Purities.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, namePurity: String ?= null, deleted: Boolean ?= false)
+GET     /purity/:id                                                             controllers.Purities.findById(id : Long)
+POST    /purity                                                                 controllers.Purities.create()
+POST    /purity                                                                 controllers.Purities.deletes()
+PUT     /purity                                                                 controllers.Purities.update(id : Long)
+DELETE  /purity/:id                                                             controllers.Purities.delete(id : Long)
+
+################################################################################
 ##·······                     Store                                  ··········#
 ################################################################################
 #GET     /store                                                                  controllers.Stores.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, status: Integer ?= null, deleted: Boolean ?= false)
@@ -215,8 +237,14 @@ DELETE  /providerType/:id                                                       
 #POST    /store                                                                  controllers.Stores.create()
 #PUT     /store                                                                  controllers.Stores.update()
 #DELETE  /store/:id                                                              controllers.Stores.delete(id : Long)
-#
-#
+#New
+GET     /store                                                                  controllers.Stores.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, nameStore: String ?= null, statusStore: Long ?= 0L, deleted: Boolean ?= false)
+GET     /store/:id                                                              controllers.Stores.findById(id : Long)
+POST    /store/deletes                                                          controllers.Stores.deletes()
+POST    /store                                                                  controllers.Stores.create()
+PUT     /store                                                                  controllers.Stores.update(id : Long)
+DELETE  /store/:id                                                              controllers.Stores.delete(id : Long)
+
 ################################################################################
 ##·······                       Unit                                 ··········#
 ################################################################################
@@ -226,5 +254,10 @@ DELETE  /providerType/:id                                                       
 #PUT     /unit                                                                   controllers.Units.update()
 #POST    /unit                                                                   controllers.Units.create()
 #DELETE  /unit/:id                                                               controllers.Units.delete(id : Long)
-#
-
+#NEW
+GET     /unit                                                                   controllers.Units.findAll( index: Integer ?= null, size: Integer ?= null, collection: String ?= null, sort: String ?= null, nameUnit: String ?= null, deleted: Boolean ?= false)
+GET     /unit/:id                                                               controllers.Units.findById(id : Long)
+POST    /unit/deletes                                                           controllers.Units.deletes()
+POST    /unit                                                                   controllers.Units.create()
+PUT     /unit                                                                   controllers.Units.update(id : Long)
+DELETE  /unit/:id                                                               controllers.Units.delete(id : Long)

@@ -24,7 +24,7 @@ INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES
 (2, 0, 'Cosechador'),
 (3, 1, 'prueba');
 
-INSERT INTO `providers` (id, identification_doc_provider, name_provider, address_provider, number_provider,
+INSERT INTO `providers` (id, nit_provider, name_provider, address_provider, number_provider,
                          email_provider, provider_type_id, contact_name_provider) VALUES
 (1130, '42424'	           ,  'Cosechador Tes'      ,   'wweq'	, 332432	  ,'DSDSD@com.com'	  ,	2,	'Cosechador Test'),
 (1131, '12345-4-2424 DV 24',	'Proveedor Te'	      ,   'Here'	, 52454547	,'pt@test.com'	    ,	1,	'None'),

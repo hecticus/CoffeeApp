@@ -67,7 +67,7 @@ public class Store extends AbstractEntity{
     }
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
-                                              String sort, String name, Integer status, boolean delete){
+                                              String sort, String name, Long status, boolean delete){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())

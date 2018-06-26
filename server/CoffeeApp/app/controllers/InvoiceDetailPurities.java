@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.ResponseCollection;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
@@ -78,6 +80,21 @@ public class InvoiceDetailPurities  extends Controller {
             return Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionUpdated(e);
+        }
+    }
+
+    //@CoffeAppsecurity
+    public Result deletes() {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(InvoiceDetailPurity.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
         }
     }
 
