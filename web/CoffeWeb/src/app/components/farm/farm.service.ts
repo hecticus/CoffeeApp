@@ -15,17 +15,11 @@ export class FarmService {
   ) { }
 
   getById(id: number): Observable<Farm> {
-    console.log(this.http.get<Farm>( FarmService.BASE_URL + '/' + id));
     return this.http.get<Farm>( FarmService.BASE_URL + '/' + id);
   }
 
-
   getAll(params: HttpParams): Observable<Farm[]> {
     return this.http.get<Farm[]>(FarmService.BASE_URL + '', {params: params});
-  }
-
-  getAllSearch(params: HttpParams): Observable<Farm[]> {
-    return this.http.get<Farm[]>(FarmService.BASE_URL + '/search', {params: params});
   }
 
 }

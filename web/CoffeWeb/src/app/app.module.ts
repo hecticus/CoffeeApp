@@ -10,6 +10,10 @@ import { NgModule } from '@angular/core';
 import { ProofModule } from './proof/proof.module';
 import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { TopbarComponent } from './core/topbar/topbar.component';
+import { HeroesComponent } from './components/heroes/heroes.component';
+import { FormsModule } from '@angular/forms';
+import { HeroesDetailComponent } from './components/heroes-detail/heroes-detail.component';
+import { MessagesComponent } from './components/messages/messages.component';
 
 @NgModule ({
   declarations: [
@@ -22,6 +26,9 @@ import { TopbarComponent } from './core/topbar/topbar.component';
     TopbarComponent,
     BreadcrumbsComponent,
     LotComponent,
+    HeroesComponent,
+    HeroesDetailComponent,
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,
