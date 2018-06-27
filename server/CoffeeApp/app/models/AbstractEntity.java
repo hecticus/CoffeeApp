@@ -8,6 +8,7 @@ import io.ebean.annotation.UpdatedTimestamp;
 import play.data.format.Formats;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
 
@@ -20,8 +21,11 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class AbstractEntity extends Model {
 
+    @Id
+    protected Long id;
+
     @SoftDelete
-    private boolean statusDelete;
+    private boolean deleted;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -35,12 +39,20 @@ public abstract class AbstractEntity extends Model {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
 
-    public boolean isStatusDelete() {
-        return statusDelete;
+    public Long getId() {
+        return id;
     }
 
-    public void setStatusDeleted(boolean statusDelete) {
-        this.statusDelete = statusDelete;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public ZonedDateTime getCreatedAt() {
@@ -67,13 +79,4 @@ public abstract class AbstractEntity extends Model {
         return sort + " asc";
     }
 
-    public static String sort(String sort, String order) {
-        if (order.equalsIgnoreCase("asc")  || order.equalsIgnoreCase("desc")) {
-            if (order.equalsIgnoreCase("desc") )
-                return sort + " desc" ;
-            return sort + " asc";
-        }else{
-            return null;
-        }
-    }
 }

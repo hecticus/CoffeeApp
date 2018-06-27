@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
@@ -37,7 +38,7 @@ public class Purities extends Controller{
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result preCreate() {
         try {
             return Response.foundEntity(Json.toJson(new Purity()));
@@ -46,16 +47,14 @@ public class Purities extends Controller{
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("NamePurity", json.findValue("namePurity"));
-            Form<Purity> form = formFactory.form(Purity.class).bind(node);
+            Form<Purity> form = formFactory.form(Purity.class).bind(json);
             if (form.hasErrors()){
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
@@ -69,27 +68,19 @@ public class Purities extends Controller{
         }
     }
 
-////@CoffeAppsecurity
-    public Result update() {
+    @CoffeAppsecurity
+    public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("idPurity");
-            if (id == null)
-                return Response.requiredParameter("idPurity");
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.set("NamePurity", json.findValue("namePurity"));
-            Form<Purity> form = formFactory.form(Purity.class).bind(node);
-            if (form.hasErrors()){
+            Form<Purity> form = formFactory.form(Purity.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
 
-            // mapping object-json
             Purity purity = Json.fromJson(json, Purity.class);
-            purity.setIdPurity(id.asLong());
+            purity.setId(id);
             purity.update();
             return Response.updatedEntity(Json.toJson(purity));
 
@@ -98,7 +89,7 @@ public class Purities extends Controller{
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Purity.findById(id));
@@ -108,22 +99,35 @@ public class Purities extends Controller{
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
+    public Result deletes() {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(Purity.class, controllers.utils.JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            return Response.foundEntity(Json.toJson( Purity.findById(id)));
+            return Response.foundEntity(Json.toJson(Purity.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
-    //@CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String collection, String sort, String name, Integer status,
-                          boolean deleted){
+    @CoffeAppsecurity
+    public Result findAll(Integer index, Integer size, String collection, String sort, String name, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Purity.findAll(index, size, pathProperties, sort, name, status, deleted);
-
+            ListPagerCollection listPager = Purity.findAll(index, size, pathProperties, sort, name, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);

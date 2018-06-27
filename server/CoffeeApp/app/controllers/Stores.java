@@ -2,7 +2,9 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.responseUtils.Response;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Store;
@@ -35,18 +37,7 @@ public class Stores {
     }
 
 
-////@CoffeAppsecurity
-    public Result preCreate() {
-        try {
-            Store store = new Store();
-            return Response.foundEntity(
-                    Json.toJson(store));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -57,7 +48,6 @@ public class Stores {
             if(form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            // mapping object-json
             Store store = Json.fromJson(json, Store.class);
             store.save();
             return Response.createdEntity(Json.toJson(store));
@@ -66,24 +56,19 @@ public class Stores {
         }
     }
 
-////@CoffeAppsecurity
-    public Result update() {
-        try
-        {
+    @CoffeAppsecurity
+    public Result update(Long id) {
+        try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
-
-            JsonNode id = json.get("idStore");
-            if (id == null)
-                return Response.requiredParameter("idStore");
 
             Form<Store> form = formFactory.form(Store.class).bind(json);
             if(form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            // mapping object-json
             Store store = Json.fromJson(json, Store.class);
+            store.setId(id);
             store.update();
             return Response.updatedEntity(Json.toJson(store));
 
@@ -92,7 +77,7 @@ public class Stores {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Store.findById(id));
@@ -102,19 +87,33 @@ public class Stores {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
+    public Result deletes() {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(Store.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Store store = Store.findById(id);
-            return Response.foundEntity(Response.toJson(store, Store.class));
+            return Response.foundEntity(Response.toJson(Store.findById(id), Store.class));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
-                          String sort, String name, Integer status, boolean deleted){
+                          String sort, String name, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Store.findAll(index, size, pathProperties, sort, name, status, deleted);

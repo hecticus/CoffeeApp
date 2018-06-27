@@ -35,7 +35,7 @@ public class Farms extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-//@CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -55,7 +55,7 @@ public class Farms extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode request = request().body().asJson();
@@ -67,7 +67,7 @@ public class Farms extends Controller {
                 return Response.invalidParameter(form.errorsAsJson());
 
             Farm farm = Json.fromJson(request, Farm.class);
-            farm.setIdFarm(id);
+            farm.setId(id);
             farm.update();
 
             return Response.updatedEntity(Json.toJson(farm));
@@ -76,18 +76,17 @@ public class Farms extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result delete(Long id) {
         try {
-            Farm farm = Farm.findById(id);
-            Ebean.delete(farm);
+            Ebean.delete(Farm.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
     }
 
-//@CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -102,7 +101,7 @@ public class Farms extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             Farm farm = Farm.findById(id);
@@ -113,9 +112,9 @@ public class Farms extends Controller {
     }
 
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll( Integer index, Integer size, String collection,
-                           String name, String sort, Integer status, boolean deleted){
+                           String name, String sort, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Farm.findAll(index, size, pathProperties, name,  sort, status, deleted);

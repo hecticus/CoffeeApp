@@ -2,25 +2,20 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
-import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
 import controllers.multimediaUtils.Multimedia;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
-import org.joda.time.DateTime;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import security.models.AuthUser;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.List;
-
 /*
  * Bean for users registered in system.
  * @author Yenny Fung
@@ -33,9 +28,6 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 public class User extends AbstractEntity {
-
-    @Id
-    private Long id;
 
     @Constraints.Required
     @OneToOne(optional = false)
@@ -149,23 +141,15 @@ public class User extends AbstractEntity {
         if (deleted)
             expressionList.setIncludeSoftDeletes();
 
-        if (sort != null) {
-            if (sort.contains(" ")) {
-                String[] aux = sort.split(" ", 2);
-                expressionList.orderBy(sort(aux[0], aux[1]));
-            } else {
-                expressionList.orderBy(sort("id", sort));
-            }
-        }
+        if (sort != null)
+            expressionList.orderBy(sort(sort));
 
         if (index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
 
-
         return new ListPagerCollection(expressionList.setFirstRow(index).setMaxRows(size).findList(),
                 expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index, size);
-
     }
 
     public static User findByMediaProfileId(Long mediaProfileId) {

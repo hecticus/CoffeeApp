@@ -1,9 +1,9 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.ItemType;
@@ -16,6 +16,8 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.authorization.CoffeAppsecurity;
+
 import javax.inject.Inject;
 
 /**
@@ -32,43 +34,18 @@ public class ItemTypes extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-
-////@CoffeAppsecurity
-    public Result preCreate() {
-        try {
-            ItemType itemtype = new ItemType();
-
-            return Response.foundEntity(Json.toJson(itemtype));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try{
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            //unit
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            ObjectNode unitNode = Json.newObject();
-            unitNode.set("idUnit", json.findValue("id_unit"));
-            node.set("unit", unitNode);
-
-            //providerType
-            ObjectNode providerTypeNode = Json.newObject();
-            providerTypeNode.set("idProviderType", json.findValue("id_ProviderType"));
-            node.set("providerType", providerTypeNode);
-
-
-            Form<ItemType> form = formFactory.form(ItemType.class).bind(node);
-            if (form.hasErrors()){
+            Form<ItemType> form = formFactory.form(ItemType.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
 
-            ItemType itemType = Json.fromJson(node, ItemType.class);
+            ItemType itemType = Json.fromJson(json, ItemType.class);
             itemType.save();
             return  Response.createdEntity(Json.toJson(itemType));
 
@@ -77,36 +54,19 @@ public class ItemTypes extends Controller {
         }
     }
 
-
-////@CoffeAppsecurity
-    public Result update() {
+    @CoffeAppsecurity
+    public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
 
-            JsonNode id = json.get("idItemType");
-            if (id == null )
-                return Response.invalidParameter("Missing parameter idItemType");
-
-            //unit
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            ObjectNode unitNode = Json.newObject();
-            unitNode.set("idUnit", json.findValue("id_unit"));
-            node.set("unit", unitNode);
-
-            //providerType
-            ObjectNode providerTypeNode = Json.newObject();
-            providerTypeNode.set("idProviderType", json.findValue("id_ProviderType"));
-            node.set("providerType", providerTypeNode);
-
-
-            Form<ItemType> form = formFactory.form(ItemType.class).bind(node);
-            if (form.hasErrors()){
+            Form<ItemType> form = formFactory.form(ItemType.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
 
-            ItemType itemType = Json.fromJson(node, ItemType.class);
+            ItemType itemType = Json.fromJson(json, ItemType.class);
+            itemType.setId(id);
             itemType.update();
             return  Response.createdEntity(Json.toJson(itemType));
         }catch(Exception e){
@@ -115,7 +75,7 @@ public class ItemTypes extends Controller {
     }
 
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(ItemType.findById(id));
@@ -125,24 +85,37 @@ public class ItemTypes extends Controller {
         }
     }
 
+    @CoffeAppsecurity
+    public Result deletes( ) {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return Response.requiredJson();
 
-    //@CoffeAppsecurity
+            Ebean.deleteAll(ItemType.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public  Result findById(Long id) {
         try {
-            ItemType itemType = ItemType.findById(id);
-            return Response.foundEntity(Json.toJson((itemType)));
+            return Response.foundEntity(Json.toJson(ItemType.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection,
-                          String sort, String name, Long idProviderType, Integer status, boolean deleted ) {
+                          String sort, String name, Long idProviderType, Long unit, boolean deleted ) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = ItemType.findAll( pageIndex, pageSize, pathProperties,
-                    sort, name, idProviderType, status, deleted);
+                    sort, name, idProviderType, unit, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

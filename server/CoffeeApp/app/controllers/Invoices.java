@@ -1,9 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.*;
@@ -39,23 +40,18 @@ public class Invoices extends Controller {
                 " phoneNumber_Provider,email_Provider, providerType(id_ProviderType, name_ProviderType))");
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public    Result create() {
         try{
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            ObjectNode providerNode = Json.newObject();
-            providerNode.set("idProvider", json.findValue("id_provider"));
-            node.set("provider", providerNode);
-
-            Form<Invoice> form = formFactory.form(Invoice.class).bind(node);
-            if (form.hasErrors()){
+            Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
-            Invoice invoice = Json.fromJson(node, Invoice.class);
+
+            Invoice invoice = Json.fromJson(json, Invoice.class);
             invoice.save();
             return  Response.createdEntity(Json.toJson(invoice));
 
@@ -64,38 +60,27 @@ public class Invoices extends Controller {
         }
     }
 
-//@CoffeAppsecurity
-    public  Result update() {
-        JsonNode json = request().body().asJson();
-        if(json== null)
-            return badRequest("Expecting Json data");
+    @CoffeAppsecurity
+    public  Result update(Long id) {
+        try {
+            JsonNode json = request().body().asJson();
+            if(json== null)
+                return badRequest("Expecting Json data");
 
-        JsonNode id = json.get("idInvoice");
-        if (id == null )
-            return badRequest("Missing parameter idInvoice");
-
-        try{
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            ObjectNode providerNode = Json.newObject();
-            providerNode.set("idProvider", json.findValue("id_provider"));
-            node.set("provider", providerNode);
-
-            Form<Invoice> form = formFactory.form(Invoice.class).bind(node);
-            if (form.hasErrors()){
+            Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
-            Invoice invoice = Json.fromJson(node, Invoice.class);
 
+            Invoice invoice = Json.fromJson(json, Invoice.class);
+            invoice.setId(id);
             invoice.update();
             return Response.updatedEntity(Json.toJson(invoice));
-
         }catch(Exception e){
             return Response.responseExceptionUpdated(e);
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result delete(Long id) {
         try{
             Ebean.delete(Invoice.findById(id));
@@ -105,20 +90,33 @@ public class Invoices extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+        @CoffeAppsecurity
+    public Result deletes() {
+        try {
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
+
+            Ebean.deleteAll(Invoice.class, JsonUtils.toArrayLong(json, "ids"));
+
+            return controllers.utils.Response.deletedEntity();
+        } catch (Exception e) {
+            return NsExceptionsUtils.delete(e);
+        }
+    }
+//    @CoffeAppsecurity
     public  Result findById(Long id) {
         try {
-            Invoice invoice = Invoice.findById(id);
-            return Response.foundEntity(Json.toJson((invoice)));
+            return Response.foundEntity(Json.toJson(Invoice.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
                                     String sort, Long id_provider, Long id_providertype, String startDate,
-                                    String endDate, Integer status ,Boolean deleted){
+                                    String endDate, Long status ,boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
@@ -130,8 +128,8 @@ public class Invoices extends Controller {
         }
     }
 
-
-////@CoffeAppsecurity
+/*
+    @CoffeAppsecurity
     public  Result buyHarvestsAndCoffe(){
         BigDecimal monto;
         InvoiceDetailPurity invoiceDetailPurity;
@@ -222,14 +220,14 @@ public class Invoices extends Controller {
 
                 invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
 
-                /*
-                comentado por el nuevo caculo que viene en caos de compra
+                //comentado por el nuevo caculo que viene en caos de compra
                 monto = Amount.asInt() * itemType.getCostItemType();
 
                 int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
                 invoiceDetailPurity.setDiscountRatePurity(Discount);
 
-                monto = monto+Discount;*/
+                monto = monto+Discount;
+
             }
 
             invoiceDetail.setAmountInvoiceDetail(Amount.decimalValue());
@@ -301,7 +299,7 @@ public class Invoices extends Controller {
     }
 
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result updateBuyHarvestsAndCoffe() {
         BigDecimal monto;
         boolean auxCreate = false;
@@ -391,13 +389,13 @@ public class Invoices extends Controller {
                 invoiceDetail.setStore(Store.findById(id_store.asLong()));
 
                 monto = Amount.decimalValue().multiply(price.decimalValue());
-                /*
                 monto = Amount.asInt() * itemType.getCostItemType();
 
                 int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
                 invoiceDetailPurity.setDiscountRatePurity(Discount);
 
-                monto = monto+Discount;*/
+                monto = monto+Discount;
+
             }
 
             invoiceDetail.setAmountInvoiceDetail(Amount.decimalValue());
@@ -461,9 +459,10 @@ public class Invoices extends Controller {
         openInvoice.setTotalInvoice(Invoice.calcularTotalInvoice(openInvoice.getIdInvoice()));
         openInvoice.update();// invoiceDao.update(openInvoice);
         return Response.updatedEntity(Json.toJson(openInvoice));
-    }
+}
 
-////@CoffeAppsecurity
+
+    @CoffeAppsecurity
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();
@@ -476,6 +475,7 @@ public class Invoices extends Controller {
 
         return Response.createdEntity(response);
     }
+*/
 
 
 

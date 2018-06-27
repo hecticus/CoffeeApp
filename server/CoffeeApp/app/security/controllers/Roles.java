@@ -85,12 +85,12 @@ public class Roles extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+        @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
-                          String sort, String name, boolean deleted){
+                          String sort, String name, boolean delete){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Role.findAll(index, size, pathProperties, sort, name, deleted);
+            ListPagerCollection listPager = Role.findAll(index, size, pathProperties, sort, name, delete);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);

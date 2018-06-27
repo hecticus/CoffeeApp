@@ -46,22 +46,24 @@ create table auth_client_credential (
 );
 
 create table config (
-  id_config                     bigint auto_increment not null,
+  config                        bigint(50) auto_increment not null,
+  name_config                   varchar(20) not null,
   config_key                    varchar(50) not null,
   value                         varchar(255) not null,
   description                   text,
-  constraint pk_config primary key (id_config)
+  constraint uq_config_name_config unique (name_config),
+  constraint pk_config primary key (config)
 );
 
 create table farms (
-  id_farm                       bigint auto_increment not null,
-  name_farm                     varchar(50) not null,
-  status_farm                   integer default 1,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  name_farm                     varchar(20) not null,
+  status_farm_id                bigint,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_farms_name_farm unique (name_farm),
-  constraint pk_farms primary key (id_farm)
+  constraint pk_farms primary key (id)
 );
 
 create table auth_group (
@@ -75,78 +77,73 @@ create table auth_group (
 );
 
 create table invoices (
-  id_invoice                    bigint auto_increment not null,
-  id_provider                   bigint not null,
-  status_invoice                integer,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  provider_id                   bigint not null,
+  status_invoice_id             bigint,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  duedate_invoice               TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   closeddate_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint pk_invoices primary key (id_invoice)
+  constraint pk_invoices primary key (id)
 );
 
 create table invoice_details (
-  id_invoicedetail              bigint auto_increment not null,
-  id_invoice                    bigint not null,
-  id_itemtype                   bigint not null,
-  id_lot                        bigint,
-  id_store                      bigint,
-  price_itemtypebylot           decimal(38) not null,
-  cost_itemtype                 decimal(38) not null,
-  amount_invoicedetail          decimal(38) not null,
-  namereceived_invoicedetail    varchar(100) not null,
-  namedelivered_invoicedetail   varchar(100) not null,
-  note_invoicedetail            text,
-  status_invoicedetail          integer not null,
-  isfreight_invoicedetail       tinyint(1) default 0 not null,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  invoice_id                    bigint not null,
+  item_type_id                  bigint not null,
+  lot_id                        bigint not null,
+  store_id                      bigint not null,
+  price_item_type_by_lot        decimal(38) not null,
+  cost_item_type                decimal(38) not null,
+  amount_invoice_detail         decimal(38) not null,
+  name_received                 varchar(100) not null,
+  name_delivered                varchar(100) not null,
+  note                          text,
+  status_invoice_detail_id      bigint,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  duedate_invoicedetail         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint pk_invoice_details primary key (id_invoicedetail)
+  constraint pk_invoice_details primary key (id)
 );
 
 create table invoicesdetails_purities (
-  id_invoicedetail_purity       bigint auto_increment not null,
-  id_purity                     bigint not null,
-  id_invoicedetail              bigint,
-  valuerate_invoicedetail_purity integer not null,
-  discountrate_purity           integer not null,
-  totaldiscount_purity          integer not null,
-  status__invoicedetail_purity  integer not null,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  purity_id                     bigint not null,
+  invoice_detail_id             bigint not null,
+  value_rate_invoice_detail_purity integer not null,
+  discount_rate_purity          integer not null,
+  total_discount_purity         integer not null,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint pk_invoicesdetails_purities primary key (id_invoicedetail_purity)
+  constraint pk_invoicesdetails_purities primary key (id)
 );
 
 create table item_types (
-  id_itemtype                   bigint auto_increment not null,
-  id_providertype               bigint(100) not null,
-  id_unit                       bigint not null,
-  name_itemtype                 varchar(255) not null,
-  cost_itemtype                 decimal(38) not null,
-  status_itemtype               integer not null,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  provider_type_id              bigint not null,
+  unit_id                       bigint not null,
+  name_item_type                varchar(255) not null,
+  cost_item_type                decimal(38) not null,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint uq_item_types_name_itemtype unique (name_itemtype),
-  constraint pk_item_types primary key (id_itemtype)
+  constraint uq_item_types_name_item_type unique (name_item_type),
+  constraint pk_item_types primary key (id)
 );
 
 create table lots (
-  id_lot                        bigint auto_increment not null,
-  id_farm                       bigint not null,
-  name_lot                      varchar(255) not null,
+  id                            bigint auto_increment not null,
+  farm_id                       bigint not null,
+  name_lot                      varchar(50) not null,
   area_lot                      varchar(200) not null,
   heigh_lot                     double not null,
   price_lot                     decimal(38) not null,
-  status_lot                    integer default 1,
-  status_delete                 tinyint(1) default 0 not null,
+  status_lot_id                 bigint,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint pk_lots primary key (id_lot)
+  constraint pk_lots primary key (id)
 );
 
 create table auth_permission (
@@ -166,45 +163,43 @@ create table auth_permission_auth_role (
 );
 
 create table providers (
-  id_provider                   bigint auto_increment not null,
-  provider_type_id_provider_type bigint(100) not null,
-  identificationdoc_provider    varchar(255) not null,
-  fullname_provider             varchar(60) not null,
+  id                            bigint auto_increment not null,
+  provider_type_id              bigint not null,
+  nit_provider                  varchar(255) not null,
+  name_provider                 varchar(60) not null,
   address_provider              varchar(60) not null,
-  phonenumber_provider          varchar(20) not null,
+  number_provider               varchar(20) not null,
   email_provider                varchar(255) not null,
   photo_provider                varchar(255),
-  contactname_provider          varchar(50) not null,
-  status_provider               integer default 1,
-  status_delete                 tinyint(1) default 0 not null,
+  contact_name_provider         varchar(50) not null,
+  status_provider_id            bigint,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint uq_providers_identificationdoc_provider unique (identificationdoc_provider),
-  constraint uq_providers_contactname_provider unique (contactname_provider),
-  constraint pk_providers primary key (id_provider)
+  constraint uq_providers_nit_provider unique (nit_provider),
+  constraint uq_providers_contact_name_provider unique (contact_name_provider),
+  constraint pk_providers primary key (id)
 );
 
 create table provider_type (
-  id_providertype               bigint(100) auto_increment not null,
-  name_providertype             varchar(60) not null,
-  status_providertype           integer default 1,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  name_provider_type            varchar(60) not null,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint uq_provider_type_name_providertype unique (name_providertype),
-  constraint pk_provider_type primary key (id_providertype)
+  constraint uq_provider_type_name_provider_type unique (name_provider_type),
+  constraint pk_provider_type primary key (id)
 );
 
 create table purities (
-  id_purity                     bigint auto_increment not null,
-  name_purity                   varchar(255) not null,
-  discountrate_purity           integer not null,
-  status_purity                 integer not null,
-  status_delete                 tinyint(1) default 0 not null,
+  id                            bigint auto_increment not null,
+  name_purity                   varchar(20) not null,
+  discount_rate_purity          integer not null,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_purities_name_purity unique (name_purity),
-  constraint pk_purities primary key (id_purity)
+  constraint pk_purities primary key (id)
 );
 
 create table auth_role (
@@ -245,35 +240,33 @@ create table auth_token (
 );
 
 create table status (
-  status_type                   varchar(31) not null,
-  id_status                     bigint auto_increment not null,
-  name                          varchar(100),
-  status_delete                 tinyint(1) default 0 not null,
-  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  constraint pk_status primary key (id_status)
+  dtype                         varchar(50) not null,
+  id                            bigint auto_increment not null,
+  name                          varchar(20) not null,
+  description                   text,
+  constraint uq_status_name unique (name),
+  constraint pk_status primary key (id)
 );
 
 create table stores (
-  id_store                      bigint auto_increment not null,
+  id                            bigint auto_increment not null,
   name_store                    varchar(50) not null,
-  status_store                  integer default 1 not null,
-  status_delete                 tinyint(1) default 0 not null,
+  status_store_id               bigint,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_stores_name_store unique (name_store),
-  constraint pk_stores primary key (id_store)
+  constraint pk_stores primary key (id)
 );
 
 create table units (
-  id_unit                       bigint auto_increment not null,
+  id                            bigint auto_increment not null,
   name_unit                     varchar(255) not null,
-  status_unit                   integer not null,
-  status_delete                 tinyint(1) default 0 not null,
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_units_name_unit unique (name_unit),
-  constraint pk_units primary key (id_unit)
+  constraint pk_units primary key (id)
 );
 
 create table user (
@@ -285,10 +278,10 @@ create table user (
   latitude                      double,
   longitude                     double,
   address                       varchar(200),
-  phone                         varchar(100),
-  phone2                        varchar(100),
-  email2                        varchar(100),
-  status_delete                 tinyint(1) default 0 not null,
+  phone                         varchar(20),
+  phone2                        varchar(20),
+  email2                        varchar(50),
+  deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   last_login                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
@@ -308,35 +301,47 @@ create index ix_auth_user_auth_group_auth_user on auth_user_auth_group (auth_use
 alter table auth_user_auth_group add constraint fk_auth_user_auth_group_auth_group foreign key (auth_group_id) references auth_group (id) on delete restrict on update restrict;
 create index ix_auth_user_auth_group_auth_group on auth_user_auth_group (auth_group_id);
 
-alter table invoices add constraint fk_invoices_id_provider foreign key (id_provider) references providers (id_provider) on delete restrict on update restrict;
-create index ix_invoices_id_provider on invoices (id_provider);
+alter table farms add constraint fk_farms_status_farm_id foreign key (status_farm_id) references status (id) on delete restrict on update restrict;
+create index ix_farms_status_farm_id on farms (status_farm_id);
 
-alter table invoice_details add constraint fk_invoice_details_id_invoice foreign key (id_invoice) references invoices (id_invoice) on delete restrict on update restrict;
-create index ix_invoice_details_id_invoice on invoice_details (id_invoice);
+alter table invoices add constraint fk_invoices_provider_id foreign key (provider_id) references providers (id) on delete restrict on update restrict;
+create index ix_invoices_provider_id on invoices (provider_id);
 
-alter table invoice_details add constraint fk_invoice_details_id_itemtype foreign key (id_itemtype) references item_types (id_itemtype) on delete restrict on update restrict;
-create index ix_invoice_details_id_itemtype on invoice_details (id_itemtype);
+alter table invoices add constraint fk_invoices_status_invoice_id foreign key (status_invoice_id) references status (id) on delete restrict on update restrict;
+create index ix_invoices_status_invoice_id on invoices (status_invoice_id);
 
-alter table invoice_details add constraint fk_invoice_details_id_lot foreign key (id_lot) references lots (id_lot) on delete restrict on update restrict;
-create index ix_invoice_details_id_lot on invoice_details (id_lot);
+alter table invoice_details add constraint fk_invoice_details_invoice_id foreign key (invoice_id) references invoices (id) on delete restrict on update restrict;
+create index ix_invoice_details_invoice_id on invoice_details (invoice_id);
 
-alter table invoice_details add constraint fk_invoice_details_id_store foreign key (id_store) references stores (id_store) on delete restrict on update restrict;
-create index ix_invoice_details_id_store on invoice_details (id_store);
+alter table invoice_details add constraint fk_invoice_details_item_type_id foreign key (item_type_id) references item_types (id) on delete restrict on update restrict;
+create index ix_invoice_details_item_type_id on invoice_details (item_type_id);
 
-alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_id_purity foreign key (id_purity) references purities (id_purity) on delete restrict on update restrict;
-create index ix_invoicesdetails_purities_id_purity on invoicesdetails_purities (id_purity);
+alter table invoice_details add constraint fk_invoice_details_lot_id foreign key (lot_id) references lots (id) on delete restrict on update restrict;
+create index ix_invoice_details_lot_id on invoice_details (lot_id);
 
-alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_id_invoicedetail foreign key (id_invoicedetail) references invoice_details (id_invoicedetail) on delete restrict on update restrict;
-create index ix_invoicesdetails_purities_id_invoicedetail on invoicesdetails_purities (id_invoicedetail);
+alter table invoice_details add constraint fk_invoice_details_store_id foreign key (store_id) references stores (id) on delete restrict on update restrict;
+create index ix_invoice_details_store_id on invoice_details (store_id);
 
-alter table item_types add constraint fk_item_types_id_providertype foreign key (id_providertype) references provider_type (id_providertype) on delete restrict on update restrict;
-create index ix_item_types_id_providertype on item_types (id_providertype);
+alter table invoice_details add constraint fk_invoice_details_status_invoice_detail_id foreign key (status_invoice_detail_id) references status (id) on delete restrict on update restrict;
+create index ix_invoice_details_status_invoice_detail_id on invoice_details (status_invoice_detail_id);
 
-alter table item_types add constraint fk_item_types_id_unit foreign key (id_unit) references units (id_unit) on delete restrict on update restrict;
-create index ix_item_types_id_unit on item_types (id_unit);
+alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_purity_id foreign key (purity_id) references purities (id) on delete restrict on update restrict;
+create index ix_invoicesdetails_purities_purity_id on invoicesdetails_purities (purity_id);
 
-alter table lots add constraint fk_lots_id_farm foreign key (id_farm) references farms (id_farm) on delete restrict on update restrict;
-create index ix_lots_id_farm on lots (id_farm);
+alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_invoice_detail_id foreign key (invoice_detail_id) references invoice_details (id) on delete restrict on update restrict;
+create index ix_invoicesdetails_purities_invoice_detail_id on invoicesdetails_purities (invoice_detail_id);
+
+alter table item_types add constraint fk_item_types_provider_type_id foreign key (provider_type_id) references provider_type (id) on delete restrict on update restrict;
+create index ix_item_types_provider_type_id on item_types (provider_type_id);
+
+alter table item_types add constraint fk_item_types_unit_id foreign key (unit_id) references units (id) on delete restrict on update restrict;
+create index ix_item_types_unit_id on item_types (unit_id);
+
+alter table lots add constraint fk_lots_farm_id foreign key (farm_id) references farms (id) on delete restrict on update restrict;
+create index ix_lots_farm_id on lots (farm_id);
+
+alter table lots add constraint fk_lots_status_lot_id foreign key (status_lot_id) references status (id) on delete restrict on update restrict;
+create index ix_lots_status_lot_id on lots (status_lot_id);
 
 alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_permission foreign key (auth_permission_id) references auth_permission (id) on delete restrict on update restrict;
 create index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role (auth_permission_id);
@@ -344,8 +349,11 @@ create index ix_auth_permission_auth_role_auth_permission on auth_permission_aut
 alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
 create index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role (auth_role_id);
 
-alter table providers add constraint fk_providers_provider_type_id_provider_type foreign key (provider_type_id_provider_type) references provider_type (id_providertype) on delete restrict on update restrict;
-create index ix_providers_provider_type_id_provider_type on providers (provider_type_id_provider_type);
+alter table providers add constraint fk_providers_provider_type_id foreign key (provider_type_id) references provider_type (id) on delete restrict on update restrict;
+create index ix_providers_provider_type_id on providers (provider_type_id);
+
+alter table providers add constraint fk_providers_status_provider_id foreign key (status_provider_id) references status (id) on delete restrict on update restrict;
+create index ix_providers_status_provider_id on providers (status_provider_id);
 
 alter table auth_role_auth_group add constraint fk_auth_role_auth_group_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
 create index ix_auth_role_auth_group_auth_role on auth_role_auth_group (auth_role_id);
@@ -357,6 +365,9 @@ alter table auth_pin add constraint fk_auth_pin_auth_user_id foreign key (auth_u
 
 alter table auth_token add constraint fk_auth_token_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 create index ix_auth_token_auth_user_id on auth_token (auth_user_id);
+
+alter table stores add constraint fk_stores_status_store_id foreign key (status_store_id) references status (id) on delete restrict on update restrict;
+create index ix_stores_status_store_id on stores (status_store_id);
 
 alter table user add constraint fk_user_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 
@@ -375,35 +386,47 @@ drop index ix_auth_user_auth_group_auth_user on auth_user_auth_group;
 alter table auth_user_auth_group drop foreign key fk_auth_user_auth_group_auth_group;
 drop index ix_auth_user_auth_group_auth_group on auth_user_auth_group;
 
-alter table invoices drop foreign key fk_invoices_id_provider;
-drop index ix_invoices_id_provider on invoices;
+alter table farms drop foreign key fk_farms_status_farm_id;
+drop index ix_farms_status_farm_id on farms;
 
-alter table invoice_details drop foreign key fk_invoice_details_id_invoice;
-drop index ix_invoice_details_id_invoice on invoice_details;
+alter table invoices drop foreign key fk_invoices_provider_id;
+drop index ix_invoices_provider_id on invoices;
 
-alter table invoice_details drop foreign key fk_invoice_details_id_itemtype;
-drop index ix_invoice_details_id_itemtype on invoice_details;
+alter table invoices drop foreign key fk_invoices_status_invoice_id;
+drop index ix_invoices_status_invoice_id on invoices;
 
-alter table invoice_details drop foreign key fk_invoice_details_id_lot;
-drop index ix_invoice_details_id_lot on invoice_details;
+alter table invoice_details drop foreign key fk_invoice_details_invoice_id;
+drop index ix_invoice_details_invoice_id on invoice_details;
 
-alter table invoice_details drop foreign key fk_invoice_details_id_store;
-drop index ix_invoice_details_id_store on invoice_details;
+alter table invoice_details drop foreign key fk_invoice_details_item_type_id;
+drop index ix_invoice_details_item_type_id on invoice_details;
 
-alter table invoicesdetails_purities drop foreign key fk_invoicesdetails_purities_id_purity;
-drop index ix_invoicesdetails_purities_id_purity on invoicesdetails_purities;
+alter table invoice_details drop foreign key fk_invoice_details_lot_id;
+drop index ix_invoice_details_lot_id on invoice_details;
 
-alter table invoicesdetails_purities drop foreign key fk_invoicesdetails_purities_id_invoicedetail;
-drop index ix_invoicesdetails_purities_id_invoicedetail on invoicesdetails_purities;
+alter table invoice_details drop foreign key fk_invoice_details_store_id;
+drop index ix_invoice_details_store_id on invoice_details;
 
-alter table item_types drop foreign key fk_item_types_id_providertype;
-drop index ix_item_types_id_providertype on item_types;
+alter table invoice_details drop foreign key fk_invoice_details_status_invoice_detail_id;
+drop index ix_invoice_details_status_invoice_detail_id on invoice_details;
 
-alter table item_types drop foreign key fk_item_types_id_unit;
-drop index ix_item_types_id_unit on item_types;
+alter table invoicesdetails_purities drop foreign key fk_invoicesdetails_purities_purity_id;
+drop index ix_invoicesdetails_purities_purity_id on invoicesdetails_purities;
 
-alter table lots drop foreign key fk_lots_id_farm;
-drop index ix_lots_id_farm on lots;
+alter table invoicesdetails_purities drop foreign key fk_invoicesdetails_purities_invoice_detail_id;
+drop index ix_invoicesdetails_purities_invoice_detail_id on invoicesdetails_purities;
+
+alter table item_types drop foreign key fk_item_types_provider_type_id;
+drop index ix_item_types_provider_type_id on item_types;
+
+alter table item_types drop foreign key fk_item_types_unit_id;
+drop index ix_item_types_unit_id on item_types;
+
+alter table lots drop foreign key fk_lots_farm_id;
+drop index ix_lots_farm_id on lots;
+
+alter table lots drop foreign key fk_lots_status_lot_id;
+drop index ix_lots_status_lot_id on lots;
 
 alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_permission;
 drop index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role;
@@ -411,8 +434,11 @@ drop index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_
 alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_role;
 drop index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role;
 
-alter table providers drop foreign key fk_providers_provider_type_id_provider_type;
-drop index ix_providers_provider_type_id_provider_type on providers;
+alter table providers drop foreign key fk_providers_provider_type_id;
+drop index ix_providers_provider_type_id on providers;
+
+alter table providers drop foreign key fk_providers_status_provider_id;
+drop index ix_providers_status_provider_id on providers;
 
 alter table auth_role_auth_group drop foreign key fk_auth_role_auth_group_auth_role;
 drop index ix_auth_role_auth_group_auth_role on auth_role_auth_group;
@@ -424,6 +450,9 @@ alter table auth_pin drop foreign key fk_auth_pin_auth_user_id;
 
 alter table auth_token drop foreign key fk_auth_token_auth_user_id;
 drop index ix_auth_token_auth_user_id on auth_token;
+
+alter table stores drop foreign key fk_stores_status_store_id;
+drop index ix_stores_status_store_id on stores;
 
 alter table user drop foreign key fk_user_auth_user_id;
 

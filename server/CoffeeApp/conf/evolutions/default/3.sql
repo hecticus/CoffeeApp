@@ -58,13 +58,13 @@ INSERT INTO `auth_permission` ( id, name) VALUES
 (223, 'controllers.InvoiceDetailPurities.delete'),
 (224, 'controllers.Providers.findById'),
 (225, 'controllers.Providers.findAll'),
-(226, 'controller.Providers.findAllSearch'),
+(226, 'controllers.Providers.findAllSearch'),
 (227, 'controllers.Providers.getByIdentificationDoc'),
 (228, 'controllers.Providers.getProvidersByName'),
 (229, 'controllers.Providers.getByTypeProvider'),
 (230, 'controllers.Providers.getByNameDocByTypeProvider'),
 (231, 'controllers.Providers.uploadPhotoProvider'),
-(232, 'ccontrollers.Providers.create'),
+(232, 'controllers.Providers.create'),
 (233, 'controllers.Providers.update'),
 (234, 'controllers.Providers.delete'),
 (235, 'controllers.Providers.deletes'),
@@ -119,11 +119,11 @@ INSERT INTO `auth_client_credential` (id, client_id, name) VALUES
 (1,'web_site',    'web site'),
 (2,'android_app', 'android app');
 
-INSERT INTO `auth_user` ( id , username, email, password,  deleted) VALUES
+INSERT INTO `auth_user` ( id , username, email, password, deleted) VALUES
 (100,'sm21','shamuel21@gmail.com','123456', 0),
 (101,'marwin','marwin@gmail.com','1234', 0);
 
-INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, status_delete) VALUES
+INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
 (100,100,'shamuel','manrrique','chara','0141412514', 0),
 (101,101,'marwin','campos','ccs','2515151', 0);
 

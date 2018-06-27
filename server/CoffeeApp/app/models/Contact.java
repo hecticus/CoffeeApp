@@ -2,10 +2,12 @@ package models;
 
 import play.data.validation.Constraints;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 @Embeddable
 public class Contact {
+
     private Double latitude = null;
 
     private Double longitude = null;
@@ -14,17 +16,17 @@ public class Contact {
     @Column(length = 200)
     private String address = null;
 
-    @Constraints.MaxLength(100)
-    @Column(length = 100)
+    @Constraints.MaxLength(20)
+    @Column(length = 20)
     private String phone = null;
 
-    @Constraints.MaxLength(100)
-    @Column(length = 100)
+    @Constraints.MaxLength(20)
+    @Column(length = 20)
     private String phone2 = null;
 
-    @Constraints.MaxLength(100)
+    @Constraints.MaxLength(50)
     @Constraints.Email
-    @Column(length = 100)
+    @Column(length = 50)
     private String email2 = null;
 
     public Double getLongitude() {

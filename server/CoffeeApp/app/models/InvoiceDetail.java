@@ -1,21 +1,14 @@
 package models;
 
-import com.avaje.ebean.validation.Range;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
-import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.text.PathProperties;
-import play.data.format.Formats;
+import models.status.StatusInvoiceDetail;
 import play.data.validation.Constraints;
-import play.libs.Json;
 
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,71 +20,56 @@ import java.util.List;
 @Table(name="invoice_details")
 public class InvoiceDetail  extends AbstractEntity{
 
-    @Id
-    @Column(name = "id_invoiceDetail")
-    private Long idInvoiceDetail;
-
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id_invoice", nullable = false)
+    @JoinColumn(nullable = false)
     private Invoice invoice;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id_itemType", nullable = false)
+    @JoinColumn(nullable = false)
     private ItemType itemType;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id_lot")
+    @JoinColumn(nullable = false)
     private Lot lot;
 
     @ManyToOne
     @Constraints.Required
-    @JoinColumn(name = "id_store")
+    @JoinColumn(nullable = false)
     private Store store;
 
     @Constraints.Min(0)
     @Constraints.Required
-    @Column(nullable = false, name = "price_ItemTypeByLot")
+    @Column(nullable = false)
     private BigDecimal priceItemTypeByLot; //esta en lote desconozco la relacion Toma de Cosecha
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(nullable = false, name = "cost_ItemType")
+    @Column(nullable = false)
     private BigDecimal costItemType;//esta en Item Type desconozco la relacion Toma del app para vender
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(nullable = false, name = "amount_invoiceDetail")
-    private BigDecimal amountInvoiceDetail; // cantidad por la que multiplica
+    @Column(nullable = false)
+    private BigDecimal amountInvoiceDetail; // cantidad por la que multiplica   era amount
 
     @Constraints.Required
     @Constraints.MaxLength(100)
-    @Column(nullable = false, name = "nameReceived_invoiceDetail", length = 100)
-    private String nameReceivedInvoiceDetail;
+    @Column(nullable = false, length = 100)
+    private String nameReceived;
 
     @Constraints.Required
     @Constraints.MaxLength(100)
-    @Column(nullable = false, name = "nameDelivered_invoiceDetail", length = 100)
-    private String nameDeliveredInvoiceDetail;
+    @Column(nullable = false, length = 100)
+    private String nameDelivered;
 
-    @Column(name = "note_invoiceDetail", columnDefinition = "text")
-    private String noteInvoiceDetail;
+    @Column(columnDefinition = "text")
+    private String note;
 
-    @Range(min = 0, max = 1)
-    @Column(nullable = false, name = "status_invoiceDetail")
-    private Integer statusInvoiceDetail;
-
-    @Column(name = "isFreight_invoiceDetail")
-    private boolean freightInvoiceDetail;
-
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreatedTimestamp
-    @Column(nullable = false, name = "dueDate_invoiceDetail", columnDefinition =
-            "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false, insertable = false)
-    private ZonedDateTime startDateInvoiceDetail;
+    @ManyToOne
+    private StatusInvoiceDetail statusInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
@@ -99,19 +77,9 @@ public class InvoiceDetail  extends AbstractEntity{
     private static Finder<Long, InvoiceDetail> finder = new Finder<>(InvoiceDetail.class);
 
     public InvoiceDetail() {
-        statusInvoiceDetail = 1;
-        freightInvoiceDetail = false;
         costItemType = BigDecimal.ZERO;
         priceItemTypeByLot = BigDecimal.ZERO;
         invoiceDetailPurity = new ArrayList<>();
-    }
-
-    public Long getIdInvoiceDetail() {
-        return idInvoiceDetail;
-    }
-
-    public void setIdInvoiceDetail(Long idInvoiceDetail) {
-        this.idInvoiceDetail = idInvoiceDetail;
     }
 
     public Invoice getInvoice() {
@@ -154,21 +122,12 @@ public class InvoiceDetail  extends AbstractEntity{
         this.store = store;
     }
 
-
     public BigDecimal getCostItemType() {
         return costItemType;
     }
 
     public void setCostItemType(BigDecimal costItemType) {
         this.costItemType = costItemType;
-    }
-
-    public ZonedDateTime getStartDateInvoiceDetail() {
-        return startDateInvoiceDetail;
-    }
-
-    public void setStartDateInvoiceDetail(ZonedDateTime startDateInvoiceDetail) {
-        this.startDateInvoiceDetail = startDateInvoiceDetail;
     }
 
     public BigDecimal getAmountInvoiceDetail() {
@@ -179,43 +138,35 @@ public class InvoiceDetail  extends AbstractEntity{
         this.amountInvoiceDetail = amountInvoiceDetail;
     }
 
-    public boolean isFreightInvoiceDetail() {
-        return freightInvoiceDetail;
-    }
-
-    public void setFreightInvoiceDetail(boolean freightInvoiceDetail) {
-        this.freightInvoiceDetail = freightInvoiceDetail;
-    }
-
     public String getNoteInvoiceDetail() {
-        return noteInvoiceDetail;
+        return note;
     }
 
     public void setNoteInvoiceDetail(String noteInvoiceDetail) {
-        this.noteInvoiceDetail = noteInvoiceDetail;
+        this.note = noteInvoiceDetail;
     }
 
-    public String getNameReceivedInvoiceDetail() {
-        return nameReceivedInvoiceDetail;
+    public String getNameReceived() {
+        return nameReceived;
     }
 
-    public void setNameReceivedInvoiceDetail(String nameReceivedInvoiceDetail) {
-        this.nameReceivedInvoiceDetail = nameReceivedInvoiceDetail;
+    public void setNameReceived(String nameReceived) {
+        this.nameReceived = nameReceived;
     }
 
-    public String getNameDeliveredInvoiceDetail() {
-        return nameDeliveredInvoiceDetail;
+    public String getNameDelivered() {
+        return nameDelivered;
     }
 
-    public void setNameDeliveredInvoiceDetail(String nameDeliveredInvoiceDetail) {
-        this.nameDeliveredInvoiceDetail = nameDeliveredInvoiceDetail;
+    public void setNameDelivered(String nameDelivered) {
+        this.nameDelivered = nameDelivered;
     }
 
-    public Integer getStatusInvoiceDetail() {
+    public StatusInvoiceDetail getStatusInvoiceDetail() {
         return statusInvoiceDetail;
     }
 
-    public void setStatusInvoiceDetail(Integer statusInvoiceDetail) {
+    public void setStatusInvoiceDetail(StatusInvoiceDetail statusInvoiceDetail) {
         this.statusInvoiceDetail = statusInvoiceDetail;
     }
 
@@ -227,86 +178,22 @@ public class InvoiceDetail  extends AbstractEntity{
         this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
+    public StatusInvoiceDetail getInvoiceDetail() {
+        return statusInvoiceDetail;
+    }
+
+    public void setInvoiceDetail(StatusInvoiceDetail invoiceDetail) {
+        this.statusInvoiceDetail = invoiceDetail;
+    }
+
     //Metodos Creados
     public static InvoiceDetail findById(Long id){
         return finder.byId(id);
     }
 
-
-    public static JsonNode finderAllByIdInvoiceSummary(Long idInvoice) {
-        ObjectNode aux;
-        List<ObjectNode> result = new ArrayList<>();
-        String sql="SELECT duedate_invoicedetail as c0, SUM(amount_invoicedetail) as c1 " +
-                "FROM invoice_details " +
-                "where id_invoice=:idInvoice " +
-                "and status_delete=0 "+
-                "group by duedate_invoicedetail " +
-                "order by duedate_invoicedetail";
-
-        SqlQuery query = Ebean.createSqlQuery(sql).setParameter("idInvoice", idInvoice);
-
-        List<SqlRow> results = query.findList();
-
-        for(int i=0; i < results.size(); ++i) {
-            aux= Json.newObject();
-
-            aux.put("startDateInvoiceDetail",results.get(i).getTimestamp("c0").toString());
-            aux.put("amountTotal",results.get(i).getString("c1"));
-
-            result.add(aux);
-        }
-        return Json.toJson(result);
-    }
-
-
-    public static int deleteAllByIdInvoiceAndDate(Long idInvoice, String date){
-
-        date = "'"+date+"'";
-
-        String sql="update invoice_details " +
-                "set status_delete=1 " +
-                "where duedate_invoicedetail= "+date+"  and id_invoice= "+idInvoice+";";
-
-        SqlUpdate query = Ebean.createSqlUpdate(sql);
-
-        return query.execute();
-    }
-
-    public static List<InvoiceDetail> findAllList(Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
-                                              String startDateInvoiceDetail, Integer status, boolean deleted){
-        ExpressionList expressionList = finder.query().where();
-
-        if(invoice != null)
-            expressionList.eq("invoice.idInvoice", invoice );
-
-        if(itemType != null)
-            expressionList.eq("itemType.idItemType", itemType );
-
-        if(lot != null)
-            expressionList.eq("lot.idLot", lot );
-
-        if(store != null)
-            expressionList.eq("store.idStore", store );
-
-        if(nameReceivedInvoiceDetail != null)
-            expressionList.eq("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
-
-        if(startDateInvoiceDetail != null)
-            expressionList.eq("startDateInvoiceDetail", startDateInvoiceDetail );
-
-        if(deleted)
-            expressionList.setIncludeSoftDeletes();
-
-        if(status != null)
-            expressionList.eq("statusInvoiceDetail", status );
-
-        return (List<InvoiceDetail>) expressionList.findList();
-    }
-
-
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
-                                              Long invoice, Long itemType, Long lot, Long store, String nameReceivedInvoiceDetail,
-                                              String startDateInvoiceDetail, Integer status, boolean deleted){
+                                              Long invoice, Long itemType, Long lot, Long store, String nameReceived,
+                                              String nameDelivered, String startDate, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -314,41 +201,37 @@ public class InvoiceDetail  extends AbstractEntity{
             expressionList.apply(pathProperties);
 
         if(invoice != 0L)
-            expressionList.eq("invoice.idInvoice", invoice );
+            expressionList.eq("invoice.id", invoice );
 
         if(itemType != 0L)
-            expressionList.eq("itemType.idItemType", itemType );
+            expressionList.eq("itemType.id", itemType );
 
         if(lot != 0L)
-            expressionList.eq("lot.idLot", lot );
+            expressionList.eq("lot.id", lot );
 
         if(store != 0L)
-            expressionList.eq("store.idStore", store );
+            expressionList.eq("store.id", store );
 
-        if(nameReceivedInvoiceDetail != null)
-            expressionList.eq("nameReceivedInvoiceDetail", nameReceivedInvoiceDetail );
+        if(nameReceived != null)
+            expressionList.startsWith("nameReceived", nameReceived );
 
-        if(startDateInvoiceDetail != null)
-            expressionList.eq("startDateInvoiceDetail", startDateInvoiceDetail );
+        if(nameDelivered != null)
+            expressionList.startsWith("nameDelivered", nameDelivered);
 
-        if(deleted)
+        if(startDate != null)
+            expressionList.startsWith("createdAt", startDate );
+
+        if(delete)
             expressionList.setIncludeSoftDeletes();
 
-        if(sort != null) {
-            if(sort.contains(" ")) {
-                String []  aux = sort.split(" ", 2);
-                expressionList.orderBy(sort( aux[0], aux[1]));
-            }else {
-                expressionList.orderBy(sort("idInvoiceDetail", sort));
-            }
-        }
+        if(sort != null)
+            expressionList.orderBy(sort(sort));
 
-        if(status != null)
-            expressionList.eq("statusInvoiceDetail", status );
+        if(status != 0L)
+            expressionList.eq("statusInvoiceDetail.id", status );
 
         if(index == null || size == null)
             return new ListPagerCollection(expressionList.findList());
-
 
         return new ListPagerCollection(
                 expressionList.setFirstRow(index).setMaxRows(size).findList(),

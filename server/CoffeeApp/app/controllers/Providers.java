@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
+import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Invoice;
@@ -35,7 +36,7 @@ public class Providers extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result preCreate() {
         try {
             ProviderType providerType = new ProviderType();
@@ -48,25 +49,18 @@ public class Providers extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            //providerType
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            ObjectNode providerTypeNode = Json.newObject();
-            providerTypeNode.set("idProviderType", json.findValue("id_ProviderType"));
-            node.set("providerType", providerTypeNode);
-
-
-            Form<Provider> form = formFactory.form(Provider.class).bind(node);
-            if (form.hasErrors()){
+            Form<Provider> form = formFactory.form(Provider.class).bindFromRequest();
+            if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
-            Provider provider = Json.fromJson(node, Provider.class);
+
+            Provider provider = Json.fromJson(json, Provider.class);
             provider.save();
             return  Response.createdEntity(Json.toJson(provider));
         }catch(Exception e){
@@ -74,25 +68,19 @@ public class Providers extends Controller {
         }
     }
 
-////@CoffeAppsecurity
-    public Result update() {
+    @CoffeAppsecurity
+    public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return badRequest("Expecting Json data");
 
-            JsonNode id = json.get("idProvider");
-            if (id == null )
-                return badRequest("Missing parameter idProvider");
+            Form<Provider> form = formFactory.form(Provider.class).bind(json);
+            if (form.hasErrors())
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            //providerType
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            ObjectNode providerTypeNode = Json.newObject();
-            providerTypeNode.set("idProviderType", json.findValue("id_ProviderType"));
-            node.set("providerType", providerTypeNode);
-
-
-            Provider provider = Json.fromJson(node, Provider.class);
+            Provider provider = Json.fromJson(json, Provider.class);
+            provider.setId(id);
             provider.update();
             return  Response.updatedEntity(Json.toJson(provider));
 
@@ -101,7 +89,7 @@ public class Providers extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Provider.findById(id));
@@ -111,92 +99,94 @@ public class Providers extends Controller {
         }
     }
 
-
-    ////@CoffeAppsecurity
-    public Result deletes(){
+    @CoffeAppsecurity
+    public Result deletes() {
         try {
-            Ebean.deleteAll(Provider.finder.query().findList());
-            return Response.deletedEntity();
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
-
-
-    ////@CoffeAppsecurity
-    public Result  uploadPhotoProvider(){
-        try  {
             JsonNode json = request().body().asJson();
-            if(json == null)
-                return Response.requiredJson();
+            if (json == null)
+                return controllers.utils.Response.requiredJson();
 
-            JsonNode idprovider = json.get("idProvider");
-            Long idProvider;
-            if (idprovider == null) {
-                JsonNode identificationDocProvider = json.get("identificationDocProvider");
-                if(identificationDocProvider == null){
-                    return Response.requiredParameter("identificationDocProvider or idProvider");
-                }else{
-                    Provider testp = Provider.getByIdentificationDoc(identificationDocProvider.asText());
-                    if(testp != null){
-                        idProvider = testp.getIdProvider();
-                    }else{
-                        return Response.requiredParameter("identificationDocProvider invalid");
-                    }
-                }
-            }else{
-                idProvider = idprovider.asLong();
-            }
+            Ebean.deleteAll(Provider.class, controllers.utils.JsonUtils.toArrayLong(json, "ids"));
 
-            JsonNode base64Photo_json = json.get("photoProvider");
-            if (base64Photo_json == null)
-                return Response.requiredParameter("photoProvider");
-
-            String base64Photo = base64Photo_json.asText();
-
-            String url;
-            if(base64Photo.contains("data:image/jpeg;base64,"))
-            {
-                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
-                url = Provider.uploadPhoto(base64Photo,"jpg");
-            }
-            else {
-                base64Photo = base64Photo.replace("data:image/png;base64,", "");
-                url = Provider.uploadPhoto(base64Photo,"png");
-            }
-
-            Provider provider = Provider.findById(idProvider);
-
-            provider.setPhotoProvider(url);
-
-            provider.update();
-
-            ObjectNode response = Json.newObject();
-            response.put("urlPhoto", url);
-            return Response.updatedEntity(response);
-
+            return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
+//    @CoffeAppsecurity
+//    public Result  uploadPhotoProvider(){
+//        try  {
+//            JsonNode json = request().body().asJson();
+//            if(json == null)
+//                return Response.requiredJson();
+//
+//            JsonNode idprovider = json.get("idProvider");
+//            Long idProvider;
+//            if (idprovider == null) {
+//                JsonNode identificationDocProvider = json.get("identificationDocProvider");
+//                if(identificationDocProvider == null){
+//                    return Response.requiredParameter("identificationDocProvider or idProvider");
+//                }else{
+//                    Provider testp = Provider.getByIdentificationDoc(identificationDocProvider.asText());
+//                    if(testp != null){
+//                        idProvider = testp.getIdProvider();
+//                    }else{
+//                        return Response.requiredParameter("identificationDocProvider invalid");
+//                    }
+//                }
+//            }else{
+//                idProvider = idprovider.asLong();
+//            }
+//
+//            JsonNode base64Photo_json = json.get("photoProvider");
+//            if (base64Photo_json == null)
+//                return Response.requiredParameter("photoProvider");
+//
+//            String base64Photo = base64Photo_json.asText();
+//
+//            String url;
+//            if(base64Photo.contains("data:image/jpeg;base64,"))
+//            {
+//                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
+//                url = Provider.uploadPhoto(base64Photo,"jpg");
+//            }
+//            else {
+//                base64Photo = base64Photo.replace("data:image/png;base64,", "");
+//                url = Provider.uploadPhoto(base64Photo,"png");
+//            }
+//
+//            Provider provider = Provider.findById(idProvider);
+//
+//            provider.setPhotoProvider(url);
+//
+//            provider.update();
+//
+//            ObjectNode response = Json.newObject();
+//            response.put("urlPhoto", url);
+//            return Response.updatedEntity(response);
+//
+//        } catch (Exception e) {
+//            return ExceptionsUtils.find(e);
+//        }
+//    }
 
-    ////@CoffeAppsecurity
+
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Provider provider = Provider.findById(id);
-            return Response.foundEntity(Json.toJson(provider));
+            return Response.foundEntity(Json.toJson(Provider.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String sort, String name,  Long idProviderType,
                            String identificationDocProvider, String addressProvider,
                            String phoneNumberProvider, String emailProvider,
-                           String contactNameProvider, Integer status, boolean deleted){
+                           String contactNameProvider, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Provider.findAll( index, size,  pathProperties, sort, name,
