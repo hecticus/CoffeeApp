@@ -36,7 +36,7 @@ public class Provider extends AbstractEntity{
     private ProviderType providerType;
 
     @Constraints.Required
-    @Constraints.MaxLength(255)
+    @Constraints.MaxLength(100)
     @Column(unique=true, nullable = false)
     private String nitProvider;
 
@@ -81,20 +81,28 @@ public class Provider extends AbstractEntity{
         invoices = new ArrayList<>();
     }
 
-    public String getIdentificationDocProvider() {
+    public ProviderType getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(ProviderType providerType) {
+        this.providerType = providerType;
+    }
+
+    public String getNitProvider() {
         return nitProvider;
     }
 
-    public void setIdentificationDocProvider(String identificationDocProvider) {
-        this.nitProvider = identificationDocProvider;
+    public void setNitProvider(String nitProvider) {
+        this.nitProvider = nitProvider;
     }
 
-    public String getFullNameProvider() {
+    public String getNameProvider() {
         return nameProvider;
     }
 
-    public void setFullNameProvider(String fullNameProvider) {
-        this.nameProvider = fullNameProvider;
+    public void setNameProvider(String nameProvider) {
+        this.nameProvider = nameProvider;
     }
 
     public String getAddressProvider() {
@@ -105,12 +113,12 @@ public class Provider extends AbstractEntity{
         this.addressProvider = addressProvider;
     }
 
-    public String getPhoneNumberProvider() {
+    public String getNumberProvider() {
         return numberProvider;
     }
 
-    public void setPhoneNumberProvider(String phoneNumberProvider) {
-        this.numberProvider = phoneNumberProvider;
+    public void setNumberProvider(String numberProvider) {
+        this.numberProvider = numberProvider;
     }
 
     public String getEmailProvider() {
@@ -129,14 +137,6 @@ public class Provider extends AbstractEntity{
         this.photoProvider = photoProvider;
     }
 
-    public ProviderType getProviderType() {
-        return providerType;
-    }
-
-    public void setProviderType(ProviderType providerType) {
-        this.providerType = providerType;
-    }
-
     public String getContactNameProvider() {
         return contactNameProvider;
     }
@@ -145,20 +145,20 @@ public class Provider extends AbstractEntity{
         this.contactNameProvider = contactNameProvider;
     }
 
-    public List<Invoice> getInvoices() {
-        return invoices;
-    }
-
-    public void setInvoices(List<Invoice> invoices) {
-        this.invoices = invoices;
-    }
-
     public StatusProvider getStatusProvider() {
         return statusProvider;
     }
 
     public void setStatusProvider(StatusProvider statusProvider) {
         this.statusProvider = statusProvider;
+    }
+
+    public List<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
     }
 
     public static Provider findById(Long id) {

@@ -82,7 +82,7 @@ public class Groups  extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, boolean deleted){
         try {

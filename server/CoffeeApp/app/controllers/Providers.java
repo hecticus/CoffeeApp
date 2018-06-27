@@ -36,7 +36,7 @@ public class Providers extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result preCreate() {
         try {
             ProviderType providerType = new ProviderType();
@@ -49,14 +49,14 @@ public class Providers extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
 
-            Form<Provider> form = formFactory.form(Provider.class).bind(json);
+            Form<Provider> form = formFactory.form(Provider.class).bindFromRequest();
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
@@ -68,7 +68,7 @@ public class Providers extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -89,7 +89,7 @@ public class Providers extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Provider.findById(id));
@@ -99,7 +99,7 @@ public class Providers extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -114,7 +114,7 @@ public class Providers extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+//    @CoffeAppsecurity
 //    public Result  uploadPhotoProvider(){
 //        try  {
 //            JsonNode json = request().body().asJson();
@@ -172,7 +172,7 @@ public class Providers extends Controller {
 //    }
 
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Provider.findById(id)));
@@ -181,7 +181,7 @@ public class Providers extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String sort, String name,  Long idProviderType,
                            String identificationDocProvider, String addressProvider,

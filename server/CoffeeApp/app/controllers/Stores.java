@@ -37,7 +37,7 @@ public class Stores {
     }
 
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -56,7 +56,7 @@ public class Stores {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -77,7 +77,7 @@ public class Stores {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Store.findById(id));
@@ -87,7 +87,7 @@ public class Stores {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -102,7 +102,7 @@ public class Stores {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Response.toJson(Store.findById(id), Store.class));
@@ -111,7 +111,7 @@ public class Stores {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, Long status, boolean deleted){
         try {

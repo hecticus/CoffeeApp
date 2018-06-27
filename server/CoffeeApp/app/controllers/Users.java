@@ -106,7 +106,7 @@ public class Users extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, String firstName, String lastName, boolean deleted){
         try {
@@ -118,7 +118,7 @@ public class Users extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result uploadPhoto(JsonNode request) {
         try {
             JsonNode jracksPhoto = User.uploadPhoto(request);

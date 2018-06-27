@@ -19,6 +19,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
 
@@ -31,7 +32,7 @@ public class Units extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -51,7 +52,7 @@ public class Units extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result update(Long id){
         try{
             JsonNode json = request().body().asJson();
@@ -70,7 +71,7 @@ public class Units extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Unit.findById(id));
@@ -80,7 +81,8 @@ public class Units extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -94,8 +96,7 @@ public class Units extends Controller {
             return NsExceptionsUtils.delete(e);
         }
     }
-
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Response.toJson(Unit.findById(id), Unit.class));
@@ -104,7 +105,7 @@ public class Units extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name,  boolean deleted){
         try {

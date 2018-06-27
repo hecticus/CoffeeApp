@@ -1,8 +1,6 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
@@ -18,6 +16,8 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.authorization.CoffeAppsecurity;
+
 import javax.inject.Inject;
 
 /**
@@ -34,7 +34,7 @@ public class ItemTypes extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -54,7 +54,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -75,7 +75,7 @@ public class ItemTypes extends Controller {
     }
 
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(ItemType.findById(id));
@@ -85,7 +85,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes( ) {
         try {
             JsonNode json = request().body().asJson();
@@ -100,7 +100,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(ItemType.findById(id)));
@@ -109,7 +109,7 @@ public class ItemTypes extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection,
                           String sort, String name, Long idProviderType, Long unit, boolean deleted ) {
         try {

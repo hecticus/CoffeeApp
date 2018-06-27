@@ -12,6 +12,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
 
@@ -29,7 +30,7 @@ public class Lots extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -42,14 +43,14 @@ public class Lots extends Controller {
 
             Lot lot = Json.fromJson(json, Lot.class);
             lot.save();
-            return  Response.updatedEntity(Json.toJson(lot));
+            return  Response.createdEntity(Json.toJson(lot));
 
         }catch(Exception e){
             return Response.responseExceptionCreated(e);
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try{
             JsonNode json = request().body().asJson();
@@ -69,7 +70,7 @@ public class Lots extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Lot.findById(id));
@@ -79,7 +80,7 @@ public class Lots extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -94,7 +95,7 @@ public class Lots extends Controller {
         }
     }
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Response.toJson(Lot.findById(id), Lot.class));
@@ -103,7 +104,7 @@ public class Lots extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
                            String name, Long idFarm, Long status, boolean deleted){
         try {

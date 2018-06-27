@@ -31,7 +31,7 @@ public class InvoiceDetailPurities  extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -51,7 +51,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -73,7 +73,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(InvoiceDetail.findById(id));
@@ -83,7 +83,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+        @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -98,7 +98,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             InvoiceDetailPurity invoiceDetailPurity = InvoiceDetailPurity.findById(id);
@@ -108,7 +108,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    ////@CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long purity, Long invoiceDetail, boolean deleted){
         try {

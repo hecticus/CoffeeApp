@@ -40,7 +40,7 @@ public class Invoices extends Controller {
                 " phoneNumber_Provider,email_Provider, providerType(id_ProviderType, name_ProviderType))");
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public    Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -60,7 +60,7 @@ public class Invoices extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -80,7 +80,7 @@ public class Invoices extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result delete(Long id) {
         try{
             Ebean.delete(Invoice.findById(id));
@@ -90,7 +90,7 @@ public class Invoices extends Controller {
         }
     }
 
-    //@CoffeAppsecurity
+        @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -104,7 +104,7 @@ public class Invoices extends Controller {
             return NsExceptionsUtils.delete(e);
         }
     }
-////@CoffeAppsecurity
+//    @CoffeAppsecurity
     public  Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Invoice.findById(id)));
@@ -113,7 +113,7 @@ public class Invoices extends Controller {
         }
     }
 
-//@CoffeAppsecurity
+    @CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
                                     String sort, Long id_provider, Long id_providertype, String startDate,
                                     String endDate, Long status ,boolean deleted){
@@ -128,9 +128,8 @@ public class Invoices extends Controller {
         }
     }
 
-
 /*
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result buyHarvestsAndCoffe(){
         BigDecimal monto;
         InvoiceDetailPurity invoiceDetailPurity;
@@ -221,15 +220,13 @@ public class Invoices extends Controller {
 
                 invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
 
-                */
-/*
-                comentado por el nuevo caculo que viene en caos de compra
+                //comentado por el nuevo caculo que viene en caos de compra
                 monto = Amount.asInt() * itemType.getCostItemType();
 
                 int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
                 invoiceDetailPurity.setDiscountRatePurity(Discount);
 
-                monto = monto+Discount;*//*
+                monto = monto+Discount;
 
             }
 
@@ -302,7 +299,7 @@ public class Invoices extends Controller {
     }
 
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result updateBuyHarvestsAndCoffe() {
         BigDecimal monto;
         boolean auxCreate = false;
@@ -392,14 +389,12 @@ public class Invoices extends Controller {
                 invoiceDetail.setStore(Store.findById(id_store.asLong()));
 
                 monto = Amount.decimalValue().multiply(price.decimalValue());
-                */
-/*
                 monto = Amount.asInt() * itemType.getCostItemType();
 
                 int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
                 invoiceDetailPurity.setDiscountRatePurity(Discount);
 
-                monto = monto+Discount;*//*
+                monto = monto+Discount;
 
             }
 
@@ -465,10 +460,9 @@ public class Invoices extends Controller {
         openInvoice.update();// invoiceDao.update(openInvoice);
         return Response.updatedEntity(Json.toJson(openInvoice));
 }
-*/
 
 
-////@CoffeAppsecurity
+    @CoffeAppsecurity
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();
@@ -481,6 +475,7 @@ public class Invoices extends Controller {
 
         return Response.createdEntity(response);
     }
+*/
 
 
 
