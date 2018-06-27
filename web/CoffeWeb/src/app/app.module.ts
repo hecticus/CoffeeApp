@@ -8,6 +8,10 @@ import { BreadcrumbsComponent } from './core/breadcrumbs/breadcrumbs.component';
 import { FarmComponent } from 'src/app/components/farm/farm.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LotComponent } from './components/lot/lot.component';
+import { HeroesComponent } from './components/heroes/heroes.component';
+import { FormsModule } from '@angular/forms';
+import { HeroesDetailComponent } from './components/heroes-detail/heroes-detail.component';
+import { MessagesComponent } from './components/messages/messages.component';
 
 @NgModule ({
   declarations: [
@@ -20,10 +24,14 @@ import { LotComponent } from './components/lot/lot.component';
     TopbarComponent,
     BreadcrumbsComponent,
     LotComponent,
+    HeroesComponent,
+    HeroesDetailComponent,
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
