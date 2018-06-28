@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  // backendUrl: 'https://dev.coffee.hecticus.com'
-  backendUrl: 'http://localhost:9000'
+	production: false,
+	// backendUrl: 'https://dev.coffee.hecticus.com'
+	backendUrl: 'http://localhost:9000'
 };

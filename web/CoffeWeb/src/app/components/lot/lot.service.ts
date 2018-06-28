@@ -7,44 +7,44 @@ import { Lot } from '../../core/models/lot';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class LotService {
 
-  private static readonly BASE_URL: string = BaseService.HOST + '/farm';
+	private static readonly BASE_URL: string = BaseService.HOST + '/farm';
 
-  constructor(
-    private http: HttpClient,
-    private fb: FormBuilder
-  ) { }
+	constructor(
+		private http: HttpClient,
+		private fb: FormBuilder
+	) { }
 
-  create(lot: Lot): Observable<Lot> {
-    return this.http.post<Lot>(LotService.BASE_URL, lot);
-  }
+	create(lot: Lot): Observable<Lot> {
+		return this.http.post<Lot>(LotService.BASE_URL, lot);
+	}
 
-  update(lot: Lot): Observable<Lot> {
-      return this.http.put<Lot>(LotService.BASE_URL + '/' + lot.id, lot);
-  }
+	update(lot: Lot): Observable<Lot> {
+			return this.http.put<Lot>(LotService.BASE_URL + '/' + lot.id, lot);
+	}
 
-  delete(id: number): Observable<any> {
-    return this.http.delete<any>(LotService.BASE_URL + '/' + id);
-  }
+	delete(id: number): Observable<any> {
+		return this.http.delete<any>(LotService.BASE_URL + '/' + id);
+	}
 
-  deletes(ids: {'ids': number[]}): Observable<any> {
-  return this.http.post(LotService.BASE_URL + '/deletes', ids );
-  }
+	deletes(ids: {'ids': number[]}): Observable<any> {
+	return this.http.post(LotService.BASE_URL + '/deletes', ids );
+	}
 
-  getById(id: number): Observable<Lot> {
-    return this.http.get<Lot>(LotService.BASE_URL + '/' + id);
-  }
+	getById(id: number): Observable<Lot> {
+		return this.http.get<Lot>(LotService.BASE_URL + '/' + id);
+	}
 
-  getAll(params: HttpParams): Observable<Lot[]> {
-    return this.http.get<Lot[]>(LotService.BASE_URL + '/search', {params});
-  }
+	getAll(): Observable<Lot[]> {
+		return this.http.get<Lot[]>(LotService.BASE_URL + '');
+	}
 
-  getAllSearch(params: HttpParams): Observable<Lot[]> {
-      return this.http.get<Lot[]>(LotService.BASE_URL + '/search', {params});
-  }
+	getAllSearch(params: HttpParams): Observable<Lot[]> {
+			return this.http.get<Lot[]>(LotService.BASE_URL + '/search', {params});
+	}
 
 
 }

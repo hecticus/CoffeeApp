@@ -1,8 +1,14 @@
-
-<h1>{{title}}</h1>
+<!-- <h1>
+    {{title}}</h1>
 <nav>
-  <a routerLink="/heroes">Heroes</a>
-  <a routerLink="/heroes">Heroes</a>
+    <li routerLink="/dashboard"> <span>Dashboard</span></li>
+    <li routerLink="/heroes">Heroes</li>
 </nav>
 <router-outlet></router-outlet>
-<app-messages></app-messages>
+<app-messages></app-messages> -->
+
+<app-topbar></app-topbar>
+<app-sidebar></app-sidebar>
+<section class="content">
+    <router-outlet></router-outlet>
+</section>

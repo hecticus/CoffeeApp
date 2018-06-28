@@ -4,21 +4,9 @@
     </header>
 
     <nav class="item-list">
-        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Proveedores</div>
-        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Lotes</div>
-        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Ordenes</div>
-
-        <nav class="item-list">
-            <div class="item header" (click)="select($event)" [ngClass]="{'selected': dataMenuItem == 'List' || dataMenuItem == 'Create' }">
-                <!-- (click)="toogleExpand($event)" -->
-                <span>Users</span>
-                <i class="material-icons"></i>
-            </div>
-            <div class="options">
-                <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == 'List'}" (click)="select($event)" routerLink="./List">List</div>
-                <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == 'Create'}" (click)="select($event)" routerLink="./Create">Create</div>
-            </div>
-        </nav>
-        <div class="item" data-menu-item="#" [ngClass]="{'selected': dataMenuItem == '#'}" (click)="select($event)" routerLink="./#">Salir</div>
+        <div class="item" data-menu-item="provider" [ngClass]="{'selected': dataMenuItem == 'provider'}" (click)="select($event)" routerLink="./lot">Proveedores</div>
+        <div class="item" data-menu-item="lot" [ngClass]="{'selected': dataMenuItem == 'lot'}" (click)="select($event)" routerLink="./lot">Lotes</div>
+        <div class="item" data-menu-item="order" [ngClass]="{'selected': dataMenuItem == 'order'}" (click)="select($event)" routerLink="./lot">Ordenes</div>
+        <div class="item" data-menu-item="user" [ngClass]="{'selected': dataMenuItem == 'user'}" (click)="select($event)" routerLink="./lot">Users</div>
     </nav>
 </div>

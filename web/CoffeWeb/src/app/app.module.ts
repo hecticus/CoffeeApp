@@ -1,3 +1,4 @@
+import { LotModule } from './components/lot/lot.module';
 
 
 import { AppComponent } from './app.component';
@@ -16,6 +17,9 @@ import { MessagesComponent } from './components/messages/messages.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TableComponent } from './core/table/table.component';
+import { TableColumnDirective } from './core/table/tableColumnDirective';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 @NgModule ({
   declarations: [
@@ -32,13 +36,17 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     HeroesDetailComponent,
     MessagesComponent,
     DashboardComponent,
+    TableComponent,
+    TableColumnDirective
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    Ng2SmartTableModule,
+    LotModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
