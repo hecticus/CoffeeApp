@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class LotService {
 
-	private static readonly BASE_URL: string = BaseService.HOST + '/farm';
+	private static readonly BASE_URL: string = BaseService.HOST + '/lot';
 
 	constructor(
 		private http: HttpClient,
@@ -19,11 +19,11 @@ export class LotService {
 	) { }
 
 	create(lot: Lot): Observable<Lot> {
-		return this.http.post<Lot>(LotService.BASE_URL, lot);
+		return this.http.post<any>(LotService.BASE_URL, lot);
 	}
 
 	update(lot: Lot): Observable<Lot> {
-			return this.http.put<Lot>(LotService.BASE_URL + '/' + lot.id, lot);
+			return this.http.put<any>(LotService.BASE_URL + '/' + lot.id, lot);
 	}
 
 	delete(id: number): Observable<any> {
@@ -35,15 +35,11 @@ export class LotService {
 	}
 
 	getById(id: number): Observable<Lot> {
-		return this.http.get<Lot>(LotService.BASE_URL + '/' + id);
+		return this.http.get<any>(LotService.BASE_URL + '/' + id);
 	}
 
-	getAll(): Observable<Lot[]> {
-		return this.http.get<Lot[]>(LotService.BASE_URL + '');
-	}
-
-	getAllSearch(params: HttpParams): Observable<Lot[]> {
-			return this.http.get<Lot[]>(LotService.BASE_URL + '/search', {params});
+	getAll(params: HttpParams = new HttpParams()): Observable<Lot[]> {
+			return this.http.get<any>(LotService.BASE_URL, {params: params});
 	}
 
 
