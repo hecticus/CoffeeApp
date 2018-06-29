@@ -125,11 +125,11 @@ export class LotCreateComponent implements OnInit  {
     create() {
         this.lotService.create(<Lot> this.form.value).subscribe
 
-    }
-    create() {
-		this.storeService.create(<Store> this.form.value).subscribe(store => {
-			this.notificationService.sucessInsert(store.name);
-			this.location.back();
-		}, err => this.notificationService.error(err));
-	}
+  }
+  //   create() {
+	// 	this.storeService.create(<Store> this.form.value).subscribe(store => {
+	// 		this.notificationService.sucessInsert(store.name);
+	// 		this.location.back();
+	// 	}, err => this.notificationService.error(err));
+	// }
 }

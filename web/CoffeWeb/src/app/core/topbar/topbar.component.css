@@ -1,11 +1,6 @@
-.top-bar {
-    top: 0cm;
-    right: 0cm;
-    left: 250px;
-    height: 84px;
-    bottom: 4px;
-    position: absolute;
-    color: white;
-    font-size: 14px;
-    background: black;
+.top-bar{
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  font-size: 13px;
 }

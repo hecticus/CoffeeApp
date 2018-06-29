@@ -1,62 +1,62 @@
+import { ActivatedRoute, Router, NavigationEnd, Params, PRIMARY_OUTLET } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 interface IBreadcrumb {
-  label: string;
-  // params?: Params;
-  url: string;
-  icon: string;
+	label: string;
+	params?: Params;
+	url: string;
+	icon: string;
 }
 
 @Component({
-  selector: 'app-breadcrumbs',
-  templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.css']
+	selector: 'app-breadcrumbs',
+	templateUrl: './breadcrumbs.component.html',
+	styleUrls: ['./breadcrumbs.component.css']
 })
 export class BreadcrumbsComponent implements OnInit {
 
-  constructor() { }
+	public breadcrumbs: IBreadcrumb[];
 
-  ngOnInit() {
-  }
+	constructor(
+		private activatedRoute: ActivatedRoute,
+		private router: Router
+	) {
+		this.breadcrumbs = [];
+	}
 
- /*  public breadcrumbs: IBreadcrumb[];
+	ngOnInit() {
+		this.breadcrumbs = this.getBreadcrumbs(this.activatedRoute);
+		this.router.events
+			.filter((event) => event instanceof NavigationEnd)
+			.subscribe((event) => {
+				this.breadcrumbs = this.getBreadcrumbs(this.activatedRoute);
+			});
+		}
 
-  constructor(
-  ) {
-    this.breadcrumbs = [];
-  }
+	private getBreadcrumbs(route: ActivatedRoute): IBreadcrumb[] {
+		const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
+		let  url = '';
+		let breadcrumbs: IBreadcrumb[] = [];
 
-  ngOnInit() {
-    this.breadcrumbs = this.getBreadcrumbs(this.activatedRoute);
+		while (route) {
+			if (route.outlet === PRIMARY_OUTLET && route.routeConfig.path !== '') {
 
-    this.router.events
-      .filter((event) => event instanceof NavigationEnd)
-      .subscribe((event) => {
-        this.breadcrumbs = this.getBreadcrumbs(this.activatedRoute);
-      });
+				let routeURL: string = route.snapshot.url.map(segment => segment.path).join('/');
+				// append route URL to URL
+				url += `/${routeURL}`;
 
-  private getBreadcrumbs(route: ActivatedRoute): IBreadcrumb[] {
-    const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
-    let  url = '';
-    let breadcrumbs: IBreadcrumb[] = [];
+				let breadcrumb: IBreadcrumb = {
+					label: route.snapshot.data[ROUTE_DATA_BREADCRUMB],
+					params: route.snapshot.params,
+					url: url,
+					icon: route.snapshot.data['icon'] ? route.snapshot.data['icon'] : ''
+				};
+				breadcrumbs.push(breadcrumb);
+			}
+			route = route.firstChild;
+		}
+		// we should never get here, but just in case
+		return breadcrumbs;
+	}
 
-    while (route) {
-      if (route.outlet === PRIMARY_OUTLET && route.routeConfig.path !== '') {
-
-        let routeURL: string = route.snapshot.url.map(segment => segment.path).join('/');
-        // append route URL to URL
-        url += `/${routeURL}`;
-
-        let breadcrumb: IBreadcrumb = {
-          label: route.snapshot.data[ROUTE_DATA_BREADCRUMB],
-          params: route.snapshot.params,
-          url: url,
-          icon: route.snapshot.data['icon'] ? route.snapshot.data['icon'] : ''
-        };
-        breadcrumbs.push(breadcrumb);
-      }
-      route = route.firstChild;
-    }
-    return breadcrumbs;
-  } */
 }
