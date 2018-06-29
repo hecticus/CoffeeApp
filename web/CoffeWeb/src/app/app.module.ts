@@ -20,36 +20,39 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TableComponent } from './core/table/table.component';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { ContextMenuModule } from 'ngx-contextmenu';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule ({
-  declarations: [
-    AppComponent,
-    //  ImportComponets
-    FarmComponent,
-
-    // ImportCore
-    SidebarComponent,
-    TopbarComponent,
-    BreadcrumbsComponent,
-    LotComponent,
-    HeroesComponent,
-    HeroesDetailComponent,
-    MessagesComponent,
-    DashboardComponent,
-    TableComponent,
-    TableColumnDirective
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    RouterModule,
-    AppRoutingModule,
-    Ng2SmartTableModule,
-    LotModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		//  ImportComponets
+		FarmComponent,
+		// ImportCore
+		SidebarComponent,
+		TopbarComponent,
+		BreadcrumbsComponent,
+		LotComponent,
+		HeroesComponent,
+		HeroesDetailComponent,
+		MessagesComponent,
+		DashboardComponent,
+		TableComponent,
+		TableColumnDirective
+	],
+	imports: [
+		BrowserModule,
+		HttpClientModule,
+		FormsModule,
+		RouterModule,
+		AppRoutingModule,
+		Ng2SmartTableModule,
+		LotModule,
+		ContextMenuModule.forRoot(),
+		MatTableModule,
+	],
+	providers: [],
+	bootstrap: [AppComponent]
 })
 
 export class AppModule { }

@@ -1,6 +1,7 @@
 import { TableColumnDirective } from './tableColumnDirective';
 import { TablaService } from './tabla.service';
 import { Component, OnInit, QueryList, Input, Output, EventEmitter, ContentChildren } from '@angular/core';
+import {  ContextMenuService } from 'ngx-contextmenu/lib/contextMenu.service';
 
 @Component({
 	selector: 'app-table',
@@ -15,7 +16,7 @@ export class TableComponent implements OnInit {
 	@ContentChildren(TableColumnDirective) public columns: QueryList<TableColumnDirective>;
 
 	constructor(
-	// private contextMenuService: ContexMenuService,
+	// private contextMenuService: ContextMenuService,
 	public tableService: TablaService
 	) {}
 

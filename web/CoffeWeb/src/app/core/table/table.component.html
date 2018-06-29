@@ -17,7 +17,7 @@
         </ng-container>
     </div>
 
-    <div *ngFor="let item of items" class="table-row table-body" (contextmenu)="tableService.select(item); onContextMenu($event, item)" (click)="onRead(item)">
+    <div *ngFor="let item of items" class="table-row table-body" (click)="onRead(item)">
         <div class="table-row-item container-checkbox" style="z-index: 100" (click)="$event.stopPropagation()">
             <label class="checkbox">
                 <input type="checkbox" [checked]="tableService.selecteds[item.id]" (change)="tableService.selectToggle(item)">

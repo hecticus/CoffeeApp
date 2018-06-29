@@ -8,6 +8,7 @@ import { BaseService } from '../../core/base.service';
 	templateUrl: './lot.component.html'
 })
 export class LotComponent implements OnInit {
+
 	ngOnInit(): void {}
 
 	constructor(
