@@ -6,3 +6,22 @@
 .table-header {
     font-weight: bold;
 }
+
+.table-header .sort.sort-up:after {
+    content: "\25B2";
+}
+
+.table-header .sort.sort-down:after {
+    content: "\25BC";
+}
+
+.check-box {}
+
+
+/* .mat-checkbox-checked.mat-accent .mat-checkbox-background .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: black;
+} */
+
+.mat-column-select {
+    overflow: initial;
+}

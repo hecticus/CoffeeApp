@@ -5,7 +5,7 @@ import { BaseService } from '../../core/base.service';
 
 @Component({
 	selector: 'app-lot',
-	templateUrl: './lot.component.html'
+	template: '<router-outlet></router-outlet>'
 })
 export class LotComponent implements OnInit {
 

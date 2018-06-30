@@ -19,6 +19,33 @@ export const lotRoutes: Routes = [
 				data: {
 					breadcrumb: undefined
 				}
+			}, {
+				path: 'create',
+				component: LotListComponent,
+				data: {
+					breadcrumb: undefined
+				}
+			}, {
+				path: ':lotId',
+				component: LotListComponent,
+				data: {
+					breadcrumb: undefined
+				},
+				children: [
+					{
+						path: '',
+						pathMatch: 'full',
+						component: LotListComponent
+					},
+					{
+						path: 'update',
+						component: LotListComponent,
+						data: {
+							breadcrumb: 'update',
+							icon: 'edit'
+						}
+					}
+				]
 			}
 		]
 	}
