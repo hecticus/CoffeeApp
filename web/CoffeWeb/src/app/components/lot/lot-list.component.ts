@@ -1,3 +1,4 @@
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseService } from '../../core/base.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -9,12 +10,46 @@ import { LotService } from './lot.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatPaginatorModule, MatSelectModule } from '@angular/material';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
 	styleUrls: ['./lot.component.css'],
 	template: `
+		<h3 class="title">Lots</h3>
+			<div class="filter row">
+				<div class="field">
+					<mat-select placeholder="Type Farm" [(ngModel)]="selectedValue" name="food">
+						<mat-option>-- None --</mat-option>
+					    <mat-option *ngFor="let food of foods" [value]="food.value">
+					        {{food.viewValue}}
+					    </mat-option>
+					</mat-select>
+				</div>
+				<div class="field">
+					<input matInput placeholder="Nombre">
+				</div>
+				<div class="container-button-filter">
+					<button class="btn-icon" title="Search" type="button">
+						<i class="material-icons">search</i>
+					</button>
+				</div>
+			</div>
+
+			<div class="tool-bar both-side">
+				<div class="right row">
+					<button class="btn-icon" type="button"> <!--(click)="create()"-->
+						<i class="material-icons">add</i>
+					</button>
+					<button class="btn-icon" type="button"> <!--
+					<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">-->
+						<i class="material-icons">delete</i>
+					</button>
+				</div>
+			</div>
+
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
 			<table class="table" mat-table [dataSource]="lots">
@@ -90,6 +125,14 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
 // <div class="sort sort-up" [ngClass]="{'selected': tableService.sort === column.propertyKey}" (click)="sortAsc(column.propertyKey)"></div>
 
 export class LotListComponent implements OnInit {
+	selectedValue: string;
+
+  	// tslint:disable-next-line:indent
+  	foods = [
+	    {value: 'steak-0', viewValue: 'Steak'},
+	    {value: 'pizza-1', viewValue: 'Pizza'},
+	    {value: 'tacos-2', viewValue: 'Tacos'}
+  	];
 	confirmDelete = true;
 	// Define  order column name
 	@ViewChild(MatSort) sort: MatSort;
@@ -103,6 +146,7 @@ export class LotListComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
+		// private filterService: FilterService;
 		private lotService: LotService,
 	) {}
 
@@ -113,7 +157,7 @@ export class LotListComponent implements OnInit {
 			this.lots = data['result'];
 			console.log(this.lots);
 		});
-		//this.lots.find.paginator = this.paginator;
+		// this.lots.find.paginator = this.paginator;
 		// console.log(this.dataSource);
 	}
 
@@ -121,21 +165,6 @@ export class LotListComponent implements OnInit {
 		console.log('asd');
 	}
 
-	/** Whether the number of selected elements matches the total number of rows. */
-	isAllSelected() {
-		const numSelected = this.selection.selected.length;
-		const numRows = this.lots.length;
-		return numSelected === numRows;
-	}
 
-	/** Selects all rows if they are not all selected; otherwise clear selection. */
-	masterToggle() {
-		this.isAllSelected() ?
-			this.selection.clear() :
-			this.lots.forEach(row => this.selection.select(row));
-	}
 
-	setPageSizeOptions(setPageSizeOptionsInput: string) {
-		this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
-	}
 }

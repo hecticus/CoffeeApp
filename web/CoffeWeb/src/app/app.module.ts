@@ -12,7 +12,7 @@ import { HeroesDetailComponent } from './components/heroes-detail/heroes-detail.
 import { HttpClientModule } from '@angular/common/http';
 import { LotComponent } from './components/lot/lot.component';
 import { LotModule } from './components/lot/lot.module';
-import { MatPaginatorModule } from '@angular/material';
+import { MatPaginatorModule, MatSelectModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { MessagesComponent } from './components/messages/messages.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -22,6 +22,11 @@ import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
 import { TopbarComponent } from './core/topbar/topbar.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { HomeComponent } from './components/home/home.component';
+
+import { HomeModule } from './components/home/home.module';
+import { AuthModule } from './components/auth/auth.module';
 
 @NgModule({
 declarations: [
@@ -38,20 +43,26 @@ declarations: [
 	MessagesComponent,
 	DashboardComponent,
 	TableComponent,
-	TableColumnDirective
+	TableColumnDirective,
+	HomeComponent
 ],
 imports: [
 	BrowserModule,
+	BrowserAnimationsModule,
 	HttpClientModule,
 	FormsModule,
 	RouterModule,
 	AppRoutingModule,
 	Ng2SmartTableModule,
-	LotModule,
 	ContextMenuModule.forRoot(),
 	MatTableModule,
 	MatCheckboxModule,
 	MatPaginatorModule,
+	MatSelectModule,
+
+	AuthModule,
+	HomeModule,
+	LotModule,
 ],
 providers: [],
 bootstrap: [AppComponent]

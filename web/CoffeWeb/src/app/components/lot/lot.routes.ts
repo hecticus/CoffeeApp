@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { LotComponent } from './lot.component';
 import { LotListComponent } from './lot-list.component';
 
