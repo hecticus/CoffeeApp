@@ -1,16 +1,19 @@
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatPaginatorModule, MatSelectModule,
-	MatFormFieldModule, MatInputModule, ErrorStateMatcher,
-	ShowOnDirtyErrorStateMatcher } from '@angular/material';
+import { homeRouting } from './home.routes';
+import { HomeComponent } from './home.component';
+import { AuthModule } from '../auth/auth.module';
+import { BreadcrumbsComponent } from '../../core/breadcrumbs/breadcrumbs.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LotListComponent } from '../lot/lot-list.component';
 import { LotModule } from '../lot/lot.module';
-import { AuthModule } from '../auth/auth.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { NgModule } from '@angular/core';
+import { SidebarComponent } from '../../core/sidebar/sidebar.component';
+import { TopbarComponent } from '../../core/topbar/topbar.component';
 
 @NgModule({
     imports: [
@@ -19,24 +22,22 @@ import { AuthModule } from '../auth/auth.module';
 		FormsModule,
 		ReactiveFormsModule,
 		BrowserAnimationsModule,
-		CommonModule,
-		MatTableModule,
-		MatCheckboxModule,
-		MatPaginatorModule,
-		MatSelectModule,
-		MatFormFieldModule,
-		MatInputModule,
 
+		homeRouting,
 		LotModule,
 		AuthModule,
 
-    ],
+	],
 	declarations: [
-		LotListComponent,
-		AuthModule,
+		HomeComponent,
+		SidebarComponent,
+		TopbarComponent,
+		BreadcrumbsComponent,
 	],
 	exports: [
-		LotListComponent,
+		SidebarComponent,
+		TopbarComponent,
+		BreadcrumbsComponent,
 	],
 	providers: [
 		{provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

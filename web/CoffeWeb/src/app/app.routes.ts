@@ -1,7 +1,7 @@
+import { ModuleWithProviders } from '@angular/core';
 import { AppComponent } from './app.component';
 import { authRoutes } from './components/auth/auth.routes';
 import { homeRoutes } from './components/home/home.routes';
-import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const appRoutes: Routes = [

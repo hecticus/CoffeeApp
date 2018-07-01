@@ -10,6 +10,7 @@ import { MatPaginatorModule, MatSelectModule,
 import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LotComponent } from './lot.component';
 
 @NgModule({
 	imports: [
@@ -29,9 +30,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 	],
 	declarations: [
+		LotComponent,
 		LotListComponent,
 	],
 	exports: [
+		LotComponent,
 		LotListComponent,
 	],
 	providers: [
