@@ -9,6 +9,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     display: block;
+    background: black
 }
 
 .form-control {
@@ -43,4 +44,9 @@
     font-size: 12px;
     color: #fb5f5f;
     margin-top: 2px;
+}
+
+.container-images {
+    margin: 0ch;
+    padding: 10pc;
 }

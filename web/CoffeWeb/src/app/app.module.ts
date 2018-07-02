@@ -17,6 +17,7 @@ import { RouterModule} from '@angular/router';
 import { routing } from './app.routes';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
+import { NotificationComponent } from './core/notification/notification.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ declarations: [
 	DashboardComponent,
 	TableComponent,
 	TableColumnDirective,
+	NotificationComponent,
 
 ],
 imports: [
