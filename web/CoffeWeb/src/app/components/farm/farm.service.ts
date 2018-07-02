@@ -5,22 +5,23 @@ import { Observable } from 'rxjs';
 import { Farm } from '../../core/models/farm';
 
 @Injectable({
-  providedIn: 'root'
-})
+	providedIn: 'root'
+	})
+
 export class FarmService {
-  private static readonly BASE_URL: string = BaseService.HOST + '/farm';
+	private static readonly BASE_URL: string = BaseService.HOST + '/farm';
 
-  constructor(
-    private http: HttpClient
-  ) { }
+	constructor(
+		private http: HttpClient
+	) { }
 
-  getById(id: number): Observable<Farm> {
-    return this.http.get<Farm>( FarmService.BASE_URL + '/' + id);
-  }
+	getById(id: number): Observable<Farm> {
+		return this.http.get<Farm>( FarmService.BASE_URL + '/' + id);
+	}
 
-  getAll(params: HttpParams): Observable<Farm[]> {
-    return this.http.get<Farm[]>(FarmService.BASE_URL + '', {params: params});
-  }
+	getAll(params: HttpParams = new HttpParams): Observable<any> {
+		return this.http.get<Farm[]>(FarmService.BASE_URL + '', {params: params});
+	}
 
 }
 

@@ -38,7 +38,7 @@ export class LotService {
 		return this.http.get<any>(LotService.BASE_URL + '/' + id);
 	}
 
-	getAll(params: HttpParams = new HttpParams()): Observable<Lot[]> {
+	getAll(params: HttpParams = new HttpParams()): Observable<any> {
 			return this.http.get<any>(LotService.BASE_URL, {params: params});
 	}
 

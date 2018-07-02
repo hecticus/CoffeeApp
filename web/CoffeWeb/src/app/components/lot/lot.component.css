@@ -1,6 +1,6 @@
 .table {
     width: 100%;
-    background-color: #f2f2f2;
+    background-color: #6b6868;
 }
 
 .table-header {
@@ -24,4 +24,40 @@
 
 .mat-column-select {
     overflow: initial;
+}
+
+
+/*
+.mat-form-field {
+    display: inline;
+    position: relative;
+    text-align: left;
+} */
+
+.example-right-align {
+    text-align: right;
+}
+
+.form-field {
+    display: inline;
+    position: relative;
+    text-align: left;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.btn-text {
+    width: 92px;
+    border: 1px solid #8c8c8c;
+    text-transform: uppercase;
+    color: black;
+    background: #b3b3b3;
 }

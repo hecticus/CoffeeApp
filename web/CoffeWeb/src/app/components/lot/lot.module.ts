@@ -1,3 +1,4 @@
+import { LotCreateComponent } from './lot-create.component';
 import { homeRouting } from './../home/home.routes';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
@@ -11,6 +12,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LotComponent } from './lot.component';
+import { LotService } from './lot.service';
 
 @NgModule({
 	imports: [
@@ -32,12 +34,15 @@ import { LotComponent } from './lot.component';
 	declarations: [
 		LotComponent,
 		LotListComponent,
+		LotCreateComponent,
 	],
 	exports: [
 		LotComponent,
 		LotListComponent,
+		LotCreateComponent,
 	],
 	providers: [
+		LotService,
 		{provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
 	]
 })

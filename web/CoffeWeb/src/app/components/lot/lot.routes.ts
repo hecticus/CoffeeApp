@@ -1,3 +1,4 @@
+import { LotCreateComponent } from './lot-create.component';
 import { Routes } from '@angular/router';
 import { LotComponent } from './lot.component';
 import { LotListComponent } from './lot-list.component';
@@ -20,7 +21,7 @@ export const lotRoutes: Routes = [
 				}
 			}, {
 				path: 'create',
-				component: LotListComponent,
+				component: LotCreateComponent,
 				data: {
 					breadcrumb: undefined
 				}
