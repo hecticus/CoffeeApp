@@ -1,5 +1,6 @@
 package com.hecticus.eleta.login;
 
+import com.hecticus.eleta.model.response.AccessTokenResponse;
 import com.hecticus.eleta.model.response.LoginResponse;
 
 /**
@@ -48,11 +49,11 @@ public class LoginContract {
 
         void recoveryPasswordRequest(String email);
 
-        void onLoginSuccess(LoginResponse response);
+        void onLoginSuccess(AccessTokenResponse accessTokenResponse);
 
         void onLoginError(String errorMessageFromServer);
 
-        void saveTokens(LoginResponse response);
+        void saveTokens(AccessTokenResponse accessTokenResponse);
 
     }
 

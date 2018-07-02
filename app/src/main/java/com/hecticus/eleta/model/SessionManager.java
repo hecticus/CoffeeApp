@@ -3,6 +3,7 @@ package com.hecticus.eleta.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.hecticus.eleta.model.response.AccessTokenResponse;
 import com.hecticus.eleta.model.response.LoginResponse;
 import com.hecticus.eleta.util.Constants;
 
@@ -57,12 +58,12 @@ public class SessionManager {
     }
 
     @DebugLog
-    public static void updateSession(Context context, LoginResponse response) {
+    public static void updateSession(Context context, AccessTokenResponse accessTokenResponse) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(ACCESS_TOKEN, response.getToken());
-        editor.putString(USER_EMAIL, response.getEmail());
-        editor.putString(USER_NAME, response.getName());
+        editor.putString(ACCESS_TOKEN, accessTokenResponse.getAccess_token());
+        editor.putString(USER_EMAIL, /*response.getEmail()*/ "shamuel21@gmail.com");
+        editor.putString(USER_NAME, /*response.getName()*/ "shamuel");
         editor.commit();
     }
 }

@@ -4,8 +4,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model.request.AuthorizationRequest;
 import com.hecticus.eleta.model.request.LoginPost;
+import com.hecticus.eleta.model.response.AccessTokenResponse;
 import com.hecticus.eleta.model.response.LoginResponse;
 import com.hecticus.eleta.model.retrofit_interface.UserRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
@@ -19,6 +24,7 @@ import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,12 +66,64 @@ public class LoginRepository implements LoginContract.Repository {
     @DebugLog
     @Override
     public void loginRequest(String email, String password) {
+            Gson gson = new GsonBuilder().create();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
 
-        LoginPost post = new LoginPost();
-        post.setEmail(email);
-        post.setPassword(password);
+            //UserRetrofitInterface api = retrofit.create(UserRetrofitInterface.class);
+        AuthorizationRequest authorizationRequest = new AuthorizationRequest(email, password);
 
-        Call<LoginResponse> call = userApi.loginRequest(post);
+
+        Call<ResponseBody> call = userApi.loginRequest(authorizationRequest.grant_type,authorizationRequest.username
+                ,authorizationRequest.password,
+                authorizationRequest.client_id);
+            //Utils.log(new Gson().toJson(authorizationRequest));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    Log.d("DEBUG", "response: " + response.code());
+                   // onLoginSuccess(/*response.body()*/);
+                    if (response.code() == 200) {
+                        try {
+                            JSONObject json = new JSONObject(response.body().string());
+                            Log.d("DEBUG sign in", "json " + json);
+                            AccessTokenResponse accessToken = new ObjectMapper().readValue(String.valueOf(json), AccessTokenResponse.class);
+                            onLoginSuccess(accessToken);
+                            //Utils.setAccessToken(accessToken.getAccess_token());
+                            //id = json.getLong("user_id");
+                            //getUserEmployee(id);
+
+
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }//*/
+                    } else if (response.code() == 400) {
+                        //Utils.snackbarLong(SigninActivity.this, R.string.error_credentials, contButtonSignIn);
+                        //builder.show();
+                    } else if (response.code() == 403) {
+                        //Utils.snackbarLong(SigninActivity.this, "Permiso insuficientes", contButtonSignIn);
+                    } else {
+                        //Utils.snackbarLong(SigninActivity.this, R.string.error_connection, contButtonSignIn);
+                        //Log.d("DEBUG", "Error en la conexion con el user " + user.getEmail());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    //Utils.snackbarLong(SigninActivity.this, R.string.error_connection, contButtonSignIn);
+                    Log.d("ERROR", t.toString());
+                    t.printStackTrace();
+                }
+            });
+
+        /*AuthorizationRequest authorizationRequest = new AuthorizationRequest(email, password);
+
+
+        Call<LoginResponse> call = userApi.loginRequest(authorizationRequest.grant_type,authorizationRequest.username
+                                                        ,authorizationRequest.password,
+                                                        authorizationRequest.client_id);
         call.enqueue(new Callback<LoginResponse>() {
             @DebugLog
             @Override
@@ -78,15 +136,15 @@ public class LoginRepository implements LoginContract.Repository {
                         onLoginError(null);
                     }
                 } else {
-                    try {
-                        JSONObject errorJsonObject = new JSONObject(response.errorBody().string());
-                        Log.d("LOGIN", "--->loginErrorResponse: " + errorJsonObject);
-                        onLoginError(errorJsonObject.optString("message", null));
-                    } catch (JSONException | IOException e) {
+                    //try {
+                        //JSONObject errorJsonObject = new JSONObject(response.errorBody().string());
+                        Log.d("LOGIN", "--->loginErrorResponse: " + response.errorBody().toString());//errorJsonObject);
+                        //onLoginError(errorJsonObject.optString("message", null));
+                    /*} catch (JSONException | IOException e) {
                         e.printStackTrace();
                         onLoginError(null);
-                    }
-                }
+                    }*/
+                /*}
             }
 
             @DebugLog
@@ -96,7 +154,7 @@ public class LoginRepository implements LoginContract.Repository {
                 Log.e("RETRO", "--->Login Repository onFailure");
                 onLoginError(null);
             }
-        });
+        });*/
     }
 
     @Override
@@ -106,8 +164,9 @@ public class LoginRepository implements LoginContract.Repository {
 
     @DebugLog
     @Override
-    public void onLoginSuccess(LoginResponse response) {
-        saveTokens(response);
+    public void onLoginSuccess(AccessTokenResponse accessTokenResponse) {
+
+        saveTokens(accessTokenResponse);
         mPresenter.onLoginSuccess();
     }
 
@@ -119,9 +178,9 @@ public class LoginRepository implements LoginContract.Repository {
 
     @DebugLog
     @Override
-    public void saveTokens(LoginResponse response) {
+    public void saveTokens(AccessTokenResponse accessTokenResponse) {
         Context context = mPresenter.context;
-        SessionManager.updateSession(context, response);
+        SessionManager.updateSession(context, accessTokenResponse);
     }
 
 }

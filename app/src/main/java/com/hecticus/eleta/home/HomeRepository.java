@@ -59,7 +59,7 @@ public class HomeRepository implements HomeContract.Repository {
     @DebugLog
     @Override
     public void logOutRequest() {
-        Call<Message> call = userApi.logOutRequest();
+        Call<Message> call = userApi.logOutRequest("hola");
 
         call.enqueue(new Callback<Message>() {
             @DebugLog

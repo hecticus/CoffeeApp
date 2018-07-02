@@ -4,9 +4,13 @@ import com.hecticus.eleta.model.request.LoginPost;
 import com.hecticus.eleta.model.response.LoginResponse;
 import com.hecticus.eleta.model.response.Message;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -16,16 +20,23 @@ import retrofit2.http.Path;
 
 public interface UserRetrofitInterface {
 
-    String loginUrl = "user/login";
+    /*String loginUrl = "user/login";
     String logoutUrl = "user/logout";
-    String recoverPasswordUrl = "user/reset/{email}";
+    String recoverPasswordUrl = "user/reset/{email}";*/
 
-    @POST(loginUrl)
-    Call<LoginResponse> loginRequest(@Body LoginPost post);
 
-    @GET(logoutUrl)
-    Call<Message> logOutRequest();
+    /*String loginUrl = "/oauth/token";
+    String logoutUrl = "/oauth/revokeToken";
+    String recoverPasswordUrl = "user/reset/{email}";*/
 
-    @GET(recoverPasswordUrl)
+    @FormUrlEncoded
+    @POST("oauth/token")
+    Call<ResponseBody> loginRequest(@Field("grant_type") String grant_type, @Field("username") String username
+            , @Field("password") String password, @Field("client_id") String client_id);
+
+    @GET("oauth/revokeToken")
+    Call<Message> logOutRequest(@Header("Authorization") String token);
+
+    @GET("user/reset/{email}")
     Call<Message> recoverPasswordRequest(@Path("email") String email);
 }
