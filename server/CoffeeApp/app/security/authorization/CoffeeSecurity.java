@@ -25,8 +25,7 @@ public class CoffeeSecurity  extends Action<CoffeeSecurity>{
     //Aqui debo crear el nuevo rbac
     @Inject
         CoffeeSecurity(Config config){
-        //enabled = config.getBoolean("play.rbac.enabled");
-        enabled = true;
+        enabled = config.getBoolean("play.rbac.enabled");
     }
 
     public CompletionStage<Result> call(Http.Context ctx)  {
