@@ -1,3 +1,4 @@
+import { UtilsModule } from './../../core/utils/utils.module';
 import { LotCreateComponent } from './lot-create.component';
 import { homeRouting } from './../home/home.routes';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -13,6 +14,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LotComponent } from './lot.component';
 import { LotService } from './lot.service';
+import { ValidatorComponent } from '../../core/utils/validator/validator.component';
+import { LotReadComponent } from './lot-read.component';
 
 @NgModule({
 	imports: [
@@ -29,17 +32,20 @@ import { LotService } from './lot.service';
 		MatInputModule,
 
 		homeRouting,
+		UtilsModule,
 
 	],
 	declarations: [
 		LotComponent,
 		LotListComponent,
 		LotCreateComponent,
+		LotReadComponent,
 	],
 	exports: [
 		LotComponent,
 		LotListComponent,
 		LotCreateComponent,
+		LotReadComponent,
 	],
 	providers: [
 		LotService,

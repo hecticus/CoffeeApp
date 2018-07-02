@@ -2,7 +2,7 @@ import { Farm } from './../../core/models/farm';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 import { LotService } from './lot.service';
 import { Lot } from '../../core/models/lot';
@@ -11,26 +11,28 @@ import { Lot } from '../../core/models/lot';
 	styleUrls: ['./lot.component.css'],
 	template: `
 		<h2 class="title">Create Lot</h2>
-		<form *ngIf="form" [formGroup]="form" (ngSubmit)="create()">
+		<form [formGroup]="form" (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Lot data</span></legend>
 
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
-							<mat-select required>
+							<mat-select required [formControlName]="'farm'">
 								<mat-option>-- None --</mat-option>
-								<mat-option value="foods" *ngFor="let f of foods ">{{f.viewValue}}</mat-option>
+								<mat-option *ngFor="let f of foods" [value]="{id: f.id}">{{f.viewValue}}</mat-option>
 							</mat-select>
-						<mat-label><b>Name Farm</b></mat-label>
+							<mat-label><b>Name Farm</b></mat-label>
 						</mat-form-field>
+						<app-validator  [control]="form.controls['farm']"></app-validator>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-						<input matInput placeholder="Name Lot">
+							<input matInput formControlName="nameLot" placeholder="Name Lot">
 						</mat-form-field>
+						<app-validator  [control]="form.controls['nameLot']"></app-validator>
 					</div>
 				</div>
 
@@ -81,24 +83,20 @@ export class LotCreateComponent implements OnInit  {
 	form: FormGroup;
 	farm: Farm;
 	options: FormGroup;
-/*     constructor(
-		private router: Router,
-		private activatedRoute: ActivatedRoute,
-		private location: Location,
-		private lotService: LotService,
-	) {} */
 
 	foods = [
-		{value: 'steak-0', viewValue: 'Steak'},
-		{value: 'pizza-1', viewValue: 'Pizza'},
-		{value: 'tacos-2', viewValue: 'Tacos'}
+		{id: 1, value: 'steak-0', viewValue: 'Steak'},
+		{id: 2, value: 'pizza-1', viewValue: 'Pizza'},
+		{id: 3, value: 'tacos-2', viewValue: 'Tacos'}
 	];
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
+		private lotService: LotService;
 		private location: Location,
-		fb: FormBuilder) {
-	/*     this.options = fb.group({
+	) {
+		this.form = this.lotService.getLot(new Lot());
+		/*     this.options = fb.group({
 		  hideRequired: false,
 		  floatLabel: 'auto',
 		}); */
@@ -107,7 +105,7 @@ export class LotCreateComponent implements OnInit  {
 	ngOnInit() {
 	}
 
-	create() {
+	create() { console.log(this.form.value)
 		console.log('verde');
 		/* this.lotService.create(<Lot> this.form.value).subscribe */
 	}

@@ -4,9 +4,9 @@ import { AbstractControl } from '@angular/forms';
 @Component({
 	selector: 'app-validator',
 	template: `
-		<div *ngIf="control.hasError('noMatch')" class="errorMessage" i18n="@@validator-noMatches">No matches</div>
+		<div *ngIf="control.hasError('noMatch')" class="errorMessage">No matches</div>
 
-		<div *ngIf="control.hasError('required')" class="errorMessage" i18n="@@validator-required">Required</div>
+		<div *ngIf="control.hasError('required')" class="errorMessage">Required</div>
 
 		<!--<div *ngIf="control.hasError('pattern')" class="errorMessage" i18n="@@validator-invalid">Invalid</div>-->
 

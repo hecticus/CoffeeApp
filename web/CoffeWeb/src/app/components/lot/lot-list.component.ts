@@ -1,18 +1,18 @@
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseService } from '../../core/base.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Farm } from './../../core/models/farm';
 import { FilterService } from '../../core/filter/filter.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Hero } from './../heroes/hero';
 import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatPaginatorModule, MatSelectModule } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginatorModule, MatSelectModule } from '@angular/material';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 
 @Component({

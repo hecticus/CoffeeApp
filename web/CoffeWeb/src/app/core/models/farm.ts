@@ -1,6 +1,7 @@
-import { BaseModel } from './base-model';
+import { BaseModel } from 'src/app/core/models/base-model';
 
-export interface Farm extends BaseModel {
-    NameFarm: string;
-    statusFarm?: string;
+
+export class Farm extends BaseModel {
+	NameFarm: string;
+	statusFarm?: string;
 }

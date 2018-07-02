@@ -1,3 +1,4 @@
+import { UtilsModule } from './../../core/utils/utils.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -17,14 +18,14 @@ import { ValidatorComponent } from '../../core/utils/validator/validator.compone
 		RouterModule,
 		CommonModule,
 		ReactiveFormsModule,
+
+		UtilsModule,
 	],
 	declarations: [
 		LoginComponent,
-		ValidatorComponent,
 	],
 	exports: [
 		LoginComponent,
-		ValidatorComponent,
 	],
 })
 
