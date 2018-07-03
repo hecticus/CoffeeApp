@@ -1,0 +1,11 @@
+<ng-container *ngIf="!closed">
+    <div class="dialog-overlay" (click)="close()"></div>
+    <div class="dialog">
+        <div class="bar">
+            <button class="btn-icon button-close" title="Close" type="button" (click)="close()">
+				<i class="material-icons">close</i>
+			</button>
+        </div>
+        <ng-template [ngTemplateOutlet]="content.template"></ng-template>
+    </div>
+</ng-container>
