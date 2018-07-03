@@ -1,3 +1,4 @@
+import { UtilsModule } from './core/utils/utils.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './components/auth/auth.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +19,7 @@ import { routing } from './app.routes';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
 import { NotificationComponent } from './core/notification/notification.component';
+import { StatusComponent } from './components/status/status.component';
 
 
 @NgModule({
@@ -34,6 +36,7 @@ declarations: [
 	TableComponent,
 	TableColumnDirective,
 	NotificationComponent,
+	StatusComponent,
 
 ],
 imports: [
@@ -48,6 +51,7 @@ imports: [
 	AuthModule,
 	HomeModule,
 	LotModule,
+	UtilsModule,
 ],
 providers: [],
 bootstrap: [AppComponent]

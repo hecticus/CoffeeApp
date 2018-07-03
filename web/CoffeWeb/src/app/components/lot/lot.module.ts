@@ -14,8 +14,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LotComponent } from './lot.component';
 import { LotService } from './lot.service';
-import { ValidatorComponent } from '../../core/utils/validator/validator.component';
 import { LotReadComponent } from './lot-read.component';
+import { LotUpdateComponent } from './lot-update.component';
 
 @NgModule({
 	imports: [
@@ -40,12 +40,14 @@ import { LotReadComponent } from './lot-read.component';
 		LotListComponent,
 		LotCreateComponent,
 		LotReadComponent,
+		LotUpdateComponent,
 	],
 	exports: [
 		LotComponent,
 		LotListComponent,
 		LotCreateComponent,
 		LotReadComponent,
+		LotUpdateComponent,
 	],
 	providers: [
 		LotService,

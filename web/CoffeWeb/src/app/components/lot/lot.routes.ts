@@ -2,6 +2,8 @@ import { LotCreateComponent } from './lot-create.component';
 import { Routes } from '@angular/router';
 import { LotComponent } from './lot.component';
 import { LotListComponent } from './lot-list.component';
+import { LotReadComponent } from './lot-read.component';
+import { LotUpdateComponent } from './lot-update.component';
 
 export const lotRoutes: Routes = [
 	{
@@ -27,7 +29,7 @@ export const lotRoutes: Routes = [
 				}
 			}, {
 				path: ':lotId',
-				component: LotListComponent,
+				component: LotUpdateComponent,
 				data: {
 					breadcrumb: undefined
 				},
@@ -39,7 +41,7 @@ export const lotRoutes: Routes = [
 					},
 					{
 						path: 'update',
-						component: LotListComponent,
+						component: LotUpdateComponent,
 						data: {
 							breadcrumb: 'update',
 							icon: 'edit'

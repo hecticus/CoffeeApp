@@ -1,18 +1,16 @@
 import { Farm } from './../../core/models/farm';
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup } from '@angular/forms';
+import { FarmService } from './../farm/farm.service';
 import { Location } from '@angular/common';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-
+import { Lot } from 'src/app/core/models/lot';
 import { LotService } from './lot.service';
-import { Lot } from '../../core/models/lot';
-import { FarmService } from '../farm/farm.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
-	styleUrls: ['./lot.component.css'],
 	template: `
-		<h2 class="title">Create Lot</h2>
-		<form [formGroup]="form" (ngSubmit)="create()">
+		<h3 class="title">Lot Edit</h3>
+		<form [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
 				<legend><span>Lot data</span></legend>
 
@@ -78,45 +76,40 @@ import { FarmService } from '../farm/farm.service';
 				<button mat-raised-button class="btn-text">Save</button>
 			</div>
 		</form>
-  `
+	`
 })
-
-
-export class LotCreateComponent implements OnInit  {
-	lot: Lot;
+export class LotUpdateComponent implements OnInit {
 	form: FormGroup;
+	confirmDelete = true;
 	farms: Farm[];
-	options: FormGroup;
+	lot = new Lot();
 
-	foods = [
-		{id: 1, value: 'steak-0', viewValue: 'Steak'},
-		{id: 2, value: 'pizza-1', viewValue: 'Pizza'},
-		{id: 3, value: 'tacos-2', viewValue: 'Tacos'}
-	];
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private lotService: LotService,
 		private location: Location,
-		private farService: FarmService,
+		private farmService: FarmService,
 	) {
 		this.form = this.lotService.getLot(new Lot());
 	}
 
-	ngOnInit () {
-		this.farService.getAll().subscribe(
-			data => {
-				this.farms = data['result'];
-				console.log(this.farms);
+	ngOnInit() {
+		this.activatedRoute.params.subscribe(params => {
+				this.lotService.getById(params['lotId']).subscribe(
+					data => { this.lot = data['result'];
+				console.log(this.lot); }
+				);
 			});
-		}
 
-	create() {
-		this.lotService.create(<Lot> this.form.value);
-		// .subscribe(store => {
-			// this.notificationService.sucessInsert(store.name);
-			// this.location.back();
-			console.log(this.form.value);
-		// });, err => this.notificationService.error(err));
+			this.farmService.getAll().subscribe( data => {
+			this.farms = data['result']; }
+		);
+
 	}
+
+	update(this) {
+		console.log(this.farm);
+	}
+
 }

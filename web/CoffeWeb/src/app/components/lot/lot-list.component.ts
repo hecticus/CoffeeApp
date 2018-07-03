@@ -1,15 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { BaseService } from '../../core/base.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Farm } from './../../core/models/farm';
-import { FilterService } from '../../core/filter/filter.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Hero } from './../heroes/hero';
 import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { MatPaginatorModule, MatSelectModule } from '@angular/material';
+import { MatPaginator} from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 
@@ -23,9 +16,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 				<div class="field">
 					<mat-select placeholder="Type Farm" [(ngModel)]="selectedValue" name="food">
 						<mat-option>-- None --</mat-option>
-					    <mat-option *ngFor="let food of foods" [value]="food.value">
-					        {{food.viewValue}}
-					    </mat-option>
+						<mat-option *ngFor="let food of foods" [value]="food.value">
+							{{food.viewValue}}
+						</mat-option>
 					</mat-select>
 				</div>
 				<div class="field">
@@ -56,18 +49,18 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 				<!-- Checkbox Column -->
 				<ng-container matColumnDef="select">
-				    <th mat-header-cell *matHeaderCellDef>
-				      	<mat-checkbox  (change)="$event ? masterToggle() : null"
-				                    [checked]="selection.hasValue() && isAllSelected()"
-				                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-				      	</mat-checkbox>
-				    </th>
-				    <td mat-cell *matCellDef="let row">
-				      	<mat-checkbox (click)="$event.stopPropagation()"
-				                    (change)="$event ? selection.toggle(row) : null"
-				                    [checked]="selection.isSelected(row)">
-				      	</mat-checkbox>
-				    </td>
+					<th mat-header-cell *matHeaderCellDef>
+					  	<mat-checkbox  (change)="$event ? masterToggle() : null"
+									[checked]="selection.hasValue() && isAllSelected()"
+									[indeterminate]="selection.hasValue() && !isAllSelected()">
+					  	</mat-checkbox>
+					</th>
+					<td mat-cell *matCellDef="let row">
+					  	<mat-checkbox (click)="$event.stopPropagation()"
+									(change)="$event ? selection.toggle(row) : null"
+									[checked]="selection.isSelected(row)">
+					  	</mat-checkbox>
+					</td>
 				</ng-container>
 
 				<!-- Position Namme -->
@@ -129,9 +122,9 @@ export class LotListComponent implements OnInit {
 
   	// tslint:disable-next-line:indent
   	foods = [
-	    {value: 'steak-0', viewValue: 'Steak'},
-	    {value: 'pizza-1', viewValue: 'Pizza'},
-	    {value: 'tacos-2', viewValue: 'Tacos'}
+		{value: 'steak-0', viewValue: 'Steak'},
+		{value: 'pizza-1', viewValue: 'Pizza'},
+		{value: 'tacos-2', viewValue: 'Tacos'}
   	];
 	confirmDelete = true;
 	// Define  order column name
