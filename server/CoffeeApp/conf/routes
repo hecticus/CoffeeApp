@@ -233,27 +233,23 @@ GET     /statusfarm                                                             
 #GET     /statusfarm/:id                                                         controllers.Purities.findById(id : Long)
 
 #StatusInvoiceDetails
-GET     /statusInvoiceDetails                                                   controllers.statusController.StatusInvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+GET     /statusInvoiceDetail                                                   controllers.statusController.StatusInvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusInvoiceDetails/:id                                              controllers.StatusInvoiceDetails.findById(id : Long)
 
-#StatusInvoiceDetails
-GET     /statusInvoiceDetails                                                   controllers.statusController.StatusInvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
-#GET     /statusInvoiceDetails/:id                                               controllers.StatusInvoiceDetails.findById(id : Long)
-
-#StatusInvoiceDetails
-GET     /statusInvoices                                                         controllers.statusController.StatusInvoices.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+#StatusInvoices
+GET     /statusInvoice                                                         controllers.statusController.StatusInvoices.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusInvoices/:id                                                     controllers.StatusInvoices.findById(id : Long)
 
 #StatusLots
-GET     /statusLot                                                              controllers.statusController.StatusInvoices.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+GET     /statusLot                                                             controllers.statusController.StatusInvoices.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusLot/:id                                                          controllers.StatusInvoices.findById(id : Long)
 
 #StatusProviders
-GET     /statusProviders                                                             controllers.statusController.StatusProviders.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+GET     /statusProvider                                                        controllers.statusController.StatusProviders.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusProviders/:id                                                          controllers.StatusProviders.findById(id : Long)
 
 #StatusStore
-GET     /statusstore                                                             controllers.statusController.StatusStores.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+GET     /statusstore                                                           controllers.statusController.StatusStores.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusstore/:id                                                          controllers.StatusStores.findById(id : Long)
 
 

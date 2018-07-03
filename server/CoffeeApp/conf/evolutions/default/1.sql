@@ -242,9 +242,11 @@ create table auth_token (
 create table status (
   dtype                         varchar(50) not null,
   id                            bigint auto_increment not null,
-  name                          varchar(20) not null,
+  name                          varchar(30) not null,
   description                   text,
-  constraint uq_status_name unique (name),
+  deleted                       tinyint(1) default 0 not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_status primary key (id)
 );
 

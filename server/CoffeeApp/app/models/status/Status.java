@@ -1,8 +1,8 @@
 package models.status;
 
 import io.ebean.Finder;
-import io.ebean.Model;
 import io.ebean.annotation.Formula;
+import models.AbstractEntity;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -10,21 +10,15 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype", length = 50)
-public abstract class Status extends Model{
-
-    @Id
-    protected Long id;
+public abstract class Status extends AbstractEntity {
 
     @Constraints.Required
-    @Constraints.MaxLength(20)
-    @Column(nullable = false, length = 20, unique = true)
+    @Constraints.MaxLength(30)
+    @Column(nullable = false, length = 30)
     protected String name;
 
     @Transient
     protected String dtype; // discriminator
-
-    @Formula(select = "(SELECT id FROM status s WHERE s.id = ${ta}.id)")
-    protected String nameDis;
 
     @Column(columnDefinition = "text")
     protected String description;
@@ -38,14 +32,6 @@ public abstract class Status extends Model{
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNameDis() {
-        return nameDis;
-    }
-
-    public void setNameDis(String nameDis) {
-        this.nameDis = nameDis;
     }
 
     public String getDtype() {
@@ -72,11 +58,4 @@ public abstract class Status extends Model{
         this.description = description;
     }
 
-    protected static String sort(String sort){
-        if(sort == null)
-            return "";
-        if(sort.startsWith("-"))
-            return sort.substring(1) + " desc";
-        return sort + " asc";
-    }
 }
