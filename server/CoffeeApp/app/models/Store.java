@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -24,6 +25,7 @@ public class Store extends AbstractEntity{
     private String nameStore;
 
     @ManyToOne
+    @JsonBackReference
     private StatusStore statusStore;
 
     @OneToMany(mappedBy = "store", cascade= CascadeType.ALL)

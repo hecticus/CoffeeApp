@@ -69,6 +69,7 @@ public class Provider extends AbstractEntity{
     private String contactNameProvider;
 
     @ManyToOne
+    @JsonBackReference
     private StatusProvider statusProvider;
 
     @OneToMany(mappedBy = "provider")

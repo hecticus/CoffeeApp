@@ -32,6 +32,7 @@ public class Invoice extends AbstractEntity{
     private Provider provider;
 
     @ManyToOne
+    @JsonBackReference
     private StatusInvoice statusInvoice;
 
     @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +

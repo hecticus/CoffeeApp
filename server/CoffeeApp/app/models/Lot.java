@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -46,6 +47,7 @@ public class Lot extends AbstractEntity{
     private BigDecimal priceLot;
 
     @ManyToOne
+    @JsonBackReference
     private StatusLot statusLot;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)

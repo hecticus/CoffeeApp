@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
@@ -25,6 +26,7 @@ public class Farm extends AbstractEntity{
     private String nameFarm;
 
     @ManyToOne
+    @JsonBackReference
     private StatusFarm statusFarm;
 
     @JsonIgnore

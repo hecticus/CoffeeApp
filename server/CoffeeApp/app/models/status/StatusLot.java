@@ -1,5 +1,6 @@
 package models.status;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
@@ -20,6 +21,7 @@ public class StatusLot extends Status {
 
     @OneToMany(mappedBy = "statusLot")
     @JsonIgnore
+    @JsonManagedReference
     private List<Lot> lots = new ArrayList<>();
 
     public List<Lot> getLots() {

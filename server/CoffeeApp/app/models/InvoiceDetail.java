@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
@@ -69,6 +70,7 @@ public class InvoiceDetail  extends AbstractEntity{
     private String note;
 
     @ManyToOne
+    @JsonBackReference
     private StatusInvoiceDetail statusInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
