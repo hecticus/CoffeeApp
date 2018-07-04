@@ -1,3 +1,4 @@
+import { ProviderModule } from './components/provider/provider.module';
 import { UtilsModule } from './core/utils/utils.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './components/auth/auth.module';
@@ -54,6 +55,7 @@ imports: [
 	AuthModule,
 	HomeModule,
 	LotModule,
+	ProviderModule,
 	UtilsModule,
 ],
 providers: [],

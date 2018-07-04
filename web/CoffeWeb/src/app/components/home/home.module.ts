@@ -1,3 +1,4 @@
+import { ProviderModule } from './../provider/provider.module';
 import { homeRouting } from './home.routes';
 import { HomeComponent } from './home.component';
 import { AuthModule } from '../auth/auth.module';
@@ -7,17 +8,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LotListComponent } from '../lot/lot-list.component';
 import { LotModule } from '../lot/lot.module';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 import { TopbarComponent } from '../../core/topbar/topbar.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
+	imports: [
+		CommonModule,
 		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
@@ -26,6 +24,7 @@ import { TopbarComponent } from '../../core/topbar/topbar.component';
 		homeRouting,
 		LotModule,
 		AuthModule,
+		ProviderModule,
 
 	],
 	declarations: [

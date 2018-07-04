@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-provider',
-  templateUrl: './provider.component.html',
-  styleUrls: ['./provider.component.css']
+	selector: 'app-provider',
+	template: '<router-outlet></router-outlet>',
+	styleUrls: ['./provider.component.css']
 })
 export class ProviderComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
 }

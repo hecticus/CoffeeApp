@@ -1,6 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { lotRoutes } from './../lot/lot.routes';
+import { providerRoutes } from '../provider/provider.routes';
 
 
 export const homeRoutes: Routes = [
@@ -16,7 +17,8 @@ export const homeRoutes: Routes = [
 					icon: ''
 				}
 			},
-			...lotRoutes
+			...lotRoutes,
+			...providerRoutes
 		],
 		data: {
 			breadcrumb: 'home',

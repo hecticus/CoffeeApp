@@ -120,12 +120,12 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class LotListComponent implements OnInit {
 	selectedValue: string;
 
-  	// tslint:disable-next-line:indent
+	// tslint:disable-next-line:indent
   	foods = [
 		{value: 'steak-0', viewValue: 'Steak'},
 		{value: 'pizza-1', viewValue: 'Pizza'},
 		{value: 'tacos-2', viewValue: 'Tacos'}
-  	];
+	];
 	confirmDelete = true;
 	// Define  order column name
 	@ViewChild(MatSort) sort: MatSort;

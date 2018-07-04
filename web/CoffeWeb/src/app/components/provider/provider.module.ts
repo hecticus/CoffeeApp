@@ -1,3 +1,4 @@
+import { ProviderListComponent } from './provider-list.component';
 import { ProviderService } from './provider.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -31,9 +32,11 @@ import { UtilsModule } from '../../core/utils/utils.module';
 	],
 	declarations: [
 		ProviderComponent,
+		ProviderListComponent,
 	],
 	exports: [
 		ProviderComponent,
+		ProviderListComponent,
 	],
 	providers: [
 		ProviderService,
