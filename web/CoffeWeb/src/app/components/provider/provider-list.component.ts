@@ -3,9 +3,10 @@ import { Params } from '@angular/router';
 import { ProviderTypeService } from './../provider-type/provider-type.service';
 import { ProviderService } from './provider.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Provider } from '@angular/core';
+import { Component, OnInit, Provider, ViewChild } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
 import { FilterService } from '../../core/filter/filter.service';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
 	selector: 'app-provider.list',
@@ -45,7 +46,7 @@ import { FilterService } from '../../core/filter/filter.service';
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
-			<table class="table" mat-table [dataSource]="providers">
+			<table class="table" mat-table [dataSource]="dataSource">
 
 				<!-- Position ProviderType
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
@@ -97,13 +98,14 @@ import { FilterService } from '../../core/filter/filter.service';
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
-
+				  <mat-paginator [pageSizeOptions]="pagesize" showFirstLastButtons></mat-paginator>
 			</table>
 		</div>
 
 	`
 })
 export class ProviderListComponent implements OnInit {
+	pagesize = [5, 10, 20];
 	columnsToDisplay = [ 'nitProvider', 'nameProvider',
 						'statusProvider', 'addressProvider', 'emailProvider',
 						'contactNameProvider', 'numberProvider'];
@@ -111,21 +113,24 @@ export class ProviderListComponent implements OnInit {
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
+	dataSource = new MatTableDataSource();
 
+	@ViewChild(MatPaginator) paginator: MatPaginator;
 	constructor(
 		private providerService: ProviderService,
 		private providerTypeService: ProviderTypeService,
 	) { }
 
 	ngOnInit() {
+		this.dataSource.paginator = this.paginator;
 		this.providerTypeService.getAll().subscribe(
 			data => { this.provType = data['result'];
 			console.log(this.provType);
 		});
 
 		this.providerService.getAll().subscribe(
-			data => { this.providers = data['result'];
-			console.log(this.providers);
+			data => { this.dataSource.data = data['result'];
+			console.log(this.dataSource);
 		});
 	}
 
