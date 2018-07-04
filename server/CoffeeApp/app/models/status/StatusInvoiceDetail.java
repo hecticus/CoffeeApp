@@ -19,6 +19,8 @@ import java.util.List;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoicesDetail.class)
 public class StatusInvoiceDetail extends Status {
 
+    // TODO daba error por referencias
+/*
     @OneToMany(mappedBy = "statusInvoiceDetail")
     @JsonIgnore
     @JsonManagedReference
@@ -31,6 +33,7 @@ public class StatusInvoiceDetail extends Status {
     public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
         this.invoiceDetails = invoiceDetails;
     }
+*/
 
     private static Finder<String, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
 
