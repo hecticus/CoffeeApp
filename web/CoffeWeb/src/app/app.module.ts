@@ -20,13 +20,18 @@ import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
 import { NotificationComponent } from './core/notification/notification.component';
 import { StatusComponent } from './components/status/status.component';
+import { ProviderComponent } from './components/provider/provider.component';
+import { InvoiceComponent } from './components/invoice/invoice.component';
+import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail.component';
+import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
+import { ItemTypeComponent } from './components/item-type/item-type.component';
+import { StoreComponent } from './components/store/store.component';
+import { UnitComponent } from './components/unit/unit.component';
 
 
 @NgModule({
 declarations: [
 	AppComponent,
-	//  ImportComponets
-	FarmComponent,
 	// ImportCore
 	HeroesComponent,
 	HeroesDetailComponent,
@@ -37,6 +42,12 @@ declarations: [
 	TableColumnDirective,
 	NotificationComponent,
 	StatusComponent,
+	InvoiceComponent,
+	InvoiceDetailComponent,
+	ProviderTypeComponent,
+	ItemTypeComponent,
+	StoreComponent,
+	UnitComponent,
 
 ],
 imports: [

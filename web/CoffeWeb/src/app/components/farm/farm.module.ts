@@ -6,19 +6,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FarmService } from './farm.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
+	imports: [
+		CommonModule,
+		BrowserModule,
 
-        homeRouting,
-    ],
-    declarations: [
-        FarmComponent,
-    ],
+		homeRouting,
+	],
+	declarations: [
+		FarmComponent,
+	],
 	exports: [
 		FarmComponent,
-    ],
-    providers: [
+	],
+	providers: [
 		FarmService,
 	]
 })

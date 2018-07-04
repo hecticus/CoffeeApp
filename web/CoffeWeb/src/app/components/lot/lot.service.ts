@@ -57,5 +57,5 @@ export class LotService {
 
 
 }
-2
+
 

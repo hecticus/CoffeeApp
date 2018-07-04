@@ -29,16 +29,11 @@ export const lotRoutes: Routes = [
 				}
 			}, {
 				path: ':lotId',
-				component: LotUpdateComponent,
+				component: LotReadComponent,
 				data: {
 					breadcrumb: undefined
 				},
 				children: [
-					{
-						path: '',
-						pathMatch: 'full',
-						component: LotListComponent
-					},
 					{
 						path: 'update',
 						component: LotUpdateComponent,
@@ -46,6 +41,10 @@ export const lotRoutes: Routes = [
 							breadcrumb: 'update',
 							icon: 'edit'
 						}
+					}, {
+						path: '',
+						pathMatch: 'full',
+						component: LotListComponent
 					}
 				]
 			}

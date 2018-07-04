@@ -93,9 +93,10 @@ export class LotReadComponent implements OnInit {
 			});
 	}
 
-	// update() {
-	// 	this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
-	// }
+	update() {
+		console.log(this.activatedRoute);
+		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
+	}
 
 	delete(this) {
 		this.lotService.delete(this.lot.id).subscribe( any => {

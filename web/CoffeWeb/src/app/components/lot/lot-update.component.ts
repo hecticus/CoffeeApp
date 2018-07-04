@@ -96,10 +96,12 @@ export class LotUpdateComponent implements OnInit {
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
-				this.lotService.getById(params['lotId']).subscribe(
-					data => { this.lot = data['result'];
-				console.log(this.lot); }
-				);
+				// this.lotService.getById(params['lotId']).subscribe(
+				//	data => { this.lot = data['result'];
+				// console.log(this.lot); }
+				// );
+				console.log(params);
+				console.log('estoy en update');
 			});
 
 			this.farmService.getAll().subscribe( data => {
