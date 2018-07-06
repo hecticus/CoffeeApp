@@ -1,5 +1,5 @@
 import { Provider } from './provider';
-import { BaseModel } from 'src/app/core/models/base-model';
+import { BaseModel } from './base-model';
 import { ItemType } from './item-type';
 
 export class ProviderType extends BaseModel {

@@ -1,4 +1,4 @@
-import { ProviderModule } from './../provider/provider.module';
+import { ProviderModule } from '../provider/provider.module';
 import { homeRouting } from './home.routes';
 import { HomeComponent } from './home.component';
 import { AuthModule } from '../auth/auth.module';

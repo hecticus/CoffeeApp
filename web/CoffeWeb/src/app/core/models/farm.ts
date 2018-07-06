@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/app/core/models/base-model';
+import { BaseModel } from './base-model';
 
 export class Farm extends BaseModel {
 	nameFarm: string;

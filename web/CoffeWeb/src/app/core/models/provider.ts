@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/app/core/models/base-model';
+import { BaseModel } from './base-model';
 import { ProviderType } from './provider-type';
 import { Status } from './status';
 import { Invoice } from './invoice';

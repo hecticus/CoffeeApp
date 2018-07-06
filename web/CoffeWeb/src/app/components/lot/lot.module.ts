@@ -1,6 +1,6 @@
-import { UtilsModule } from './../../core/utils/utils.module';
+import { UtilsModule } from '../../core/utils/utils.module';
 import { LotCreateComponent } from './lot-create.component';
-import { homeRouting } from './../home/home.routes';
+import { homeRouting } from '../home/home.routes';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';

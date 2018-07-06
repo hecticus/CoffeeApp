@@ -6,6 +6,8 @@ import { LotReadComponent } from './lot-read.component';
 import { LotUpdateComponent } from './lot-update.component';
 import { ProviderComponent } from '../provider/provider.component';
 import { ProviderListComponent } from '../provider/provider-list.component';
+import { ProviderCreateComponent } from '../provider/provider-create.component';
+import { ProviderReadComponent } from '../provider/provider-read.component';
 
 export const lotRoutes: Routes = [
 	{
@@ -19,7 +21,7 @@ export const lotRoutes: Routes = [
 			{
 				path: '',
 				pathMatch: 'full',
-				component: ProviderListComponent,
+				component: ProviderReadComponent,
 				data: {
 					breadcrumb: undefined
 				}

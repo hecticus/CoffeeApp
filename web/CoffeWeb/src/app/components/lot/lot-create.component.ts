@@ -1,4 +1,4 @@
-import { Farm } from './../../core/models/farm';
+import { Farm } from '../../core/models/farm';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -93,6 +93,7 @@ export class LotCreateComponent implements OnInit  {
 		{id: 2, value: 'pizza-1', viewValue: 'Pizza'},
 		{id: 3, value: 'tacos-2', viewValue: 'Tacos'}
 	];
+
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,

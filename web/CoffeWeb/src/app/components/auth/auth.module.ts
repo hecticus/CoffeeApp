@@ -1,4 +1,4 @@
-import { UtilsModule } from './../../core/utils/utils.module';
+import { UtilsModule } from '../../core/utils/utils.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';

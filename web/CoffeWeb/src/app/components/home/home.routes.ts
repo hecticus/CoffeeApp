@@ -1,6 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
-import { lotRoutes } from './../lot/lot.routes';
+import { lotRoutes } from '../lot/lot.routes';
 import { providerRoutes } from '../provider/provider.routes';
 
 

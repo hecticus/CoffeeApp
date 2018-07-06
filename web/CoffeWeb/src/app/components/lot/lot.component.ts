@@ -1,4 +1,4 @@
-import { Lot } from './../../core/models/lot';
+import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
 import { Component, OnInit } from '@angular/core';
 import { BaseService } from '../../core/base.service';

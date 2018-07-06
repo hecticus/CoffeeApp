@@ -1,3 +1,4 @@
+import { InvoiceModule } from './components/invoice/invoce.module';
 import { ProviderModule } from './components/provider/provider.module';
 import { UtilsModule } from './core/utils/utils.module';
 import { AppComponent } from './app.component';
@@ -16,7 +17,6 @@ import { routing } from './app.routes';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
 import { NotificationComponent } from './core/notification/notification.component';
-import { InvoiceComponent } from './components/invoice/invoice.component';
 import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail.component';
 import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
 import { ItemTypeComponent } from './components/item-type/item-type.component';
@@ -34,8 +34,6 @@ declarations: [
 	TableColumnDirective,
 	NotificationComponent,
 
-
-	InvoiceComponent,
 	InvoiceDetailComponent,
 	ProviderTypeComponent,
 	ItemTypeComponent,
@@ -56,6 +54,7 @@ imports: [
 	HomeModule,
 	LotModule,
 	ProviderModule,
+	InvoiceModule,
 	UtilsModule,
 ],
 providers: [],

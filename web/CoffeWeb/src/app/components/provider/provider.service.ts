@@ -44,7 +44,7 @@ export class ProviderService {
 			return this.http.get<any>(ProviderService.BASE_URL, {params: params});
 	}
 
-	getLot(provider: Provider): FormGroup {
+	getProvider(provider: Provider): FormGroup {
 		return this.fb.group({
 			id: new FormControl(provider.id),
 			providerType: new FormControl(provider.providerType, Validators.required),
@@ -53,7 +53,6 @@ export class ProviderService {
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
 			numberProvider: new FormControl(provider.numberProvider, [CustomValidators.numberRegex, Validators.maxLength(20)]),
 			emailProvider: new FormControl(provider.emailProvider, [Validators.required, CustomValidators.match('email')]),
-			photoProvider: new FormControl(provider.photoProvider),
 			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.required, Validators.maxLength(50)]),
 			statusProvider: new FormControl(provider.statusProvider, [Validators.required, Validators.maxLength(20)]),
 			// invoices: new FormControl(provider.emailProvider, [Validators.required, Validators.maxLength(100)]),

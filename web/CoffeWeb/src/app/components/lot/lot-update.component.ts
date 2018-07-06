@@ -1,8 +1,8 @@
-import { Farm } from './../../core/models/farm';
+import { Farm } from '../../core/models/farm';
 import { FormGroup } from '@angular/forms';
-import { FarmService } from './../farm/farm.service';
+import { FarmService } from '../farm/farm.service';
 import { Location } from '@angular/common';
-import { Lot } from 'src/app/core/models/lot';
+import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';

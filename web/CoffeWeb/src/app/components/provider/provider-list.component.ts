@@ -1,12 +1,13 @@
 
 import { Params } from '@angular/router';
-import { ProviderTypeService } from './../provider-type/provider-type.service';
+import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { ProviderService } from './provider.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, Provider, ViewChild } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
 import { FilterService } from '../../core/filter/filter.service';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
 	selector: 'app-provider.list',
@@ -15,15 +16,15 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 		<h2 class="title">Providers</h2>
 		<div class="filter row">
 			<div class="field">
-				<mat-select placeholder="Provider Type" [(ngModel)]="selectedValue" name="pt">
+				<mat-select placeholder="Provider Type" [(ngModel)]="seler" name="pt">
 					<mat-option>-- None --</mat-option>
 					<mat-option *ngFor="let pt of provType" [value]="pt.id" >
-						{{pt.nameProviderType}}
+			{{pt.nameProviderType}}
 					</mat-option>
 				</mat-select>
 			</div>
 			<div class="field">
-				<input matInput placeholder="Name's Provider">
+				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
 			</div>
 			<div class="container-button-filter">
 				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
@@ -46,7 +47,23 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
-			<table class="table" mat-table [dataSource]="dataSource">
+			<table class="table" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+				<!-- Checkbox Column -->
+				<ng-container matColumnDef="select">
+				  <th mat-header-cell *matHeaderCellDef>
+					<mat-checkbox (change)="$event ? masterToggle() : null"
+								  [checked]="selection.hasValue() && isAllSelected()"
+								  [indeterminate]="selection.hasValue() && !isAllSelected()">
+					</mat-checkbox>
+				  </th>
+				  <td mat-cell *matCellDef="let row">
+					<mat-checkbox (click)="$event.stopPropagation()"
+								  (change)="$event ? selection.toggle(row) : null"
+								  [checked]="selection.isSelected(row)">
+					</mat-checkbox>
+				  </td>
+				</ng-container>
 
 				<!-- Position ProviderType
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
@@ -98,23 +115,36 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
-				  <mat-paginator [pageSizeOptions]="pagesize" showFirstLastButtons></mat-paginator>
 			</table>
+			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
 
 	`
 })
 export class ProviderListComponent implements OnInit {
-	pagesize = [5, 10, 20];
-	columnsToDisplay = [ 'nitProvider', 'nameProvider',
-						'statusProvider', 'addressProvider', 'emailProvider',
-						'contactNameProvider', 'numberProvider'];
-	selectedValue = 'hol';
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
-	dataSource = new MatTableDataSource();
 
+	// Order Columns Display
+	columnsToDisplay = ['select', 'nitProvider', 'nameProvider',
+						'statusProvider', 'addressProvider', 'emailProvider',
+						'contactNameProvider', 'numberProvider'];
+	// MatPaginator Inputs
+	length = 100;
+	pageSize = 10;
+	pageSizeOptions: number[] = [5, 10, 20];
+
+	dataSource = new MatTableDataSource<Provider>();
+
+	// Defione Selection
+	selection = new SelectionModel<Provider>(true, []);
+	// const initialSelection = [];
+	// const allowMultiSelect = true;
+	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
+
+	seler = 4;
+	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	constructor(
 		private providerService: ProviderService,
@@ -122,7 +152,10 @@ export class ProviderListComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+
+		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
+
 		this.providerTypeService.getAll().subscribe(
 			data => { this.provType = data['result'];
 			console.log(this.provType);
@@ -132,13 +165,32 @@ export class ProviderListComponent implements OnInit {
 			data => { this.dataSource.data = data['result'];
 			console.log(this.dataSource);
 		});
+
 	}
 
 	create() {
-		console.log(this.selectedValue);
+		console.log('hola');
 	}
 
 	manejo($event: any) {
 		console.log($event);
+	}
+
+	/** Whether the number of selected elements matches the total number of rows. */
+	isAllSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.dataSource.data.length;
+		return numSelected === numRows;
+		}
+
+	/** Selects all rows if they are not all selected; otherwise clear selection. */
+	masterToggle() {
+	this.isAllSelected() ?
+		this.selection.clear() :
+		this.dataSource.data.forEach(row => this.selection.select(row));
+	}
+
+	applyFilter(filterValue: string) {
+		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 }

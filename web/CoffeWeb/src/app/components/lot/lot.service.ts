@@ -5,7 +5,7 @@ import { BaseService } from '../../core/base.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { CustomValidators } from '../../core/utils/validator/custom-validator';
-import { Lot } from 'src/app/core/models/lot';
+import { Lot } from '../../core/models/lot';
 
 @Injectable({
 	providedIn: 'root'

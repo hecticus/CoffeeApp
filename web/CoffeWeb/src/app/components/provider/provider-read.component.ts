@@ -1,12 +1,14 @@
+import { ProviderService, ProviderService } from './provider.service';
 import { Location } from '@angular/common';
 import { Lot } from '../../core/models/lot';
-import { LotService } from './lot.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { LotService } from '../lot/lot.service';
+import { Provider } from '../../core/models/provider';
 
 @Component({
 	template: `
-		<h3 class="title">Lot Detail</h3>
+		<h3 class="title">Provider Detail</h3>
 		<div class="tool-bar both-side">
 			<div class="right row">
 				<button class="btn-icon" title="Update" type="button" (click)="update()">
@@ -20,36 +22,54 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 		<div class="answer">
 			<div class="fieldset">
-				<div class="legend">Lot Data</div>
+				<div class="legend">Provider Data</div>
 
 				<div class="wrap-fields">
 					<div>
+						<span class="label">Provider Type</span>
+						<span class="output">{{provider.nameProvider|| '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div>
 						<span class="label">Name</span>
-						<span class="output">{{lot.nameLot|| '-'}}</span>
+						<span class="output">{{provider.providerType?.nameProviderType|| '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Farm</span>
-						<span class="output">{{lot.farm?.nameFarm || '-'}}</span>
+						<span class="label">Code Provider</span>
+						<span class="output">{{provider.nitProvider || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Area</span>
-						<span class="output">{{lot.areaLot || '-'}}</span>
+						<span class="label">Address</span>
+						<span class="output">{{provider.addressProvider || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Height</span>
-						<span class="output">{{lot.heighLot || '-'}}</span>
+						<span class="label">Phone Number</span>
+						<span class="output">{{provider.numberProvider || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Price Lot</span>
-						<span class="output">{{lot.priceLot || '-'}}</span>
+						<span class="label">Email Provider</span>
+						<span class="output">{{provider.emailProvider || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div>
+						<span class="label">Contact Name</span>
+						<span class="output">{{provider.contactNameProvider || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div>
+						<span class="label">Status</span>
+						<span class="output">{{provider.statusProvider || '-'}}</span>
 					</div>
 				</div>
 			</div>
@@ -72,23 +92,22 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 			</app-modal>
 	`
 })
-export class LotReadComponent implements OnInit {
+export class ProviderReadComponent implements OnInit {
 	confirmDelete = true;
-	lot = new Lot();
+	provider = new Provider();
 
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private lotService: LotService,
 		private location: Location,
-
+		private providerService: ProviderService,
 	) { }
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
-				this.lotService.getById(params['lotId']).subscribe(
-					data => { this.lot = data['result'];
-				console.log(this.lot); }
+				this.providerService.getById(params['providerId']).subscribe(
+					data => { this.provider = data['result'];
+				console.log(this.provider); }
 				);
 			});
 	}
