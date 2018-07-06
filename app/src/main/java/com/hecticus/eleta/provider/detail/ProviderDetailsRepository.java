@@ -223,7 +223,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             }
         } else {
             Log.d("DETAILS", "--->Sent provider: " + providerParam);
-            Call<ProviderCreationResponse> call = providerDetailsDataApi.updateProviderData(providerParam);
+            Call<ProviderCreationResponse> call = providerDetailsDataApi.updateProviderData(providerParam.getIdProvider(),providerParam);
             ManagerServices service = new ManagerServices<ProviderCreationResponse>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
                 @DebugLog
                 @Override

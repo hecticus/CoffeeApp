@@ -1,5 +1,12 @@
 package com.hecticus.eleta.model_new;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIdentityReference(alwaysAsId = true)
 public class InvoiceDetailPurity {
 
     private Long id;

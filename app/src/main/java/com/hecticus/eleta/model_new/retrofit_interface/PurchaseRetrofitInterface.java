@@ -7,6 +7,7 @@ import com.hecticus.eleta.model.response.store.StoresListResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by roselyn545 on 26/9/17.
@@ -26,12 +27,29 @@ public interface PurchaseRetrofitInterface {
     @DELETE(HARVEST_DELETE_URL)
     Call<Message> deleteHarvestInvoice(@Path("idHarvest") int idHarvest);*/
 
-    @GET(STORES_URL)
+    /*
+    @GET("store/getByStatusStore/1/ASC")
     Call<StoresListResponse> getStores();
 
-    @GET(PURITIES_URL)
+    @GET("purity/getByStatusPurity/1/ASC")
     Call<PurityListResponse> getPurities();
 
-    @GET(PURCHASE_ITEMS_URL)
+    @GET("itemType/getByProviderTypeId/{providerTypeId}/0?sort=nameItemType")
     Call<ItemTypesListResponse> getItemsType(@Path("providerTypeId") int providerTypeId);
+     */
+
+    /*
+
+     */
+
+    @GET("store")
+    Call<StoresListResponse> getStores(/*@Query("statusStore") Long statusStore*/);
+
+    @GET("purity")
+    Call<PurityListResponse> getPurities(/*@Query("statusStore") Long statusStore*/);
+
+    @GET("itemType")//getByProviderTypeId/{providerTypeId}/0?sort=nameItemType")
+    Call<ItemTypesListResponse> getItemsType(@Query("sort") String sort, @Query("providerType") int providerType);
+
+
 }

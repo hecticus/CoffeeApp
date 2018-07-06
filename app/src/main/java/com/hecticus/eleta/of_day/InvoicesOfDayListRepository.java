@@ -19,6 +19,7 @@ import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -203,7 +204,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
             }
         } else {
-            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getInvoiceId(), date);
+            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getInvoiceId(), date, new ArrayList<Long>());
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override
@@ -233,7 +234,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     @DebugLog
     @Override
     public void closeInvoiceRequest(CloseInvoicePost post) {
-        Call<Message> call = invoiceApi.closeInvoice(post);
+        Call<Message> call = invoiceApi.closeInvoice(post.getId(), post);
 
         call.enqueue(new Callback<Message>() {
             @DebugLog

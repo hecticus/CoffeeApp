@@ -69,7 +69,7 @@ public class GlobalRequests {
 
     @DebugLog
     private void getHarvesterItems() {
-        Call<ItemTypesListResponse> harvesterItemsCall = purchasesApi.getItemsType(Constants.TYPE_HARVESTER);
+        Call<ItemTypesListResponse> harvesterItemsCall = purchasesApi.getItemsType("nameItemType",Constants.TYPE_HARVESTER);
         new ManagerServices<>(harvesterItemsCall, new ManagerServices.ServiceListener<ItemTypesListResponse>() {
             @DebugLog
             @Override
@@ -95,7 +95,7 @@ public class GlobalRequests {
 
     @DebugLog
     private void getSellerItems() {
-        Call<ItemTypesListResponse> sellerItemsCall = purchasesApi.getItemsType(Constants.TYPE_SELLER);
+        Call<ItemTypesListResponse> sellerItemsCall = purchasesApi.getItemsType("nameItemType", Constants.TYPE_SELLER);
         new ManagerServices<>(sellerItemsCall, new ManagerServices.ServiceListener<ItemTypesListResponse>() {
             @DebugLog
             @Override

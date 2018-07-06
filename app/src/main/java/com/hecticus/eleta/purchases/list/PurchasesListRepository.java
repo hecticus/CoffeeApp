@@ -98,7 +98,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                 onError(mPresenter.context.getString(R.string.error_getting_purchases), "getPurchasesRequest getAllInvoicesByType null list");
             }
         } else {
-            Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_SELLER, index);//Util.getCurrentDate()//"2017-09-28"
+            Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_SELLER, index, 10);//Util.getCurrentDate()//"2017-09-28"
 
             call.enqueue(new Callback<InvoiceListResponse>() {
                 @DebugLog

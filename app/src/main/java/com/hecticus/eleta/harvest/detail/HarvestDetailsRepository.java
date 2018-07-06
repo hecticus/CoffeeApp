@@ -338,7 +338,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 onError(mPresenter.context.getString(R.string.error_getting_lots));
             }
         } else {
-            Call<LotsListResponse> call = harvestApi.getLotsByFarm(idFarm);
+            Call<LotsListResponse> call = harvestApi.getLotsByFarm(idFarm,"nameLot");
 
             call.enqueue(new Callback<LotsListResponse>() {
                 @DebugLog

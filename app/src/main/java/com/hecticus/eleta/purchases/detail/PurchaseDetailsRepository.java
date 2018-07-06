@@ -216,7 +216,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 onError(mPresenter.context.getString(R.string.error_getting_items));
             }
         } else {
-            Call<ItemTypesListResponse> call = purchaseApi.getItemsType(Constants.TYPE_SELLER);
+            Call<ItemTypesListResponse> call = purchaseApi.getItemsType("nameItemType", Constants.TYPE_SELLER);
 
             call.enqueue(new Callback<ItemTypesListResponse>() {
                 @DebugLog

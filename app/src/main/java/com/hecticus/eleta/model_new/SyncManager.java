@@ -165,7 +165,7 @@ public class SyncManager {
         } else {
             operationName = "editProviderSync";
             Log.d("DETAILS", "---> Provider edit" + currentProviderToSync);
-            call = providersApi.updateProviderData(currentProviderToSync);
+            call = providersApi.updateProviderData(currentProviderToSync.getIdProvider(), currentProviderToSync);
         }
         new ManagerServices<>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
             @DebugLog
@@ -680,7 +680,7 @@ public class SyncManager {
         ofDayList.remove(firstOfDay);
         Log.d("DETAILS", "--->deleteNextOfDay firstInvoice" + firstOfDay);
 
-        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId(), firstOfDay.getStartDate());
+        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId(), firstOfDay.getStartDate(), new ArrayList<Long>());
 
         new ManagerServices<>(call, new ManagerServices.ServiceListener<InvoiceDetailsResponse>() {
             @DebugLog
