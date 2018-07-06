@@ -2,7 +2,7 @@ package com.hecticus.eleta.model.response.lot;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.hecticus.eleta.model.ItemSpinnerInterface;
+import com.hecticus.eleta.model_new.ItemSpinnerInterface;
 import com.hecticus.eleta.model.response.farm.Farm;
 
 import java.io.Serializable;

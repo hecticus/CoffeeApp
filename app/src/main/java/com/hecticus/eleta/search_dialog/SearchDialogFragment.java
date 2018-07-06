@@ -22,7 +22,7 @@ import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomEditText;
-import com.hecticus.eleta.model.callback.SelectedProviderInterface;
+import com.hecticus.eleta.model_new.callback.SelectedProviderInterface;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.util.Constants;
 

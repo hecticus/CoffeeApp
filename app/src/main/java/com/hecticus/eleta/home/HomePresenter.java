@@ -2,7 +2,7 @@ package com.hecticus.eleta.home;
 
 import android.content.Context;
 
-import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model_new.SessionManager;
 
 import hugo.weaving.DebugLog;
 

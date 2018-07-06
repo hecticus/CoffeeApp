@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.response.farm.Farm;

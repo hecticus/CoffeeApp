@@ -1,4 +1,4 @@
-package com.hecticus.eleta.model.persistence;
+package com.hecticus.eleta.model_new.persistence;
 
 import android.util.Log;
 

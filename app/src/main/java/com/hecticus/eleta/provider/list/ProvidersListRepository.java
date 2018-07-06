@@ -5,13 +5,13 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
-import com.hecticus.eleta.model.SessionManager;
-import com.hecticus.eleta.model.persistence.ManagerDB;
-import com.hecticus.eleta.model.persistence.ManagerServices;
+import com.hecticus.eleta.model_new.SessionManager;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
+import com.hecticus.eleta.model_new.persistence.ManagerServices;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
-import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
 import java.io.IOException;

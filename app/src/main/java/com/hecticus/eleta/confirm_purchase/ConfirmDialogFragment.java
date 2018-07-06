@@ -20,7 +20,7 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.DescriptionAndValueModel;
 import com.hecticus.eleta.base.item.DoubleTextViewListAdapter;
 import com.hecticus.eleta.custom_views.CustomDobleTextView;
-import com.hecticus.eleta.model.callback.AcceptConfirmInterface;
+import com.hecticus.eleta.model_new.callback.AcceptConfirmInterface;
 import com.hecticus.eleta.util.Constants;
 
 import java.util.List;

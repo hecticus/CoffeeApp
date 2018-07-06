@@ -1,18 +1,15 @@
 package com.hecticus.eleta.login;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.AuthorizationRequest;
-import com.hecticus.eleta.model.request.LoginPost;
 import com.hecticus.eleta.model.response.AccessTokenResponse;
-import com.hecticus.eleta.model.response.LoginResponse;
-import com.hecticus.eleta.model.retrofit_interface.UserRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.UserRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
 import org.json.JSONException;

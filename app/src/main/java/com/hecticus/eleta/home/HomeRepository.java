@@ -3,9 +3,9 @@ package com.hecticus.eleta.home;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.response.Message;
-import com.hecticus.eleta.model.retrofit_interface.UserRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.UserRetrofitInterface;
 import com.hecticus.eleta.recovery_password.RecoveryPasswordActivity;
 import com.hecticus.eleta.util.Constants;
 

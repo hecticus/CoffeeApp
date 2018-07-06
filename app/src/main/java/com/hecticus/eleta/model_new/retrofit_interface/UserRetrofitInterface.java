@@ -1,12 +1,9 @@
-package com.hecticus.eleta.model.retrofit_interface;
+package com.hecticus.eleta.model_new.retrofit_interface;
 
-import com.hecticus.eleta.model.request.LoginPost;
-import com.hecticus.eleta.model.response.LoginResponse;
 import com.hecticus.eleta.model.response.Message;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;

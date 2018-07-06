@@ -3,7 +3,7 @@ package com.hecticus.eleta.model.response.item;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseEditableModel;
-import com.hecticus.eleta.model.ItemSpinnerInterface;
+import com.hecticus.eleta.model_new.ItemSpinnerInterface;
 
 import java.io.Serializable;
 

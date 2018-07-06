@@ -1,12 +1,10 @@
-package com.hecticus.eleta.model.retrofit_interface;
+package com.hecticus.eleta.model_new.retrofit_interface;
 
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.farm.FarmsListResponse;
 import com.hecticus.eleta.model.response.harvest.HarvestsListResponse;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
 import com.hecticus.eleta.model.response.lot.LotsListResponse;
-import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
-import com.hecticus.eleta.util.Constants;
 
 import retrofit2.Call;
 import retrofit2.http.DELETE;

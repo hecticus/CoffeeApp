@@ -12,7 +12,7 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.home.HomeActivity;
-import com.hecticus.eleta.model.SessionManager;
+import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.recovery_password.RecoveryPasswordActivity;
 
 import butterknife.BindView;

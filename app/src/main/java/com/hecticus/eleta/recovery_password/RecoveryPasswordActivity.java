@@ -11,7 +11,7 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.model.response.Message;
-import com.hecticus.eleta.model.retrofit_interface.UserRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.UserRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
 import java.io.IOException;

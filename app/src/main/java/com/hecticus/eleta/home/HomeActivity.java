@@ -23,9 +23,9 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.harvest.list.HarvestsListFragment;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.login.LoginActivity;
-import com.hecticus.eleta.model.GlobalRequests;
-import com.hecticus.eleta.model.SessionManager;
-import com.hecticus.eleta.model.SyncManager;
+import com.hecticus.eleta.model_new.GlobalRequests;
+import com.hecticus.eleta.model_new.SessionManager;
+import com.hecticus.eleta.model_new.SyncManager;
 import com.hecticus.eleta.provider.list.ProvidersListFragment;
 import com.hecticus.eleta.purchases.list.PurchasesListFragment;
 

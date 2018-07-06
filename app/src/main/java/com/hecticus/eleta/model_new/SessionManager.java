@@ -1,4 +1,4 @@
-package com.hecticus.eleta.model;
+package com.hecticus.eleta.model_new;
 
 import android.content.Context;
 import android.content.SharedPreferences;

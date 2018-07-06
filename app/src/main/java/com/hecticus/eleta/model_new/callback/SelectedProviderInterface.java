@@ -1,4 +1,4 @@
-package com.hecticus.eleta.model.callback;
+package com.hecticus.eleta.model_new.callback;
 
 import com.hecticus.eleta.model.response.providers.Provider;
 

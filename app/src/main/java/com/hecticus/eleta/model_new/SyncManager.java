@@ -1,11 +1,11 @@
-package com.hecticus.eleta.model;
+package com.hecticus.eleta.model_new;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.hecticus.eleta.home.HomeActivity;
-import com.hecticus.eleta.model.persistence.ManagerDB;
-import com.hecticus.eleta.model.persistence.ManagerServices;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
+import com.hecticus.eleta.model_new.persistence.ManagerServices;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
@@ -15,8 +15,8 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
 import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
-import com.hecticus.eleta.model.retrofit_interface.InvoiceRetrofitInterface;
-import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.FileUtils;
 

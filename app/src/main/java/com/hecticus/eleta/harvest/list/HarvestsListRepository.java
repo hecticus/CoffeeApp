@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
-import com.hecticus.eleta.model.SessionManager;
-import com.hecticus.eleta.model.persistence.ManagerDB;
+import com.hecticus.eleta.model_new.SessionManager;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
@@ -14,7 +14,7 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
-import com.hecticus.eleta.model.retrofit_interface.InvoiceRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
 

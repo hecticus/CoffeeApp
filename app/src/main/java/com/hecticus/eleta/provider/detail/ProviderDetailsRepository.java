@@ -8,13 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
-import com.hecticus.eleta.model.SessionManager;
-import com.hecticus.eleta.model.persistence.ManagerDB;
-import com.hecticus.eleta.model.persistence.ManagerServices;
+import com.hecticus.eleta.model_new.SessionManager;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
+import com.hecticus.eleta.model_new.persistence.ManagerServices;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
 import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
-import com.hecticus.eleta.model.retrofit_interface.ProviderRetrofitInterface;
+import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.FileUtils;
 
@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import hugo.weaving.DebugLog;
 import io.realm.Realm;

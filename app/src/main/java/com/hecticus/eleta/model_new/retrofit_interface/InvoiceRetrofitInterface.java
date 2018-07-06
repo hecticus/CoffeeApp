@@ -1,4 +1,4 @@
-package com.hecticus.eleta.model.retrofit_interface;
+package com.hecticus.eleta.model_new.retrofit_interface;
 
 import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;

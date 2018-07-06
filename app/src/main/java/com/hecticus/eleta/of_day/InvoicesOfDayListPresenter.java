@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
-import com.hecticus.eleta.model.persistence.ManagerDB;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;

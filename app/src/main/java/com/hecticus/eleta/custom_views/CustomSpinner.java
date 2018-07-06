@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hecticus.eleta.R;
-import com.hecticus.eleta.model.ItemSpinnerInterface;
+import com.hecticus.eleta.model_new.ItemSpinnerInterface;
 
 import java.util.List;
 
