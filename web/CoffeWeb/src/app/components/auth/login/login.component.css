@@ -40,7 +40,7 @@
 }
 
 .form-group>a:hover {
-    color: #0099cc;
+    color: rgba(223, 223, 223, 0.664);
     text-decoration: underline;
 }
 
@@ -53,4 +53,12 @@
 .container-images {
     margin: 0ch;
     padding: 10pc;
+}
+
+label {
+    color: white;
+}
+
+a {
+    color: white;
 }

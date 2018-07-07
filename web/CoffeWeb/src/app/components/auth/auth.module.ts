@@ -1,3 +1,4 @@
+import { AuthRoutingModule } from './auth.routing';
 import { UtilsModule } from '../../core/utils/utils.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -7,13 +8,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ValidatorComponent } from '../../core/utils/validator/validator.component';
-import { MatInputModule, MatFormFieldModule } from '../../../../node_modules/@angular/material';
+import { MatInputModule, MatFormFieldModule } from '@angular/material';
 
 @NgModule({
 	imports: [
-		BrowserModule,
-		BrowserAnimationsModule,
+		// BrowserModule,
+		// BrowserAnimationsModule,
 		HttpClientModule,
 		FormsModule,
 		RouterModule,
@@ -23,6 +23,7 @@ import { MatInputModule, MatFormFieldModule } from '../../../../node_modules/@an
 		MatInputModule,
 
 		UtilsModule,
+		AuthRoutingModule,
 	],
 	declarations: [
 		LoginComponent,

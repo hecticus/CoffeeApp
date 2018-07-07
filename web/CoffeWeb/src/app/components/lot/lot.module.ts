@@ -1,28 +1,32 @@
-import { UtilsModule } from '../../core/utils/utils.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import {
+	ErrorStateMatcher,
+	MatFormFieldModule,
+	MatInputModule,
+	MatPaginatorModule,
+	MatSelectModule,
+	ShowOnDirtyErrorStateMatcher
+	} from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LotComponent } from './lot.component';
 import { LotCreateComponent } from './lot-create.component';
-import { homeRouting } from '../home/home.routes';
+import { LotListComponent } from './lot-list.component';
+import { LotReadComponent } from './lot-read.component';
+import { LotRoutingModule } from './lot.routing';
+import { LotService } from './lot.service';
+import { LotUpdateComponent } from './lot-update.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LotListComponent } from './lot-list.component';
-import { MatPaginatorModule, MatSelectModule,
-	MatFormFieldModule, MatInputModule, ErrorStateMatcher,
-	ShowOnDirtyErrorStateMatcher } from '@angular/material';
-import { BrowserModule } from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LotComponent } from './lot.component';
-import { LotService } from './lot.service';
-import { LotReadComponent } from './lot-read.component';
-import { LotUpdateComponent } from './lot-update.component';
+import { UtilsModule } from '../../core/utils/utils.module';
 
 @NgModule({
 	imports: [
-		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
-		BrowserAnimationsModule,
+		// BrowserAnimationsModule,
 		CommonModule,
 		MatTableModule,
 		MatCheckboxModule,
@@ -31,8 +35,8 @@ import { LotUpdateComponent } from './lot-update.component';
 		MatFormFieldModule,
 		MatInputModule,
 
-		homeRouting,
 		UtilsModule,
+		LotRoutingModule,
 
 	],
 	declarations: [

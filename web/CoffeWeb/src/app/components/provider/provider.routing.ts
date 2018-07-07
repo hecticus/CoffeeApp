@@ -1,13 +1,14 @@
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { ProviderComponent } from './provider.component';
 import { ProviderListComponent } from './provider-list.component';
 import { ProviderReadComponent } from './provider-read.component';
 import { ProviderCreateComponent } from './provider-create.component';
 import { ProviderUpdateComponent } from './provider-update.componet';
+import { NgModule } from '@angular/core';
 
 export const providerRoutes: Routes = [
 	{
-		path: 'poviders',
+		path: 'providers',
 		component: ProviderComponent,
 		data: {
 			breadcrumb: 'providers',
@@ -44,10 +45,20 @@ export const providerRoutes: Routes = [
 					}, {
 						path: '',
 						pathMatch: 'full',
-						component:  ProviderListComponent
+						component:  ProviderReadComponent
 					}
 				]
 			}
 		]
 	}
 ];
+
+@NgModule({
+	imports: [
+		RouterModule.forChild(providerRoutes)
+	],
+	exports: [
+		RouterModule
+	]
+})
+export class ProviderRoutingModule { }

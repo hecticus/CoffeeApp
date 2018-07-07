@@ -1,27 +1,25 @@
-import { InvoiceModule } from './components/invoice/invoce.module';
-import { ProviderModule } from './components/provider/provider.module';
-import { UtilsModule } from './core/utils/utils.module';
-import { AppComponent } from './app.component';
+import { HomeModule } from './components/home/home.module';
 import { AuthModule } from './components/auth/auth.module';
+import { HomeRoutingModule } from './components/home/home.routing';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app.routing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HomeModule } from './components/home/home.module';
 import { HttpClientModule } from '@angular/common/http';
-import { LotModule } from './components/lot/lot.module';
-import { MessagesComponent } from './components/messages/messages.component';
+import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail.component';
+import { ItemTypeComponent } from './components/item-type/item-type.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
-import { routing } from './app.routes';
+import { NotificationComponent } from './core/notification/notification.component';
+import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
+import { RouterModule } from '@angular/router';
+import { StoreComponent } from './components/store/store.component';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
-import { NotificationComponent } from './core/notification/notification.component';
-import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail.component';
-import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
-import { ItemTypeComponent } from './components/item-type/item-type.component';
-import { StoreComponent } from './components/store/store.component';
 import { UnitComponent } from './components/unit/unit.component';
+import { UtilsModule } from './core/utils/utils.module';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -29,7 +27,6 @@ declarations: [
 	AppComponent,
 	// ImportCore
 
-	MessagesComponent,
 	TableComponent,
 	TableColumnDirective,
 	NotificationComponent,
@@ -42,6 +39,7 @@ declarations: [
 
 ],
 imports: [
+	CommonModule,
 	BrowserModule,
 	BrowserAnimationsModule,
 	HttpClientModule,
@@ -49,13 +47,10 @@ imports: [
 	RouterModule,
 	Ng2SmartTableModule,
 
-	routing,
+	UtilsModule,
 	AuthModule,
 	HomeModule,
-	LotModule,
-	ProviderModule,
-	InvoiceModule,
-	UtilsModule,
+	AppRoutingModule,
 ],
 providers: [],
 bootstrap: [AppComponent]

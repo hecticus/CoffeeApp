@@ -3,7 +3,8 @@ import { LotCreateComponent } from './lot-create.component';
 import { LotListComponent } from './lot-list.component';
 import { LotReadComponent } from './lot-read.component';
 import { LotUpdateComponent } from './lot-update.component';
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 
 export const lotRoutes: Routes = [
 	{
@@ -51,3 +52,13 @@ export const lotRoutes: Routes = [
 		]
 	}
 ];
+
+@NgModule({
+	imports: [
+		RouterModule.forChild(lotRoutes)
+	],
+	exports: [
+		RouterModule
+	]
+})
+export class LotRoutingModule { }

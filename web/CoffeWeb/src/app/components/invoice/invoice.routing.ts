@@ -1,9 +1,10 @@
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { InvoiceReadComponent } from './invoice-read.component';
 import { InvoiceListComponent } from './invoice-list.component';
 import { InvoiceComponent } from './invoice.component';
 import { InvoiceCreateComponent } from './invoice-create.component';
 import { InvoiceUpdateComponent } from './invoice-update.component';
+import { NgModule } from '@angular/core';
 
 export const invoiceRoutes: Routes = [
 	{
@@ -44,10 +45,20 @@ export const invoiceRoutes: Routes = [
 					}, {
 						path: '',
 						pathMatch: 'full',
-						component: InvoiceListComponent
+						component: InvoiceReadComponent
 					}
 				]
 			}
 		]
 	}
 ];
+
+@NgModule({
+	imports: [
+		RouterModule.forChild(invoiceRoutes)
+	],
+	exports: [
+		RouterModule
+	]
+})
+export class InvoiceRoutingModule { }

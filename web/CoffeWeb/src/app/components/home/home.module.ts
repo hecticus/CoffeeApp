@@ -1,32 +1,30 @@
-import { homeRouting } from './home.routes';
+import { InvoiceModule } from './../invoice/invoce.module';
+import { ProviderModule } from './../provider/provider.module';
+import { HomeRoutingModule } from './home.routing';
+import { UtilsModule } from './../../core/utils/utils.module';
 import { HomeComponent } from './home.component';
-import { AuthModule } from '../auth/auth.module';
 import { BreadcrumbsComponent } from '../../core/breadcrumbs/breadcrumbs.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LotModule } from '../lot/lot.module';
 import { NgModule } from '@angular/core';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 import { TopbarComponent } from '../../core/topbar/topbar.component';
-import { InvoiceModule } from '../invoice/invoce.module';
-import { ProviderModule } from '../provider/provider.module';
+import { LotModule } from '../lot/lot.module';
 
 @NgModule({
 	imports: [
 		CommonModule,
-		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
 		BrowserAnimationsModule,
 
-		homeRouting,
-		LotModule,
-		AuthModule,
-		ProviderModule,
+		UtilsModule,
 		InvoiceModule,
+		ProviderModule,
+		LotModule,
+		HomeRoutingModule,
 
 	],
 	declarations: [

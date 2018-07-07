@@ -8,21 +8,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule, MatCheckboxModule,
 		MatPaginatorModule, MatSelectModule,
 		MatFormFieldModule, MatInputModule } from '@angular/material';
-import { homeRouting } from '../home/home.routes';
 import { UtilsModule } from '../../core/utils/utils.module';
 import { ProviderUpdateComponent } from './provider-update.componet';
 import { ProviderListComponent } from './provider-list.component';
 import { ProviderCreateComponent } from './provider-create.component';
 import { ProviderReadComponent } from './provider-read.component';
+import { ProviderRoutingModule } from './provider.routing';
 
 @NgModule({
 	imports: [
 		CommonModule,
-		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
-		BrowserAnimationsModule,
-		CommonModule,
+		// BrowserAnimationsModule,
 		MatTableModule,
 		MatCheckboxModule,
 		MatPaginatorModule,
@@ -30,8 +28,8 @@ import { ProviderReadComponent } from './provider-read.component';
 		MatFormFieldModule,
 		MatInputModule,
 
-		homeRouting,
 		UtilsModule,
+		ProviderRoutingModule,
 	],
 	declarations: [
 		ProviderComponent,

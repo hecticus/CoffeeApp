@@ -1,17 +1,15 @@
+import { InvoiceRoutingModule } from './invoice.routing';
 import { InvoiceService } from './invoice.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import {
-	ErrorStateMatcher,
 	MatFormFieldModule,
 	MatInputModule,
 	MatPaginatorModule,
 	MatSelectModule,
-	ShowOnDirtyErrorStateMatcher
 	} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { homeRouting } from '../home/home.routes';
 import { InvoiceComponent } from './invoice.component';
 import { InvoiceCreateComponent } from './invoice-create.component';
 import { InvoiceListComponent } from './invoice-list.component';
@@ -25,10 +23,9 @@ import { UtilsModule } from '../../core/utils/utils.module';
 
 @NgModule({
 	imports: [
-		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
-		BrowserAnimationsModule,
+		// BrowserAnimationsModule,
 		CommonModule,
 		MatTableModule,
 		MatCheckboxModule,
@@ -37,8 +34,8 @@ import { UtilsModule } from '../../core/utils/utils.module';
 		MatFormFieldModule,
 		MatInputModule,
 
-		homeRouting,
 		UtilsModule,
+		InvoiceRoutingModule,
 
 	],
 	declarations: [
