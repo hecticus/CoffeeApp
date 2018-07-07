@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 import { ProviderComponent } from './provider.component';
 import { ProviderListComponent } from './provider-list.component';
+import { ProviderReadComponent } from './provider-read.component';
+import { ProviderCreateComponent } from './provider-create.component';
+import { ProviderUpdateComponent } from './provider-update.componet';
 
 export const providerRoutes: Routes = [
 	{
-		path: 'povider',
+		path: 'poviders',
 		component: ProviderComponent,
 		data: {
 			breadcrumb: 'providers',
@@ -20,20 +23,20 @@ export const providerRoutes: Routes = [
 				}
 			}, {
 				path: 'create',
-				component:  ProviderListComponent,
+				component:  ProviderCreateComponent,
 				data: {
 					breadcrumb: undefined
 				}
 			}, {
 				path: ':providerId',
-				component:  ProviderListComponent,
+				component:  ProviderReadComponent,
 				data: {
 					breadcrumb: undefined
 				},
 				children: [
 					{
 						path: 'update',
-						component:  ProviderListComponent,
+						component:  ProviderUpdateComponent,
 						data: {
 							breadcrumb: 'update',
 							icon: 'edit'

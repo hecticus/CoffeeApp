@@ -2,7 +2,7 @@ import { Farm } from '../../core/models/farm';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { LotService } from './lot.service';
 import { Lot } from '../../core/models/lot';

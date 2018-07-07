@@ -1,4 +1,4 @@
-import { ProviderService, ProviderService } from './provider.service';
+import { ProviderService } from './provider.service';
 import { Location } from '@angular/common';
 import { Lot } from '../../core/models/lot';
 import { Component, OnInit} from '@angular/core';

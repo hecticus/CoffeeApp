@@ -5,13 +5,13 @@ import { InvoiceComponent } from './invoice.component';
 import { InvoiceCreateComponent } from './invoice-create.component';
 import { InvoiceUpdateComponent } from './invoice-update.component';
 
-export const providerRoutes: Routes = [
+export const invoiceRoutes: Routes = [
 	{
-		path: 'lot',
+		path: 'invoices',
 		component: InvoiceComponent,
 		data: {
-			breadcrumb: 'lots',
-			icon: 'list'
+			breadcrumb: 'invoices',
+			icon: 'invoices'
 		},
 		children: [
 			{

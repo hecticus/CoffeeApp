@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CustomValidators } from '../../../core/utils/validator/custom-validator';
-
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-login',
@@ -11,22 +10,35 @@ import { CustomValidators } from '../../../core/utils/validator/custom-validator
 })
 
 export class LoginComponent implements OnInit {
-    form: FormGroup;
+	form: FormGroup;
 
 	constructor(
-        private router: Router,
+		private router: Router,
+		private activatedRoute: ActivatedRoute,
 		private fb: FormBuilder
-    ) {
-        this.form = this.getForm();
-    }
+	) {
+		this.form = this.getForm();
+	}
 
 	ngOnInit() {
 	}
 
-    getForm(): FormGroup {
+	main() {
+		this.router.navigate(['./admin'], {relativeTo: this.activatedRoute});
+	}
+
+	getForm(): FormGroup {
 		return this.fb.group({
 			email: new FormControl('', [Validators.required, CustomValidators.emailRegex, Validators.maxLength(50)]),
 			password: new FormControl('', Validators.required)
 		});
+	}
+
+	login() {
+		console.log('jjjj');
+	}
+
+	showDialogo() {
+		console.log('jjjj');
 	}
 }

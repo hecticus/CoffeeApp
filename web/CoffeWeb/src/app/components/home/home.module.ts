@@ -1,4 +1,3 @@
-import { ProviderModule } from '../provider/provider.module';
 import { homeRouting } from './home.routes';
 import { HomeComponent } from './home.component';
 import { AuthModule } from '../auth/auth.module';
@@ -12,6 +11,8 @@ import { LotModule } from '../lot/lot.module';
 import { NgModule } from '@angular/core';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 import { TopbarComponent } from '../../core/topbar/topbar.component';
+import { InvoiceModule } from '../invoice/invoce.module';
+import { ProviderModule } from '../provider/provider.module';
 
 @NgModule({
 	imports: [
@@ -25,6 +26,7 @@ import { TopbarComponent } from '../../core/topbar/topbar.component';
 		LotModule,
 		AuthModule,
 		ProviderModule,
+		InvoiceModule,
 
 	],
 	declarations: [

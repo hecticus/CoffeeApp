@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ValidatorComponent } from '../../core/utils/validator/validator.component';
+import { MatInputModule, MatFormFieldModule } from '../../../../node_modules/@angular/material';
 
 @NgModule({
 	imports: [
@@ -18,6 +19,8 @@ import { ValidatorComponent } from '../../core/utils/validator/validator.compone
 		RouterModule,
 		CommonModule,
 		ReactiveFormsModule,
+		MatFormFieldModule,
+		MatInputModule,
 
 		UtilsModule,
 	],
