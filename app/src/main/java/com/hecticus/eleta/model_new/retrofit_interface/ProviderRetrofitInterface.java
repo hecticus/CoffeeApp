@@ -68,7 +68,7 @@ DELETE  /provider/:id                                                           
     Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("nameProvider") String name);
 
     @GET("provider")
-    Call<ProvidersListResponse> providersByType(@Path("providerType") int providerTypeId);
+    Call<ProvidersListResponse> providersByType(@Query("providerType") int providerTypeId);
 
     @DELETE("provider/{idProvider}")
     Call<Message> deleteProvider(@Path("idProvider") int idProvider);
