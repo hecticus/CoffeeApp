@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.response.providers.ProviderType;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.providers.Provider;
@@ -81,7 +82,7 @@ public class SearchRepository implements SearchContract.Repository {
                         if (response.isSuccessful() && response.body() != null) {
                             //currentProviders = response.body().getResult();
                             //onGetProvidersSuccess(response.body());
-                            ManagerDB.updateProviders(response.body().getResult());
+                            ManagerDB.updateProviders(response.body().getResult(), type);
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult());
                             currentProviders = finalList;
                             onGetProvidersSuccess(finalList);

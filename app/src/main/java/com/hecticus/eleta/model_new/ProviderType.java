@@ -22,6 +22,10 @@ public class ProviderType {
     public ProviderType() {
     }
 
+    public ProviderType(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

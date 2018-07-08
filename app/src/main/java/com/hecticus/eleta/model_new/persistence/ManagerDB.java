@@ -228,7 +228,7 @@ public class ManagerDB {
     }
 
     @DebugLog
-    public static void updateProviders(List<Provider> providerList) {
+    public static void updateProviders(List<Provider> providerList, final int idProviderType) {
         Realm realm = Realm.getDefaultInstance();
         try {
             for (final Provider provider : providerList) {
@@ -240,7 +240,7 @@ public class ManagerDB {
                     @Override
                     public void execute(Realm realm) {
                         Log.d("DEBUG", String.valueOf(provider.getProviderType()));
-                        provider.setIdProviderType(provider.getProviderType().getIdProviderType());
+                        provider.setIdProviderType(idProviderType);//(provider.getProviderType().getIdProviderType());
                         realm.insertOrUpdate(provider);
 
                         //Log.d("Repository", "--->Inserted/Updated provider: " + provider.toString());

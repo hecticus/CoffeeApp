@@ -106,7 +106,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                 @Override
                 public void onSuccess(Response<ProvidersListResponse> response) {
                     try {
-                        ManagerDB.updateProviders(response.body().getResult());
+                        ManagerDB.updateProviders(response.body().getResult(), providerType);
                         List<Provider> finalList = ManagerDB.mixAndGetValids(providerType, response.body().getResult());
                         currentProviders = finalList;
                         onGetProvidersSuccess(finalList);

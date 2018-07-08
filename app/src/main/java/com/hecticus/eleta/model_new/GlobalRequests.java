@@ -156,7 +156,7 @@ public class GlobalRequests {
             @Override
             public void onSuccess(Response<ProvidersListResponse> response) {
                 try {
-                    ManagerDB.updateProviders(response.body().getResult());
+                    ManagerDB.updateProviders(response.body().getResult(), sellerProviderType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -27,6 +27,8 @@ public class ProviderType implements Serializable {
         this.idProviderType = idProviderType;
     }
 
+
+
     @Override
     public String toString() {
         return "ProviderType{" +
