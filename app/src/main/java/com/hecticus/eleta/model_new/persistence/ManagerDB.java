@@ -239,6 +239,7 @@ public class ManagerDB {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+                        Log.d("DEBUG", String.valueOf(provider.getProviderType()));
                         provider.setIdProviderType(provider.getProviderType().getIdProviderType());
                         realm.insertOrUpdate(provider);
 

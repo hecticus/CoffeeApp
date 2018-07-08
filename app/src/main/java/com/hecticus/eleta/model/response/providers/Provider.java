@@ -21,7 +21,7 @@ import io.realm.annotations.PrimaryKey;
 public class Provider extends RealmObject implements BaseModel, JsonSerializer<Provider> {
 
     // Important: Negative ids are used for local storage (before sync). Starting with -1.
-    @SerializedName("idProvider")
+    @SerializedName("id")//("idProvider")
     @Expose
     private Integer idProvider;
 
@@ -32,17 +32,17 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     private int statusDelete;
 
     @PrimaryKey
-    @SerializedName("identificationDocProvider")
+    @SerializedName("nitProvider")//("identificationDocProvider")
     @Expose
     private String identificationDocProvider;
 
-    @SerializedName("fullNameProvider")
+    @SerializedName("nameProvider")//("fullNameProvider")
     @Expose
     private String fullNameProvider;
     @SerializedName("addressProvider")
     @Expose
     private String addressProvider;
-    @SerializedName("phoneNumberProvider")
+    @SerializedName("numberProvider")//("phoneNumberProvider")
     @Expose
     private String phoneNumberProvider;
     @SerializedName("emailProvider")

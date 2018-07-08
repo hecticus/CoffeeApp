@@ -10,7 +10,7 @@ import hugo.weaving.DebugLog;
 
 public class ProviderType implements Serializable {
 
-    @SerializedName("idProviderType")
+    @SerializedName("id")//("idProviderType")
     @Expose
     private Integer idProviderType;
 
