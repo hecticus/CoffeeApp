@@ -1,5 +1,5 @@
 
-import { Params } from '@angular/router';
+import { Params, Router, ActivatedRoute } from '@angular/router';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { ProviderService } from './provider.service';
 import { FormGroup } from '@angular/forms';
@@ -114,7 +114,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="selectRow(row)"></tr>
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
@@ -149,6 +149,8 @@ export class ProviderListComponent implements OnInit {
 	constructor(
 		private providerService: ProviderService,
 		private providerTypeService: ProviderTypeService,
+		private router: Router,
+		private activatedRoute: ActivatedRoute,
 	) { }
 
 	ngOnInit() {
@@ -169,7 +171,7 @@ export class ProviderListComponent implements OnInit {
 	}
 
 	create() {
-		console.log('hola');
+		this.router.navigate(['./create'], {relativeTo: this.activatedRoute});
 	}
 
 	manejo($event: any) {
@@ -192,5 +194,9 @@ export class ProviderListComponent implements OnInit {
 
 	applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
+	}
+
+	selectRow(row) {
+		console.log(row);
 	}
 }
