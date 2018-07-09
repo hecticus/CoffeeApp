@@ -19,7 +19,7 @@ import io.realm.annotations.PrimaryKey;
 public class Purity extends RealmObject implements Serializable, BaseEditableModel {
 
     @PrimaryKey
-    @SerializedName("idPurity")
+    @SerializedName("id")//("idPurity")
     @Expose
     private int id = -1;
 

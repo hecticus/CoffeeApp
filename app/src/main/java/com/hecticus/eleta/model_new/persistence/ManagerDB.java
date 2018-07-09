@@ -866,7 +866,7 @@ public class ManagerDB {
                 .equalTo("date", invoice.getDate())
                 .equalTo("isClosed", invoice.isClosed())
                 .equalTo("deleteOffline", false)
-                .equalTo("invoiceStatus", invoice.getInvoiceStatus())
+                //.equalTo("invoiceStatus", invoice.getInvoiceStatus()) todo nose
                 .beginGroup()
                 .equalTo("addOffline", true).
                         or()

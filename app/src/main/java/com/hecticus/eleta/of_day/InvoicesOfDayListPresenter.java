@@ -150,7 +150,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @Override
     public boolean isCurrentClosedInvoice() {
-        return currentInvoice.getInvoiceStatus() == 3;
+        return false; //currentInvoice.getInvoiceStatus() == 3;todo nose
     }
 
     @DebugLog

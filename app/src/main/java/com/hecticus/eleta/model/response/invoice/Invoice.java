@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.providers.Provider;
 
 import java.lang.reflect.Type;
@@ -23,7 +24,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class Invoice extends RealmObject implements BaseModel, JsonSerializer<Invoice> {
 
-    @SerializedName("idInvoice")
+    @SerializedName("id")
     @Expose
     private int invoiceId = -1;
 
@@ -34,7 +35,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @SerializedName("statusInvoice")
     @Expose
-    private int invoiceStatus = -1;
+    private StatusInvoice invoiceStatus;
 
     @SerializedName("startDateInvoice")
     @Expose
@@ -59,7 +60,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     private int localId = -1;
 
     @PrimaryKey
-    private String id = "";
+    private String id2 = "";
 
     private String date = "";
 
@@ -72,7 +73,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     }
 
     public Invoice(InvoicePost invoicePost) {
-        invoiceStatus = 1;
+        invoiceStatus = new StatusInvoice(11, false, "Activa", null);
         invoiceStartDate = invoicePost.getStartDate();
         invoiceClosedDate = invoicePost.getStartDate();
         invoiceTotal = invoicePost.getTotal();
@@ -93,7 +94,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @Override
     public boolean canDelete() {
-        return invoiceStatus < 3;
+        return false; //invoiceStatus < 3; todo nose
     }
 
     public int getInvoiceId() {
@@ -112,11 +113,11 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         this.provider = provider;
     }
 
-    public int getInvoiceStatus() {
+    public StatusInvoice getInvoiceStatus() {
         return invoiceStatus;
     }
 
-    public void setInvoiceStatus(int invoiceStatus) {
+    public void setInvoiceStatus(StatusInvoice invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
     }
 
@@ -226,11 +227,11 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     }
 
     public String getId() {
-        return id;
+        return id2;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id2 = id;
     }
 
     public String getBestAvailableProviderName() {
@@ -254,7 +255,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
                 ", identificationDocProvider='" + identificationDocProvider + '\'' +
                 ", providerId=" + providerId +
                 ", localId=" + localId +
-                ", id='" + id + '\'' +
+                ", id='" + id2 + '\'' +
                 ", date='" + date + '\'' +
                 ", addOffline=" + addOffline +
                 ", deleteOffline=" + deleteOffline +
@@ -267,7 +268,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     public JsonElement serialize(Invoice src, Type typeOfSrc, JsonSerializationContext context) {
         final JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("idInvoice", src.getInvoiceId());
-        jsonObject.addProperty("statusInvoice", src.getInvoiceStatus());
+        //jsonObject.addProperty("statusInvoice", src.getInvoiceStatus());
         jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
         jsonObject.addProperty("startDateInvoice", src.getInvoiceStartDate());
         jsonObject.addProperty("closedDateInvoice", src.getInvoiceClosedDate());

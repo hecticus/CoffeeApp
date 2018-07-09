@@ -2,6 +2,7 @@ package com.hecticus.eleta.model.response.store;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.hecticus.eleta.model.StatusStore;
 import com.hecticus.eleta.model_new.ItemSpinnerInterface;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ import io.realm.annotations.PrimaryKey;
 public class Store extends RealmObject implements ItemSpinnerInterface, Serializable {
 
     @PrimaryKey
-    @SerializedName("idStore")
+    @SerializedName("id")
     @Expose
     private int id = -1;
 
@@ -30,7 +31,7 @@ public class Store extends RealmObject implements ItemSpinnerInterface, Serializ
 
     @SerializedName("statusStore")
     @Expose
-    private int status = -1;
+    private StatusStore status;
 
     public int getId() {
         return id;
@@ -56,11 +57,11 @@ public class Store extends RealmObject implements ItemSpinnerInterface, Serializ
         this.deleteStatus = deleteStatus;
     }
 
-    public int getStatus() {
+    public StatusStore getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(StatusStore status) {
         this.status = status;
     }
 

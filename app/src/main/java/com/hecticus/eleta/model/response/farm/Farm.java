@@ -16,11 +16,11 @@ import io.realm.annotations.PrimaryKey;
 public class Farm extends RealmObject implements ItemSpinnerInterface, Serializable {
 
     @PrimaryKey
-    @SerializedName("idFarm")
+    @SerializedName("id")
     @Expose
     private int id = -1;
 
-    @SerializedName("NameFarm")
+    @SerializedName("nameFarm")
     @Expose
     private String name = "";
 

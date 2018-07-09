@@ -27,6 +27,7 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.model.StatusProvider;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderType;
 import com.hecticus.eleta.util.Constants;
@@ -226,7 +227,8 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             maybeModifiedProvider.setContactNameProvider(contactEditText.getText().trim());
         }
 
-        maybeModifiedProvider.setStatusProvider(1);
+
+        maybeModifiedProvider.setStatusProvider(new StatusProvider(41, false, "Activa", null));
 
         return maybeModifiedProvider;
     }

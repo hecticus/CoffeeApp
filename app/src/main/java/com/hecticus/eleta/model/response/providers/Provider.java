@@ -8,6 +8,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseModel;
+import com.hecticus.eleta.model.StatusProvider;
 import com.hecticus.eleta.util.Constants;
 
 import java.lang.reflect.Type;
@@ -62,7 +63,7 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     private String contactNameProvider;
     @SerializedName("statusProvider")
     @Expose
-    private int statusProvider;
+    private StatusProvider statusProvider;
 
     private boolean addOffline;
     private boolean deleteOffline;
@@ -166,11 +167,11 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
         this.contactNameProvider = contactNameProvider;
     }
 
-    public int getStatusProvider() {
+    public StatusProvider getStatusProvider() {
         return statusProvider;
     }
 
-    public void setStatusProvider(int statusProvider) {
+    public void setStatusProvider(StatusProvider statusProvider) {
         this.statusProvider = statusProvider;
     }
 
@@ -270,7 +271,7 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
         jsonObject.addProperty("emailProvider", src.getEmailProvider());
         jsonObject.addProperty("photoProvider", src.getPhotoProvider());
         jsonObject.addProperty("contactNameProvider", src.getContactNameProvider());
-        jsonObject.addProperty("statusProvider", src.getStatusProvider());
+        //jsonObject.addProperty("statusProvider", src.getStatusProvider());
         jsonObject.addProperty("addOffline", src.isAddOffline());
         jsonObject.addProperty("editOffline", src.isEditOffline());
         jsonObject.addProperty("deleteOffline", src.isDeleteOffline());
