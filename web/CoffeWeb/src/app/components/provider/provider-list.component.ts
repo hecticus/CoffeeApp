@@ -65,11 +65,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 				  </td>
 				</ng-container>
 
-				<!-- Position ProviderType
+				<!-- Position ProviderType -->
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Provider Type</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.providerType.nameProviderType}} </td>
-				</ng-container> -->
+					<td mat-cell *matCellDef="let provider"> {{provider.providerType?.nameProviderType}} </td>
+				</ng-container>
 
 				<!-- Position nitProvider -->
 				<ng-container matColumnDef="nitProvider">
@@ -110,11 +110,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 				<!-- Position statusProvider -->
 				<ng-container matColumnDef="statusProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider?.name}} </td>
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="read(row.id)"></tr>
+	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
@@ -127,7 +127,7 @@ export class ProviderListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'nitProvider', 'nameProvider',
+	columnsToDisplay = ['select', 'provider.providerType.nameProviderType', 'nitProvider', 'nameProvider',
 						'statusProvider', 'addressProvider', 'emailProvider',
 						'contactNameProvider', 'numberProvider'];
 	// MatPaginator Inputs

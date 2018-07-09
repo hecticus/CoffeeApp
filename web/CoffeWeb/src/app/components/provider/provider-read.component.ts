@@ -29,7 +29,7 @@ import { Provider } from '../../core/models/provider';
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Provider Type</span>
-						<span class="output">{{provider.providerType?.id || '-'}}</span>
+						<span class="output">{{provider.providerType?.nameProviderType || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
@@ -71,7 +71,7 @@ import { Provider } from '../../core/models/provider';
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Status</span>
-						<span class="output">{{provider.statusProvider || '-'}}</span>
+						<span class="output">{{provider.statusProvider?.name || '-'}}</span>
 					</div>
 				</div>
 			</div>
