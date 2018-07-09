@@ -1,7 +1,7 @@
-import { InvoiceModule } from './../invoice/invoce.module';
-import { ProviderModule } from './../provider/provider.module';
+import { InvoiceModule } from '../invoice/invoce.module';
+import { ProviderModule } from '../provider/provider.module';
 import { HomeRoutingModule } from './home.routing';
-import { UtilsModule } from './../../core/utils/utils.module';
+import { UtilsModule } from '../../core/utils/utils.module';
 import { HomeComponent } from './home.component';
 import { BreadcrumbsComponent } from '../../core/breadcrumbs/breadcrumbs.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

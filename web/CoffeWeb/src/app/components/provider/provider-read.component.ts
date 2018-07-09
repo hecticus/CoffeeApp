@@ -1,3 +1,5 @@
+import { ProviderType } from '../../core/models/provider-type';
+import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { ProviderService } from './provider.service';
 import { Location } from '@angular/common';
 import { Lot } from '../../core/models/lot';
@@ -27,13 +29,13 @@ import { Provider } from '../../core/models/provider';
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Provider Type</span>
-						<span class="output">{{provider.nameProvider|| '-'}}</span>
+						<span class="output">{{provider.providerType?.id || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Name</span>
-						<span class="output">{{provider.providerType?.nameProviderType|| '-'}}</span>
+						<span class="output">{{provider.nameProvider || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
@@ -95,11 +97,11 @@ import { Provider } from '../../core/models/provider';
 export class ProviderReadComponent implements OnInit {
 	confirmDelete = true;
 	provider = new Provider();
+	// providerType: ProviderType;
 
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private location: Location,
 		private providerService: ProviderService,
 	) { }
 
@@ -110,6 +112,10 @@ export class ProviderReadComponent implements OnInit {
 				console.log(this.provider); }
 				);
 			});
+		// this.providerTypeService.getById(this.provider.providerType.id).subscribe(
+		// 	data => { this.providerType = data['result'];
+		// 	console.log(this.providerType);
+		// 	});
 	}
 
 	update() {

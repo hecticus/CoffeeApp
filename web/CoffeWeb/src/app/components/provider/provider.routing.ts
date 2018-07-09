@@ -3,7 +3,7 @@ import { ProviderComponent } from './provider.component';
 import { ProviderListComponent } from './provider-list.component';
 import { ProviderReadComponent } from './provider-read.component';
 import { ProviderCreateComponent } from './provider-create.component';
-import { ProviderUpdateComponent } from './provider-update.componet';
+import { ProviderUpdateComponent } from './provider-update.component';
 import { NgModule } from '@angular/core';
 
 export const providerRoutes: Routes = [

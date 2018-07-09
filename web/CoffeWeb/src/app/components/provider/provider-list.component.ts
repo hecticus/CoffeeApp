@@ -114,7 +114,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="selectRow(row)"></tr>
+	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="read(row.id)"></tr>
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
@@ -159,12 +159,15 @@ export class ProviderListComponent implements OnInit {
 		this.dataSource.paginator = this.paginator;
 
 		this.providerTypeService.getAll().subscribe(
-			data => { this.provType = data['result'];
+			data => {
+				this.provType = data['result'];
 			console.log(this.provType);
 		});
 
 		this.providerService.getAll().subscribe(
-			data => { this.dataSource.data = data['result'];
+			data => {
+				this.providers = data['result'];
+				this.dataSource.data = data['result'];
 			console.log(this.dataSource);
 		});
 
@@ -196,7 +199,8 @@ export class ProviderListComponent implements OnInit {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 
-	selectRow(row) {
-		console.log(row);
+	read(id: number) {
+		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
+		console.log(id);
 	}
 }
