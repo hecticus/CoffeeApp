@@ -141,15 +141,18 @@ public class Invoices extends Controller {
         JsonNode idprovider = json.get("idProvider");
         Long idProvider;
         if (idprovider == null) {
-            JsonNode identificationDocProvider = json.get("identificationDocProvider");
-            if(identificationDocProvider == null){
-                return Response.requiredParameter("identificationDocProvider or idProvider");
-//            }else{
-//                idProvider = Provider.getByIdentificationDoc(identificationDocProvider.asText()).getIdProvider();
-            }
-        }else{
-            idProvider = idprovider.asLong();
+            return Response.requiredParameter(" idProvider");
         }
+//            JsonNode identificationDocProvider = json.get("identificationDocProvider");
+//            if(identificationDocProvider == null){
+//                return Response.requiredParameter("identificationDocProvider or idProvider");
+////            }else{
+////                idProvider = Provider.getByIdentificationDoc(identificationDocProvider.asText()).getIdProvider();
+//            }
+//        }else{
+//            idProvider = idprovider.asLong();
+//        }
+        idProvider = idprovider.asLong();
 
         JsonNode itemtypes = json.get("itemtypes");
         if (itemtypes == null)
