@@ -3,18 +3,13 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
-import controllers.multimediaUtils.Multimedia;
 import models.status.StatusProvider;
-import org.apache.tools.ant.types.resources.Sort;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -22,15 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by drocha on 21/04/17.
  * modify sm21 06/2018
  */
 @Entity
 @Table(name="providers")
 public class Provider extends AbstractEntity{
 
-    @ManyToOne(optional = false)
-    @JsonBackReference
+//    @ManyToOne(optional = false)
+//    @JsonBackReference
+//    @JoinColumn(nullable = false)
+    @ManyToOne
     @Constraints.Required
     @JoinColumn(nullable = false)
     private ProviderType providerType;
@@ -69,7 +65,8 @@ public class Provider extends AbstractEntity{
     private String contactNameProvider;
 
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
+//    @Constraints.Required
     private StatusProvider statusProvider;
 
     @OneToMany(mappedBy = "provider")

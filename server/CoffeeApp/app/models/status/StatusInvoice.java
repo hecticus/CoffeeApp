@@ -1,10 +1,10 @@
 package models.status;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
-import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
 import models.Invoice;
 
@@ -16,7 +16,6 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("invoice")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoice.class)
 public class StatusInvoice extends Status {
 
     public static final String APPROVED = "in_approved";
@@ -26,7 +25,7 @@ public class StatusInvoice extends Status {
 
     @OneToMany(mappedBy = "statusInvoice")
     @JsonIgnore
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Invoice> invoices = new ArrayList<>();
 
     public static String getAPPROVED() {

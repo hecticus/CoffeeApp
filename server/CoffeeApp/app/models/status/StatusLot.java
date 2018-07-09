@@ -1,10 +1,10 @@
 package models.status;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
-import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
 import models.Lot;
 
@@ -16,12 +16,11 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("lot")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusLot.class)
 public class StatusLot extends Status {
 
     @OneToMany(mappedBy = "statusLot")
     @JsonIgnore
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Lot> lots = new ArrayList<>();
 
     public List<Lot> getLots() {

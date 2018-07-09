@@ -26,7 +26,8 @@ public class Farm extends AbstractEntity{
     private String nameFarm;
 
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
+    @Constraints.Required
     private StatusFarm statusFarm;
 
     @JsonIgnore

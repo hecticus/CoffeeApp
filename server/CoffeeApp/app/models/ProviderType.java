@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -23,8 +24,10 @@ public class ProviderType  extends AbstractEntity {
     @Column(nullable = false, unique = true, length = 60)
     private String nameProviderType;
 
-    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
-    @JsonManagedReference
+//    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "providerType", cascade= CascadeType.ALL)
     private List<Provider> providers;
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)

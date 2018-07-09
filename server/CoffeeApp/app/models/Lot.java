@@ -47,7 +47,8 @@ public class Lot extends AbstractEntity{
     private BigDecimal priceLot;
 
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
+    @Constraints.Required
     private StatusLot statusLot;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)

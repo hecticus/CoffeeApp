@@ -25,7 +25,7 @@ public class Store extends AbstractEntity{
     private String nameStore;
 
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
     private StatusStore statusStore;
 
     @OneToMany(mappedBy = "store", cascade= CascadeType.ALL)

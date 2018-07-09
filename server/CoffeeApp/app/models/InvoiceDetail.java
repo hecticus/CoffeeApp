@@ -70,7 +70,8 @@ public class InvoiceDetail  extends AbstractEntity{
     private String note;
 
     @ManyToOne
-    @JsonBackReference
+    @Constraints.Required
+//    @JsonBackReference
     private StatusInvoiceDetail statusInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)

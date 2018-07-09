@@ -1,10 +1,10 @@
 package models.status;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
-import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
 
@@ -16,14 +16,11 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("invoiceDetail")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = StatusInvoicesDetail.class)
 public class StatusInvoiceDetail extends Status {
 
-    // TODO daba error por referencias
-/*
     @OneToMany(mappedBy = "statusInvoiceDetail")
     @JsonIgnore
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
     public List<InvoiceDetail> getInvoiceDetails() {
@@ -33,7 +30,7 @@ public class StatusInvoiceDetail extends Status {
     public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
         this.invoiceDetails = invoiceDetails;
     }
-*/
+
 
     private static Finder<String, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
 

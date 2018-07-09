@@ -1,10 +1,9 @@
 package models.status;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.PagedList;
-import io.ebean.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
 import models.Provider;
 
@@ -21,7 +20,7 @@ public class StatusProvider extends Status {
 
     @OneToMany(mappedBy = "statusProvider")
     @JsonIgnore
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Provider> providers = new ArrayList<>();
 
     public List<Provider> getProviders() {
