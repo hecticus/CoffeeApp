@@ -229,7 +229,7 @@ DELETE  /purity/:id                                                             
 ##·······                     Status                                 ··········#
 ################################################################################
 #StatusFarm
-GET     /statusfarm                                                             controllers.statusController.StatusFarms.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+GET     /statusFarm                                                             controllers.statusController.StatusFarms.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusfarm/:id                                                         controllers.Purities.findById(id : Long)
 
 #StatusInvoiceDetails
@@ -249,7 +249,7 @@ GET     /statusProvider                                                        c
 #GET     /statusProviders/:id                                                          controllers.StatusProviders.findById(id : Long)
 
 #StatusStore
-GET     /statusstore                                                           controllers.statusController.StatusStores.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
+GET     /statusStore                                                           controllers.statusController.StatusStores.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null)
 #GET     /statusstore/:id                                                          controllers.StatusStores.findById(id : Long)
 
 

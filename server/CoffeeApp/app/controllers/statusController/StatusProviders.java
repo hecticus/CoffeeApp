@@ -1,5 +1,6 @@
 package controllers.statusController;
 
+import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
@@ -22,7 +23,7 @@ public class StatusProviders extends Controller {
     public Result findAll(Integer index, Integer size, String sort, String collection) {
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            PagedList pagedList = StatusProvider.findAll(index, size, sort, pathProperties);
+            ListPagerCollection pagedList = StatusProvider.findAll(index, size, sort, pathProperties);
 
             return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
