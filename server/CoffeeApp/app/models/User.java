@@ -64,14 +64,6 @@ public class User extends AbstractEntity {
 
     private static Finder<Long, User> finder = new Finder<>(User.class);
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public AuthUser getAuthUser() {
         return authUser;
     }
