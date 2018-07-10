@@ -1,2 +1,4 @@
-export interface Store {
+import { BaseModel } from './base-model';
+
+export class Store extends BaseModel {
 }

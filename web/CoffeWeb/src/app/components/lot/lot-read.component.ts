@@ -1,3 +1,5 @@
+import { StatusLotService } from './../status/status-lot.service';
+import { Status } from './../../core/models/status';
 import { Location } from '@angular/common';
 import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
@@ -74,6 +76,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 export class LotReadComponent implements OnInit {
 	confirmDelete = true;
+	status: Status;
 	lot = new Lot();
 
 	constructor(
@@ -81,6 +84,7 @@ export class LotReadComponent implements OnInit {
 		private activatedRoute: ActivatedRoute,
 		private lotService: LotService,
 		private location: Location,
+		private statusLotService: StatusLotService,
 
 	) { }
 
@@ -91,6 +95,9 @@ export class LotReadComponent implements OnInit {
 				console.log(this.lot); }
 				);
 			});
+		this.statusLotService.getAll().subscribe( data => {
+			this.status = data['result'];
+		});
 	}
 
 	update() {

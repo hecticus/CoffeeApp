@@ -55,7 +55,6 @@ import { UtilsModule } from '../../core/utils/utils.module';
 	],
 	providers: [
 		LotService,
-		{provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
 	]
 })
 export class LotModule { }

@@ -30,7 +30,7 @@ export const providerRoutes: Routes = [
 				}
 			}, {
 				path: ':providerId',
-				component:  ProviderReadComponent,
+				component:  ProviderUpdateComponent,
 				data: {
 					breadcrumb: undefined
 				},

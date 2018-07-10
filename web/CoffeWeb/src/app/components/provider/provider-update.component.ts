@@ -1,5 +1,5 @@
 import { StatusProviderService } from '../status/status-provider.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Farm } from '../../core/models/farm';
 import { FarmService } from '../farm/farm.service';
@@ -16,26 +16,26 @@ import { Status } from '../../core/models/status';
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Edit Provider</h2>
-		<form [formGroup]="form" (ngSubmit)="create()">
+		<form *ngIf="form" [formGroup]="form" (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Provider data</span></legend>
 
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
-							<mat-select required [formControlName]="'providerType'">
-								<mat-option>-- None --</mat-option>
+							<mat-select required [formControlName]="'providerType'" (changed)="changeProviderType($event)">
+								<!--<mat-option>-- None --</mat-option>-->
 								<mat-option *ngFor="let f of provType" [value]="{id: f.id}">{{f.nameProviderType}}</mat-option>
 							</mat-select>
 							<mat-label><b>Provider Type</b></mat-label>
 						</mat-form-field>
-						<app-validator  [control]="form.controls['providerType']"></app-validator>
+						<app-validator [control]="form.controls['providerType']"></app-validator>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="nameProvider" placeholder="Name">
+							<input matInput formControlName="nameProvider" placeholder="Provider Name">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nameProvider']"></app-validator>
 					</div>
@@ -46,6 +46,17 @@ import { Status } from '../../core/models/status';
 							<input matInput formControlName="nitProvider" placeholder="Provider Code">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div class="field form-field">
+						<mat-form-field class="example-full-width">
+							<mat-select required [formControlName]="'statusProvider'" >
+								<!--<mat-option>-- None --</mat-option>-->
+								<mat-option *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
+							</mat-select>
+							<mat-label>Status</mat-label>
+						</mat-form-field>
 					</div>
 				</div>
 				<div class="wrap-fields">
@@ -61,14 +72,9 @@ import { Status } from '../../core/models/status';
 					<tr>
 						<td>
 							<mat-form-field class="example-full-width">
-							  <input matInput formControlName="numberProvider" placeholder="Telefono Number">
-							  <app-validator [control]="form.controls['numberProvider']"></app-validator>
-							</mat-form-field></td>
-						<td>
-							<mat-form-field class="example-full-width">
 							  <input matInput formControlName="emailProvider" placeholder="Email">
-							  <app-validator [control]="form.controls['emailProvider']"></app-validator>
 							</mat-form-field>
+							<app-validator [control]="form.controls['emailProvider']"></app-validator>
 						</td>
 						<td>
 							<mat-form-field class="example-full-width">
@@ -77,19 +83,13 @@ import { Status } from '../../core/models/status';
 							<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
 						</td>
 					</tr>
-				</table>
-
-				<div class="wrap-fields">
-					<div class="field form-field">
+					<tr>
 						<mat-form-field class="example-full-width">
-							<mat-select required>
-								<mat-option>-- None --</mat-option>
-								<mat-option value="foods" *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
-							</mat-select>
-							<mat-label>Status</mat-label>
+							<input matInput formControlName="numberProvider" placeholder="Telefono Number">
+							<app-validator [control]="form.controls['numberProvider']"></app-validator>
 						</mat-form-field>
-					</div>
-				</div>
+					</tr>
+				</table>
 			</fieldset>
 
 			<div class="options row">
@@ -106,6 +106,7 @@ export class ProviderUpdateComponent implements OnInit  {
 	provType: ProviderType[];
 	options: FormGroup;
 	status: Status[];
+	provider: Provider;
 
 	constructor(
 		private router: Router,
@@ -115,7 +116,7 @@ export class ProviderUpdateComponent implements OnInit  {
 		private providerService: ProviderService,
 		private statusProviderService: StatusProviderService,
 	) {
-		this.form = this.providerService.getProvider(new Provider());
+		// this.form = this.providerService.getProvider(new Provider());
 	}
 
 	ngOnInit () {
@@ -131,15 +132,39 @@ export class ProviderUpdateComponent implements OnInit  {
 
 		this.statusProviderService.getAll().subscribe(
 			data => {this.status = data['result'];
+			console.log('aquinnnnnn');
+			console.log(this.status);
 		});
-		}
+
+		// this.activatedRoute.parent
+		// 	.params
+		// 	.subscribe( param => {
+		// 		this.providerService.getById(+param['providerId']).subscribe( provider => {
+		// 			// this.provider = data['result'];
+		// 			this.form = this.providerService.getProvider(provider);
+		// 		});
+		// });
+
+		this.providerService.getById(1130).subscribe( data => {
+			this.provider = data['result'];
+			console.log(data);
+			console.log(this.provider);
+			this.form = this.providerService.getProvider(this.provider);
+			console.log(this.form);
+		});
+	}
 
 	create() {
+		console.log(this.provider);
 		// this.lotService.create(<Lot> this.form.value);
 		// // .subscribe(store => {
 		// 	// this.notificationService.sucessInsert(store.name);
 		// 	// this.location.back();
 		// 	console.log(this.form.value);
 		// // });, err => this.notificationService.error(err));
+	}
+
+	changeProviderType(providerType: ProviderType) {
+		this.form.controls.providerType.patchValue(providerType);
 	}
 }

@@ -13,3 +13,7 @@ th.mat-sort-header-sorted {
 .element-row:not(.expanded):hover {
     background: #ece9e9;
 }
+
+.example-full-width {
+    width: 100%;
+}

@@ -16,7 +16,7 @@ import { Status } from '../../core/models/status';
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Create Provider</h2>
-		<form [formGroup]="form"  (ngSubmit)="create()">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Provider data</span></legend>
 

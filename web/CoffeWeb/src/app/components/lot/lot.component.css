@@ -1,4 +1,4 @@
-.table {
+/*.table {
     width: 100%;
     background-color: #6b6868;
 }
@@ -20,19 +20,20 @@
 
 /* .mat-checkbox-checked.mat-accent .mat-checkbox-background .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
     background-color: black;
-} */
+}
 
 .mat-column-select {
     overflow: initial;
 }
 
 
-/*
+
 .mat-form-field {
     display: inline;
     position: relative;
     text-align: left;
-} */
+}
+
 
 .example-right-align {
     text-align: right;
@@ -60,4 +61,24 @@
     text-transform: uppercase;
     color: black;
     background: #b3b3b3;
+} */
+
+table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.element-row {
+    position: relative;
+}
+
+.element-row:not(.expanded):hover {
+    background: #ece9e9;
+}
+
+.example-full-width {
+    width: 100%;
 }
