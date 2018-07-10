@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 
 @Component({
+    
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h2 class="title">Reportes</h2>
@@ -92,7 +93,7 @@ import { Invoice } from '../../core/models/invoice';
 
 	`
 })
-export class InvoiceListComponent implements OnInit {
+export class InvoiceDetailListComponent implements OnInit {
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];

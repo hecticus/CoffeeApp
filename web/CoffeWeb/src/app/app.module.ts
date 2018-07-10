@@ -1,13 +1,11 @@
 import { HomeModule } from './components/home/home.module';
 import { AuthModule } from './components/auth/auth.module';
-import { HomeRoutingModule } from './components/home/home.routing';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail.component';
 import { ItemTypeComponent } from './components/item-type/item-type.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgModule } from '@angular/core';
@@ -31,7 +29,6 @@ declarations: [
 	TableColumnDirective,
 	NotificationComponent,
 
-	InvoiceDetailComponent,
 	ProviderTypeComponent,
 	ItemTypeComponent,
 	StoreComponent,

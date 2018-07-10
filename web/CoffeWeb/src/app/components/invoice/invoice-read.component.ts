@@ -1,10 +1,10 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Invoice } from './../../core/models/invoice';
+import { Invoice } from '../../core/models/invoice';
 import { InvoiceService } from './invoice.service';
 import { Location } from '@angular/common';
-import { Status } from './../../core/models/status';
-import { StatusInvoiceService } from './../status/status-invoice.service';
+import { Status } from '../../core/models/status';
+import { StatusInvoiceService } from '../status/status-invoice.service';
 
 @Component({
 	styleUrls: ['./invoice.component.css'],
@@ -56,6 +56,11 @@ import { StatusInvoiceService } from './../status/status-invoice.service';
 					</div>
 				</div>
 			</div>
+
+			<div class="fieldset">
+				<div class="legend">InvoiceDetail Data</div>
+
+			</div>
 		</div>
 
 		<app-modal [(closed)]="confirmDelete">
@@ -94,7 +99,7 @@ export class InvoiceReadComponent implements OnInit {
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
-				this.invoiceService.getById(params['lotId']).subscribe(
+				this.invoiceService.getById(params['invoiceId']).subscribe(
 					data => { this.invoice = data['result'];
 				console.log(this.invoice); }
 				);

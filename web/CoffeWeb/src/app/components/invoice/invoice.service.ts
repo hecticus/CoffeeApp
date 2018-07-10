@@ -1,4 +1,4 @@
-import { Invoice } from './../../core/models/invoice';
+import { Invoice } from '../../core/models/invoice';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
