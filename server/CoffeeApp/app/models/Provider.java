@@ -2,6 +2,7 @@ package models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import controllers.utils.ListPagerCollection;
 import io.ebean.Ebean;
@@ -70,7 +71,8 @@ public class Provider extends AbstractEntity{
     private StatusProvider statusProvider;
 
     @OneToMany(mappedBy = "provider")
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonIgnore
     private List<Invoice> invoices;
 
     public static Finder<Long, Provider> finder = new Finder<>(Provider.class);

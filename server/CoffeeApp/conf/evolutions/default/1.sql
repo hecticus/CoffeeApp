@@ -80,19 +80,20 @@ create table invoices (
   id                            bigint auto_increment not null,
   provider_id                   bigint not null,
   status_invoice_id             bigint,
+  startdate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  closeddate_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  closeddate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id)
 );
 
 create table invoice_details (
   id                            bigint auto_increment not null,
   invoice_id                    bigint not null,
-  item_type_id                  bigint not null,
-  lot_id                        bigint not null,
-  store_id                      bigint not null,
+  item_type_id                  bigint,
+  lot_id                        bigint,
+  store_id                      bigint,
   price_item_type_by_lot        decimal(38) not null,
   cost_item_type                decimal(38) not null,
   amount_invoice_detail         decimal(38) not null,

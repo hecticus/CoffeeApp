@@ -27,7 +27,7 @@ public class Invoice extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn( nullable = false)
-    @JsonBackReference
+//    @JsonBackReference
     @Constraints.Required
     private Provider provider;
 
@@ -44,8 +44,14 @@ public class Invoice extends AbstractEntity{
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    @UpdatedTimestamp
+    @Column(name = "startDate", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private ZonedDateTime startDateInvoice;
+
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
-    @Column(name = "closedDate_invoice", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(name = "closedDate", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private ZonedDateTime closedDateInvoice;
 
     // GETTER AND SETTER
@@ -90,6 +96,14 @@ public class Invoice extends AbstractEntity{
 
     public BigDecimal getTotalInvoice() {
         return totalInvoice;
+    }
+
+    public ZonedDateTime getStartDateInvoice() {
+        return startDateInvoice;
+    }
+
+    public void setStartDateInvoice(ZonedDateTime openDateInvoice) {
+        this.startDateInvoice = openDateInvoice;
     }
 
     public void setTotalInvoice(BigDecimal totalInvoice) {

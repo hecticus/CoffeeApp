@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="invoice_details")
-public class InvoiceDetail  extends AbstractEntity{
+public class  InvoiceDetail  extends AbstractEntity{
 
     @ManyToOne
     @Constraints.Required
@@ -27,18 +27,18 @@ public class InvoiceDetail  extends AbstractEntity{
     private Invoice invoice;
 
     @ManyToOne
-    @Constraints.Required
-    @JoinColumn(nullable = false)
+//    @Constraints.Required
+//    @JoinColumn(nullable = false)
     private ItemType itemType;
 
     @ManyToOne
-    @Constraints.Required
-    @JoinColumn(nullable = false)
+//    @Constraints.Required
+//    @JoinColumn(nullable = false)
     private Lot lot;
 
     @ManyToOne
-    @Constraints.Required
-    @JoinColumn(nullable = false)
+//    @Constraints.Required
+//    @JoinColumn(nullable = false)
     private Store store;
 
     @Constraints.Min(0)
@@ -205,7 +205,7 @@ public class InvoiceDetail  extends AbstractEntity{
 
         if(invoice != 0L)
             expressionList.eq("invoice.id", invoice );
-
+        System.out.println(invoice);
         if(itemType != 0L)
             expressionList.eq("itemType.id", itemType );
 
