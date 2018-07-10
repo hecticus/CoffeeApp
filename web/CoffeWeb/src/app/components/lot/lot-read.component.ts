@@ -55,23 +55,24 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<app-modal [(closed)]="confirmDelete">
-				<ng-template modalContentDirective>
-					<div class="dialog-content">
-						<div class="dialog-title" >Confirmation</div>
-						<div class="dialog-message">Are you sure you want to delete this record?</div>
-						<div class="dialog-options">
-							<button class="btn-text red" type="button" (click)="confirmDelete = true">
-								<div class="text">No</div>
-							</button>
-							<button class="btn-text green" type="button" (click)="delete(); confirmDelete = true">
-								<div class="text">Yes</div>
-							</button>
-						</div>
+		<app-modal [(closed)]="confirmDelete">
+			<ng-template modalContentDirective>
+				<div class="dialog-content">
+					<div class="dialog-title" >Confirmation</div>
+					<div class="dialog-message">Are you sure you want to delete this record?</div>
+					<div class="dialog-options">
+						<button class="btn-text red" type="button" (click)="confirmDelete = true">
+							<div class="text">No</div>
+						</button>
+						<button class="btn-text green" type="button" (click)="delete(); confirmDelete = true">
+							<div class="text">Yes</div>
+						</button>
 					</div>
-				</ng-template>
-			</app-modal>
+				</div>
+			</ng-template>
+		</app-modal>
 	`
 })
 export class LotReadComponent implements OnInit {

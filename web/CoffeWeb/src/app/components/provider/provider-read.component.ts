@@ -32,42 +32,49 @@ import { Provider } from '../../core/models/provider';
 						<span class="output">{{provider.providerType?.nameProviderType || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Name</span>
 						<span class="output">{{provider.nameProvider || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Code Provider</span>
 						<span class="output">{{provider.nitProvider || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Address</span>
 						<span class="output">{{provider.addressProvider || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Phone Number</span>
 						<span class="output">{{provider.numberProvider || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Email Provider</span>
 						<span class="output">{{provider.emailProvider || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Contact Name</span>
 						<span class="output">{{provider.contactNameProvider || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Status</span>
@@ -75,23 +82,24 @@ import { Provider } from '../../core/models/provider';
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<app-modal [(closed)]="confirmDelete">
-				<ng-template modalContentDirective>
-					<div class="dialog-content">
-						<div class="dialog-title" >Confirmation</div>
-						<div class="dialog-message">Are you sure you want to delete this record?</div>
-						<div class="dialog-options">
-							<button class="btn-text red" type="button" (click)="confirmDelete = true">
-								<div class="text">No</div>
-							</button>
-							<button class="btn-text green" type="button" (click)="delete(); confirmDelete = true">
-								<div class="text">Yes</div>
-							</button>
-						</div>
+		<app-modal [(closed)]="confirmDelete">
+			<ng-template modalContentDirective>
+				<div class="dialog-content">
+					<div class="dialog-title" >Confirmation</div>
+					<div class="dialog-message">Are you sure you want to delete this record?</div>
+					<div class="dialog-options">
+						<button class="btn-text red" type="button" (click)="confirmDelete = true">
+							<div class="text">No</div>
+						</button>
+						<button class="btn-text green" type="button" (click)="delete(); confirmDelete = true">
+							<div class="text">Yes</div>
+						</button>
 					</div>
-				</ng-template>
-			</app-modal>
+				</div>
+			</ng-template>
+		</app-modal>
 	`
 })
 export class ProviderReadComponent implements OnInit {

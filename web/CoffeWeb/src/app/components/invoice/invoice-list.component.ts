@@ -56,15 +56,15 @@ import { Invoice } from '../../core/models/invoice';
 				</ng-container>
 
 				<!-- Position Provider -->
-				<ng-container matColumnDef="invoice.provider.name">
+				<ng-container matColumnDef="provider.nameProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Provider</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.provider?.nameProvider}} </td>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.nameProvider}} </td>
 				</ng-container>
 
 				<!-- Position statusInvoice -->
-				<ng-container matColumnDef="invoice.statusInvoice.name">
+				<ng-container matColumnDef="statusInvoice.name">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status Invoice</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.statusInvoice?.name}} </td>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.statusInvoice.name}} </td>
 				</ng-container>
 
 				<!-- Position closeDateInvoice -->
@@ -99,9 +99,10 @@ export class InvoiceListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'invoice.provider.nameProvider',
-	'invoice.statusInvoice.name', 'createdAt',	'closedDateInvoice', 'totalInvoice'];
+	columnsToDisplay = ['select', 'provider.nameProvider',
+	'statusInvoice.name', 'createdAt',	'closedDateInvoice', 'totalInvoice'];
 
+	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
