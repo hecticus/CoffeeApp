@@ -1,11 +1,14 @@
 package com.hecticus.eleta.model.request.invoice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.hecticus.eleta.model.response.lot.Lot;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -20,12 +23,14 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePost> {
-
+    @JsonIgnore
     @PrimaryKey
     private int invoicePostLocalId = -1;
+
+    @JsonIgnore
     private String invoiceLocalId = "";
 
-    @SerializedName("idInvoice")
+    @SerializedName("id")
     @Expose
     private int invoiceId = -1;
 
@@ -35,17 +40,17 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
 
     @SerializedName("idLot")
     @Expose
-    private int lotId = -1;
+    private int lot;
 
     @SerializedName("freigh")
     @Expose
     private boolean freigh = true;
 
-    @SerializedName("nameReceivedInvoiceDetail")
+    @SerializedName("nameReceived")
     @Expose
     private String receiverName = null;
 
-    @SerializedName("nameDeliveredInvoiceDetail")
+    @SerializedName("nameDelivered")
     @Expose
     private String dispatcherName = null;
 
@@ -59,7 +64,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
 
     @SerializedName("buyOption")
     @Expose
-    private int buyOption = -1;
+    private Boolean buyOption;
 
     private int type = -1;
     private String date = "";
@@ -102,12 +107,12 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
         this.providerId = providerId;
     }
 
-    public int getLotId() {
-        return lotId;
+    public int getLot() {
+        return lot;
     }
 
-    public void setLotId(int lotId) {
-        this.lotId = lotId;
+    public void setLot(int lot) {
+        this.lot = lot;
     }
 
     public boolean isFreigh() {
@@ -151,11 +156,11 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
         this.observations = observations;
     }
 
-    public int getBuyOption() {
+    public Boolean getBuyOption() {
         return buyOption;
     }
 
-    public void setBuyOption(int buyOption) {
+    public void setBuyOption(Boolean buyOption) {
         this.buyOption = buyOption;
     }
 
@@ -240,7 +245,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
                 ", invoiceLocalId='" + invoiceLocalId + '\'' +
                 ", invoiceId=" + invoiceId +
                 ", providerId=" + providerId +
-                ", lotId=" + lotId +
+                ", lot=" + lot +
                 ", freigh=" + freigh +
                 ", receiverName='" + receiverName + '\'' +
                 ", dispatcherName='" + dispatcherName + '\'' +
@@ -261,10 +266,10 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
     @Override
     public JsonElement serialize(InvoicePost src, Type typeOfSrc, JsonSerializationContext context) {
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("idInvoice", src.getInvoiceId());
-        jsonObject.addProperty("idProvider", src.getProviderId());
+        jsonObject.addProperty("id", src.getInvoiceId());
+        jsonObject.addProperty("provider", src.getProviderId());
         jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
-        jsonObject.addProperty("idLot", src.getLotId());
+        jsonObject.addProperty("lot", src.getLot());
         jsonObject.addProperty("freigh", src.isFreigh());
         jsonObject.addProperty("nameReceivedInvoiceDetail", src.getReceiverName());
         jsonObject.addProperty("nameDeliveredInvoiceDetail", src.getDispatcherName());

@@ -118,7 +118,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     public InvoiceDetails(ItemPost itemPost, InvoicePost invoicePost) {
         localId = itemPost.getItemPostLocalId();
         itemTypeId = itemPost.getItemTypeId();
-        lotId = invoicePost.getLotId();
+        lotId = invoicePost.getLot();
         priceByLot = invoicePost.getPriceByLot();
         startDate = invoicePost.getStartDate();
         amount = itemPost.getAmount();

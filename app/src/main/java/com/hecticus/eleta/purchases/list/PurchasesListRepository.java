@@ -201,9 +201,9 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
 
             Log.d("PRINT", "--->getReceiptDetails FROM OFFLINE");
 
-            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getInvoiceId(), invoiceParam.getLocalId());
+            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getId(), invoiceParam.getLocalId());
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                    invoiceParam.getInvoiceId(),
+                    invoiceParam.getId(),
                     invoiceParam.getLocalId(),
                     false);
 
@@ -226,7 +226,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             Log.d("PRINT", "--->getReceiptDetails FROM ONLINE");
 
 
-            Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceParam.getInvoiceId());
+            Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceParam.getId());
 
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
@@ -280,7 +280,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             onGetReceiptSuccess(fakeReceiptResponse);
 
         } else {
-            Call<ReceiptResponse> call = invoiceApi.getReceipt(invoiceParam.getInvoiceId());
+            Call<ReceiptResponse> call = invoiceApi.getReceipt(invoiceParam.getId());
 
             call.enqueue(new Callback<ReceiptResponse>() {
                 @DebugLog

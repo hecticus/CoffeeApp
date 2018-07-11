@@ -26,7 +26,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @SerializedName("id")
     @Expose
-    private int invoiceId = -1;
+    private int id = -1;
 
     @Ignore
     @SerializedName("provider")
@@ -97,12 +97,12 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         return false; //invoiceStatus < 3; todo nose
     }
 
-    public int getInvoiceId() {
-        return invoiceId;
+    public int getId() {
+        return id;
     }
 
-    public void setInvoiceId(int invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Provider getProvider() {
@@ -226,11 +226,11 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         this.date = date;
     }
 
-    public String getId() {
+    public String getId2() {
         return id2;
     }
 
-    public void setId(String id) {
+    public void setId2(String id) {
         this.id2 = id;
     }
 
@@ -244,7 +244,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Override
     public String toString() {
         return "Invoice{" +
-                "invoiceId=" + invoiceId +
+                "invoiceId=" + id +
                 ", provider=" + provider +
                 ", invoiceStatus=" + invoiceStatus +
                 ", invoiceStartDate='" + invoiceStartDate + '\'' +
@@ -267,7 +267,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Override
     public JsonElement serialize(Invoice src, Type typeOfSrc, JsonSerializationContext context) {
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("idInvoice", src.getInvoiceId());
+        jsonObject.addProperty("id", src.getId2());
         //jsonObject.addProperty("statusInvoice", src.getInvoiceStatus());
         jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
         jsonObject.addProperty("startDateInvoice", src.getInvoiceStartDate());
@@ -282,7 +282,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         jsonObject.addProperty("localId", src.getLocalId());
         jsonObject.addProperty("date", src.getDate());
         jsonObject.addProperty("isClosed", src.isClosed());
-        jsonObject.addProperty("id", src.getId());
+        jsonObject.addProperty("id", src.getId2());
 
         return jsonObject;
     }

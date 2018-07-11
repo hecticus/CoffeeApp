@@ -153,7 +153,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                     try {
                         if (response.isSuccessful()) {
                             //onHarvestUpdated();
-                            getDetails(response.body().getResult().getInvoiceId());
+                            getDetails(response.body().getResult().getId());
                         } else {
                             Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                             manageError(response);

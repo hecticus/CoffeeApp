@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -248,6 +249,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     @OnClick(R.id.custom_send_button)
     @Override
     public void onClickSaveChangesButton() {
+        Log.d("DEBUG itemId", "desde Activity"+String.valueOf(itemsSpinner.getSelectedItem().getItemId()));
         mPresenter.onSaveChanges(
                 (Store) storeSpinner.getSelectedItem(),
                 freightCheckBox.isChecked(),
@@ -279,6 +281,8 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
     @Override
     public void updateItems(List<ItemType> itemTypeList, int selectedId) {
+        Gson g = new Gson();
+        Log.d("DEBUG listItems id:"+String.valueOf(selectedId), g.toJson(itemTypeList));
         itemsSpinner.setValuesAndSelect(itemTypeList, selectedId);
 
     }

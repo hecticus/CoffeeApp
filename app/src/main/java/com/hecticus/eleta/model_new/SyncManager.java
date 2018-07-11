@@ -413,7 +413,7 @@ public class SyncManager {
                     //int properInvoiceId = firstInvoice.getInvoicePostLocalId();
                     //String dateSuffix = firstInvoice.getStartDate().endsWith(".0") ? "" : ".0";
 
-                    //ManagerDB.delete(firstInvoice.getId(), firstInvoice.getStartDate() + dateSuffix, properInvoiceId + "-" + firstInvoice.getStartDate())
+                    //ManagerDB.delete(firstInvoice.getId2(), firstInvoice.getStartDate() + dateSuffix, properInvoiceId + "-" + firstInvoice.getStartDate())
 
                     Realm realm = Realm.getDefaultInstance();
 
@@ -429,7 +429,7 @@ public class SyncManager {
                     HarvestOfDay harvestOfDay = null;
 
                     if (invoiceInRealm != null) {
-                        int properInvoiceId = invoiceInRealm.getInvoiceId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getInvoiceId();
+                        int properInvoiceId = invoiceInRealm.getId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getId();
                         String dateSuffix = firstInvoicePost.getStartDate().endsWith(".0") ? "" : ".0";
 
                         harvestOfDay = realm.
@@ -592,7 +592,7 @@ public class SyncManager {
 
             somethingHasBeenSynced = true;
 
-            Call<Message> call = invoiceApi.deleteInvoice(firstInvoice.getInvoiceId());
+            Call<Message> call = invoiceApi.deleteInvoice(firstInvoice.getId());
 
             new ManagerServices<>(call, new ManagerServices.ServiceListener<Message>() {
                 @DebugLog

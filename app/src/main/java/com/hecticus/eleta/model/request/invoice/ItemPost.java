@@ -30,11 +30,11 @@ public class ItemPost extends RealmObject implements JsonSerializer<ItemPost> {
     @Expose
     private int itemTypeId = -1;
 
-    @SerializedName("amount")
+    @SerializedName("amountInvoiceDetail")
     @Expose
     private float amount = 0;
 
-    @SerializedName("price")
+    @SerializedName("priceItemTypeByLot")
     @Expose
     private float price = 0;
 
@@ -47,7 +47,7 @@ public class ItemPost extends RealmObject implements JsonSerializer<ItemPost> {
     @Expose
     private float rateValue = 0;
 
-    @SerializedName("id_store")
+    @SerializedName("idStore")
     @Expose
     private int storeId = -1;
 

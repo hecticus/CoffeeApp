@@ -128,11 +128,11 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 return;
             }
 
-            invoicePost.setLotId(selectedLot.getId());
+            invoicePost.setLot(selectedLot.getId());
             invoicePost.setObservations(observations);
         } else {
             Log.d("OFFLINE", "--->invoicePost BEFORE2 getChanges()" + invoicePost);
-            invoicePost = getChanges(selectedLot.getId(), items, observations);
+            invoicePost = getChanges(selectedLot, items, observations);
             Log.d("OFFLINE", "--->invoicePost AFTER getChanges()" + invoicePost);
             if (invoicePost == null) {
                 mView.hideWorkingIndicator();
@@ -157,15 +157,15 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     @DebugLog
     @Override
-    public InvoicePost getChanges(int lotId, List<ItemType> itemsTypesList, String observations) {
+    public InvoicePost getChanges(Lot lotId, List<ItemType> itemsTypesList, String observations) {
         InvoicePost invoicePostWithChanges = null;
 
         if (currentDetailsList == null || currentDetailsList.size() <= 0)
             return invoicePostWithChanges;
 
-        if (currentDetailsList.get(0).getLot() != null && currentDetailsList.get(0).getLot().getId() != lotId) {
+        if (currentDetailsList.get(0).getLot() != null && currentDetailsList.get(0).getLot().getId() != lotId.getId()) {
             invoicePostWithChanges = new InvoicePost();
-            invoicePostWithChanges.setLotId(lotId);
+            invoicePostWithChanges.setLot(lotId.getId());
         }
 
         if (currentDetailsList.get(0).getObservation() != null && !currentDetailsList.get(0).getObservation().equals(observations)) {
@@ -404,7 +404,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
                 createdOffline = true;
             } else {
-                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
+                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getId());
             }
             invoicePost.setProviderId(currentProvider.getIdProvider());
             invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
@@ -412,8 +412,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());
             invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
 
-            if (invoicePost.getLotId() == -1 && currentDetailsList.get(0).getLot() != null) {
-                invoicePost.setLotId(currentDetailsList.get(0).getLot().getId());
+            if (invoicePost.getLot() == -1 && currentDetailsList.get(0).getLot() != null) {
+                invoicePost.setLot(currentDetailsList.get(0).getLot().getId());
             }
             if (invoicePost.getObservations() == null) {
                 invoicePost.setObservations(currentDetailsList.get(0).getObservation());

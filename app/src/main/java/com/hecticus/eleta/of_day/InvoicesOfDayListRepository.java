@@ -113,9 +113,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM OFFLINE");
 
-            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
+            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getId(), invoice.getLocalId());
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                    invoice.getInvoiceId(),
+                    invoice.getId(),
                     invoice.getLocalId(),
                     isForHarvest);
 
@@ -137,7 +137,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM ONLINE");
 
-            Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoice.getInvoiceId());
+            Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoice.getId());
 
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
@@ -147,7 +147,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests());
+                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getId(), response.body().getHarvests());
                             ManagerDB.saveDetailsOfInvoice(response.body().getDetails());
                             onGetHarvestsSuccess(response.body());
                         } else
@@ -173,10 +173,10 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     @Override
     public void deleteHarvestOrPurchase(Invoice invoice, String date, String harvestOrPurchaseId) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoice)) {
-            if (ManagerDB.delete(invoice.getId(), date, harvestOrPurchaseId)) {
-                List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
+            if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchaseId)) {
+                List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getId(), invoice.getLocalId());
                 List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                        invoice.getInvoiceId(),
+                        invoice.getId(),
                         invoice.getLocalId(),
                         isForHarvest);
 
@@ -194,7 +194,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
                 if (harvestsOrPurchasesOfDayList.size() == 0) {
                     Log.d("HOD", "--->Invoice has " + harvestsOrPurchasesOfDayList.size() + " items of day to also delete");
-                    ManagerDB.delete(invoice.getInvoiceId(), invoice.getLocalId());
+                    ManagerDB.delete(invoice.getId(), invoice.getLocalId());
                 } else {
                     Log.d("HOD", "--->Invoice has no items of day to also delete");
                 }
@@ -204,7 +204,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
             }
         } else {
-            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getInvoiceId(), date, new ArrayList<Long>());
+            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getId(), date, new ArrayList<Long>());
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override
@@ -289,7 +289,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
         } else {
 
-            Call<ReceiptResponse> call = invoiceApi.getReceipt(invoiceParam.getInvoiceId());
+            Call<ReceiptResponse> call = invoiceApi.getReceipt(invoiceParam.getId());
 
             call.enqueue(new Callback<ReceiptResponse>() {
                 @DebugLog

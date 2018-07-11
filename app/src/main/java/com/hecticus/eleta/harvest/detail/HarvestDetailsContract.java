@@ -61,7 +61,7 @@ public class HarvestDetailsContract {
 
         void onSaveChanges(Lot selectedLot, List<ItemType> items, String observations);
 
-        InvoicePost getChanges(int lotId, List<ItemType> items, String observations);
+        InvoicePost getChanges(Lot lotId, List<ItemType> items, String observations);
 
         void onUpdateError();
 

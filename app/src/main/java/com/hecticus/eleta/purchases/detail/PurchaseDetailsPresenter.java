@@ -101,6 +101,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
     @DebugLog
     @Override
     public void onSaveChanges(Store selectedStore, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations) {
+        Log.d("DEBUG itemId", "desde presenter"+String.valueOf(itemId));
         mView.showWorkingIndicator();
 
         if (currentProvider == null) {
@@ -561,9 +562,9 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             if (currentDetailsList.get(0).getInvoice() == null) {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
             } else {
-                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
+                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getId());
             }
-            //invoice.setId(currentDetailsList.get(0).getInvoice().getInvoiceId());
+            //invoice.setId2(currentDetailsList.get(0).getInvoice().getId());
             invoicePost.setProviderId(currentProvider.getIdProvider());
             invoicePost.setReceiverName(currentDetailsList.get(0).getReceiverName());
             invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());

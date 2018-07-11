@@ -5,7 +5,7 @@ package com.hecticus.eleta.util;
  */
 
 public class Constants {
-    public static final String BASE_URL = "https://dev.api.coffee.hecticus.com/";
+    public static final String BASE_URL = "http://10.0.3.105:9000/";
 
     public static final String FAKE_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6ImVkd2luZGVyZXB1ZXN0b0BnbWFpbC5jb20iLCJqdGkiOiI1IiwiaWF0IjoxNTE2Njc4MTQzLCJzdWIiOiJsb2dpbi8iLCJpc3MiOiJodHRwczovL2Rldi5jb2ZmZWUuaGVjdGljdXMuY29tLyMifQ.wkwffOAzge8Y7jlOCnjhfH3iEv-tjrlsS2o9Z3MpGb4T7cuUF-55BDhoUbeq84NSebHUN2UJlsxjH4AS9TXUXQ";
 
@@ -16,8 +16,8 @@ public class Constants {
     public static final int TYPE_HARVESTER = 2;
     public static final int TYPE_SELLER = 1;
 
-    public static final int BUY_OPTION_HARVEST = 1;
-    public static final int BUY_OPTION_PURCHASE = 2;
+    public static final Boolean BUY_OPTION_HARVEST = true;
+    public static final Boolean BUY_OPTION_PURCHASE = false;
 
     public static final int REQUEST_CODE_PROVIDER_CREATION = 6666;
 

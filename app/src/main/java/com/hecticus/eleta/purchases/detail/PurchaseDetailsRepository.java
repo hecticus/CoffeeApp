@@ -127,9 +127,12 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             }
         } else {
             Call<CreateInvoiceResponse> call;
+            Gson g = new Gson();
             if (isAdd) {
                 call = invoiceApi.newInvoiceDetail(invoicePost);
+                Log.d("DEBUG1", g.toJson(invoicePost));
             } else {
+                Log.d("DEBUG2", g.toJson(invoicePost));
                 call = invoiceApi.updateInvoiceDetail(invoicePost);
             }
             call.enqueue(new Callback<CreateInvoiceResponse>() {
@@ -138,7 +141,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                     try {
                         if (response.isSuccessful()) {
-                            getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId(), true);
+                            getAndSaveInvoiceDetails(response.body().getResult().getId(), true);
                         } else {
                             Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                             manageError(response);
@@ -169,7 +172,6 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             @Override
             public void onResponse(@NonNull Call<InvoiceDetailsResponse> call,
                                    @NonNull Response<InvoiceDetailsResponse> response) {
-
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests());
@@ -186,6 +188,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             @Override
             public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
+                Log.d("DEBUG5", "errorrrrrrrrrrrrrrrrrrrrrrrrr");
                 onError();
             }
         });

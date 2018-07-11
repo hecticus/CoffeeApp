@@ -22,7 +22,7 @@ public class ItemType extends RealmObject implements ItemSpinnerInterface, Seria
     private int deleteStatus = -1;
 
     @PrimaryKey
-    @SerializedName("idItemType")
+    @SerializedName("id")
     @Expose
     private int id = -1;
 

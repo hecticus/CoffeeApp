@@ -194,7 +194,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void closeInvoice() {
         mView.showWorkingIndicator();
-        CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getInvoiceId(), Util.getTomorrowDate());
+        CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getId(), Util.getTomorrowDate());
         mRepository.closeInvoiceRequest(closePost);
     }
 

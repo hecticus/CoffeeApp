@@ -440,7 +440,7 @@ public class ManagerDB {
         try {
 
             for (final Invoice invoice : invoiceList) {
-                Invoice saved = realm.where(Invoice.class).equalTo("invoiceId", invoice.getInvoiceId()).findFirst();
+                Invoice saved = realm.where(Invoice.class).equalTo("invoiceId", invoice.getId()).findFirst();
                 if (saved != null && (saved.isDeleteOffline() || saved.isAddOffline() || saved.isEditOffline() || saved.isClosed()))
                     continue;
 
@@ -455,7 +455,7 @@ public class ManagerDB {
                             invoice.setIdentificationDocProvider(invoice.getProvider().getIdentificationDocProvider());
                         }
                         invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
-                        invoice.setId(invoice.getInvoiceId() + "-" + invoice.getLocalId());
+                        invoice.setId2(invoice.getId() + "-" + invoice.getLocalId());
                         realm.insertOrUpdate(invoice);
                         Log.d("Repository", "--->Inserted " + invoice.toString());
                     }
@@ -561,7 +561,7 @@ public class ManagerDB {
 
                         invoiceDetails.setWholeId(invoiceDetails.getId() + "-" + invoiceDetails.getLocalId());
 
-                        invoiceDetails.setInvoiceId(invoiceDetails.getInvoice().getInvoiceId());
+                        invoiceDetails.setInvoiceId(invoiceDetails.getInvoice().getId());
                         if (invoiceDetails.getStore() != null) {
                             invoiceDetails.setStoreId(invoiceDetails.getStore().getId());
                         }
@@ -758,7 +758,7 @@ public class ManagerDB {
 
             existingInvoice.setLocalId(nextLocalInvoiceId);
             existingInvoice.setAddOffline(true);
-            existingInvoice.setId(existingInvoice.getInvoiceId() + "-" + existingInvoice.getLocalId());
+            existingInvoice.setId2(existingInvoice.getId() + "-" + existingInvoice.getLocalId());
         } else
             Log.d("BUG", "--->saveNewInvoice (It existed before):" + existingInvoice);
 
@@ -768,7 +768,7 @@ public class ManagerDB {
                 @DebugLog
                 @Override
                 public void execute(Realm realm) {
-                    invoicePost.setInvoiceLocalId(finalInvoiceToInsert.getId());
+                    invoicePost.setInvoiceLocalId(finalInvoiceToInsert.getId2());
                     Number maxExistingInvoicePostId = realm.where(InvoicePost.class).max("invoicePostLocalId");
                     int nextExistingInvoicePostId = (maxExistingInvoicePostId == null) ? 1 : maxExistingInvoicePostId.intValue() + 1;
                     invoicePost.setInvoicePostLocalId(nextExistingInvoicePostId);
@@ -789,7 +789,7 @@ public class ManagerDB {
                         Number detailsId = realm.where(InvoiceDetails.class).max("localId");
                         int nextDetailsId = (detailsId == null) ? 1 : detailsId.intValue() + 1;
                         InvoiceDetails details = new InvoiceDetails(item, invoicePost);
-                        details.setInvoiceId(finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId());
+                        details.setInvoiceId(finalInvoiceToInsert.getId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getId());
                         details.setLocalId(nextDetailsId);
                         details.setWholeId(details.getId() + "-" + details.getLocalId());
                         realm.insertOrUpdate(details);
@@ -831,7 +831,7 @@ public class ManagerDB {
 
                     HarvestOfDay harvestOfDay = new HarvestOfDay();
                     //TODO CHECK ALL OF THIS
-                    int properInvoiceId = finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId();
+                    int properInvoiceId = finalInvoiceToInsert.getId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getId();
                     harvestOfDay.setInvoiceId(properInvoiceId);
                     String dateSuffix = invoicePost.getStartDate().endsWith(".0") ? "" : ".0";
                     harvestOfDay.setStartDate(invoicePost.getStartDate() + dateSuffix);
@@ -890,7 +890,7 @@ public class ManagerDB {
                     .equalTo("date", invoicePost.getDate())
                     .equalTo("isClosed", false)
                     .equalTo("deleteOffline", false)
-                    .lessThan("invoiceStatus", 3)
+                    //.lessThan("invoiceStatus", 3) todo no se
                     .equalTo("addOffline", true)
                     .findFirst();
 
@@ -953,7 +953,7 @@ public class ManagerDB {
                     public void execute(Realm realm) {
                         float newTotalAmount = 0;
                         List<ItemPost> newItems = invoicePost.getItems();
-                        List<InvoiceDetails> oldInvoiceDetails = getAllDetailsOfInvoiceByIdSortedByDate(invoiceInRealm.getInvoiceId(), invoiceInRealm.getLocalId(), invoicePost.getStartDate());
+                        List<InvoiceDetails> oldInvoiceDetails = getAllDetailsOfInvoiceByIdSortedByDate(invoiceInRealm.getId(), invoiceInRealm.getLocalId(), invoicePost.getStartDate());
 
                         for (int i = 0; i < oldInvoiceDetails.size(); i++) {
 
@@ -988,9 +988,9 @@ public class ManagerDB {
 
                             } else {
                                 InvoiceDetails details = null;
-                                if (invoicePost.getLotId() != oldInvoiceDetails.get(i).getLotId()) {
+                                if (invoicePost.getLot() != oldInvoiceDetails.get(i).getLotId()) {
                                     details = oldInvoiceDetails.get(i);
-                                    details.setLotId(invoicePost.getLotId());
+                                    details.setLotId(invoicePost.getLot());
                                 }
                                 if (invoicePost.getObservations().equals(oldInvoiceDetails.get(i).getObservation())) {
                                     if (details == null) {
@@ -1287,7 +1287,7 @@ public class ManagerDB {
                     .equalTo("deleteOffline", false)
                     .findFirst();
 
-            properInvoiceId = invoiceInRealm.getInvoiceId();
+            properInvoiceId = invoiceInRealm.getId();
 
         } else {
             invoiceInRealm = realm
@@ -1321,7 +1321,7 @@ public class ManagerDB {
 
         final InvoicePost invoicePostInRealm = realm
                 .where(InvoicePost.class)
-                .equalTo("invoiceLocalId", invoiceInRealm.getId())
+                .equalTo("invoiceLocalId", invoiceInRealm.getId2())
                 .findFirst();
 
         if (invoicePostInRealm != null) {
@@ -1336,7 +1336,7 @@ public class ManagerDB {
                 }
             });
         } else
-            Log.d("OFFLINE", "--->deleteHarvestInvoice InvoicePost not found: " + invoiceInRealm.getId());
+            Log.d("OFFLINE", "--->deleteHarvestInvoice InvoicePost not found: " + invoiceInRealm.getId2());
 
         return deleted[0];
     }
@@ -1392,11 +1392,11 @@ public class ManagerDB {
 
                 if (invoice.isAddOffline()) {
                     invoicePostsOfInvoice = realm.where(InvoicePost.class)
-                            .equalTo("invoiceLocalId", invoice.getId())
+                            .equalTo("invoiceLocalId", invoice.getId2())
                             .findAllSorted("startDate");
                 } else {
                     invoicePostsOfInvoice = realm.where(InvoicePost.class)
-                            .equalTo("invoiceId", invoice.getInvoiceId())
+                            .equalTo("invoiceId", invoice.getId())
                             .findAllSorted("startDate");
                 }
 

@@ -18,7 +18,7 @@ import io.realm.annotations.PrimaryKey;
 public class Lot extends RealmObject implements ItemSpinnerInterface, Serializable {
 
     @PrimaryKey
-    @SerializedName("idLot")
+    @SerializedName("id")
     @Expose
     private int id = -1;
 

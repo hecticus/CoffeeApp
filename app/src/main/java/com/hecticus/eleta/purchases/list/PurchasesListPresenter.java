@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseModel;
@@ -96,7 +95,7 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
     public void deletePurchase(BaseModel model) {
         mView.showWorkingIndicator();
         Invoice invoice = (Invoice) model;
-        mRepository.deletePurchase(invoice.getInvoiceId(), invoice.getLocalId());
+        mRepository.deletePurchase(invoice.getId(), invoice.getLocalId());
     }
 
     @DebugLog
