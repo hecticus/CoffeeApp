@@ -1,7 +1,7 @@
 import { Provider } from './provider';
 import { BaseModel } from './base-model';
 import { Status } from './status';
-import { InvoiceDetail } from './InvoiceDetail';
+import { InvoiceDetail } from './invoice-detail';
 
 export class Invoice extends BaseModel {
 	provider: Provider;

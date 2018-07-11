@@ -1,4 +1,4 @@
-import { InvoiceModule } from '../invoice/invoce.module';
+import { InvoiceModule } from '../invoice/invoice.module';
 import { ProviderModule } from '../provider/provider.module';
 import { HomeRoutingModule } from './home.routing';
 import { UtilsModule } from '../../core/utils/utils.module';

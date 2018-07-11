@@ -1,6 +1,6 @@
+import { Invoice } from './../../core/models/invoice';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Invoice } from '../../core/models/invoice';
 import { InvoiceService } from './invoice.service';
 import { Location } from '@angular/common';
 import { Status } from '../../core/models/status';
@@ -59,6 +59,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 
 			<div class="fieldset">
 				<div class="legend">InvoiceDetail Data</div>
+				<app-invoice-detail-read   [idInvoice]="idInvoice"></app-invoice-detail-read>
 
 			</div>
 		</div>
@@ -87,6 +88,7 @@ export class InvoiceReadComponent implements OnInit {
 	confirmDelete = true;
 	status: Status;
 	invoice = new Invoice();
+	idInvoice: number;
 
 	constructor(
 		private router: Router,
@@ -99,14 +101,15 @@ export class InvoiceReadComponent implements OnInit {
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
-				this.invoiceService.getById(params['invoiceId']).subscribe(
-					data => { this.invoice = data['result'];
-				console.log(this.invoice); }
-				);
-			});
-		this.statusInvoiceService.getAll().subscribe( data => {
-			this.status = data['result'];
+			this.idInvoice = params['invoiceId'];
 		});
+
+		this.invoiceService.getById(this.idInvoice).subscribe(
+			data => { this.invoice = data['result'];
+			console.log(this.idInvoice); }
+		);
+		// this.idInvoice = this.invoice.id;
+		console.log(this.invoice);
 	}
 
 	update() {

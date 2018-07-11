@@ -1,3 +1,4 @@
+import { InvoiceDetailListComponent } from '../invoice-detail/invoice-detail-list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { InvoiceReadComponent } from './invoice-read.component';
 import { InvoiceListComponent } from './invoice-list.component';

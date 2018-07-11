@@ -1,3 +1,4 @@
+import { InvoiceDetailComponent } from './invoice-detail.component';
 import { CommonModule } from '@angular/common';
 import {
 	MatFormFieldModule,
@@ -10,7 +11,6 @@ import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { UtilsModule } from '../../core/utils/utils.module';
 import { InvoiceDetailService } from './invoice-detail.service';
-import { InvoiceComponent } from '../invoice/invoice.component';
 import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 
 
@@ -28,11 +28,11 @@ import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 
 	],
 	declarations: [
-		InvoiceComponent,
+		InvoiceDetailComponent,
 		InvoiceDetailListComponent,
 	],
 	exports: [
-		InvoiceComponent,
+		InvoiceDetailComponent,
 		InvoiceDetailListComponent,
 	],
 	providers: [

@@ -19,6 +19,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { UtilsModule } from '../../core/utils/utils.module';
+import { InvoiceDetailListComponent } from '../invoice-detail/invoice-detail-list.component';
+import { InvoiceDetailModule } from '../invoice-detail/invoice-detail.module';
 
 
 @NgModule({
@@ -36,6 +38,7 @@ import { UtilsModule } from '../../core/utils/utils.module';
 
 		UtilsModule,
 		InvoiceRoutingModule,
+		InvoiceDetailModule,
 
 	],
 	declarations: [

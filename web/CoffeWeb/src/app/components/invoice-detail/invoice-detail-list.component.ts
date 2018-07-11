@@ -1,17 +1,19 @@
-import { InvoiceService } from './invoice.service';
+import { InvoiceDetail } from '../../core/models/invoice-detail';
+import { InvoiceDetailService } from './invoice-detail.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Provider, ViewChild } from '@angular/core';
-import { ProviderType } from '../../core/models/provider-type';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
+import { BaseService } from '../../core/base.service';
 
 @Component({
-    
-	styleUrls: ['./invoice.component.css'],
+	selector: 'app-invoice-detail-read',
+	styleUrls: ['./invoice-detail.component.css'],
 	template: `
-		<h2 class="title">Reportes</h2>
+		<!--<h2 class="title">Reportes</h2>
+
 		<div class="filter row">
 			<div class="field">
 				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
@@ -28,18 +30,19 @@ import { Invoice } from '../../core/models/invoice';
 				<button class="btn-icon" type="button" (click)="create()">
 					<i class="material-icons">add</i>
 				</button>
-				<button class="btn-icon" type="button"> <!--
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">-->
+				<button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
 		</div>
+		-->
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
 			<table class="table" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-				<!-- Checkbox Column -->
+				<!-- Checkbox Column 
 				<ng-container matColumnDef="select">
 				  <th mat-header-cell *matHeaderCellDef>
 					<mat-checkbox (change)="$event ? masterToggle() : null"
@@ -53,37 +56,67 @@ import { Invoice } from '../../core/models/invoice';
 								  [checked]="selection.isSelected(row)">
 					</mat-checkbox>
 				  </td>
+				</ng-container> -->
+
+				<!-- Position nameItemType -->
+				<ng-container matColumnDef="itemType.nameItemType">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Item Type</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.itemType.nameItemType}}</td>
 				</ng-container>
 
-				<!-- Position Provider -->
-				<ng-container matColumnDef="provider.nameProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Provider</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.nameProvider}} </td>
+				<!-- Position lot.nameLot -->
+				<ng-container matColumnDef="lot.nameLot">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Lot</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.lot.nameLot}} </td>
 				</ng-container>
 
-				<!-- Position statusInvoice -->
-				<ng-container matColumnDef="statusInvoice.name">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status Invoice</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.statusInvoice.name}} </td>
+				<!-- Position store.nameStore -->
+				<ng-container matColumnDef="store.nameStore">
+					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name Store</span></th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.store.nameStore}} </td>
 				</ng-container>
 
-				<!-- Position closeDateInvoice -->
-				<ng-container matColumnDef="closedDateInvoice">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name</span></th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.closedDateInvoice}} </td>
+				<!-- Position  priceItemTypeByLot -->
+				<ng-container matColumnDef="priceItemTypeByLot">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+						<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.priceItemTypeByLot}} </td>
 				</ng-container>
 
-				<!-- Position  openDateInvoice -->
-				<ng-container matColumnDef="createdAt">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Addreess</th>
-						<td mat-cell *matCellDef="let invoice"> {{invoice.createdAt}} </td>
+				<!-- Position costItemType -->
+				<ng-container matColumnDef="costItemType">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Costo Item Type</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.costItemType}}</td>
 				</ng-container>
 
-				<!-- Position totalInvoice -->
-				<ng-container matColumnDef="totalInvoice">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total Invoice</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.totalInvoice}}</td>
+				<!-- Position amountInvoiceDetail -->
+				<ng-container matColumnDef="amountInvoiceDetail">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.amountInvoiceDetail}}</td>
 				</ng-container>
+
+				<!-- Position nameReceived -->
+				<ng-container matColumnDef="nameReceived">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Received</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameReceived}}</td>
+				</ng-container>
+
+				<!-- Position nameReceived-->
+				<ng-container matColumnDef="nameDelivered">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Delivered</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered}}</td>
+				</ng-container>
+
+				<!-- Position nameDelivered
+				<ng-container matColumnDef="note">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Note</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.note}}</td>
+				</ng-container>-->
+
+				<!-- Position statusInvoiceDetail
+				<ng-container matColumnDef="statusInvoiceDetail">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Delivered</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.statusInvoiceDetail}}</td>
+				</ng-container>-->
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
@@ -93,14 +126,17 @@ import { Invoice } from '../../core/models/invoice';
 
 	`
 })
+
 export class InvoiceDetailListComponent implements OnInit {
+
+	@Input() idInvoice: number;
 	form: FormGroup;
-	provType: ProviderType[];
-	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'provider.nameProvider',
-	'statusInvoice.name', 'createdAt',	'closedDateInvoice', 'totalInvoice'];
+	columnsToDisplay = ['itemType.nameItemType',
+	'lot.nameLot', 'store.nameStore', 'priceItemTypeByLot',
+	'costItemType', 'amountInvoiceDetail', 'nameReceived',
+	'nameDelivered' ];
 
 	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs
@@ -108,10 +144,10 @@ export class InvoiceDetailListComponent implements OnInit {
 	pageSize = 10;
 	pageSizeOptions: number[] = [5, 10, 20];
 
-	dataSource = new MatTableDataSource<Invoice>();
+	dataSource = new MatTableDataSource<InvoiceDetail>();
 
 	// Defione Selection
-	selection = new SelectionModel<Invoice>(true, []);
+	selection = new SelectionModel<InvoiceDetail>(true, []);
 	// const initialSelection = [];
 	// const allowMultiSelect = true;
 	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
@@ -122,21 +158,24 @@ export class InvoiceDetailListComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private invoiceService: InvoiceService,
+		private invoiceDetailService: InvoiceDetailService,
 	) { }
 
 	ngOnInit() {
-
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
-		this.invoiceService.getAll().subscribe(
+		let hhtpParams = BaseService.jsonToHttpParams({
+			invoice: this.idInvoice,
+		});
+
+		this.invoiceDetailService.getAll(hhtpParams).subscribe(
 			data => {
 				this.dataSource.data = data['result'];
 				console.log(this.dataSource);
 		});
-
 	}
+
 
 	create() {
 		this.router.navigate(['./create'], {relativeTo: this.activatedRoute});
