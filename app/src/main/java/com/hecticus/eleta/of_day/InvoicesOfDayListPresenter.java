@@ -150,14 +150,14 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @Override
     public boolean isCurrentClosedInvoice() {
-        return false; //currentInvoice.getInvoiceStatus() == 3;todo nose
+        return true; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
     }
 
     @DebugLog
     @Override
     public void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse) {
 
-        Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());
+        Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());//invoiceDetailsResponse.getListInvoiceDetails().size());
 
         detailsList = invoiceDetailsResponse.getListInvoiceDetails();
         harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();

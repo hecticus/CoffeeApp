@@ -47,18 +47,24 @@ public class InvoiceDetailsResponse {
 
     public void setListInvoiceDetails(List<InvoiceDetails> listInvoiceDetails) {
         this.listInvoiceDetails = listInvoiceDetails;
-        for(final InvoiceDetails invoiceDetail : listInvoiceDetails){
-            harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
-        }
     }
 
     public List<HarvestOfDay> getHarvests() {
+        for(final InvoiceDetails invoiceDetail : listInvoiceDetails){
+            harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
+        }
         return harvests;
     }
 
     public void setHarvests(List<HarvestOfDay> harvests) {
         this.harvests = harvests;
     }
+
+    /*
+    for(final InvoiceDetails invoiceDetail : listInvoiceDetails){
+            harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
+    }
+    */
 
     /*@SerializedName("result")
     @Expose
