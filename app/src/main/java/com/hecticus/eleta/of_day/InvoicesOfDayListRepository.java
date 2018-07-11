@@ -122,13 +122,13 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 
             if (invoiceList != null) {
-                localResponse.setHarvestsList(invoiceList);
+                localResponse.setHarvests(invoiceList);
             } else {
                 onError(mPresenter.context.getString(R.string.error_getting_harvests));
             }
 
             if (detailsList != null) {
-                localResponse.setDetailsList(detailsList);
+                localResponse.setListInvoiceDetails(detailsList);
             }
 
             mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(localResponse);
@@ -148,7 +148,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getId(), response.body().getHarvests());
-                            ManagerDB.saveDetailsOfInvoice(response.body().getDetails());
+                            ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             onGetHarvestsSuccess(response.body());
                         } else
                             manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
@@ -182,14 +182,14 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
                 InvoiceDetailsResponse response = new InvoiceDetailsResponse();
                 if (harvestsOrPurchasesOfDayList != null) {
-                    response.setHarvestsList(harvestsOrPurchasesOfDayList);
+                    response.setHarvests(harvestsOrPurchasesOfDayList);
                 } else {
                     onError(mPresenter.context.getString(R.string.error_getting_harvests));
                     return;
                 }
 
                 if (detailsList != null) {
-                    response.setDetailsList(detailsList);
+                    response.setListInvoiceDetails(detailsList);
                 }
 
                 if (harvestsOrPurchasesOfDayList.size() == 0) {

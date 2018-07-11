@@ -29,6 +29,7 @@ import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.GlideApp;
@@ -74,9 +75,10 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
         ButterKnife.bind(this);
 
         Invoice initialInvoice = null;
-        if (getIntent().getStringExtra("invoice") != null) {
+        if (getIntent().getIntExtra("invoice",-1) > -1) {
             Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
-            initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+
+            initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
             Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
         } else
             Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");

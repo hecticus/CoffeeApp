@@ -210,13 +210,13 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 
             if (invoiceList != null) {
-                localResponse.setHarvestsList(invoiceList);
+                localResponse.setHarvests(invoiceList);
             } else {
                 onError(mPresenter.context.getString(R.string.error_getting_information_to_print), "No offline invoice found");
             }
 
             if (detailsList != null) {
-                localResponse.setDetailsList(detailsList);
+                localResponse.setListInvoiceDetails(detailsList);
             }
 
             //mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(localResponse);

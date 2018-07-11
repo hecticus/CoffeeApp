@@ -189,7 +189,7 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
 
         float totalOfInvoiceIncludingLocalOperations = 0;
 
-        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getDetails()) {
+        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getListInvoiceDetails()) {
             totalOfInvoiceIncludingLocalOperations += (currentDetail.getPriceItem() * currentDetail.getAmount());
         }
 

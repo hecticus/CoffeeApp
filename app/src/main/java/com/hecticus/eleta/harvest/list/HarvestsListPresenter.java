@@ -213,7 +213,7 @@ public class HarvestsListPresenter implements HarvestsListContract.Actions {
 
         float totalOfInvoiceIncludingLocalOperations = 0;
 
-        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getDetails()) {
+        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getListInvoiceDetails()) {
             totalOfInvoiceIncludingLocalOperations += (currentDetail.getPriceByLot() * currentDetail.getAmount());
         }
 

@@ -87,11 +87,11 @@ public class Util {
     ///PRINTER
     @DebugLog
     public static String formatTextForPreview(Context context, ReceiptResponse receiptResponse, InvoiceDetailsResponse detailsResponse) {
-        if (detailsResponse.getDetails() == null || detailsResponse.getDetails().size() <= 0) {
+        if (detailsResponse.getListInvoiceDetails() == null || detailsResponse.getListInvoiceDetails().size() <= 0) {
             return "";
         }
 
-        Log.d("PRINTOFFLINE", "--->I'll print " + detailsResponse.getDetails().size() + " details");
+        Log.d("PRINTOFFLINE", "--->I'll print " + detailsResponse.getListInvoiceDetails().size() + " details");
 
         StringBuilder text = new StringBuilder();
         text.append(receiptResponse.getCompanyName()).append("\n");
@@ -133,7 +133,7 @@ public class Util {
         DecimalFormat df = new DecimalFormat("#.00");
         df.setRoundingMode(RoundingMode.HALF_UP);
 
-        InvoiceDetails firstDetail = detailsResponse.getDetails().get(0);
+        InvoiceDetails firstDetail = detailsResponse.getListInvoiceDetails().get(0);
 
         Log.d("PRINTOFFLINE", "--->firstDetail to print: " + firstDetail);
 
@@ -159,7 +159,7 @@ public class Util {
             text.append(String.format("%12s", " ")).append("Libras")
                     .append("  ").append(String.format("%8s", "Precio")).append("      Monto\n");
 
-            for (InvoiceDetails detail : detailsResponse.getDetails()) {
+            for (InvoiceDetails detail : detailsResponse.getListInvoiceDetails()) {
                 String[] nameArray = detail.getItemType().getName().split(" ");
                 ArrayList nameArrayList = new ArrayList();
 
@@ -226,7 +226,7 @@ public class Util {
 
             text.append("- - - - - - - - - - - -\n");
 
-            for (InvoiceDetails currentDetail : detailsResponse.getDetails()) {
+            for (InvoiceDetails currentDetail : detailsResponse.getListInvoiceDetails()) {
 
                 //Store: XXXX
                 text.append(context.getString(R.string.gathering)).append(": ").append(currentDetail.getStore().getName()).append("\n");

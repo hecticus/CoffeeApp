@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.purchases.detail.PurchaseDetailsActivity;
 import com.hecticus.eleta.util.Constants;
@@ -77,8 +79,9 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         ButterKnife.bind(this);
 
         Invoice initialInvoice = null;
-        if (getIntent().getStringExtra("invoice") != null) {
-            initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+        if (getIntent().getIntExtra("invoice",-1) > -1){  // getIntent().getStringExtra("invoice") != null) {
+            Log.d("DEBUG", String.valueOf(getIntent().getIntExtra("invoice", -1)));
+            initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));/*new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);*/
         }
         mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice, false);
         initViews();

@@ -43,6 +43,14 @@ public class HarvestOfDay extends RealmObject implements BaseDetailModel {
     private boolean deleteOffline;
     private boolean editOffline;
 
+    public HarvestOfDay(String startDate, float totalAmount) {
+        this.startDate = startDate;
+        this.totalAmount = totalAmount;
+    }
+
+    public HarvestOfDay() {
+    }
+
     @DebugLog
     public String getStartDate() {
         return startDate;

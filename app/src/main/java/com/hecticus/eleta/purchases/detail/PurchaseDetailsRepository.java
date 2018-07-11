@@ -175,7 +175,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests());
-                        ManagerDB.saveDetailsOfInvoice(response.body().getDetails());
+                        ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

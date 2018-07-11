@@ -18,9 +18,20 @@ public class InvoiceDetailsResponse {
     @Expose
     private String message;
 
-    /*@SerializedName("result")
+    @SerializedName("result")
     @Expose
     private List<InvoiceDetails> listInvoiceDetails;
+
+    private List<HarvestOfDay> harvests = new ArrayList<HarvestOfDay>();
+
+    public InvoiceDetailsResponse(){
+        setListInvoiceDetails(new ArrayList<InvoiceDetails>());
+        setHarvests(new ArrayList<HarvestOfDay>());
+    }
+
+    public InvoiceDetailsResponse(List<InvoiceDetails> listInvoiceDetails) {
+        setListInvoiceDetails(listInvoiceDetails);
+    }
 
     public String getMessage() {
         return message;
@@ -36,9 +47,20 @@ public class InvoiceDetailsResponse {
 
     public void setListInvoiceDetails(List<InvoiceDetails> listInvoiceDetails) {
         this.listInvoiceDetails = listInvoiceDetails;
-    }*/
+        for(final InvoiceDetails invoiceDetail : listInvoiceDetails){
+            harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
+        }
+    }
 
-    @SerializedName("result")
+    public List<HarvestOfDay> getHarvests() {
+        return harvests;
+    }
+
+    public void setHarvests(List<HarvestOfDay> harvests) {
+        this.harvests = harvests;
+    }
+
+    /*@SerializedName("result")
     @Expose
     @JsonIgnore
     private Result result = null;
@@ -120,14 +142,14 @@ public class InvoiceDetailsResponse {
                     ", details=" + details +
                     '}';
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public String toString() {
         return "InvoiceDetailsResponse{" +
                 "message='" + message + '\'' +
                 ", result=" + result +
                 '}';
-    }
+    }*/
 }
 

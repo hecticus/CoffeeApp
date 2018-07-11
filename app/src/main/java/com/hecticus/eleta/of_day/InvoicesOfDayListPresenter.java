@@ -159,7 +159,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
         Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());
 
-        detailsList = invoiceDetailsResponse.getDetails();
+        detailsList = invoiceDetailsResponse.getListInvoiceDetails();
         harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();
         mView.hideWorkingIndicator();
         /*if (currentPage == Constants.INITIAL_PAGE_IN_PAGER) {
@@ -175,7 +175,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @DebugLog
     @Override
     public void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse) {
-        detailsList = invoiceDetailsResponse.getDetails();
+        detailsList = invoiceDetailsResponse.getListInvoiceDetails();
         harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();
         mView.hideWorkingIndicator();
         mView.showMessage(context.getString(R.string.harvest_deleted_successful));
@@ -261,7 +261,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
         float totalOfInvoiceIncludingLocalOperations = 0;
 
-        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getDetails()) {
+        for (InvoiceDetails currentDetail : invoiceDetailsResponse.getListInvoiceDetails()) {
             if (isHarvest)
                 totalOfInvoiceIncludingLocalOperations += (currentDetail.getPriceByLot() * currentDetail.getAmount());
             else

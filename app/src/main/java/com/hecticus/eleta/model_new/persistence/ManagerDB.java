@@ -440,7 +440,7 @@ public class ManagerDB {
         try {
 
             for (final Invoice invoice : invoiceList) {
-                Invoice saved = realm.where(Invoice.class).equalTo("invoiceId", invoice.getId()).findFirst();
+                Invoice saved = realm.where(Invoice.class).equalTo("id", invoice.getId()).findFirst();
                 if (saved != null && (saved.isDeleteOffline() || saved.isAddOffline() || saved.isEditOffline() || saved.isClosed()))
                     continue;
 
@@ -854,6 +854,11 @@ public class ManagerDB {
         }
         realm.close();
         return true;
+    }
+
+    @DebugLog
+    public static Invoice getInvoiceById(int id) {
+        return Realm.getDefaultInstance().where(Invoice.class).equalTo("id", id).findFirst();
     }
 
     @DebugLog

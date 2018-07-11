@@ -27,7 +27,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class InvoiceDetails extends RealmObject implements JsonSerializer<InvoiceDetails>, Serializable, Cloneable {
 
-    @SerializedName("idInvoiceDetail")
+    @SerializedName("id")
     @Expose
     private int id = -1;
 
