@@ -32,7 +32,11 @@ public class Invoices extends Controller {
     @Inject
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
-
+    public static final String COMPANY_NAME = "Cafe de Eleta, S.A";
+    public static final String COMPANY_TELEPHONE = "6679-4752";
+    public static final String HARVEST_INVOICE_DESCRIPTION = "Recibo Diario de Cafe";
+    public static final String HARVEST_INVOICE_TYPE = "Cosecha Propia";
+    public static final String PURCHASE_RUC = "R.U.C 1727-188-34109 D.V. 69";
 
     public Invoices(){
         propertiesCollection.putPropertiesCollection("s", "(id, name)");
@@ -232,16 +236,19 @@ public class Invoices extends Controller {
 ////            startDatetime = ;
 ////
 ////            invoiceDetail.setStartDateInvoice(startDatetime);
-            System.out.println(startDate.textValue()+"--***********-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*");
 
-            List<Invoice> invoices = Invoice.getOpenByProviderId(idprovider.asLong());
-
+            System.out.println(startDate.asText());
+            String date = startDate.toString().substring(1);
+            String fecha = date.split(" ")[0];
+            System.out.println(date +"-+-----+---+---++--+--+--+--+---+----+-+-+--+-----");
+            System.out.println(fecha +"-+");
+            List<Invoice> invoiceSes = Invoice.getOpenByProviderId(idprovider.asLong(), date);
+            List<Invoice> invoices = Invoice.getOpenByProviderId(idprovider.asLong(), fecha);
+            System.out.println(invoices.toString());
+            System.out.println(invoiceSes.toString());
             if (!invoices.isEmpty() ) {
-//                && invoices.get(0).getCreatedAt().toString().equals(
-//                    invoices.get(0).getCreatedAt())){
-                //                if (!invoices.isEmpty() && invoices.get(0).getStartDateInvoice().toString().equals(
-//                        invoices.get(0).getStartDateInvoice())){
                 openInvoice = invoices.get(0);
+
             } else {
                 openInvoice = new Invoice();
                 openInvoice.setProvider(Provider.findById(idprovider.asLong()));
@@ -459,15 +466,40 @@ public class Invoices extends Controller {
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();
-        response.put("nameCompany", Config.getString("nameCompany"));
-        response.put("invoiceDescription", Config.getString("invoiceDescription"));
-        response.put("invoiceType", Config.getString("invoiceType"));
-        response.put("RUC", Config.getString("RUC"));
-        response.put("telephonoCompany", Config.getString("telephonoCompany"));
+        response.put("nameCompany", "Cafe de Eleta, S.A");
+        response.put("invoiceDescription", "Recibo Diario de Cafe");
+        response.put("invoiceType", "Cosecha Propia");
+        response.put("RUC", "R.U.C 1727-188-34109 D.V. 69");
+        response.put("telephonoCompany", "6679-4752");
         response.set("invoice", Json.toJson(invoice));
+//        response.put("nameCompany", COMPANY_NAME);
+//        response.put("invoiceDescription", "Recibo Diario de Cafe");
+//        response.put("invoiceType", "Cosecha Propia");
+//        response.put("RUC", "R.U.C 1727-188-34109 D.V. 69");
+//        response.put("telephonoCompany", "6679-4752");
+//        response.set("invoice", Json.toJson(invoice));
 
         return Response.createdEntity(response);
     }
+
+//    public static final String COMPANY_NAME = "Cafe de Eleta, S.A";
+//    public static final String COMPANY_TELEPHONE = "6679-4752";
+//    public static final String HARVEST_INVOICE_DESCRIPTION = "Recibo Diario de Cafe";
+//    public static final String HARVEST_INVOICE_TYPE = "Cosecha Propia";
+//    public static final String PURCHASE_RUC = "R.U.C 1727-188-34109 D.V. 69";
+//    @CoffeAppsecurity
+//    public  Result createReceipt(Long idInvoice)  {
+//        Invoice invoice = Invoice.findById(idInvoice);
+//        ObjectNode response = Json.newObject();
+//        response.put("nameCompany", Config.getString("nameCompany"));
+//        response.put("invoiceDescription", Config.getString("invoiceDescription"));
+//        response.put("invoiceType", Config.getString("invoiceType"));
+//        response.put("RUC", Config.getString("RUC"));
+//        response.put("telephonoCompany", Config.getString("telephonoCompany"));
+//        response.set("invoice", Json.toJson(invoice));
+//
+//        return Response.createdEntity(response);
+//    }
 
 
 
