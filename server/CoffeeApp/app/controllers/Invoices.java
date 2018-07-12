@@ -12,6 +12,7 @@ import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
+import models.status.StatusInvoice;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -21,8 +22,12 @@ import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 import java.time.ZonedDateTime;
+import java.util.ListIterator;
+
+import static sun.security.krb5.Confounder.longValue;
 
 /**
  * Created by sm21 on 10/05/18.
@@ -136,9 +141,8 @@ public class Invoices extends Controller {
 
 
     @CoffeAppsecurity
-    public  Result buyHarvestsAndCoffe(){
+    public  Result buyHarvestsAndCoffe( ){
 
-        InvoiceDetailPurity invoiceDetailPurity;
         JsonNode json = request().body().asJson();
         if(json == null)
             return Response.requiredJson();
@@ -149,124 +153,63 @@ public class Invoices extends Controller {
             return Response.requiredParameter("buyOption");
         Boolean option = buyOption.asBoolean();
 
-
-        JsonNode idprovider = json.get("idProvider");
-        if (idprovider == null) {
-            return Response.requiredParameter(" idProvider");
-        }
-        System.out.println(idprovider.asLong());
-//        idProvider = idprovider.asLong();
-
         JsonNode itemtypes = json.get("itemtypes");
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
 
-        JsonNode nameReceived = json.get("nameReceived");
-        if (nameReceived== null)
-            return Response.requiredParameter("nameReceived");
+        Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
+        if (form.hasErrors())
+            return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-        JsonNode nameDelivered = json.get("nameDelivered");
-        if (nameDelivered==  null)
-            return Response.requiredParameter("nameDelivered");
+        Invoice invoice = Json.fromJson(json, Invoice.class);
+        String fecha = invoice.getStartDateInvoice().toString().split(" ")[0];
+        System.out.println(fecha +"-+");
 
-        JsonNode note = json.get("note");
 
-//        JsonNode freigh = json.get("freigh");
-//        if (freigh==  null)
-//            return Response.requiredParameter("freigh");
+        List<Invoice> invoices = Invoice.getOpenByProviderId(invoice.getProvider().getId(), fecha);
 
-        JsonNode startDate =  json.get("startDateInvoiceDetail");;
-        if (startDate==  null)
-            return Response.requiredParameter("startDateInvoiceDetail");
+        Invoice newInvoice = null;
 
-        Invoice openInvoice = null;
+        if(invoices.isEmpty()){
+            newInvoice = new Invoice();
+            newInvoice.setProvider(invoice.getProvider());
+            newInvoice.setStatusInvoice(StatusInvoice.findByName( "Open"));
+        }else{
+            for (Iterator inv= invoices.iterator(); inv.hasNext(); ) {
+                Invoice i = (Invoice) inv.next();
+                if(i.getStatusInvoice().getName() == "Open") {
+                    newInvoice = i;
+                } else if (i.getStatusInvoice().getName() == "Closed"){
+                    newInvoice = new Invoice();
+                }else{
+                    newInvoice = new Invoice();
+                }
+            }
+
+        }
+
 
         for (JsonNode itemtypeAux : itemtypes) {
 
-            JsonNode amount = itemtypeAux.get("amountInvoiceDetail");
-            if (amount == null)
-                return Response.requiredParameter("amountInvoiceDetail");
+            Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(json);
+            if (formDetail.hasErrors())
+                return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
 
-            JsonNode idItemtype = itemtypeAux.get("idItemType");
-            if (idItemtype == null)
-                return Response.requiredParameter("idItemType");
-
-            ItemType itemType = ItemType.findById(idItemtype.asLong());
-
-            InvoiceDetail invoiceDetail = new InvoiceDetail();
-            invoiceDetail.setItemType(itemType);
-
-            // 1 true  harvest
-            if (option){
-                // Porque la extrae del json
-                JsonNode idLot = json.get("lotId");
-                if (idLot == null)
-                    return Response.requiredParameter("lotId");
-
-                Lot lot = Lot.findById(idLot.asLong());
-                invoiceDetail.setLot(lot);
-                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
-
-            // 2 false buy coffe
-            } else{
-                JsonNode price = itemtypeAux.get("priceItemTypeByLot");
-                if (price == null)
-                    return Response.requiredParameter("priceItemTypeByLot");
-
-                invoiceDetail.setCostItemType(price.decimalValue());
-
-                JsonNode idStore = itemtypeAux.get("idStore");
-                if (idStore == null)
-                    return Response.requiredParameter("idStore");
-
-                invoiceDetail.setStore(Store.findById(idStore.asLong()));
-
-                invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
-
-//                int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
-//                invoiceDetailPurity.setDiscountRatePurity(Discount);
-            }
-
-            invoiceDetail.setAmountInvoiceDetail(amount.decimalValue());
-            invoiceDetail.setNameDelivered(nameDelivered.asText());
-            invoiceDetail.setNameReceived(nameReceived.asText());
-            invoiceDetail.setNoteInvoiceDetail(note.asText());
-
-//            ZonedDateTime startDatetime;
-////            startDatetime = ;
-////
-////            invoiceDetail.setStartDateInvoice(startDatetime);
-
-            System.out.println(startDate.asText());
-            String date = startDate.toString().substring(1);
-            String fecha = date.split(" ")[0];
-            System.out.println(date +"-+-----+---+---++--+--+--+--+---+----+-+-+--+-----");
-            System.out.println(fecha +"-+");
-            List<Invoice> invoiceSes = Invoice.getOpenByProviderId(idprovider.asLong(), date);
-            List<Invoice> invoices = Invoice.getOpenByProviderId(idprovider.asLong(), fecha);
-            System.out.println(invoices.toString());
-            System.out.println(invoiceSes.toString());
-            if (!invoices.isEmpty() ) {
-                openInvoice = invoices.get(0);
-
-            } else {
-                openInvoice = new Invoice();
-                openInvoice.setProvider(Provider.findById(idprovider.asLong()));
-            }
+            InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
+            invoiceDetail.save();
 
             // Buscos la lista de invoicesDetail asociado a esa Invoice
-            List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
+            List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
             invoiceDetails.add(invoiceDetail);
-            openInvoice.setInvoiceDetails(invoiceDetails);
+            newInvoice.setInvoiceDetails(invoiceDetails);
 
-            if (!invoices.isEmpty() && invoices.get(0).getCreatedAt().toString().equals(
-                    invoices.get(0).getCreatedAt())){
-                openInvoice.update();
+            if (!invoices.isEmpty()){
+                newInvoice.update();
             } else {
-                openInvoice.save();
+                newInvoice.save();
             }
 
-            invoiceDetail.setInvoice(openInvoice);
+            invoiceDetail.setInvoice(newInvoice);
             invoiceDetail.save();
 
             if(!option)  {
@@ -275,7 +218,7 @@ public class Invoices extends Controller {
                 if (purities == null)
                     return Response.requiredParameter("purities");
                 for(JsonNode purity : purities) {
-                    invoiceDetailPurity = new InvoiceDetailPurity();
+                    InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
                     JsonNode idPurity = purity.get("idPurity");
                     if (idPurity == null)
                         return Response.requiredParameter("idPurity");
@@ -293,10 +236,174 @@ public class Invoices extends Controller {
                 }
             }
         }
-//        openInvoice.setTotalInvoice(Invoice.calcularTotalInvoice(openInvoice.getIdInvoice()));
-        openInvoice.update();
-        return Response.createdEntity(Json.toJson(openInvoice));
+        newInvoice.update();
+        return Response.createdEntity(Json.toJson(newInvoice));
     }
+
+//
+//    @CoffeAppsecurity
+//    public  Result buyHarvestsAndCoffe(){
+//
+//        InvoiceDetailPurity invoiceDetailPurity;
+//        JsonNode json = request().body().asJson();
+//        if(json == null)
+//            return Response.requiredJson();
+//
+//        // 1 true  harvest    //////// 2 false buy coffe
+//        JsonNode buyOption = json.get("buyOption");
+//        if (buyOption ==  null)
+//            return Response.requiredParameter("buyOption");
+//        Boolean option = buyOption.asBoolean();
+//
+//
+//        JsonNode idprovider = json.get("idProvider");
+//        if (idprovider == null) {
+//            return Response.requiredParameter(" idProvider");
+//        }
+//        System.out.println(idprovider.asLong());
+////        idProvider = idprovider.asLong();
+//
+//        JsonNode itemtypes = json.get("itemtypes");
+//        if (itemtypes == null)
+//            return Response.requiredParameter("itemtypes");
+//
+//        JsonNode nameReceived = json.get("nameReceived");
+//        if (nameReceived== null)
+//            return Response.requiredParameter("nameReceived");
+//
+//        JsonNode nameDelivered = json.get("nameDelivered");
+//        if (nameDelivered==  null)
+//            return Response.requiredParameter("nameDelivered");
+//
+//        JsonNode note = json.get("note");
+//
+////        JsonNode freigh = json.get("freigh");
+////        if (freigh==  null)
+////            return Response.requiredParameter("freigh");
+//
+//        JsonNode startDate =  json.get("startDateInvoiceDetail");;
+//        if (startDate==  null)
+//            return Response.requiredParameter("startDateInvoiceDetail");
+//
+//        Invoice openInvoice = null;
+//
+//        for (JsonNode itemtypeAux : itemtypes) {
+//
+//            JsonNode amount = itemtypeAux.get("amountInvoiceDetail");
+//            if (amount == null)
+//                return Response.requiredParameter("amountInvoiceDetail");
+//
+//            JsonNode idItemtype = itemtypeAux.get("idItemType");
+//            if (idItemtype == null)
+//                return Response.requiredParameter("idItemType");
+//
+//            ItemType itemType = ItemType.findById(idItemtype.asLong());
+//
+//            InvoiceDetail invoiceDetail = new InvoiceDetail();
+//            invoiceDetail.setItemType(itemType);
+//
+//            // 1 true  harvest
+//            if (option){
+//                // Porque la extrae del json
+//                JsonNode idLot = json.get("lotId");
+//                if (idLot == null)
+//                    return Response.requiredParameter("lotId");
+//
+//                Lot lot = Lot.findById(idLot.asLong());
+//                invoiceDetail.setLot(lot);
+//                invoiceDetail.setPriceItemTypeByLot(lot.getPrice_lot());
+//
+//            // 2 false buy coffe
+//            } else{
+//                JsonNode price = itemtypeAux.get("priceItemTypeByLot");
+//                if (price == null)
+//                    return Response.requiredParameter("priceItemTypeByLot");
+//
+//                invoiceDetail.setCostItemType(price.decimalValue());
+//
+//                JsonNode idStore = itemtypeAux.get("idStore");
+//                if (idStore == null)
+//                    return Response.requiredParameter("idStore");
+//
+//                invoiceDetail.setStore(Store.findById(idStore.asLong()));
+//
+//                invoiceDetail.setPriceItemTypeByLot(BigDecimal.ZERO);
+//
+////                int Discount = (-1)*Math.round((monto*puritys.getDiscountRatePurity())/100);
+////                invoiceDetailPurity.setDiscountRatePurity(Discount);
+//            }
+//
+//            invoiceDetail.setAmountInvoiceDetail(amount.decimalValue());
+//            invoiceDetail.setNameDelivered(nameDelivered.asText());
+//            invoiceDetail.setNameReceived(nameReceived.asText());
+//            invoiceDetail.setNoteInvoiceDetail(note.asText());
+//
+////            ZonedDateTime startDatetime;
+//////            startDatetime = ;
+//////
+//////            invoiceDetail.setStartDateInvoice(startDatetime);
+//
+//            System.out.println(startDate.asText());
+//            String date = startDate.toString().substring(1);
+//            String fecha = date.split(" ")[0];
+//            System.out.println(date +"-+-----+---+---++--+--+--+--+---+----+-+-+--+-----");
+//            System.out.println(fecha +"-+");
+//            List<Invoice> invoiceSes = Invoice.getOpenByProviderId(idprovider.asLong(), date);
+//            List<Invoice> invoices = Invoice.getOpenByProviderId(idprovider.asLong(), fecha);
+//            System.out.println(invoices.toString());
+//            System.out.println(invoiceSes.toString());
+//            if (!invoices.isEmpty() ) {
+//                openInvoice = invoices.get(0);
+//
+//            } else {
+//                openInvoice = new Invoice();
+//                openInvoice.setProvider(Provider.findById(idprovider.asLong()));
+//            }
+//
+//            // Buscos la lista de invoicesDetail asociado a esa Invoice
+//            List<InvoiceDetail> invoiceDetails = openInvoice.getInvoiceDetails();
+//            invoiceDetails.add(invoiceDetail);
+//            openInvoice.setInvoiceDetails(invoiceDetails);
+//
+//            if (!invoices.isEmpty() && invoices.get(0).getCreatedAt().toString().equals(
+//                    invoices.get(0).getCreatedAt())){
+//                openInvoice.update();
+//            } else {
+//                openInvoice.save();
+//            }
+//
+//            invoiceDetail.setInvoice(openInvoice);
+//            invoiceDetail.save();
+//
+//            if(!option)  {
+//
+//                JsonNode purities = itemtypeAux.get("purities");
+//                if (purities == null)
+//                    return Response.requiredParameter("purities");
+//                for(JsonNode purity : purities) {
+//                    invoiceDetailPurity = new InvoiceDetailPurity();
+//                    JsonNode idPurity = purity.get("idPurity");
+//                    if (idPurity == null)
+//                        return Response.requiredParameter("idPurity");
+//
+//                    JsonNode valueRateInvoiceDetailPurity = purity.get("valueRateInvoiceDetailPurity");
+//                    if (valueRateInvoiceDetailPurity == null)
+//                        return Response.requiredParameter("valueRateInvoiceDetailPurity");
+//
+//                    Purity puritys = Purity.findById(idPurity.asLong());
+//
+//                    invoiceDetailPurity.setPurity(puritys);
+//                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+//                    invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
+//                    invoiceDetailPurity.save();
+//                }
+//            }
+//        }
+////        openInvoice.setTotalInvoice(Invoice.calcularTotalInvoice(openInvoice.getIdInvoice()));
+//        openInvoice.update();
+//        return Response.createdEntity(Json.toJson(openInvoice));
+//    }
+
 
 //
 //    @CoffeAppsecurity

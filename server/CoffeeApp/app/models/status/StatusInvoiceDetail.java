@@ -39,6 +39,10 @@ public class StatusInvoiceDetail extends Status {
         return finder.byId(id);
     }
 
+//    public static StatusInvoiceDetail findById(Long id){
+//        return finder.byId(id);
+//    }
+
     public static ListPagerCollection findAll(Integer index, Integer size, String sort, PathProperties pathProperties){
         ExpressionList expressionList = finder.query().where();
 

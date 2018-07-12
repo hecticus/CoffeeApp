@@ -19,30 +19,25 @@ import java.util.List;
 @DiscriminatorValue("invoice")
 public class StatusInvoice extends Status {
 
-    public static final String APPROVED = "in_approved";
-    public static final String REJECTED = "in_rejected";
-    public static final String CLOSED = "in_closed";
-    public static final String CANCELLED = "in_cancelled";
+    public static final String OPEN = "Open";
+    public static final String CLOSED = "Closed";
+    public static final String CANCELED = "Canceled";
 
     @OneToMany(mappedBy = "statusInvoice")
     @JsonIgnore
 //    @JsonManagedReference
     private List<Invoice> invoices = new ArrayList<>();
 
-    public static String getAPPROVED() {
-        return APPROVED;
-    }
-
-    public static String getREJECTED() {
-        return REJECTED;
+    public static String getOPEN() {
+        return OPEN;
     }
 
     public static String getCLOSED() {
         return CLOSED;
     }
 
-    public static String getCANCELLED() {
-        return CANCELLED;
+    public static String getCANCELED() {
+        return CANCELED;
     }
 
     public List<Invoice> getInvoices() {
@@ -55,8 +50,8 @@ public class StatusInvoice extends Status {
 
     private static Finder<String, StatusInvoice> finder = new Finder<>(StatusInvoice.class);
 
-    public static StatusInvoice findById(String id){
-        return finder.byId(id);
+    public static StatusInvoice findByName(String name){
+        return finder.query().where().startsWith("name", name).findUnique();
     }
 
     public static ListPagerCollection findAll(Integer index, Integer size, String sort, PathProperties pathProperties){

@@ -1,24 +1,25 @@
 # --- !Ups
 
 INSERT INTO `status` ( id, dtype, name, description) VALUES
-  (1,  'farm',          'Activa',     'No deudor'),
-  (2,  'farm',          'Inactiva',   'No deudor'),
-  (3,  'farm',          'Consulta',   'No deudor'),
-  (11, 'invoice',       'Activa',     'Deudor'),
-  (12, 'invoice',       'Inactiva',   'Deudor'),
-  (13, 'invoice',       'Consulta',   'Deudor'),
-  (21, 'invoiceDetail', 'Activa',      NULL),
-  (22, 'invoiceDetail', 'Inactiva',    NULL),
-  (23, 'invoiceDetail', 'Consulta',    NULL),
-  (31, 'lot',           'Activa',      NULL),
-  (32, 'lot',           'Inactiva',    NULL),
-  (33, 'lot',           'Consulta',    NULL),
-  (41, 'provider',      'Activa',      NULL),
-  (42, 'provider',      'Inactiva',    NULL),
-  (43, 'provider',      'Consulta',    NULL),
-  (50, 'store',         'Activa',      NULL),
-  (51, 'store',         'Inactiva',    NULL),
-  (52, 'store',         'Consulta',    NULL);
+  (1,  'farm',          'Active',     'No deudor'),
+  (2,  'farm',          'Inactive',   'No deudor'),
+  (3,  'farm',          'Edit',       'No deudor'),
+  (11, 'invoice',       'Open',       'Deudor'),
+  (12, 'invoice',       'Closed',     'Deudor'),
+  (13, 'invoice',       'Canceled',   'Deudor'),
+  (14, 'invoice',       'Edit',       'Deudor'),
+  (21, 'invoiceDetail', 'Active',      NULL),
+  (22, 'invoiceDetail', 'Inactive',    NULL),
+  (23, 'invoiceDetail', 'Edit',        NULL),
+  (31, 'lot',           'Active',      NULL),
+  (32, 'lot',           'Inactive',    NULL),
+  (33, 'lot',           'Edit',        NULL),
+  (41, 'provider',      'Active',      NULL),
+  (42, 'provider',      'Inactive',    NULL),
+  (43, 'provider',      'Consulted',   NULL),
+  (50, 'store',         'Active',      NULL),
+  (51, 'store',         'Inactive',    NULL),
+  (52, 'store',         'Consulted',   NULL);
 
 
 INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES
