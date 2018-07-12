@@ -38,7 +38,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
     @Expose
     private Integer providerId = -1;
 
-    @SerializedName("idLot")
+    @SerializedName("lotId")
     @Expose
     private int lot;
 

@@ -129,7 +129,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             Call<CreateInvoiceResponse> call;
             Gson g = new Gson();
             if (isAdd) {
-                call = invoiceApi.newInvoiceDetail(invoicePost);
+                call = invoiceApi.newInvoiceDetail(invoicePost, invoicePost.getProviderId(), invoicePost.getStartDate());
                 Log.d("DEBUG1", g.toJson(invoicePost));
             } else {
                 Log.d("DEBUG2", g.toJson(invoicePost));

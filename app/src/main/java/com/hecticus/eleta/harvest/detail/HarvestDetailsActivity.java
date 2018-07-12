@@ -266,6 +266,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     @Override
     public void updateFarms(List<Farm> farmsList, int selectedId) {
+        Gson g = new Gson();
+        Log.d("DEBUGFFFFFFFARM", g.toJson(farmsList));
         farmSpinner.setValuesAndSelect(farmsList, selectedId);
     }
 

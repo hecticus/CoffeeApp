@@ -397,7 +397,7 @@ public class SyncManager {
         Call<CreateInvoiceResponse> call;
         if (firstInvoicePost.getInvoiceId() == -1) {
             Log.d("DETAILS", "---> firstInvoicePost is new: " + firstInvoicePost);
-            call = invoiceApi.newInvoiceDetail(firstInvoicePost);
+            call = invoiceApi.newInvoiceDetail(firstInvoicePost, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate());
         } else {
             Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
             call = invoiceApi.updateInvoiceDetail(firstInvoicePost);

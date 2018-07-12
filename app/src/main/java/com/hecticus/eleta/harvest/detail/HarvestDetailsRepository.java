@@ -133,7 +133,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                call = invoiceApi.newInvoiceDetail(invoicePost);
+                call = invoiceApi.newInvoiceDetail(invoicePost, invoicePost.getProviderId(), invoicePost.getStartDate());
             } else {
                 call = invoiceApi.updateInvoiceDetail(invoicePost);
             }

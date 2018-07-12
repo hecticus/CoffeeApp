@@ -47,7 +47,7 @@ public interface HarvestRetrofitInterface {
     @DELETE("provider/{id}")
     Call<Message> deleteHarvest(@Path("id") int idHarvest);
 
-    @GET("farm?sort=nameFarm&collection=s")
+    @GET("farm?sort=nameFarm")//&collection=s")
     Call<FarmsListResponse> getFarms();
 
     @GET("lot")

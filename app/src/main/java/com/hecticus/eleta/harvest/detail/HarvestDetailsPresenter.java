@@ -235,27 +235,34 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
         });*/
 
         if (!isAdd && !initializedFarm) {
+            Log.d("DEBUG ", "1");
             initializedFarm = true;
             if (currentDetailsList.size() <= 0) {
+                Log.d("DEBUG ", "2");
                 mView.updateFarms(farmsList, -1);
                 return;
             }
+            Log.d("DEBUG ", "3");
             Lot lot = currentDetailsList.get(0).getLot();
             if (lot != null && lot.getFarm() != null) {
+                Log.d("DEBUG ", "4");
                 mView.updateFarms(farmsList, lot.getFarm().getId());
                 return;
             } else if (currentDetailsList.get(0).getLotId() != -1) {
+                Log.d("DEBUG ", "5");
                 Lot lotAux = mRepository.getLotById(currentDetailsList.get(0).getLotId());
                 if (lotAux != null) {
+                    Log.d("DEBUG ", "6");
                     currentDetailsList.get(0).setLot(lotAux);
                     if (lotAux.getFarmId() != -1) {
+                        Log.d("DEBUG ", "7");
                         mView.updateFarms(farmsList, lotAux.getFarmId());
                         return;
                     }
                 }
             }
         }
-
+        Log.d("DEBUG ", "8");
         mView.updateFarms(farmsList, -1);
 
     }

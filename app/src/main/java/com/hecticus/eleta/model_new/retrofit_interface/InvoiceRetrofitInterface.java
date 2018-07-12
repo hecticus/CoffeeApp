@@ -95,8 +95,8 @@ DELETE  /invoiceDetail/:id                                                      
     @POST("/invoiceDetail/delete")//pasarle el array de ids estoy pasando los un array vacio
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice,@Path("date") String date, @Body ArrayList<Long> ids);
 
-    @POST("invoice/buyHarvestsAndCoffe")
-    Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post); //supongo q lleva invoice y no invoice post
+    @POST("invoice/buyHarvestsAndCoffe/{idProvider}/{date}")
+    Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post, @Path("idProvider") int idProvider, @Path("date") String date); //supongo q lleva invoice y no invoice post
 
     @PUT("invoice/buyHarvestsAndCoffe")
     Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);
