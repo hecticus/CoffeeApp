@@ -22,6 +22,8 @@ public class InvoiceDetailsResponse {
     @Expose
     private List<InvoiceDetails> listInvoiceDetails;
 
+    private Boolean control = false;
+
     private List<HarvestOfDay> harvests = new ArrayList<HarvestOfDay>();
 
     public InvoiceDetailsResponse(){
@@ -50,8 +52,11 @@ public class InvoiceDetailsResponse {
     }
 
     public List<HarvestOfDay> getHarvests() {
-        for(final InvoiceDetails invoiceDetail : listInvoiceDetails){
-            harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
+        if(!control) {
+            for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
+                harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
+            }
+            control = true;
         }
         return harvests;
     }

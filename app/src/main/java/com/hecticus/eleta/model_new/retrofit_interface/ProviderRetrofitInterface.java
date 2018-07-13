@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -56,7 +57,7 @@ PUT     /provider/:id                                                           
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
      */
     @POST("provider")
-    Call<ProviderCreationResponse> createProvider(@Body Provider providerToCreate);
+    Call<ProviderCreationResponse> createProvider(/*@Header("Authorization") String token,*/ @Body Provider providerToCreate);
 
     @PUT("provider/{id}")
     Call<ProviderCreationResponse> updateProviderData(@Path("id") int id, @Body Provider providerToUpdate);

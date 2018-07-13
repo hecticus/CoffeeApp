@@ -80,25 +80,28 @@ DELETE  /invoiceDetail/:id                                                      
       */
 
 
-//todo cambio
-    @GET("/invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
+    //todo cambio
+    @GET("invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
     Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider, @Query("pageindex") int index, @Query("pagesize") int size);
 
     //todo cambio
-    @GET("/invoiceDetail")///findAllByIdInvoice/{invoiceId}")
+    @GET("invoiceDetail")///findAllByIdInvoice/{invoiceId}")
     Call<InvoiceDetailsResponse> getInvoiceDetails(@Query("invoice") int invoiceId);
 
     @DELETE("invoice/{id}")
     Call<Message> deleteInvoice(@Path("id") int idInvoice);
 
     //@DELETE("invoiceDetail/deleteAllByIdInvoiceAndDate/{idInvoice}/{date}") todo cambio
-    @POST("/invoiceDetail/delete")//pasarle el array de ids estoy pasando los un array vacio
-    Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice,@Path("date") String date, @Body ArrayList<Long> ids);
+    @POST("invoiceDetail/{id}")//pasarle el array de ids estoy pasando los un array vacio
+    Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
 
-    @POST("invoice/buyHarvestsAndCoffe/{idProvider}/{date}")
-    Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post, @Path("idProvider") int idProvider, @Path("date") String date); //supongo q lleva invoice y no invoice post
+    @POST("invoice/buyHarvestsAndCoffe")//{idProvider}/{date}")
+    Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post
 
-    @PUT("invoice/buyHarvestsAndCoffe")
+    /*@PUT("invoice")
+    Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);*/
+
+    @PUT("invoiceDetail")
     Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);
 
     @GET("invoice/createReceipt/{id}")

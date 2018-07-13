@@ -20,6 +20,10 @@ public class ItemType {
     public ItemType() {
     }
 
+    public ItemType(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

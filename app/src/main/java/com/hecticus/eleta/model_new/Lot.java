@@ -23,6 +23,10 @@ public class Lot {
     public Lot() {
     }
 
+    public Lot(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

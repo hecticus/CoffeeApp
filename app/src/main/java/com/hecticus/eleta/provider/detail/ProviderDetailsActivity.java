@@ -207,6 +207,8 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         if (initialProvider != null)
             maybeModifiedProvider.setIdentificationDocProviderChange(initialProvider.getIdentificationDocProvider());
 
+        //maybeModifiedProvider.setProviderType();
+
         maybeModifiedProvider.setIdentificationDocProvider(dniEditText.getText().trim());
 
         maybeModifiedProvider.setFullNameProvider(nameEditText.getText().trim());

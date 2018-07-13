@@ -140,7 +140,9 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                     onCreateError(mPresenter.context.getString(R.string.error_during_operation));
                 }
             }
-
+        //Gson g = new Gson();
+            //Log.d("DEBUG", g.toJson(providerParam));
+            //Log.d("DEBUg desde bd", ManagerDB.getProviderByIdentificationDoc(providerParam.getIdentificationDocProvider()).toString());
         } else {
             Log.d("DETAILS", "--->Sent provider: " + providerParam);
 

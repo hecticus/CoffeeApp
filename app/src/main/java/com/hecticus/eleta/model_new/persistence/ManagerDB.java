@@ -2,6 +2,7 @@ package com.hecticus.eleta.model_new.persistence;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.request.invoice.PurityPost;
@@ -53,6 +54,8 @@ public class ManagerDB {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
+                    Gson g = new Gson();
+                    Log.d("DEBUG", g.toJson(provider));
                     realm.insertOrUpdate(provider);
                     Log.d("BUG", "--->saveNewProvider " + provider);
                 }

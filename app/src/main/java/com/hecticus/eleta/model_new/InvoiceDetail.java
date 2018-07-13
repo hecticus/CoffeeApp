@@ -3,6 +3,8 @@ package com.hecticus.eleta.model_new;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.request.invoice.ItemPost;
 
 import java.util.List;
 
@@ -16,19 +18,32 @@ public class InvoiceDetail {
     private String createdAt;
     private String updatedAt;
     private String noteInvoiceDetail;
-    private Integer priceItemTypeByLot;
-    private Integer costItemType;
-    private Integer amountInvoiceDetail;
+    private Float priceItemTypeByLot;
+    private Float costItemType;
+    private Float amountInvoiceDetail;
     private String nameReceived;
     private String nameDelivered;
     private Invoice invoice;
     private ItemType itemType;
     private Lot lot;
     private Store store;
-    private InvoiceDetail invoiceDetail;
     private List<InvoiceDetailPurity> invoiceDetailPurity;
 
     public InvoiceDetail() {
+    }
+
+    public InvoiceDetail(ItemPost itemPost, InvoicePost invoicePost) {
+        id = (long) itemPost.getInvoiceDetailId();
+        noteInvoiceDetail = invoicePost.getObservations();
+        priceItemTypeByLot = itemPost.getPrice();
+        costItemType = itemPost.getAmount();
+        amountInvoiceDetail= itemPost.getAmount();
+        nameReceived = invoicePost.getReceiverName();
+        nameDelivered = invoicePost.getDispatcherName();
+        itemType = new ItemType((long) itemPost.getItemTypeId());
+        lot = new Lot((long) invoicePost.getLot());
+        store = new Store((long) itemPost.getStoreId());
+        //invoiceDetailPurity;
     }
 
     public Long getId() {
@@ -71,27 +86,27 @@ public class InvoiceDetail {
         this.noteInvoiceDetail = noteInvoiceDetail;
     }
 
-    public Integer getPriceItemTypeByLot() {
+    public Float getPriceItemTypeByLot() {
         return priceItemTypeByLot;
     }
 
-    public void setPriceItemTypeByLot(Integer priceItemTypeByLot) {
+    public void setPriceItemTypeByLot(Float priceItemTypeByLot) {
         this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
-    public Integer getCostItemType() {
+    public Float getCostItemType() {
         return costItemType;
     }
 
-    public void setCostItemType(Integer costItemType) {
+    public void setCostItemType(Float costItemType) {
         this.costItemType = costItemType;
     }
 
-    public Integer getAmountInvoiceDetail() {
+    public Float getAmountInvoiceDetail() {
         return amountInvoiceDetail;
     }
 
-    public void setAmountInvoiceDetail(Integer amountInvoiceDetail) {
+    public void setAmountInvoiceDetail(Float amountInvoiceDetail) {
         this.amountInvoiceDetail = amountInvoiceDetail;
     }
 
@@ -141,14 +156,6 @@ public class InvoiceDetail {
 
     public void setStore(Store store) {
         this.store = store;
-    }
-
-    public InvoiceDetail getInvoiceDetail() {
-        return invoiceDetail;
-    }
-
-    public void setInvoiceDetail(InvoiceDetail invoiceDetail) {
-        this.invoiceDetail = invoiceDetail;
     }
 
     public List<InvoiceDetailPurity> getInvoiceDetailPurity() {

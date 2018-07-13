@@ -3,8 +3,13 @@ package com.hecticus.eleta.model_new;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,9 +22,22 @@ public class Invoice implements Serializable {
     private String updatedAt;
     private Double totalInvoice;
     private String closedDateInvoice;
+    private List<InvoiceDetail> invoiceDetails;
+    private String startDateInvoice;
+    private com.hecticus.eleta.model.response.providers.Provider provider;
 
-    public Invoice() {
+
+
+    public Invoice(InvoicePost invoicePost) {
+        this.id = (long) invoicePost.getInvoiceId();
+        this.provider = ManagerDB.getProviderById(invoicePost.getProviderId());
+        this.startDateInvoice = invoicePost.getStartDate();
+        this.invoiceDetails = new ArrayList<>();
+        for(int i=0; i<invoicePost.getItems().size(); i++ ) {
+            invoiceDetails.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
+        }
     }
+
 
     public Long getId() {
         return id;
@@ -67,5 +85,29 @@ public class Invoice implements Serializable {
 
     public void setClosedDateInvoice(String closedDateInvoice) {
         this.closedDateInvoice = closedDateInvoice;
+    }
+
+    public List<InvoiceDetail> getInvoiceDetails() {
+        return invoiceDetails;
+    }
+
+    public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
+        this.invoiceDetails = invoiceDetails;
+    }
+
+    public String getStartDateInvoice() {
+        return startDateInvoice;
+    }
+
+    public void setStartDateInvoice(String startDateInvoice) {
+        this.startDateInvoice = startDateInvoice;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 }

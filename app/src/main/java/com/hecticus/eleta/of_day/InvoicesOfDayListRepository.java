@@ -204,7 +204,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
             }
         } else {
-            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getId(), date, new ArrayList<Long>());
+            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getId()/*, date, new ArrayList<Long>()*/);
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override

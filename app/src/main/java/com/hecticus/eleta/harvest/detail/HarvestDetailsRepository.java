@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model_new.Invoice;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -133,7 +134,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                call = invoiceApi.newInvoiceDetail(invoicePost, invoicePost.getProviderId(), invoicePost.getStartDate());
+                call = invoiceApi.newInvoiceDetail(invoicePost/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
+                new Invoice(invoicePost);
             } else {
                 call = invoiceApi.updateInvoiceDetail(invoicePost);
             }

@@ -3,7 +3,10 @@ package com.hecticus.eleta.model_new;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.model.response.providers.ProviderType;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.ManagerServices;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -66,13 +69,19 @@ public class SyncManager {
     @DebugLog
     public SyncManager() {
         if (providersApi == null) {
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
             OkHttpClient httpClient = new OkHttpClient.Builder()
                     .addInterceptor(
                             new Interceptor() {
                                 @Override
                                 public okhttp3.Response intercept(Chain chain) throws IOException {
+
+                                    Log.d("DEBUG contructor", SessionManager.getAccessToken(HomeActivity.INSTANCE));
+
                                     Request request = chain.request().newBuilder()
-                                            .addHeader("Authorization", SessionManager.getAccessToken(HomeActivity.INSTANCE)) //loggedInActivityParam))
+                                            .addHeader("Authorization", SessionManager.getAccessToken(HomeActivity.INSTANCE))
                                             .addHeader("Content-Type", "application/json").build();
                                     return chain.proceed(request);
                                 }
@@ -80,8 +89,9 @@ public class SyncManager {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient).build();
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(httpClient)
+                    .build();
 
             providersApi = retrofit.create(ProviderRetrofitInterface.class);
             invoiceApi = retrofit.create(InvoiceRetrofitInterface.class);
@@ -161,10 +171,12 @@ public class SyncManager {
         if (isAdding) {
             operationName = "createProviderSync";
             Log.d("DETAILS", "---> Provider new" + currentProviderToSync);
+            currentProviderToSync.setProviderType(new ProviderType(currentProviderToSync.getIdProviderType()));
             call = providersApi.createProvider(currentProviderToSync);
         } else {
             operationName = "editProviderSync";
             Log.d("DETAILS", "---> Provider edit" + currentProviderToSync);
+            currentProviderToSync.setProviderType(new ProviderType(currentProviderToSync.getIdProviderType()));
             call = providersApi.updateProviderData(currentProviderToSync.getIdProvider(), currentProviderToSync);
         }
         new ManagerServices<>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
@@ -397,7 +409,7 @@ public class SyncManager {
         Call<CreateInvoiceResponse> call;
         if (firstInvoicePost.getInvoiceId() == -1) {
             Log.d("DETAILS", "---> firstInvoicePost is new: " + firstInvoicePost);
-            call = invoiceApi.newInvoiceDetail(firstInvoicePost, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate());
+            call = invoiceApi.newInvoiceDetail(firstInvoicePost/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
         } else {
             Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
             call = invoiceApi.updateInvoiceDetail(firstInvoicePost);
@@ -680,7 +692,7 @@ public class SyncManager {
         ofDayList.remove(firstOfDay);
         Log.d("DETAILS", "--->deleteNextOfDay firstInvoice" + firstOfDay);
 
-        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId(), firstOfDay.getStartDate(), new ArrayList<Long>());
+        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId() /* ,firstOfDay.getStartDate(), new ArrayList<Long>()*/);
 
         new ManagerServices<>(call, new ManagerServices.ServiceListener<InvoiceDetailsResponse>() {
             @DebugLog
