@@ -48,7 +48,11 @@ public class StatusInvoice extends Status {
         this.invoices = invoices;
     }
 
-    private static Finder<String, StatusInvoice> finder = new Finder<>(StatusInvoice.class);
+    private static Finder<Long, StatusInvoice> finder = new Finder<>(StatusInvoice.class);
+
+    public static StatusInvoice findById(Long id){
+        return finder.byId(id);
+    }
 
     public static StatusInvoice findByName(String name){
         return finder.query().where().startsWith("name", name).findUnique();

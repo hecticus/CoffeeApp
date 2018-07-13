@@ -33,9 +33,9 @@ public class StatusInvoiceDetail extends Status {
     }
 
 
-    private static Finder<String, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
+    private static Finder<Long, StatusInvoiceDetail> finder = new Finder<>(StatusInvoiceDetail.class);
 
-    public static StatusInvoiceDetail findById(String id){
+    public static StatusInvoiceDetail findById(Long id){
         return finder.byId(id);
     }
 

@@ -33,9 +33,9 @@ public class StatusFarm extends Status {
         this.farms = farms;
     }
 
-    private static Finder<String, StatusFarm> finder = new Finder<>(StatusFarm.class);
+    private static Finder<Long, StatusFarm> finder = new Finder<>(StatusFarm.class);
 
-    public static StatusFarm findById(String id){
+    public static StatusFarm findById(Long id){
         return finder.byId(id);
     }
 

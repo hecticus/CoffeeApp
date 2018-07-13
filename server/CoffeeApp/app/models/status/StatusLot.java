@@ -32,9 +32,9 @@ public class StatusLot extends Status {
         this.lots = lots;
     }
 
-    private static Finder<String, StatusLot> finder = new Finder<>(StatusLot.class);
+    private static Finder<Long, StatusLot> finder = new Finder<>(StatusLot.class);
 
-    public static StatusLot findById(String id){
+    public static StatusLot findById(Long id){
         return finder.byId(id);
     }
 

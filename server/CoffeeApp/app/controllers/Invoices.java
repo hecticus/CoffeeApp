@@ -161,8 +161,12 @@ public class Invoices extends Controller {
         if (form.hasErrors())
             return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
+        JsonNode startDate =  json.get("startDate");;
+        if (startDate==  null)
+            return Response.requiredParameter("startDateInvoiceDetail");
         Invoice invoice = Json.fromJson(json, Invoice.class);
-        String fecha = invoice.getStartDateInvoice().toString().split(" ")[0];
+        String fecha =startDate.asText().split(" ")[0];
+//        String fecha = invoice.getStartDateInvoice().toString().split(" ")[0];
         System.out.println(fecha +"-+");
 
 
@@ -173,29 +177,32 @@ public class Invoices extends Controller {
         if(invoices.isEmpty()){
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
-            newInvoice.setStatusInvoice(StatusInvoice.findByName( "Open"));
+            newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
         }else{
-            for (Iterator inv= invoices.iterator(); inv.hasNext(); ) {
-                Invoice i = (Invoice) inv.next();
-                if(i.getStatusInvoice().getName() == "Open") {
-                    newInvoice = i;
-                } else if (i.getStatusInvoice().getName() == "Closed"){
-                    newInvoice = new Invoice();
+            for (Invoice i : invoices ) {
+                StatusInvoice status = i.getStatusInvoice();
+                if( status != null) {
+                    if (status.getId().intValue() == 11) System.out.println(status);
+                        newInvoice = i;
                 }else{
                     newInvoice = new Invoice();
+                    newInvoice.setProvider(invoice.getProvider());
+                    newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
                 }
             }
-
         }
 
 
-        for (JsonNode itemtypeAux : itemtypes) {
+        for (JsonNode item : itemtypes) {
 
-            Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(json);
+//            JsonNode amount = itemtypeAux.get("amountInvoiceDetail");
+//            if (amount == null)
+//                return Response.requiredParameter("amountInvoiceDetail");
+            Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
             if (formDetail.hasErrors())
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
 
-            InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
+            InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
             invoiceDetail.save();
 
             // Buscos la lista de invoicesDetail asociado a esa Invoice
@@ -214,7 +221,7 @@ public class Invoices extends Controller {
 
             if(!option)  {
 
-                JsonNode purities = itemtypeAux.get("purities");
+                JsonNode purities = item.get("purities");
                 if (purities == null)
                     return Response.requiredParameter("purities");
                 for(JsonNode purity : purities) {
@@ -240,7 +247,7 @@ public class Invoices extends Controller {
         return Response.createdEntity(Json.toJson(newInvoice));
     }
 
-//
+
 //    @CoffeAppsecurity
 //    public  Result buyHarvestsAndCoffe(){
 //

@@ -22,8 +22,8 @@ import java.util.List;
 public class  InvoiceDetail  extends AbstractEntity{
 
     @ManyToOne
-    @Constraints.Required
-    @JoinColumn(nullable = false)
+//    @Constraints.Required
+//    @JoinColumn(nullable = false)
     private Invoice invoice;
 
     @ManyToOne
@@ -70,7 +70,7 @@ public class  InvoiceDetail  extends AbstractEntity{
     private String note;
 
     @ManyToOne
-    @Constraints.Required
+//    @Constraints.Required
 //    @JsonBackReference
     private StatusInvoiceDetail statusInvoiceDetail;
 

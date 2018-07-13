@@ -23,16 +23,7 @@ public abstract class Status extends AbstractEntity {
     @Column(columnDefinition = "text")
     protected String description;
 
-    private static Finder<String, Status> finder = new Finder<>(Status.class);
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private static Finder<Long, Status> finder = new Finder<>(Status.class);
 
     public String getDtype() {
         return dtype;

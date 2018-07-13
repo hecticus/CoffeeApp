@@ -32,9 +32,9 @@ public class StatusProvider extends Status {
         this.providers = providers;
     }
 
-    private static Finder<String, StatusProvider> finder = new Finder<>(StatusProvider.class);
+    private static Finder<Long, StatusProvider> finder = new Finder<>(StatusProvider.class);
 
-    public static StatusProvider findById(String id){
+    public static StatusProvider findById(Long id){
         return finder.byId(id);
     }
 

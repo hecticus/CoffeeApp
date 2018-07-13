@@ -33,9 +33,9 @@ public class StatusStore extends Status {
         this.stores = stores;
     }
 
-    private static Finder<String, StatusStore> finder = new Finder<>(StatusStore.class);
+    private static Finder<Long, StatusStore> finder = new Finder<>(StatusStore.class);
 
-    public static StatusStore findById(String id){
+    public static StatusStore findById(Long id){
         return finder.byId(id);
     }
 
