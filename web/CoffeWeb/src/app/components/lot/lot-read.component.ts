@@ -7,6 +7,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
 	template: `
@@ -87,7 +88,8 @@ export class LotReadComponent implements OnInit {
 		private lotService: LotService,
 		private location: Location,
 		private statusLotService: StatusLotService,
-		private modalService: BsModalService
+		private modalService: BsModalService,
+		private toastr: ToastrManager
 
 	) { }
 
@@ -107,12 +109,16 @@ export class LotReadComponent implements OnInit {
 		this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
 	}
 
-	confirm(): void {
+	decline(): void {
 		this.modalRef.hide();
 	}
 
-	decline(): void {
-		this.modalRef.hide();
+	showSuccess() {
+		this.toastr.successToastr('This is success toast.', 'Success!');
+	}
+
+	showInfo() {
+		this.toastr.infoToastr('This is info toast.', 'Info');
 	}
 
 	update() {
@@ -122,10 +128,10 @@ export class LotReadComponent implements OnInit {
 
 	delete() {
 		this.lotService.delete(this.lot.id).subscribe( any => {
+			this.showSuccess();
 			let url = this.location.path();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
-			} // }, err => this.notificationService.error(err));
-		);
+			},  err => this.toastr.infoToastr('This is info toast.', err));
 		this.modalRef.hide();
 	}
 }

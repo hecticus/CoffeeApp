@@ -18,7 +18,7 @@ import { TableComponent } from './core/table/table.component';
 import { UnitComponent } from './components/unit/unit.component';
 import { UtilsModule } from './core/utils/utils.module';
 import { CommonModule } from '@angular/common';
-
+import { ToastrModule } from 'ng6-toastr-notifications';
 
 @NgModule({
 declarations: [
@@ -43,6 +43,7 @@ imports: [
 	FormsModule,
 	RouterModule,
 	Ng2SmartTableModule,
+	ToastrModule.forRoot(),
 
 	UtilsModule,
 	AuthModule,
