@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { UtilsModule } from '../../core/utils/utils.module';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
 	imports: [
@@ -34,6 +35,7 @@ import { UtilsModule } from '../../core/utils/utils.module';
 		MatSelectModule,
 		MatFormFieldModule,
 		MatInputModule,
+		ModalModule.forRoot(),
 
 		UtilsModule,
 		LotRoutingModule,

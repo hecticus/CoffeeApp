@@ -3,8 +3,10 @@ import { Status } from '../../core/models/status';
 import { Location } from '@angular/common';
 import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
 	template: `
@@ -14,7 +16,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 				<button class="btn-icon" title="Update" type="button" (click)="update()">
 					<i class="material-icons">edit</i>
 				</button>
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false">
+				<button class="btn-icon" title="Delete" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
@@ -57,25 +59,24 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 			</div>
 		</div>
 
-		<app-modal [(closed)]="confirmDelete">
-			<ng-template modalContentDirective>
-				<div class="dialog-content">
-					<div class="dialog-title" >Confirmation</div>
-					<div class="dialog-message">Are you sure you want to delete this record?</div>
-					<div class="dialog-options">
-						<button class="btn-text red" type="button" (click)="confirmDelete = true">
-							<div class="text">No</div>
-						</button>
-						<button class="btn-text green" type="button" (click)="delete(); confirmDelete = true">
-							<div class="text">Yes</div>
-						</button>
-					</div>
+		<ng-template #template>
+			<div class="modal-body text-center">
+				<div class="dialog-title">Confirmation</div>
+				<div class="dialog-message">Are you sure you want to delete this record?</div>
+				<div class="dialog-options">
+					<button class="btn-text green" type="button" (click)="delete()">
+						<div class="text">Yes</div>
+					</button>
+					<button class="btn-text red" type="button" (click)="decline()" >
+						<div class="text">No</div>
+					</button>
 				</div>
-			</ng-template>
-		</app-modal>
+			</div>
+		</ng-template>
 	`
 })
 export class LotReadComponent implements OnInit {
+	modalRef: BsModalRef;
 	confirmDelete = true;
 	status: Status;
 	lot = new Lot();
@@ -86,6 +87,7 @@ export class LotReadComponent implements OnInit {
 		private lotService: LotService,
 		private location: Location,
 		private statusLotService: StatusLotService,
+		private modalService: BsModalService
 
 	) { }
 
@@ -101,16 +103,29 @@ export class LotReadComponent implements OnInit {
 		});
 	}
 
+	openModal(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+	}
+
+	confirm(): void {
+		this.modalRef.hide();
+	}
+
+	decline(): void {
+		this.modalRef.hide();
+	}
+
 	update() {
 		console.log(this.activatedRoute);
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
 	}
 
-	delete(this) {
+	delete() {
 		this.lotService.delete(this.lot.id).subscribe( any => {
 			let url = this.location.path();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
 			} // }, err => this.notificationService.error(err));
 		);
+		this.modalRef.hide();
 	}
 }

@@ -68,49 +68,49 @@ import { SelectionModel } from '@angular/cdk/collections';
 				<!-- Position ProviderType -->
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Provider Type</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.providerType?.nameProviderType}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.providerType?.nameProviderType || '-'}} </td>
 				</ng-container>
 
 				<!-- Position nitProvider -->
 				<ng-container matColumnDef="nitProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nit Provider</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.nitProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.nitProvider || '-'}}</td>
 				</ng-container>
 
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name</span></th>
-					<td mat-cell *matCellDef="let provider"> {{provider.nameProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.nameProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position Address -->
 				<ng-container matColumnDef="addressProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Addreess</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.addressProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.addressProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position numberProvider -->
 				<ng-container matColumnDef="numberProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Number</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.numberProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.numberProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position emailProvider -->
 				<ng-container matColumnDef="emailProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.emailProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.emailProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position contactNameProvider -->
 				<ng-container matColumnDef="contactNameProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Contac Name</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.contactNameProvider}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.contactNameProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position statusProvider -->
 				<ng-container matColumnDef="statusProvider">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider?.name}} </td>
+					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider?.name || '-'}} </td>
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
@@ -118,6 +118,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
+
+		<button class="btn btn-primary">Test Button</button>
 
 	`
 })
