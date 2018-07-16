@@ -149,8 +149,9 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     }
 
     @Override
-    public boolean isCurrentClosedInvoice() {
-        return false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
+    public boolean isCurrentClosedInvoice() {//3 = a factura cerrada
+        Log.d("DEBUGGGGGGGG", String.valueOf(currentInvoice.getInvoiceStatus().getDescription().equals("Closed")));
+        return currentInvoice.getInvoiceStatus().getDescription().equals("Closed");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
     }
 
     @DebugLog

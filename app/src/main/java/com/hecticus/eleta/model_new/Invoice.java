@@ -29,13 +29,13 @@ public class Invoice implements Serializable {
 
 
     public Invoice(InvoicePost invoicePost) {
-        this.id = (long) invoicePost.getInvoiceId();
+        //this.id = (long) invoicePost.getInvoiceId();
         this.provider = ManagerDB.getProviderById(invoicePost.getProviderId());
         this.startDateInvoice = invoicePost.getStartDate();
-        this.invoiceDetails = new ArrayList<>();
-        for(int i=0; i<invoicePost.getItems().size(); i++ ) {
+        //this.invoiceDetails = new ArrayList<>();
+        /*for(int i=0; i<invoicePost.getItems().size(); i++ ) {
             invoiceDetails.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
-        }
+        }*/
     }
 
 

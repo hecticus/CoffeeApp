@@ -128,6 +128,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         if (getIntent().getSerializableExtra("details") != null) {
             Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
             }.getType();
+            Log.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
             details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
         }
 

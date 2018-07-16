@@ -1,5 +1,7 @@
 package com.hecticus.eleta.model.response.invoice;
 
+import android.util.Log;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -94,7 +96,13 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @Override
     public boolean canDelete() {
-        return false; //invoiceStatus < 3; todo nose
+        Log.d("DEBUGGGGGGGG", String.valueOf(!getInvoiceStatus().getDescription().equals("Closed")));
+        if(getInvoiceStatus().getDescription().equals("Closed")){
+            return false;
+        }else{
+            return true; //invoiceStatus < 3; todo nose
+        }
+
     }
 
     public int getId() {

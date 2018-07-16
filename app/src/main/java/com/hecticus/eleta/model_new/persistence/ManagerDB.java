@@ -1291,7 +1291,7 @@ public class ManagerDB {
         if (remoteInvoiceId != -1) {
             invoiceInRealm = realm
                     .where(Invoice.class)
-                    .equalTo("invoiceId", remoteInvoiceId)
+                    .equalTo("id", remoteInvoiceId)
                     .equalTo("deleteOffline", false)
                     .findFirst();
 

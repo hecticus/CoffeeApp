@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model_new.Invoice;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -127,12 +128,13 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             }
         } else {
             Call<CreateInvoiceResponse> call;
-            Gson g = new Gson();
+            //Gson g = new Gson();
             if (isAdd) {
+                Log.d("DEBUG1", "PASO");
                 call = invoiceApi.newInvoiceDetail(invoicePost/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
-                Log.d("DEBUG1", g.toJson(invoicePost));
+                //Log.d("DEBUG1", g.toJson(invoicePost));
             } else {
-                Log.d("DEBUG2", g.toJson(invoicePost));
+                //Log.d("DEBUG2", g.toJson(invoicePost));
                 call = invoiceApi.updateInvoiceDetail(invoicePost);
             }
             call.enqueue(new Callback<CreateInvoiceResponse>() {
@@ -140,7 +142,9 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 @Override
                 public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                     try {
+                        Log.d("DEBUG2", "PASO");
                         if (response.isSuccessful()) {
+                            Log.d("DEBUG3", "PASO");
                             getAndSaveInvoiceDetails(response.body().getResult().getId(), true);
                         } else {
                             Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));

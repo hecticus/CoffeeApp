@@ -7,6 +7,7 @@ import com.hecticus.eleta.model.response.invoice.CreateInvoiceResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
+import com.hecticus.eleta.model_new.Invoice;
 
 import java.util.ArrayList;
 
@@ -82,7 +83,7 @@ DELETE  /invoiceDetail/:id                                                      
 
     //todo cambio
     @GET("invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
-    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider, @Query("pageindex") int index, @Query("pagesize") int size);
+    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
 
     //todo cambio
     @GET("invoiceDetail")///findAllByIdInvoice/{invoiceId}")
@@ -95,7 +96,7 @@ DELETE  /invoiceDetail/:id                                                      
     @POST("invoiceDetail/{id}")//pasarle el array de ids estoy pasando los un array vacio
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
 
-    @POST("invoice/buyHarvestsAndCoffe")//{idProvider}/{date}")
+    @POST("invoice2")//{idProvider}/{date}")
     Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post
 
     /*@PUT("invoice")
