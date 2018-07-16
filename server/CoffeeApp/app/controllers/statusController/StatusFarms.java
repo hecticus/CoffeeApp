@@ -1,8 +1,10 @@
 package controllers.statusController;
 
+import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ResponseCollection;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
-import controllers.utils.PropertiesCollection;
+import controllers.responseUtils.PropertiesCollection;
 import controllers.utils.Response;
 import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
@@ -19,15 +21,26 @@ public class StatusFarms extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
+//    @CoffeAppsecurity
+//    public Result findAll(Integer index, Integer size, String sort, String collection) {
+//        try {
+//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+//            ListPagerCollection pagedList = StatusFarm.findAll(index, size, sort, pathProperties);
+//
+//            return Response.foundEntity(pagedList, pathProperties);
+//        }catch(Exception e){
+//            return NsExceptionsUtils.find(e);
+//        }
+//    }
     @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+    public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection pagedList = StatusFarm.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = StatusFarm.findAll(index, size, sort, pathProperties);
 
-            return Response.foundEntity(pagedList, pathProperties);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return NsExceptionsUtils.find(e);
+            return ExceptionsUtils.find(e);
         }
     }
 }

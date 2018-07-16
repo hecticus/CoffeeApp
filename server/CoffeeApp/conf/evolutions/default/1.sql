@@ -100,7 +100,6 @@ create table invoice_details (
   name_received                 varchar(100) not null,
   name_delivered                varchar(100) not null,
   note                          text,
-  status_invoice_detail_id      bigint,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -325,9 +324,6 @@ create index ix_invoice_details_lot_id on invoice_details (lot_id);
 alter table invoice_details add constraint fk_invoice_details_store_id foreign key (store_id) references stores (id) on delete restrict on update restrict;
 create index ix_invoice_details_store_id on invoice_details (store_id);
 
-alter table invoice_details add constraint fk_invoice_details_status_invoice_detail_id foreign key (status_invoice_detail_id) references status (id) on delete restrict on update restrict;
-create index ix_invoice_details_status_invoice_detail_id on invoice_details (status_invoice_detail_id);
-
 alter table invoicesdetails_purities add constraint fk_invoicesdetails_purities_purity_id foreign key (purity_id) references purities (id) on delete restrict on update restrict;
 create index ix_invoicesdetails_purities_purity_id on invoicesdetails_purities (purity_id);
 
@@ -409,9 +405,6 @@ drop index ix_invoice_details_lot_id on invoice_details;
 
 alter table invoice_details drop foreign key fk_invoice_details_store_id;
 drop index ix_invoice_details_store_id on invoice_details;
-
-alter table invoice_details drop foreign key fk_invoice_details_status_invoice_detail_id;
-drop index ix_invoice_details_status_invoice_detail_id on invoice_details;
 
 alter table invoicesdetails_purities drop foreign key fk_invoicesdetails_purities_purity_id;
 drop index ix_invoicesdetails_purities_purity_id on invoicesdetails_purities;

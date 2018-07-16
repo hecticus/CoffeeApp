@@ -1,10 +1,8 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.text.PathProperties;
-import models.status.StatusInvoiceDetail;
 import play.data.validation.Constraints;
 
 
@@ -69,10 +67,6 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(columnDefinition = "text")
     private String note;
 
-    @ManyToOne
-//    @Constraints.Required
-//    @JsonBackReference
-    private StatusInvoiceDetail statusInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
@@ -165,13 +159,6 @@ public class  InvoiceDetail  extends AbstractEntity{
         this.nameDelivered = nameDelivered;
     }
 
-    public StatusInvoiceDetail getStatusInvoiceDetail() {
-        return statusInvoiceDetail;
-    }
-
-    public void setStatusInvoiceDetail(StatusInvoiceDetail statusInvoiceDetail) {
-        this.statusInvoiceDetail = statusInvoiceDetail;
-    }
 
     public BigDecimal getPriceItemTypeByLot() {
         return priceItemTypeByLot;
@@ -181,14 +168,7 @@ public class  InvoiceDetail  extends AbstractEntity{
         this.priceItemTypeByLot = priceItemTypeByLot;
     }
 
-    public StatusInvoiceDetail getInvoiceDetail() {
-        return statusInvoiceDetail;
-    }
-
-    public void setInvoiceDetail(StatusInvoiceDetail invoiceDetail) {
-        this.statusInvoiceDetail = invoiceDetail;
-    }
-
+   
     //Metodos Creados
     public static InvoiceDetail findById(Long id){
         return finder.byId(id);
