@@ -12,8 +12,8 @@
             <app-validator [control]="form.controls['password']"></app-validator>
         </div>
         <div class="form-group">
-            <button (click)="main()" class="btn-text" type="submit" [disabled]="!form.valid" routerLink="/admin/lots">
-				<div class="text">Login</div>
+            <button (click)="create()" class="btn-text" type="submit" [disabled]="!form.valid">
+				<div (click)="showDialogo()" class="text">Login</div>
 			</button>
             <a (click)="showDialogo()">Forgot password</a>
         </div>

@@ -16,7 +16,7 @@ import { Status } from '../../core/models/status';
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Create Provider</h2>
-		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+		<form [formGroup]="form"  (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Provider data</span></legend>
 
@@ -85,12 +85,13 @@ import { Status } from '../../core/models/status';
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
-							<mat-select required>
+							<mat-select required [formControlName]="'status'">
 								<mat-option>-- None --</mat-option>
-								<mat-option value="foods" *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
+								<mat-option *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
 							</mat-select>
 							<mat-label>Status</mat-label>
 						</mat-form-field>
+						<app-validator  [control]="form.controls['status']"></app-validator>
 					</div>
 				</div>
 			</fieldset>
@@ -136,6 +137,7 @@ export class ProviderCreateComponent implements OnInit  {
 			data => {this.status = data['result'];
 		});
 		}
+
 
 	create() {
 		this.providerService.create(<Provider> this.form.value);

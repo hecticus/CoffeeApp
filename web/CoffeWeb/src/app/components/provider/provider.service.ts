@@ -47,15 +47,16 @@ export class ProviderService {
 	getProvider(provider: Provider): FormGroup {
 		return this.fb.group({
 			id: new FormControl(provider.id),
-			providerType: new FormControl(provider.providerType, Validators.required),
+			providerType: new FormControl(provider.providerType ? provider.providerType.id : undefined, Validators.required),
 			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),
 			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
 			numberProvider: new FormControl(provider.numberProvider, [CustomValidators.numberRegex, Validators.maxLength(20)]),
-			emailProvider: new FormControl(provider.emailProvider, [Validators.required, CustomValidators.match('email')]),
+			emailProvider: new FormControl(provider.emailProvider, [Validators.required, CustomValidators.emailRegex]),
 			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.required, Validators.maxLength(50)]),
-			statusProvider: new FormControl(provider.statusProvider, [Validators.required, Validators.maxLength(20)]),
+			statusProvider: new FormControl(provider.statusProvider ? provider.statusProvider.id : undefined, Validators.required),
 			// invoices: new FormControl(provider.emailProvider, [Validators.required, Validators.maxLength(100)]),
 		});
 	}
+
 }

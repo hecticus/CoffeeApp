@@ -1,3 +1,5 @@
+import { Status } from './../../core/models/status';
+import { StatusLotService } from './../status/status-lot.service';
 import { Farm } from '../../core/models/farm';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -64,9 +66,9 @@ import { FarmService } from '../farm/farm.service';
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
-							<mat-select required>
+							<mat-select required [formControlName]="'status'">
 								<mat-option>-- None --</mat-option>
-								<mat-option value="foods" *ngFor="let f of foods ">{{f.viewValue}}</mat-option>
+								<mat-option *ngFor="let s of status" [value]="{id: f.id}">{{s.name}}</mat-option>
 							</mat-select>
 							<mat-label>Status</mat-label>
 						</mat-form-field>
@@ -87,6 +89,7 @@ export class LotCreateComponent implements OnInit  {
 	form: FormGroup;
 	farms: Farm[];
 	options: FormGroup;
+	status: Status;
 
 	foods = [
 		{id: 1, value: 'steak-0', viewValue: 'Steak'},
@@ -97,9 +100,10 @@ export class LotCreateComponent implements OnInit  {
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private lotService: LotService,
 		private location: Location,
+		private lotService: LotService,
 		private farService: FarmService,
+		private statusLotService: StatusLotService,
 	) {
 		this.form = this.lotService.getLot(new Lot());
 	}
@@ -110,7 +114,14 @@ export class LotCreateComponent implements OnInit  {
 				this.farms = data['result'];
 				console.log(this.farms);
 			});
-		}
+
+		this.statusLotService.getAll().subscribe(
+			data => {
+				this.status = data['result'];
+				console.log(this.status);
+				console.log("holalala");
+			});
+	}
 
 	create() {
 		this.lotService.create(<Lot> this.form.value);

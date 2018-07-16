@@ -61,49 +61,51 @@ import { BaseService } from '../../core/base.service';
 				<!-- Position nameItemType -->
 				<ng-container matColumnDef="itemType.nameItemType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Item Type</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.itemType.nameItemType}}</td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.itemType?.nameItemType || '-'}}</td>
 				</ng-container>
 
 				<!-- Position lot.nameLot -->
 				<ng-container matColumnDef="lot.nameLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Lot</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.lot.nameLot}} </td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.lot?.nameLot || '-'}} </td>
+					<td mat-footer-cell *matFooterCellDef> Total </td>
 				</ng-container>
 
 				<!-- Position store.nameStore -->
 				<ng-container matColumnDef="store.nameStore">
 					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name Store</span></th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.store.nameStore}} </td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.store?.nameStore|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  priceItemTypeByLot -->
 				<ng-container matColumnDef="priceItemTypeByLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
-						<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.priceItemTypeByLot}} </td>
+						<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.priceItemTypeByLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position costItemType -->
 				<ng-container matColumnDef="costItemType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Costo Item Type</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.costItemType}}</td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.costItemType|| '-'}}</td>
 				</ng-container>
 
 				<!-- Position amountInvoiceDetail -->
 				<ng-container matColumnDef="amountInvoiceDetail">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.amountInvoiceDetail}}</td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.amountInvoiceDetail|| '-'}}</td>
 				</ng-container>
 
 				<!-- Position nameReceived -->
 				<ng-container matColumnDef="nameReceived">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Received</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameReceived}}</td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameReceived|| '-'}}</td>
 				</ng-container>
 
 				<!-- Position nameReceived-->
 				<ng-container matColumnDef="nameDelivered">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Delivered</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered}}</td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered|| '-'}}</td>
+
 				</ng-container>
 
 				<!-- Position nameDelivered
@@ -130,8 +132,9 @@ import { BaseService } from '../../core/base.service';
 export class InvoiceDetailListComponent implements OnInit {
 
 	@Input() idInvoice: number;
+	@Input() total: number;
 	form: FormGroup;
-
+	totall: number;
 	// Order Columns Display
 	columnsToDisplay = ['itemType.nameItemType',
 	'lot.nameLot', 'store.nameStore', 'priceItemTypeByLot',
@@ -168,12 +171,13 @@ export class InvoiceDetailListComponent implements OnInit {
 		let hhtpParams = BaseService.jsonToHttpParams({
 			invoice: this.idInvoice,
 		});
-
+		console.log(this.total);
 		this.invoiceDetailService.getAll(hhtpParams).subscribe(
 			data => {
 				this.dataSource.data = data['result'];
 				console.log(this.dataSource);
 		});
+		this.totall = this.total;
 	}
 
 

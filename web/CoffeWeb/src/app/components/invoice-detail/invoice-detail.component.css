@@ -17,3 +17,10 @@ th.mat-sort-header-sorted {
 .example-full-width {
     width: 100%;
 }
+
+html,
+body {
+    min-height: 100% !important;
+    height: 100%;
+    color: #3f3f3f;
+}

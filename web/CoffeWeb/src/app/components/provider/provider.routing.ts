@@ -30,22 +30,21 @@ export const providerRoutes: Routes = [
 				}
 			}, {
 				path: ':providerId',
-				component:  ProviderUpdateComponent,
+				component:  ProviderComponent,
 				data: {
 					breadcrumb: undefined
 				},
 				children: [
 					{
-						path: 'update',
-						component:  ProviderUpdateComponent,
-						data: {
-							breadcrumb: 'update',
-							icon: 'edit'
-						}
-					}, {
 						path: '',
 						pathMatch: 'full',
 						component:  ProviderReadComponent
+					}, {
+						path: 'update',
+						component:  ProviderUpdateComponent,
+						data: {
+							breadcrumb: 'update'
+						}
 					}
 				]
 			}

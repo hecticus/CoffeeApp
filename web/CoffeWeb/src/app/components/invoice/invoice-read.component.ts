@@ -59,7 +59,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 
 			<div class="fieldset">
 				<div class="legend">InvoiceDetail Data</div>
-				<app-invoice-detail-read   [idInvoice]="idInvoice"></app-invoice-detail-read>
+				<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
 
 			</div>
 		</div>

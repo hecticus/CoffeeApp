@@ -15,14 +15,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 	template: `
 		<h2 class="title">Providers</h2>
 		<div class="filter row">
-			<div class="field">
+		<!--	<div class="field">
 				<mat-select placeholder="Provider Type" [(ngModel)]="seler" name="pt">
 					<mat-option>-- None --</mat-option>
 					<mat-option *ngFor="let pt of provType" [value]="pt.id" >
 			{{pt.nameProviderType}}
 					</mat-option>
 				</mat-select>
-			</div>
+			</div>-->
 			<div class="field">
 				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
 			</div>
@@ -118,8 +118,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
-
-		<button class="btn btn-primary">Test Button</button>
 
 	`
 })

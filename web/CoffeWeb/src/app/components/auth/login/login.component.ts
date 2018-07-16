@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
 	}
 
 	main() {
+		console.log('estoy log');
 		this.router.navigate(['./admin'], {relativeTo: this.activatedRoute});
 	}
 
@@ -40,5 +41,10 @@ export class LoginComponent implements OnInit {
 
 	showDialogo() {
 		console.log('jjjj');
+		this.router.navigate(['./admin'], {relativeTo: this.activatedRoute});
 	}
+	create() {
+		this.router.navigate(['./admin'], {relativeTo: this.activatedRoute});
+	}
+
 }
