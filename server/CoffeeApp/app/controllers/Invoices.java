@@ -156,13 +156,10 @@ public class Invoices extends Controller {
             return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
         JsonNode startDate =  json.get("startDate");;
-        if (startDate==  null)
+        if (startDate ==  null)
             return Response.requiredParameter("startDateInvoiceDetail");
         Invoice invoice = Json.fromJson(json, Invoice.class);
-        String fecha =startDate.asText().split(" ")[0];
-//        String fecha = invoice.getStartDateInvoice().toString().split(" ")[0];
-        System.out.println(fecha +"-+");
-
+        String fecha = startDate.asText().split(" ")[0];
 
         List<Invoice> invoices = Invoice.getOpenByProviderId(invoice.getProvider().getId(), fecha);
 
@@ -188,10 +185,6 @@ public class Invoices extends Controller {
 
 
         for (JsonNode item : itemtypes) {
-
-//            JsonNode amount = itemtypeAux.get("amountInvoiceDetail");
-//            if (amount == null)
-//                return Response.requiredParameter("amountInvoiceDetail");
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
             if (formDetail.hasErrors())
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());

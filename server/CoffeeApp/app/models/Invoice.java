@@ -122,6 +122,10 @@ public class Invoice extends AbstractEntity{
         return finder.byId(id);
     }
 
+    public static List<Invoice> findAllInvoiceActive() {
+        return finder.query().where().eq("statusInvoice.id", 11).findList();
+    }
+
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long providerType, String startDate,
