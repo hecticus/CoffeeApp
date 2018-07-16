@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
+import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
 import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
@@ -45,6 +46,7 @@ public class Invoice extends AbstractEntity{
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "startDate")
+    @CreatedTimestamp
     private ZonedDateTime startDateInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
