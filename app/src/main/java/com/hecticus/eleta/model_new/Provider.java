@@ -27,6 +27,16 @@ public class Provider {
     public Provider() {
     }
 
+    public Provider(com.hecticus.eleta.model.response.providers.Provider provider) {
+        this.id = (long) provider.getIdProvider();
+        this.nitProvider = provider.getIdentificationDocProvider();
+        this.nameProvider = provider.getFullNameProvider();
+        this.addressProvider = provider.getAddressProvider();
+        this.numberProvider = provider.getPhoneNumberProvider();
+        this.emailProvider = provider.getEmailProvider();
+        this.contactNameProvider = provider.getContactNameProvider();
+    }
+
     public Long getId() {
         return id;
     }

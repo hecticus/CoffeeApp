@@ -131,7 +131,9 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             //Gson g = new Gson();
             if (isAdd) {
                 Log.d("DEBUG1", "PASO");
-                call = invoiceApi.newInvoiceDetail(invoicePost/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
+                Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
+                Log.d("DEBUG2", "PASO22");
+                call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
                 //Log.d("DEBUG1", g.toJson(invoicePost));
             } else {
                 //Log.d("DEBUG2", g.toJson(invoicePost));

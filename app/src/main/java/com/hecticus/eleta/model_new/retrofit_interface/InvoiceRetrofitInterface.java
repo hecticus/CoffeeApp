@@ -83,7 +83,7 @@ DELETE  /invoiceDetail/:id                                                      
 
     //todo cambio
     @GET("invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
-    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
+    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(/*@Query("startDate") String date,*/ @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
 
     //todo cambio
     @GET("invoiceDetail")///findAllByIdInvoice/{invoiceId}")
@@ -97,7 +97,7 @@ DELETE  /invoiceDetail/:id                                                      
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
 
     @POST("invoice2")//{idProvider}/{date}")
-    Call<CreateInvoiceResponse> newInvoiceDetail(@Body InvoicePost post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post
+    Call<CreateInvoiceResponse> newInvoiceDetail(@Body Invoice post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post
 
     /*@PUT("invoice")
     Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);*/

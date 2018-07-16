@@ -99,7 +99,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             }
         } else {
             Log.d("DEBUG", "paso 1");
-            Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_SELLER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-28"
+            Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(/*Util.getCurrentDate(),*/ Constants.TYPE_SELLER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-28"
 
             call.enqueue(new Callback<InvoiceListResponse>() {
                 @DebugLog

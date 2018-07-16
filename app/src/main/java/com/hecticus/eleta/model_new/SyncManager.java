@@ -409,7 +409,8 @@ public class SyncManager {
         Call<CreateInvoiceResponse> call;
         if (firstInvoicePost.getInvoiceId() == -1) {
             Log.d("DETAILS", "---> firstInvoicePost is new: " + firstInvoicePost);
-            call = invoiceApi.newInvoiceDetail(firstInvoicePost/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
+            com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
+            call = invoiceApi.newInvoiceDetail(invoice/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
         } else {
             Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
             call = invoiceApi.updateInvoiceDetail(firstInvoicePost);

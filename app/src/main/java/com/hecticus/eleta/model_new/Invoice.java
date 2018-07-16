@@ -1,11 +1,12 @@
 package com.hecticus.eleta.model_new;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
-import com.hecticus.eleta.model.response.providers.Provider;
-import com.hecticus.eleta.model_new.persistence.ManagerDB;
+import com.hecticus.eleta.model_new.Provider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,20 +23,23 @@ public class Invoice implements Serializable {
     private String updatedAt;
     private Double totalInvoice;
     private String closedDateInvoice;
-    private List<InvoiceDetail> invoiceDetails;
-    private String startDateInvoice;
-    private com.hecticus.eleta.model.response.providers.Provider provider;
+    private Boolean buyOption;
+    private List<InvoiceDetail> itemtypes;
+    private String startDate;
+    private Provider provider;
 
+    public Invoice() {
+    }
 
-
-    public Invoice(InvoicePost invoicePost) {
-        //this.id = (long) invoicePost.getInvoiceId();
-        this.provider = ManagerDB.getProviderById(invoicePost.getProviderId());
-        this.startDateInvoice = invoicePost.getStartDate();
-        //this.invoiceDetails = new ArrayList<>();
-        /*for(int i=0; i<invoicePost.getItems().size(); i++ ) {
-            invoiceDetails.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
-        }*/
+    public Invoice(InvoicePost invoicePost, com.hecticus.eleta.model.response.providers.Provider provider) {
+        this.id = (long) invoicePost.getInvoiceId();
+        this.buyOption = invoicePost.getBuyOption();
+        this.provider = new Provider(provider);
+        this.startDate = invoicePost.getStartDate();
+        this.itemtypes = new ArrayList<>();
+        for(int i=0; i<invoicePost.getItems().size(); i++ ) {
+            itemtypes.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
+        }
     }
 
 
@@ -87,20 +91,28 @@ public class Invoice implements Serializable {
         this.closedDateInvoice = closedDateInvoice;
     }
 
-    public List<InvoiceDetail> getInvoiceDetails() {
-        return invoiceDetails;
+    public Boolean getBuyOption() {
+        return buyOption;
     }
 
-    public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
-        this.invoiceDetails = invoiceDetails;
+    public void setBuyOption(Boolean buyOption) {
+        this.buyOption = buyOption;
     }
 
-    public String getStartDateInvoice() {
-        return startDateInvoice;
+    public List<InvoiceDetail> getItemtypes() {
+        return itemtypes;
     }
 
-    public void setStartDateInvoice(String startDateInvoice) {
-        this.startDateInvoice = startDateInvoice;
+    public void setItemtypes(List<InvoiceDetail> itemtypes) {
+        this.itemtypes = itemtypes;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public Provider getProvider() {

@@ -134,8 +134,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                call = invoiceApi.newInvoiceDetail(invoicePost/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
-                new Invoice(invoicePost);
+                Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
+                call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
             } else {
                 call = invoiceApi.updateInvoiceDetail(invoicePost);
             }

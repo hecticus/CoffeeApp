@@ -62,6 +62,7 @@ public class Util {
     @DebugLog
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Log.d("DEBUG FECHA", sdf.format(new Date()));
         return sdf.format(new Date());
     }
 

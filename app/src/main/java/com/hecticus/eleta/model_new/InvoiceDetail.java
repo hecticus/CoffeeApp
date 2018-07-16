@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
+import com.hecticus.eleta.model.request.invoice.PurityPost;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class InvoiceDetail {
     private ItemType itemType;
     private Lot lot;
     private Store store;
-    private List<InvoiceDetailPurity> invoiceDetailPurity;
+    private List<PurityPost> purities;
 
     public InvoiceDetail() {
     }
@@ -43,7 +44,7 @@ public class InvoiceDetail {
         itemType = new ItemType((long) itemPost.getItemTypeId());
         lot = new Lot((long) invoicePost.getLot());
         store = new Store((long) itemPost.getStoreId());
-        //invoiceDetailPurity;
+        purities = itemPost.getPurities();
     }
 
     public Long getId() {
@@ -158,11 +159,11 @@ public class InvoiceDetail {
         this.store = store;
     }
 
-    public List<InvoiceDetailPurity> getInvoiceDetailPurity() {
-        return invoiceDetailPurity;
+    public List<PurityPost> getPurities() {
+        return purities;
     }
 
-    public void setInvoiceDetailPurity(List<InvoiceDetailPurity> invoiceDetailPurity) {
-        this.invoiceDetailPurity = invoiceDetailPurity;
+    public void setPurities(List<PurityPost> purities) {
+        this.purities = purities;
     }
 }
