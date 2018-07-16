@@ -97,9 +97,9 @@ export class LotReadComponent implements OnInit {
 		this.activatedRoute.params.subscribe(params => {
 				this.lotService.getById(params['lotId']).subscribe(
 					data => { this.lot = data['result'];
-				console.log(this.lot); }
-				);
+					});
 			});
+
 		this.statusLotService.getAll().subscribe( data => {
 			this.status = data['result'];
 		});
@@ -122,8 +122,9 @@ export class LotReadComponent implements OnInit {
 	}
 
 	update() {
-		console.log(this.activatedRoute);
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
+		console.log('estoy en update');
+		console.log(this.activatedRoute);
 	}
 
 	delete() {

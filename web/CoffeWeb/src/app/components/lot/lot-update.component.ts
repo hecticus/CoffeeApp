@@ -92,19 +92,28 @@ export class LotUpdateComponent implements OnInit {
 		private farmService: FarmService,
 	) {
 		this.form = this.lotService.getLot(new Lot());
+		/* this.activatedRoute.parent.params.subscribe(params => console.log(params)); */
 	}
 
-	ngOnInit() {
-		this.activatedRoute.params.subscribe(params => {
-				// this.lotService.getById(params['lotId']).subscribe(
-				//	data => { this.lot = data['result'];
-				// console.log(this.lot); }
-				// );
-				console.log(params);
-				console.log('estoy en update');
-			});
+/*
+	constructor(private route: ActivatedRoute) {
+		this.route.parent.params.subscribe(params => console.log(params)); // Object {artistId: 12345} */
 
-			this.farmService.getAll().subscribe( data => {
+	ngOnInit() {
+		this.activatedRoute.parent.params.subscribe(params => {
+				this.lotService.getById(+params['lotId']).subscribe(
+					data => { this.lot = data['result'];
+					console.log(this.lot); }
+				);
+				console.log(params+"ldsnjkdsbjklvbkjdsbjvkbdskljb");
+				console.log('estoy elñlñlñlñlñlñlñlñln update');
+			});
+/* 
+this.sub = this.router.routerState.parent(this.route)
+.params.subscribe(params => {
+  this.parentRouteId = +params["id"];
+}) */
+		this.farmService.getAll().subscribe( data => {
 			this.farms = data['result']; }
 		);
 

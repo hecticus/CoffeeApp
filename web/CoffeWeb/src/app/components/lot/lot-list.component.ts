@@ -177,7 +177,6 @@ export class LotListComponent implements OnInit {
 
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
-		console.log(id);
 	}
 
 }
