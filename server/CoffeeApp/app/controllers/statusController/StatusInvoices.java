@@ -1,10 +1,9 @@
 package controllers.statusController;
 
+import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ResponseCollection;
 import controllers.utils.ListPagerCollection;
-import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
-import controllers.utils.Response;
-import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import models.status.StatusInvoice;
 import play.mvc.Controller;
@@ -20,14 +19,14 @@ public class StatusInvoices extends Controller {
     }
 
     @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+    public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection pagedList = StatusInvoice.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = StatusInvoice.findAll(index, size, sort, pathProperties);
 
-            return Response.foundEntity(pagedList, pathProperties);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return NsExceptionsUtils.find(e);
+            return ExceptionsUtils.find(e);
         }
     }
 }

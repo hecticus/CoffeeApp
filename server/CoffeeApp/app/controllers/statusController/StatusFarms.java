@@ -21,17 +21,6 @@ public class StatusFarms extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-//    @CoffeAppsecurity
-//    public Result findAll(Integer index, Integer size, String sort, String collection) {
-//        try {
-//            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-//            ListPagerCollection pagedList = StatusFarm.findAll(index, size, sort, pathProperties);
-//
-//            return Response.foundEntity(pagedList, pathProperties);
-//        }catch(Exception e){
-//            return NsExceptionsUtils.find(e);
-//        }
-//    }
     @CoffeAppsecurity
     public Result findAll( Integer index, Integer size, String sort, String collection){
         try {

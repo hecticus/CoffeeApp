@@ -1,5 +1,7 @@
 package controllers.statusController;
 
+import controllers.responseUtils.ExceptionsUtils;
+import controllers.responseUtils.ResponseCollection;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
@@ -19,14 +21,14 @@ public class StatusLots {
     }
 
     @CoffeAppsecurity
-    public Result findAll(Integer index, Integer size, String sort, String collection) {
+    public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection pagedList = StatusLot.findAll(index, size, sort, pathProperties);
+            ListPagerCollection listPager = StatusLot.findAll(index, size, sort, pathProperties);
 
-            return Response.foundEntity(pagedList, pathProperties);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return NsExceptionsUtils.find(e);
+            return ExceptionsUtils.find(e);
         }
     }
 }
