@@ -17,3 +17,9 @@ th.mat-sort-header-sorted {
 .example-full-width {
     width: 100%;
 }
+
+fieldset {
+    width: 100%;
+    border: 0;
+    margin-bottom: 30px;
+}

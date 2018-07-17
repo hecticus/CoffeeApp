@@ -1,3 +1,4 @@
+import { ToastrManager } from 'ng6-toastr-notifications';
 import { Status } from './../../core/models/status';
 import { StatusLotService } from './../status/status-lot.service';
 import { Farm } from '../../core/models/farm';
@@ -12,7 +13,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 @Component({
 	template: `
 		<h3 class="title">Lot Edit</h3>
-		<form [formGroup]="form" (ngSubmit)="update()">
+		<form  *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
 			<legend><span>Lot data</span></legend>
 			<div class="wrap-fields">
@@ -31,12 +32,13 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 					<app-validator  [control]="form.controls['nameLot']"></app-validator>
 				</div>
 			</div>
+			<!-- -->
 			<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
 							<mat-select required [formControl]="form.controls['statusLot']">
-							<mat-option>-- None --</mat-option>
-								<mat-option *ngFor="let s of status" [value]="{id: s.id}">{{s.name}}</mat-option>
+								<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
+								</mat-option>
 							</mat-select>
 							<mat-label><b>Status</b></mat-label>
 						</mat-form-field>
@@ -47,15 +49,13 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
 						<mat-select required [formControl]="form.controls['farm']">
-						<mat-option>-- None --</mat-option>
-							<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
+							<mat-option *ngFor="let f of farms" [value]="f.id">{{f.nameFarm}}</mat-option>
 						</mat-select>
 						<mat-label><b>Farm</b></mat-label>
 					</mat-form-field>
 					<app-validator [control]="form.controls['farm']"></app-validator>
 				</div>
 			</div>
-			<!-- -->
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field class="example-full-width">
@@ -94,37 +94,26 @@ export class LotUpdateComponent implements OnInit {
 	status: Status;
 
 	constructor(
-		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private lotService: LotService,
 		private location: Location,
 		private farmService: FarmService,
 		private statusLotService: StatusLotService,
-	) {
-		this.form = this.lotService.getLot(new Lot());
-		/* this.activatedRoute.parent.params.subscribe(params => console.log(params)); */
-	}
-
-/*
-	constructor(private route: ActivatedRoute) {
-		this.route.parent.params.subscribe(params => console.log(params)); // Object {artistId: 12345} */
+		private toastr: ToastrManager
+	) {	}
 
 	ngOnInit() {
-		this.activatedRoute.parent.params.subscribe(params => {
-				this.lotService.getById(+params['lotId']).subscribe(
-					data => { this.lot = data['result'];
-					console.log(this.lot); }
-				);
-				console.log(params + 'ldsnjkdsbjklvbkjdsbjvkbdskljb');
-				console.log('estoy elñlñlñlñlñlñlñlñln update');
+		this.activatedRoute.parent.params
+			.subscribe(params => {
+				this.lotService.getById(params['lotId']).subscribe(data => {
+					this.form = this.lotService.getLot(data['result']);
+				});
 			}
 		);
 
 		this.statusLotService.getAll().subscribe(
 			data => {
 				this.status = data['result'];
-				console.log(this.status);
-				console.log('bbb');
 			}
 		);
 
@@ -134,8 +123,17 @@ export class LotUpdateComponent implements OnInit {
 
 	}
 
-	update(this) {
-		console.log(this.farm);
+	update() {
+		console.log(this.form.value);
+		this.form.controls['farm'].patchValue({id: this.form.value['farm']});
+		this.form.controls['statusLot'].patchValue({id: this.form.value['statusLot']});
+
+		this.lotService.update(<Lot> this.form.value)
+			.subscribe(lot => {
+				this.toastr.successToastr('Success Update', lot.nameLot);
+				this.location.back();
+				console.log(this.form.value);
+			}, err => this.toastr.errorToastr('This is error', err));
 	}
 
 }
