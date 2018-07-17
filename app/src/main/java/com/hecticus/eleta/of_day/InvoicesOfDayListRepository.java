@@ -152,16 +152,18 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     try {
                         Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
-                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getId(), response.body().getHarvests());
-                            ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
-                            onGetHarvestsSuccess(response.body());
-                        } else
                             Log.d("DEBUG", "paso3");
+                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getId(), response.body().getHarvests());
+                            Log.d("DEBUG", "paso4");
+                            ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
+                            Log.d("DEBUG", "paso5");
+                            onGetHarvestsSuccess(response.body());
+                            Log.d("DEBUG", "paso6");
+                        } else
                             manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.d("DEBUG", "paso4");
                         onError(mPresenter.context.getString(R.string.error_getting_harvests));
                     }
                 }

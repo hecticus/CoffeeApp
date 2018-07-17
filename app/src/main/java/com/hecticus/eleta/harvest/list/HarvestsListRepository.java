@@ -120,8 +120,9 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                             } else {
                                 Log.e("OFFLINE", "--->getHarvestsRequest local after request null list");
                                 onError(mPresenter.context.getString(R.string.error_getting_harvests));
+
                             }
-                            //onGetHarvestsSuccess(response.body());
+                            //onGetHarvestsSuccess(response.body());//todo eliminar
                         } else {
                             manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
                         }
