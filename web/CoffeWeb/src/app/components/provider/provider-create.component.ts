@@ -1,3 +1,4 @@
+import { ToastrManager } from 'ng6-toastr-notifications';
 import { StatusProviderService } from '../status/status-provider.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -114,37 +115,31 @@ export class ProviderCreateComponent implements OnInit  {
 		private location: Location,
 		private providerService: ProviderService,
 		private statusProviderService: StatusProviderService,
-	) {
-		// this.form = this.providerService.getFormGroupProvider(new Provider());
-	}
+		private toastr: ToastrManager,
+	) {}
 
 	ngOnInit () {
 		this.form = this.providerService.getFormGroupProvider(new Provider());
-		// console.log(this.form);
+
 		this.providerTypeService.getAll().subscribe(
 			data => {
 				this.provType = data['result'];
 			}
 		);
 
-		// console.log(this.provType);
 		this.statusProviderService.getAll().subscribe(
 			data => {this.status = data['result'];
 			console.log(this.status);
 		});
-		// console.log(this.status);
-
-
 	}
 
-
 	create() {
-		console.log('this.form.value');
-		// this.providerService.create(<Provider> this.form.value);
-		// .subscribe(store => {
-		// 	this.notificationService.sucessInsert(store.name);
-		// 	this.location.back();
-			console.log(this.form.value);
-		// });, err => this.notificationService.error(err));
+		this.form.controls['providerType'].patchValue({id: this.form.value['providerType']});
+		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
+		this.providerService.create(<Provider> this.form.value)
+		.subscribe(provider => {
+			this.toastr.successToastr('Success create', provider.nameProvider);
+			this.location.back();
+		}, err => this.toastr.errorToastr('This is error', err));
 	}
 }

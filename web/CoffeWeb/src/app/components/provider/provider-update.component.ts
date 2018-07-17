@@ -1,13 +1,10 @@
+import { FormGroup } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { Status } from './../../core/models/status';
 import { StatusProviderService } from '../status/status-provider.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Farm } from '../../core/models/farm';
-import { FarmService } from '../farm/farm.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { Lot } from '../../core/models/lot';
 import { Provider } from '../../core/models/provider';
 import { ProviderService } from './provider.service';
 import { ProviderType } from '../../core/models/provider-type';
