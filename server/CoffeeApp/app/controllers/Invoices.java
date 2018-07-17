@@ -173,8 +173,11 @@ public class Invoices extends Controller {
             for (Invoice i : invoices ) {
                 StatusInvoice status = i.getStatusInvoice();
                 if( status != null) {
-                    if (status.getId().intValue() == 11) System.out.println(status);
+                    if (status.getId().intValue() == 11) {
+                        System.out.println(status.getId());
+                        System.out.println(i.getId() + "Id");
                         newInvoice = i;
+                    }
                 }else{
                     newInvoice = new Invoice();
                     newInvoice.setProvider(invoice.getProvider());

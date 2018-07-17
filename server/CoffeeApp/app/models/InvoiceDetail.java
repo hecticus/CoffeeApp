@@ -47,7 +47,7 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Constraints.Required
     @Constraints.Min(0)
     @Column(nullable = false)
-    private BigDecimal costItemType;//esta en Item Type desconozco la relacion Toma del app para vender
+    private BigDecimal costItemType;//esta en Item Type desconozco la relacion Toma del app para venderf
 
     @Constraints.Required
     @Constraints.Min(0)

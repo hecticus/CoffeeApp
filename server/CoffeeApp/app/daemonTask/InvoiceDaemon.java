@@ -15,7 +15,8 @@ public class InvoiceDaemon extends TimerTask {
 
     @Override
     public void run() {
-        closeInvoice();
+
+//        closeInvoice();
     }
 
 
@@ -47,15 +48,15 @@ public class InvoiceDaemon extends TimerTask {
 
 
 
-    public void closeInvoice() {
-        List<Invoice> invoices = Invoice.findAllInvoiceActive();
-        StatusInvoice status = StatusInvoice.findById(new Long(12));
-        for (Invoice inv : invoices){
-            inv.setStatusInvoice(status);
-            inv.update();
-        }
-        System.out.println("jsjsjsjjjsjsjsjsjsjsj");
-    }
+//    public void closeInvoice() {
+//        List<Invoice> invoices = Invoice.findAllInvoiceActive();
+//        StatusInvoice status = StatusInvoice.findById(new Long(12));
+//        for (Invoice inv : invoices){
+//            inv.setStatusInvoice(status);
+//            inv.update();
+//        }
+//        System.out.println("jsjsjsjjjsjsjsjsjsjsj");
+//    }
 
     private static Date getTomorrowMorning2AM(){
 
