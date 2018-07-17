@@ -1,11 +1,15 @@
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpParams } from '@angular/common/http';
-
 import { BaseService } from '../../core/base.service';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
 import { CustomValidators } from '../../core/utils/validator/custom-validator';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	Validators
+	} from '@angular/forms';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Lot } from '../../core/models/lot';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
 	providedIn: 'root'
@@ -46,6 +50,18 @@ export class LotService {
 	getLot(lot: Lot): FormGroup {
 		return this.fb.group({
 			id: new FormControl(lot.id),
+			farm: new FormControl(lot.farm ? lot.farm.id : undefined , Validators.required),
+			statusLot: new FormControl(lot.statusLot ? lot.statusLot.id : undefined , Validators.maxLength(100)),
+			nameLot: new FormControl(lot.nameLot, [Validators.required, Validators.maxLength(50)]),
+			areaLot:  new FormControl(lot.areaLot, [Validators.required, Validators.maxLength(100)]),
+			heighLot: new FormControl(lot.heighLot, [Validators.required, Validators.maxLength(100)]),
+			priceLot: new FormControl(lot.priceLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
+		});
+	}
+
+	getFormGroupLot(lot: Lot): FormGroup {
+		return this.fb.group({
+			id: new FormControl(lot.id),
 			farm: new FormControl(lot.farm, Validators.required),
 			nameLot: new FormControl(lot.nameLot, [Validators.required, Validators.maxLength(50)]),
 			areaLot:  new FormControl(lot.areaLot, [Validators.required, Validators.maxLength(100)]),
@@ -54,8 +70,6 @@ export class LotService {
 			statusLot: new FormControl(lot.statusLot, [Validators.required, Validators.maxLength(100)]),
 		});
 	}
-
-
 }
 
 

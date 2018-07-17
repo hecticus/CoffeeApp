@@ -25,10 +25,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
 	imports: [
+		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
 		// BrowserAnimationsModule,
-		CommonModule,
 		MatTableModule,
 		MatCheckboxModule,
 		MatPaginatorModule,
