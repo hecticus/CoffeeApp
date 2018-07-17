@@ -18,6 +18,9 @@ import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -138,7 +142,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM ONLINE");
 
             Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoice.getId());
-
+            Log.d("DEBUG", String.valueOf(invoice.getId()));
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override
@@ -146,15 +150,18 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                                        @NonNull Response<InvoiceDetailsResponse> response) {
 
                     try {
+                        Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
                             ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getId(), response.body().getHarvests());
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             onGetHarvestsSuccess(response.body());
                         } else
+                            Log.d("DEBUG", "paso3");
                             manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("DEBUG", "paso4");
                         onError(mPresenter.context.getString(R.string.error_getting_harvests));
                     }
                 }
@@ -162,6 +169,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
+                    Log.d("DEBUG", "paso5");
                     t.printStackTrace();
                     onError(mPresenter.context.getString(R.string.error_getting_harvests));
                 }

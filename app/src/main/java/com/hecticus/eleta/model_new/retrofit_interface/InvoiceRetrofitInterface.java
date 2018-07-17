@@ -109,7 +109,7 @@ DELETE  /invoiceDetail/:id                                                      
     Call<ReceiptResponse> getReceipt(@Path("id") int invoiceId);
 
     //todo cambio
-    @PUT("invoice/{id}")
+    @PUT("invoice")
     Call<Message> closeInvoice(@Path("id") int id, @Body CloseInvoicePost post);
 
 }

@@ -34,7 +34,7 @@ public class Invoice implements Serializable {
     public Invoice(InvoicePost invoicePost, com.hecticus.eleta.model.response.providers.Provider provider) {
         this.id = (long) invoicePost.getInvoiceId();
         this.buyOption = invoicePost.getBuyOption();
-        this.provider = new Provider(provider);
+        this.provider = new Provider(provider, invoicePost.getProviderId());
         this.startDate = invoicePost.getStartDate();
         this.itemtypes = new ArrayList<>();
         for(int i=0; i<invoicePost.getItems().size(); i++ ) {

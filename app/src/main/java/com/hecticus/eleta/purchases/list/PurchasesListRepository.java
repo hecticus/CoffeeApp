@@ -125,6 +125,8 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                             manageError(mPresenter.context.getString(R.string.error_getting_purchases), response, "Got bad purchases response: " + response);
                     } catch (Exception e) {
                         e.printStackTrace();
+
+                        Log.d("DEBUG", "eroor");
                         onError(mPresenter.context.getString(R.string.error_getting_purchases),
                                 "Exception when handling purchases response: " + e + " // "
                                         + (response == null ? "Null response" : "Response body: " + response.body()));

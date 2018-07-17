@@ -39,7 +39,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Expose
     private StatusInvoice invoiceStatus;
 
-    @SerializedName("startDateInvoice")
+    @SerializedName("createdAt")
     @Expose
     private String invoiceStartDate;
 

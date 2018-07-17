@@ -6,6 +6,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.hecticus.eleta.model.StatusInvoiceDetail;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.response.item.ItemType;
@@ -107,7 +108,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
 
     @SerializedName("statusInvoiceDetail")
     @Expose
-    private int status = -1;
+    private StatusInvoiceDetail status;
 
     private boolean addOffline;
     private boolean editOffline;
@@ -253,11 +254,11 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         this.dispatcherName = dispatcherName;
     }
 
-    public int getStatus() {
+    public StatusInvoiceDetail getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(StatusInvoiceDetail status) {
         this.status = status;
     }
 
@@ -375,7 +376,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         jsonObject.addProperty("noteInvoiceDetail", src.getObservation());
         jsonObject.addProperty("nameReceivedInvoiceDetail", src.getReceiverName());
         jsonObject.addProperty("nameDeliveredInvoiceDetail", src.getDispatcherName());
-        jsonObject.addProperty("statusInvoiceDetail", src.getStatus());
+        //jsonObject.addProperty("statusInvoiceDetail", src.getStatus());
 
         return jsonObject;
     }
@@ -404,7 +405,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
                 ", observation='" + observation + '\'' +
                 ", receiverName='" + receiverName + '\'' +
                 ", dispatcherName='" + dispatcherName + '\'' +
-                ", status=" + status +
+                //", status=" + status +
                 ", addOffline=" + addOffline +
                 ", editOffline=" + editOffline +
                 ", deleteOffline=" + deleteOffline +

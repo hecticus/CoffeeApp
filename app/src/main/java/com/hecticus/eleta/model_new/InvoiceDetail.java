@@ -34,16 +34,22 @@ public class InvoiceDetail {
     }
 
     public InvoiceDetail(ItemPost itemPost, InvoicePost invoicePost) {
-        id = (long) itemPost.getInvoiceDetailId();
+        //id = (long) itemPost.getInvoiceDetailId();
         noteInvoiceDetail = invoicePost.getObservations();
         priceItemTypeByLot = itemPost.getPrice();
         costItemType = itemPost.getAmount();
         amountInvoiceDetail= itemPost.getAmount();
         nameReceived = invoicePost.getReceiverName();
         nameDelivered = invoicePost.getDispatcherName();
-        itemType = new ItemType((long) itemPost.getItemTypeId());
-        lot = new Lot((long) invoicePost.getLot());
-        store = new Store((long) itemPost.getStoreId());
+        if(!invoicePost.getBuyOption()){
+            itemType = new ItemType((long) itemPost.getItemTypeId());
+            lot = null;//new Lot((long) invoicePost.getLot());
+            store = null;//new Store((long) itemPost.getStoreId());
+        }else{
+            itemType = null;//new ItemType((long) itemPost.getItemTypeId());
+            store = new Store((long) itemPost.getStoreId());
+            lot = new Lot((long) invoicePost.getLot());
+        }
         purities = itemPost.getPurities();
     }
 

@@ -3,6 +3,7 @@ package com.hecticus.eleta.harvest.detail;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -396,6 +397,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
         if (isAdd()) {
             invoicePost.setProviderId(currentProvider.getIdProvider());
+            Log.d("DEBUG!!!!!", "--->"+ invoicePost.getProviderId());
             invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
             invoicePost.setReceiverName(SessionManager.getUserName(context));
             invoicePost.setStartDate(Util.getCurrentDateForInvoice());
@@ -414,6 +416,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getId());
             }
             invoicePost.setProviderId(currentProvider.getIdProvider());
+            Log.d("DEBUG!!!!!", "--->"+ invoicePost.getProviderId());
             invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
             invoicePost.setReceiverName(currentDetailsList.get(0).getReceiverName());
             invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());
