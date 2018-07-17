@@ -1,3 +1,4 @@
+import { StatusFarmService } from './../status/status-farm.service';
 import { Status } from './../../core/models/status';
 import { StatusLotService } from './../status/status-lot.service';
 import { Farm } from '../../core/models/farm';
@@ -104,6 +105,7 @@ export class LotCreateComponent implements OnInit  {
 		private lotService: LotService,
 		private farService: FarmService,
 		private statusLotService: StatusLotService,
+		private statusFarmService: StatusFarmService,
 	) {
 		this.form = this.lotService.getLot(new Lot());
 	}
@@ -112,14 +114,21 @@ export class LotCreateComponent implements OnInit  {
 		this.farService.getAll().subscribe(
 			data => {
 				this.farms = data['result'];
-				console.log(this.farms);
+				// console.log(this.farms);
+			});
+
+		this.statusFarmService.getAll().subscribe(
+			data => {
+				this.status = data['result'];
+				console.log(this.status);
+				console.log('holalala');
 			});
 
 		this.statusLotService.getAll().subscribe(
 			data => {
 				this.status = data['result'];
 				console.log(this.status);
-				console.log("holalala");
+				console.log('bbb');
 			});
 	}
 

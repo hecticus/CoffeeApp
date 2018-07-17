@@ -1,3 +1,4 @@
+import { Status } from './../../core/models/status';
 import { StatusProviderService } from '../status/status-provider.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -10,7 +11,6 @@ import { Provider } from '../../core/models/provider';
 import { ProviderService } from './provider.service';
 import { ProviderType } from '../../core/models/provider-type';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
-import { Status } from '../../core/models/status';
 
 @Component({
 	styleUrls: ['./provider.component.css'],
@@ -19,17 +19,6 @@ import { Status } from '../../core/models/status';
 		<form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
 				<legend><span>Provider data</span></legend>
-				<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControl]="form.controls['providerType']">
-								<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
-							</mat-select>
-							<mat-label><b>Provider Type</b></mat-label>
-						</mat-form-field>
-						<app-validator [control]="form.controls['providerType']"></app-validator>
-					</div>
-				</div>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -46,20 +35,34 @@ import { Status } from '../../core/models/status';
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 					</div>
 				</div>
-				<!--<div class="wrap-fields">
+				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
-							<mat-select required [formControlName]="'statusProvider'" >
-								<mat-option *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
+							<mat-select required [formControl]="form.controls['providerType']">
+								<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
 							</mat-select>
-							<mat-label>Status</mat-label>
+							<mat-label><b>Provider Type</b></mat-label>
 						</mat-form-field>
+						<app-validator [control]="form.controls['providerType']"></app-validator>
 					</div>
-				</div>-->
+				</div>
+				<!-- -->
+				<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="example-full-width">
+								<mat-select required [formControl]="form.controls['statusProvider']">
+									<mat-option *ngFor="let f of status" [value]="f.id">{{f.name}}</mat-option>
+								</mat-select>
+								<mat-label><b>Status</b></mat-label>
+							</mat-form-field>
+							<app-validator [control]="form.controls['statusProvider']"></app-validator>
+						</div>
+				</div>
+
 			</fieldset>
 
 			<fieldset>
-				<legend><span>Provider data</span></legend>
+				<legend><span>Contact data</span></legend>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field class="example-full-width">
@@ -101,7 +104,6 @@ import { Status } from '../../core/models/status';
 
 
 export class ProviderUpdateComponent implements OnInit  {
-	lot: Lot;
 	form: FormGroup;
 	provType: ProviderType[];
 	options: FormGroup;
@@ -143,17 +145,16 @@ export class ProviderUpdateComponent implements OnInit  {
 	update() {
 		console.log(this.form.value);
 		this.form.controls['providerType'].patchValue({id: this.form.value['providerType']});
+		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
+		console.log(789);
 		console.log(this.form.value);
 
-		// this.lotService.create(<Lot> this.form.value);
-		// // .subscribe(store => {
-		// 	// this.notificationService.sucessInsert(store.name);
-		// 	// this.location.back();
-		// 	console.log(this.form.value);
-		// // });, err => this.notificationService.error(err));
+		this.providerService.update(<Provider> this.form.value);
+		// .subscribe(store => {
+			// this.notificationService.sucessInsert(store.name);
+			// this.location.back();
+			console.log(this.form.value);
+		// });, err => this.notificationService.error(err));
 	}
 
-	changeProviderType(providerType: ProviderType) {
-		this.form.controls.providerType.patchValue(providerType);
-	}
 }

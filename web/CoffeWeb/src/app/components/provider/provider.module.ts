@@ -1,3 +1,4 @@
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProviderService } from './provider.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -25,6 +26,7 @@ import { ProviderRoutingModule } from './provider.routing';
 		MatSelectModule,
 		MatFormFieldModule,
 		MatInputModule,
+		ModalModule.forRoot(),
 
 		UtilsModule,
 		ProviderRoutingModule,

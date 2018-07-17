@@ -14,6 +14,6 @@ export class StatusInvoiceService {
 	) {}
 
 	getAll(params: HttpParams = new HttpParams()): Observable<any> {
-		return this.http.get(StatusInvoiceService.BASE_URL, {params: params});
+		return this.http.get<any>(StatusInvoiceService.BASE_URL, {params: params});
 	}
 }

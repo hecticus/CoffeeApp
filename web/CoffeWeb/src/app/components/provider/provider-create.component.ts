@@ -19,19 +19,6 @@ import { Status } from '../../core/models/status';
 		<form [formGroup]="form"  (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Provider data</span></legend>
-
-				<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControlName]="'providerType'">
-								<mat-option>-- None --</mat-option>
-								<mat-option *ngFor="let f of provType" [value]="{id: f.id}">{{f.nameProviderType}}</mat-option>
-							</mat-select>
-							<mat-label><b>Provider Type</b></mat-label>
-						</mat-form-field>
-						<app-validator  [control]="form.controls['providerType']"></app-validator>
-					</div>
-				</div>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -48,6 +35,45 @@ import { Status } from '../../core/models/status';
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 					</div>
 				</div>
+<!--
+				<div class="wrap-fields">
+					<div class="field form-field">
+						<mat-form-field class="example-full-width">
+							<mat-select required [formControl]="form.controls['providerType']">
+								<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
+							</mat-select>
+							<mat-label><b>Provider Type</b></mat-label>
+						</mat-form-field>
+						<app-validator [control]="form.controls['providerType']"></app-validator>
+					</div>
+				</div>
+
+
+				<div class="wrap-fields">
+					<div class="field form-field">
+						<mat-form-field class="example-full-width">
+							<mat-select required [formControlName]="'status'">
+								<mat-option>-- None --</mat-option>
+								<mat-option *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
+							</mat-select>
+							<mat-label>Status</mat-label>
+						</mat-form-field>
+						<app-validator  [control]="form.controls['status']"></app-validator>
+					</div>
+				</div>
+				-->
+			</fieldset>
+			<fieldset>
+				<legend><span>Contact data</span></legend>
+				<div class="wrap-fields">
+					<div class="field">
+						<mat-form-field class="example-full-width">
+							<input matInput formControlName="contactNameProvider" placeholder="Contact Name">
+						</mat-form-field>
+						<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
+					</div>
+				</div>
+
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -63,37 +89,15 @@ import { Status } from '../../core/models/status';
 							<input matInput formControlName="numberProvider" placeholder="Telephono Number">
 						</mat-form-field>
 					</div>
-				</div>
-
-				<table class="example-full-width" cellspacing="0">
-					<tr>
-						<td>
-							<mat-form-field class="example-full-width">
-							  <input matInput formControlName="emailProvider" placeholder="Email">
-							</mat-form-field>
-							<app-validator [control]="form.controls['emailProvider']"></app-validator>
-						</td>
-						<td>
-							<mat-form-field class="example-full-width">
-								<input matInput formControlName="contactNameProvider" placeholder="Contact Name">
-							</mat-form-field>
-							<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
-						</td>
-					</tr>
-				</table>
-
-				<div class="wrap-fields">
-					<div class="field form-field">
+					<div class="field">
 						<mat-form-field class="example-full-width">
-							<mat-select required [formControlName]="'status'">
-								<mat-option>-- None --</mat-option>
-								<mat-option *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
-							</mat-select>
-							<mat-label>Status</mat-label>
+							<input matInput formControlName="emailProvider" placeholder="Email">
 						</mat-form-field>
-						<app-validator  [control]="form.controls['status']"></app-validator>
+						<app-validator [control]="form.controls['emailProvider']"></app-validator>
 					</div>
 				</div>
+
+
 			</fieldset>
 
 			<div class="options row">
@@ -119,28 +123,32 @@ export class ProviderCreateComponent implements OnInit  {
 		private providerService: ProviderService,
 		private statusProviderService: StatusProviderService,
 	) {
-		this.form = this.providerService.getProvider(new Provider());
+		// this.form = this.providerService.getFormGroupProvider(new Provider());
 	}
 
 	ngOnInit () {
-		// this.prov.getAll().subscribe(
-		// 	data => {
-		// 		this.farms = data['result'];
-		// 		console.log(this.farms);
-		// 	});
+		this.form = this.providerService.getFormGroupProvider(new Provider());
+		// console.log(this.form);
 		this.providerTypeService.getAll().subscribe(
 			data => {
 				this.provType = data['result'];
-			});
+			}
+		);
 
+		// console.log(this.provType);
 		this.statusProviderService.getAll().subscribe(
 			data => {this.status = data['result'];
+			console.log(this.status);
 		});
-		}
+		// console.log(this.status);
+
+
+	}
 
 
 	create() {
-		this.providerService.create(<Provider> this.form.value);
+		console.log('this.form.value');
+		// this.providerService.create(<Provider> this.form.value);
 		// .subscribe(store => {
 		// 	this.notificationService.sucessInsert(store.name);
 		// 	this.location.back();
