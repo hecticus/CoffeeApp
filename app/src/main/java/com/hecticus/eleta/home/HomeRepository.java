@@ -1,8 +1,12 @@
 package com.hecticus.eleta.home;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model_new.retrofit_interface.UserRetrofitInterface;
@@ -15,6 +19,7 @@ import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,7 +64,32 @@ public class HomeRepository implements HomeContract.Repository {
     @DebugLog
     @Override
     public void logOutRequest() {
-        Call<Message> call = userApi.logOutRequest("hola");
+            /*Gson gson = new GsonBuilder().create();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(LifeFitnessAPI.API_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
+
+            LifeFitnessAPI api = retrofit.create(LifeFitnessAPI.class);*/
+            Call<ResponseBody> call = userApi.logOutRequest();
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+                        onLogoutSuccess();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onLogoutError();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    //pDialog.dismiss();
+                    t.printStackTrace();
+                    Log.e("RETRO", "--->" + RecoveryPasswordActivity.class.getSimpleName() + " onFailure +" + call + " + " + t);
+                    onLogoutError();
+                }
+            });
+        /*Call<Message> call = userApi.logOutRequest();
 
         call.enqueue(new Callback<Message>() {
             @DebugLog
@@ -87,7 +117,7 @@ public class HomeRepository implements HomeContract.Repository {
                 Log.e("RETRO", "--->" + RecoveryPasswordActivity.class.getSimpleName() + " onFailure +" + call + " + " + t);
                 onLogoutError();
             }
-        });
+        });*/
     }
 
     @DebugLog

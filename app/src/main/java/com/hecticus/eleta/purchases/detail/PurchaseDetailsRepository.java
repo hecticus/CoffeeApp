@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model_new.Invoice;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -137,42 +139,90 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 Log.d("DEBUF json", g.toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
                 //Log.d("DEBUG1", g.toJson(invoicePost));
-            } else {
-                //Log.d("DEBUG2", g.toJson(invoicePost));
-                call = invoiceApi.updateInvoiceDetail(invoicePost);
-            }
-            call.enqueue(new Callback<CreateInvoiceResponse>() {
-                @DebugLog
-                @Override
-                public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
-                    try {
-                        Log.d("DEBUG2", "PASO");
-                        if (response.isSuccessful()) {
-                            Log.d("DEBUG3", "PASO");
-                            getAndSaveInvoiceDetails(response.body().getResult().getId(), true);
-                        } else {
-                            Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                            manageError(response);
+                call.enqueue(new Callback<CreateInvoiceResponse>() {
+                    @DebugLog
+                    @Override
+                    public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
+                        try {
+                            Log.d("DEBUG2", "PASO");
+                            if (response.isSuccessful()) {
+                                Log.d("DEBUG3", "PASO");
+                                getAndSaveInvoiceDetails(response.body().getResult().getId());
+                            } else {
+                                Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
+                                manageError(response);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            onError();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    }
+
+                    @DebugLog
+                    @Override
+                    public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        Log.e("RETRO", "--->ERROR");
                         onError();
                     }
+                });
+            } else {
+                //Log.d("DEBUG2", g.toJson(invoicePost));
+                //todo put
+                //call = invoiceApi.updateInvoiceDetail(invoicePost);
+                List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
+                for(int i=0; i<invoiceDetailsList.size(); i++){
+                    InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
+                    endPoint(invoiceDetail);
                 }
+            }
 
-                @DebugLog
-                @Override
-                public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    Log.e("RETRO", "--->ERROR");
-                    onError();
-                }
-            });
         }
     }
 
+    void endPoint(InvoiceDetail invoiceDetail){
+        Call<CreateInvoiceResponse> call;
+        call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId().intValue(), invoiceDetail);
+        call.enqueue(new Callback<CreateInvoiceResponse>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
+                try {
+                    Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
+                    Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                try {
+                    if (response.isSuccessful()) {
+                        //onHarvestUpdated();
+                        getAndSaveInvoiceDetails(response.body().getResult().getId());
+                    } else {
+                        Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
+                        manageError(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onError();
+                }
+
+            }
+
+            @DebugLog
+            @Override
+            public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                t.printStackTrace();
+                Log.e("RETRO", "--->ERROR");
+                onError();
+            }
+        });
+    }
+
     @DebugLog
-    private void getAndSaveInvoiceDetails(final int invoiceId, boolean isAppOnline) {
+    private void getAndSaveInvoiceDetails(final int invoiceId) {
         Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceId);
 
         call.enqueue(new Callback<InvoiceDetailsResponse>() {

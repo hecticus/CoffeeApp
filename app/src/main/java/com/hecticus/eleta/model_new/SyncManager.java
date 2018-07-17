@@ -413,88 +413,90 @@ public class SyncManager {
             Gson g = new Gson();
             Log.d("DEBUG new offline", g.toJson(invoice));
             call = invoiceApi.newInvoiceDetail(invoice/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
-        } else {
-            Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
-            call = invoiceApi.updateInvoiceDetail(firstInvoicePost);
-        }
+            new ManagerServices<>(call, new ManagerServices.ServiceListener<CreateInvoiceResponse>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<CreateInvoiceResponse> response) {
+                    try {
 
-        new ManagerServices<>(call, new ManagerServices.ServiceListener<CreateInvoiceResponse>() {
-            @DebugLog
-            @Override
-            public void onSuccess(Response<CreateInvoiceResponse> response) {
-                try {
+                        Log.d("DETAILS", "--->Success saveInvoiceSync Request:" + response.body());
+                        //int properInvoiceId = firstInvoice.getInvoicePostLocalId();
+                        //String dateSuffix = firstInvoice.getStartDate().endsWith(".0") ? "" : ".0";
 
-                    Log.d("DETAILS", "--->Success saveInvoiceSync Request:" + response.body());
-                    //int properInvoiceId = firstInvoice.getInvoicePostLocalId();
-                    //String dateSuffix = firstInvoice.getStartDate().endsWith(".0") ? "" : ".0";
+                        //ManagerDB.delete(firstInvoice.getId2(), firstInvoice.getStartDate() + dateSuffix, properInvoiceId + "-" + firstInvoice.getStartDate())
 
-                    //ManagerDB.delete(firstInvoice.getId2(), firstInvoice.getStartDate() + dateSuffix, properInvoiceId + "-" + firstInvoice.getStartDate())
+                        Realm realm = Realm.getDefaultInstance();
 
-                    Realm realm = Realm.getDefaultInstance();
-
-                    List<Invoice> invoiceList1 = realm.where(Invoice.class).findAll();
-                    Log.d("DETAILS", "--->" + invoiceList1);
+                        List<Invoice> invoiceList1 = realm.where(Invoice.class).findAll();
+                        Log.d("DETAILS", "--->" + invoiceList1);
 
 
-                    final Invoice invoiceInRealm = realm
-                            .where(Invoice.class)
-                            .equalTo("id", firstInvoicePost.getInvoiceLocalId())
-                            .findFirst();
-
-                    HarvestOfDay harvestOfDay = null;
-
-                    if (invoiceInRealm != null) {
-                        int properInvoiceId = invoiceInRealm.getId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getId();
-                        String dateSuffix = firstInvoicePost.getStartDate().endsWith(".0") ? "" : ".0";
-
-                        harvestOfDay = realm.
-                                where(HarvestOfDay.class)
-                                .equalTo("id", properInvoiceId + "-" + firstInvoicePost.getStartDate() + dateSuffix)
+                        final Invoice invoiceInRealm = realm
+                                .where(Invoice.class)
+                                .equalTo("id", firstInvoicePost.getInvoiceLocalId())
                                 .findFirst();
 
-                    }
-                    try {
-                        if (harvestOfDay != null) {
-                            realm.beginTransaction();
-                            harvestOfDay.deleteFromRealm();
-                            realm.commitTransaction();
-                        }
+                        HarvestOfDay harvestOfDay = null;
 
                         if (invoiceInRealm != null) {
-                            realm.beginTransaction();
-                            invoiceInRealm.deleteFromRealm();
-                            realm.commitTransaction();
+                            int properInvoiceId = invoiceInRealm.getId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getId();
+                            String dateSuffix = firstInvoicePost.getStartDate().endsWith(".0") ? "" : ".0";
+
+                            harvestOfDay = realm.
+                                    where(HarvestOfDay.class)
+                                    .equalTo("id", properInvoiceId + "-" + firstInvoicePost.getStartDate() + dateSuffix)
+                                    .findFirst();
+
                         }
+                        try {
+                            if (harvestOfDay != null) {
+                                realm.beginTransaction();
+                                harvestOfDay.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
 
-                        ManagerDB.findAndDeleteLocalInvoicePost(firstInvoicePost);
+                            if (invoiceInRealm != null) {
+                                realm.beginTransaction();
+                                invoiceInRealm.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
 
-                    } finally {
-                        realm.close();
-                        saveNextInvoice();
-                    }
-                } catch (Exception e) {
+                            ManagerDB.findAndDeleteLocalInvoicePost(firstInvoicePost);
+
+                        } finally {
+                            realm.close();
+                            saveNextInvoice();
+                        }
+                    } catch (Exception e) {
                     /*Gson g = new Gson();
                     Log.d("DEBUG details",g.toJson(response.body()));*/
-                    Log.d("DETAILS", "--->Fail saveInvoiceSync: Exception: " + e + " // Response: " + (response == null ? null : response.body()));
-                    e.printStackTrace();
-                    HomeActivity.INSTANCE.syncFailed("saveInvoiceSync exception: " + e.getMessage());
+                        Log.d("DETAILS", "--->Fail saveInvoiceSync: Exception: " + e + " // Response: " + (response == null ? null : response.body()));
+                        e.printStackTrace();
+                        HomeActivity.INSTANCE.syncFailed("saveInvoiceSync exception: " + e.getMessage());
+                    }
                 }
-            }
 
-            @DebugLog
-            @Override
-            public void onError(boolean fail, int code, Response<CreateInvoiceResponse> response, String errorMessage) {
-                Log.e("DETAILS", "--->Fail saveInvoiceSync (" + code + "):" + response);
-                HomeActivity.INSTANCE.syncFailed("saveInvoiceSync errorResponse: " + response);
-            }
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<CreateInvoiceResponse> response, String errorMessage) {
+                    Log.e("DETAILS", "--->Fail saveInvoiceSync (" + code + "):" + response);
+                    HomeActivity.INSTANCE.syncFailed("saveInvoiceSync errorResponse: " + response);
+                }
 
-            @DebugLog
-            @Override
-            public void onInvalidToken() {
-                Log.d("DETAILS", "--->Fail token (saveInvoiceSync)");
-                HomeActivity.INSTANCE.syncFailed("saveInvoiceSync onInvalidToken");
-            }
-        });
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                    Log.d("DETAILS", "--->Fail token (saveInvoiceSync)");
+                    HomeActivity.INSTANCE.syncFailed("saveInvoiceSync onInvalidToken");
+                }
+            });
+        } else {
+            Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
+            //todo put
+            //call = invoiceApi.updateInvoiceDetail(firstInvoicePost);
+        }
+
+
     }
 
     @DebugLog

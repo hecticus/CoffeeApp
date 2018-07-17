@@ -104,8 +104,8 @@ DELETE  /invoiceDetail/:id                                                      
     /*@PUT("invoice")
     Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);*/
 
-    @PUT("invoiceDetail/{id}")
-    Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);
+    /*@PUT("invoiceDetail/{id}")
+    Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);*/
 
     @PUT("invoiceDetail/{id}")
     Call<CreateInvoiceResponse> updateInvoiceDetailNewEndpoint(@Path("id") int invoiceId, @Body InvoiceDetail post);

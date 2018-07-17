@@ -32,7 +32,7 @@ public interface UserRetrofitInterface {
             , @Field("password") String password, @Field("client_id") String client_id);
 
     @GET("oauth/revokeToken")
-    Call<Message> logOutRequest(@Header("Authorization") String token);
+    Call<ResponseBody> logOutRequest(/*@Header("Authorization") String token*/);
 
     @GET("user/reset/{email}")
     Call<Message> recoverPasswordRequest(@Path("email") String email);

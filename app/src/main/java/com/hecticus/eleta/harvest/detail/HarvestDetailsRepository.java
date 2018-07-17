@@ -140,45 +140,47 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
                 Log.d("debug json", g.toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
-            } else {
-                call = invoiceApi.updateInvoiceDetail(invoicePost);
-            }
-            call.enqueue(new Callback<CreateInvoiceResponse>() {
-                @DebugLog
-                @Override
-                public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
-                    try {
+                call.enqueue(new Callback<CreateInvoiceResponse>() {
+                    @DebugLog
+                    @Override
+                    public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
+                        try {
                             Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
-                        Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
-                    }
+                            Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
+                        }
                         catch (Exception e)
                         {
                             e.printStackTrace();
                         }
 
-                    try {
-                        if (response.isSuccessful()) {
-                            //onHarvestUpdated();
-                            getDetails(response.body().getResult().getId());
-                        } else {
-                            Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                            manageError(response);
+                        try {
+                            if (response.isSuccessful()) {
+                                //onHarvestUpdated();
+                                getDetails(response.body().getResult().getId());
+                            } else {
+                                Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
+                                manageError(response);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            onError();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        onError();
+
                     }
 
-                }
+                    @DebugLog
+                    @Override
+                    public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        Log.e("RETRO", "--->ERROR");
+                        onError();
+                    }
+                });
+            } else {
+                //todo put
+                //call = invoiceApi.updateInvoiceDetail(invoicePost);
+            }
 
-                @DebugLog
-                @Override
-                public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    Log.e("RETRO", "--->ERROR");
-                    onError();
-                }
-            });
         }
     }
 
@@ -208,6 +210,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     }
 
     void endPoint(InvoiceDetail invoiceDetail){
+        Gson g = new Gson();
+        Log.d("DEBUG con lot", g.toJson(invoiceDetail));
         Call<CreateInvoiceResponse> call;
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId().intValue(), invoiceDetail);
         call.enqueue(new Callback<CreateInvoiceResponse>() {
