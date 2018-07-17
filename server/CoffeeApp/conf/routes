@@ -188,8 +188,8 @@ GET     /provider                                                               
 GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
 POST    /provider                                                               controllers.Providers.create()
 POST    /provider/delete                                                        controllers.Providers.deletes()
-#POST    /provider/uploadPhotoProvider                                           controllers.Providers.uploadPhotoProvider()
-PUT     /provider/:id                                                                controllers.Providers.update(id : Long)
+POST    /provider/uploadPhotoProvider                                           controllers.Providers.uploadPhotoProvider()
+PUT     /provider/:id                                                           controllers.Providers.update(id : Long)
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
 
 ################################################################################

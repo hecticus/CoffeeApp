@@ -4,6 +4,10 @@ package models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.multimediaUtils.Multimedia;
 import controllers.utils.ListPagerCollection;
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
@@ -166,6 +170,10 @@ public class Provider extends AbstractEntity{
     }
 
 
+    public static Provider findByNit(String nitProvider) {
+        return finder.query().where().eq("nitProvider", nitProvider).findUnique();
+    }
+
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
                                                String sort, String name,  Long idProviderType,
                                                String identificationDocProvider, String addressProvider,
@@ -217,7 +225,7 @@ public class Provider extends AbstractEntity{
     }
 
 
-/*    public static String uploadPhoto(String base64Photo, String ext) {
+    public static String uploadPhoto(String base64Photo, String ext) {
 
         ObjectMapper mapper = new ObjectMapper();
         //    ArrayNode arrayNode = mapper.createArrayNode();
@@ -232,5 +240,5 @@ public class Provider extends AbstractEntity{
 
         return result.get("url").asText();
 
-    }*/
+    }
 }
