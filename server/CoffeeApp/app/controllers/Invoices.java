@@ -194,11 +194,6 @@ public class Invoices extends Controller {
 //            newInvoice.save();
         }
 
-//        if (!invoices.isEmpty()){
-//            newInvoice.update();
-//        } else {
-//            newInvoice.save();
-//        }
 
         for (JsonNode item : itemtypes) {
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
