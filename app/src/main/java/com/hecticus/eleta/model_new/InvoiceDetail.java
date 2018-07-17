@@ -1,11 +1,14 @@
 package com.hecticus.eleta.model_new;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.request.invoice.PurityPost;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 
 import java.util.List;
 
@@ -33,8 +36,31 @@ public class InvoiceDetail {
     public InvoiceDetail() {
     }
 
+    public InvoiceDetail(InvoiceDetails invoiceDetails, InvoicePost invoicePost) {
+        this.id = (long) invoiceDetails.getId();
+        this.noteInvoiceDetail = invoiceDetails.getObservation();
+        this.priceItemTypeByLot = invoiceDetails.getPriceByLot();
+        this.costItemType = invoiceDetails.getPriceItem();
+        this.nameReceived = invoiceDetails.getReceiverName();
+        this.nameDelivered = invoiceDetails.getDispatcherName();
+        this.itemType = new ItemType((long)invoiceDetails.getItemTypeId());
+        for(int i=0; i<invoicePost.getItems().size(); i++) {
+            if(invoicePost.getItems().get(i).getItemTypeId()==invoiceDetails.getItemTypeId()){
+                this.amountInvoiceDetail = invoicePost.getItems().get(i).getAmount();
+            }
+        }
+        if(invoiceDetails.getLotId()!=-1) {
+            this.lot = new Lot((long) invoiceDetails.getLotId());
+        }else {
+            this.store = new Store((long) invoiceDetails.getStoreId());
+        }
+        this.invoice = new Invoice((long) invoiceDetails.getInvoiceId());
+        //this.purities = invoiceDetails.getDetailPurities();
+
+    }
+
     public InvoiceDetail(ItemPost itemPost, InvoicePost invoicePost) {
-        //id = (long) itemPost.getInvoiceDetailId();
+        //id = Long.valueOf(itemPost.getInvoiceDetailId());
         noteInvoiceDetail = invoicePost.getObservations();
         priceItemTypeByLot = itemPost.getPrice();
         costItemType = itemPost.getAmount();

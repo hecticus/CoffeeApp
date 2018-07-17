@@ -98,11 +98,11 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private String observation = "";
 
-    @SerializedName("nameReceivedInvoiceDetail")
+    @SerializedName("nameReceived")
     @Expose
     private String receiverName = "";
 
-    @SerializedName("nameDeliveredInvoiceDetail")
+    @SerializedName("nameDelivered")
     @Expose
     private String dispatcherName ="";
 

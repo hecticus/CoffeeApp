@@ -8,7 +8,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model_new.Invoice;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -178,6 +180,72 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 }
             });
         }
+    }
+
+    @Override
+    public void editHarvestRequest(InvoicePost invoicePost) {
+        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,false)) {
+            /*if (isAdd) {
+                if (ManagerDB.saveNewInvoice(Constants.TYPE_HARVESTER, invoicePost)) {
+                    onHarvestUpdated();
+                } else {
+                    onError();
+                }
+            } else {*/
+                Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
+                if (ManagerDB.updateInvoiceDetails(invoicePost, null))
+                    onHarvestUpdated();
+                else
+                    onError();
+            //}
+        } else {
+            List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
+            for(int i=0; i<invoiceDetailsList.size(); i++){
+                InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
+                endPoint(invoiceDetail);
+            }
+        }
+    }
+
+    void endPoint(InvoiceDetail invoiceDetail){
+        Call<CreateInvoiceResponse> call;
+        call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId().intValue(), invoiceDetail);
+        call.enqueue(new Callback<CreateInvoiceResponse>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
+                try {
+                    Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
+                    Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                try {
+                    if (response.isSuccessful()) {
+                        //onHarvestUpdated();
+                        getDetails(response.body().getResult().getId());
+                    } else {
+                        Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
+                        manageError(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onError();
+                }
+
+            }
+
+            @DebugLog
+            @Override
+            public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                t.printStackTrace();
+                Log.e("RETRO", "--->ERROR");
+                onError();
+            }
+        });
     }
 
     private void getDetails(final int invoiceId){

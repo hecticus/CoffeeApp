@@ -410,6 +410,8 @@ public class SyncManager {
         if (firstInvoicePost.getInvoiceId() == -1) {
             Log.d("DETAILS", "---> firstInvoicePost is new: " + firstInvoicePost);
             com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
+            Gson g = new Gson();
+            Log.d("DEBUG new offline", g.toJson(invoice));
             call = invoiceApi.newInvoiceDetail(invoice/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
         } else {
             Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
@@ -471,6 +473,8 @@ public class SyncManager {
                         saveNextInvoice();
                     }
                 } catch (Exception e) {
+                    /*Gson g = new Gson();
+                    Log.d("DEBUG details",g.toJson(response.body()));*/
                     Log.d("DETAILS", "--->Fail saveInvoiceSync: Exception: " + e + " // Response: " + (response == null ? null : response.body()));
                     e.printStackTrace();
                     HomeActivity.INSTANCE.syncFailed("saveInvoiceSync exception: " + e.getMessage());

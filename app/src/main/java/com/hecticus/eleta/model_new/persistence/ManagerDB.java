@@ -170,6 +170,14 @@ public class ManagerDB {
     }
 
     @DebugLog
+    public static List<InvoiceDetails> getInvoiceDetailsByInvoice(int invoice) {
+        return Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("invoiceId", invoice)
+                .findAllSorted("receiverName");
+    }
+
+    @DebugLog
     public static List<Provider> searchProvidersByTypeAndText(int type, String text) {
         ArrayList<Provider> finalProviderList = new ArrayList<>();
         List<Provider> addProviderList = Realm.getDefaultInstance().where(Provider.class).equalTo("deleteOffline", false).equalTo("idProviderType", type).contains("fullNameProvider", text, Case.INSENSITIVE).findAllSorted("fullNameProvider");

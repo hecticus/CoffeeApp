@@ -4,10 +4,12 @@ import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.invoice.CreateInvoiceResponse;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model_new.Invoice;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 
 import java.util.ArrayList;
 
@@ -102,8 +104,11 @@ DELETE  /invoiceDetail/:id                                                      
     /*@PUT("invoice")
     Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);*/
 
-    @PUT("invoiceDetail")
+    @PUT("invoiceDetail/{id}")
     Call<CreateInvoiceResponse> updateInvoiceDetail(@Body InvoicePost post);
+
+    @PUT("invoiceDetail/{id}")
+    Call<CreateInvoiceResponse> updateInvoiceDetailNewEndpoint(@Path("id") int invoiceId, @Body InvoiceDetail post);
 
     @GET("invoice/createReceipt/{id}")
     Call<ReceiptResponse> getReceipt(@Path("id") int invoiceId);

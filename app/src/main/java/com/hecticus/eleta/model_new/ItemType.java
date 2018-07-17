@@ -20,6 +20,8 @@ public class ItemType {
     public ItemType() {
     }
 
+
+
     public ItemType(Long id) {
         this.id = id;
     }

@@ -397,7 +397,6 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
         if (isAdd()) {
             invoicePost.setProviderId(currentProvider.getIdProvider());
-            Log.d("DEBUG!!!!!", "--->"+ invoicePost.getProviderId());
             invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
             invoicePost.setReceiverName(SessionManager.getUserName(context));
             invoicePost.setStartDate(Util.getCurrentDateForInvoice());
@@ -433,8 +432,10 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             }
 
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
-
-            mRepository.saveHarvestRequest(invoicePost, false);
+            //Gson g = new Gson();
+            //Log.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
+            //mRepository.saveHarvestRequest(invoicePost, false);
+            mRepository.editHarvestRequest(invoicePost);
         }
     }
 }

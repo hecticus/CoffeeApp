@@ -91,6 +91,8 @@ public class HarvestDetailsContract {
 
         void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd);
 
+        void editHarvestRequest(InvoicePost invoicePost);
+
         void onError();
 
         void onError(String error);
