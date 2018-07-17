@@ -161,6 +161,7 @@ public class Invoices extends Controller {
         Invoice invoice = Json.fromJson(json, Invoice.class);
         String fecha = startDate.asText().split(" ")[0];
 
+
         List<Invoice> invoices = Invoice.getOpenByProviderId(invoice.getProvider().getId(), fecha);
 
         Invoice newInvoice = null;
@@ -172,20 +173,32 @@ public class Invoices extends Controller {
         }else{
             for (Invoice i : invoices ) {
                 StatusInvoice status = i.getStatusInvoice();
-                if( status != null) {
-                    if (status.getId().intValue() == 11) {
+                if( status != null & status.getId().intValue() == 11) {
+//                    if (status.getId().intValue() == 11) {
                         System.out.println(status.getId());
                         System.out.println(i.getId() + "Id");
                         newInvoice = i;
-                    }
+                        break;
+//                    }
+//                    }else{
+//                        newInvoice = new Invoice();
+//                        newInvoice.setProvider(invoice.getProvider());
+//                        newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
+//                    }
                 }else{
                     newInvoice = new Invoice();
                     newInvoice.setProvider(invoice.getProvider());
                     newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
                 }
             }
+//            newInvoice.save();
         }
 
+//        if (!invoices.isEmpty()){
+//            newInvoice.update();
+//        } else {
+//            newInvoice.save();
+//        }
 
         for (JsonNode item : itemtypes) {
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
@@ -197,14 +210,16 @@ public class Invoices extends Controller {
 
             // Buscos la lista de invoicesDetail asociado a esa Invoice
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
+//            if(newInvoice.getInvoiceDetails().isEmpty())
             invoiceDetails.add(invoiceDetail);
             newInvoice.setInvoiceDetails(invoiceDetails);
 
-            if (!invoices.isEmpty()){
-                newInvoice.update();
-            } else {
-                newInvoice.save();
-            }
+            newInvoice.save();
+//            if (!invoices.isEmpty()){
+//                newInvoice.update();
+//            } else {
+//                newInvoice.save();
+//            }
 
             invoiceDetail.setInvoice(newInvoice);
             invoiceDetail.save();
