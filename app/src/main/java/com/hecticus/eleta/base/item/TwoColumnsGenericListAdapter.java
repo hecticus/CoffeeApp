@@ -1,10 +1,12 @@
 package com.hecticus.eleta.base.item;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailListContract;
 import com.hecticus.eleta.base.BaseListContract;
@@ -66,6 +68,8 @@ public class TwoColumnsGenericListAdapter extends RecyclerView.Adapter<TwoColumn
             genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Gson g = new Gson();
+                    Log.d("DEBUG delete", g.toJson(list.get(position)));
                     mPresenter.onClickDeleteButton(list.get(position));
                 }
             });

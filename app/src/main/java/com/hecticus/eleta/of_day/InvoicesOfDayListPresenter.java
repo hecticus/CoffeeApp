@@ -95,7 +95,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     public void deleteHarvestOrPurchase(BaseDetailModel model) {
         mView.showWorkingIndicator();
         HarvestOfDay harvest = (HarvestOfDay) model;
-        mRepository.deleteHarvestOrPurchase(currentInvoice, harvest.getStartDate(), harvest.getId());
+        mRepository.deleteHarvestOrPurchase(currentInvoice, harvest.getStartDate(), harvest);
     }
 
     @DebugLog

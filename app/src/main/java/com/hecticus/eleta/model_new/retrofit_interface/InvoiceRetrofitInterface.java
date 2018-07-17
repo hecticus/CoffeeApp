@@ -93,7 +93,7 @@ DELETE  /invoiceDetail/:id                                                      
     Call<Message> deleteInvoice(@Path("id") int idInvoice);
 
     //@DELETE("invoiceDetail/deleteAllByIdInvoiceAndDate/{idInvoice}/{date}") todo cambio
-    @POST("invoiceDetail/{id}")//pasarle el array de ids estoy pasando los un array vacio
+    @DELETE("invoiceDetail/{id}")//pasarle el array de ids estoy pasando los un array vacio
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
 
     @POST("invoice2")//{idProvider}/{date}")

@@ -23,6 +23,8 @@ public class HarvestOfDay extends RealmObject implements BaseDetailModel {
     @Expose
     private float totalAmount = -1;
 
+    private int idInvoiceDetail;
+
     @Ignore
     private String date = null;
 
@@ -43,12 +45,21 @@ public class HarvestOfDay extends RealmObject implements BaseDetailModel {
     private boolean deleteOffline;
     private boolean editOffline;
 
-    public HarvestOfDay(String startDate, float totalAmount) {
+    public HarvestOfDay(String startDate, float totalAmount, int idInvoiceDetail) {
         this.startDate = startDate;
         this.totalAmount = totalAmount;
+        this.idInvoiceDetail = idInvoiceDetail;
     }
 
     public HarvestOfDay() {
+    }
+
+    public int getIdInvoiceDetail() {
+        return idInvoiceDetail;
+    }
+
+    public void setIdInvoiceDetail(int idInvoiceDetail) {
+        this.idInvoiceDetail = idInvoiceDetail;
     }
 
     @DebugLog

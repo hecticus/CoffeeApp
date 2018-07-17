@@ -82,7 +82,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private float priceItem =-1;
 
-    @SerializedName("startDateInvoiceDetail")
+    @SerializedName("createdAt")
     @Expose
     private String startDate = "";
 

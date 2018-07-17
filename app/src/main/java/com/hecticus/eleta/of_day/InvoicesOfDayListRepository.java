@@ -179,9 +179,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
     @DebugLog
     @Override
-    public void deleteHarvestOrPurchase(Invoice invoice, String date, String harvestOrPurchaseId) {
+    public void deleteHarvestOrPurchase(Invoice invoice, String date, HarvestOfDay harvestOrPurchase) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoice)) {
-            if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchaseId)) {
+            if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
                 List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getId(), invoice.getLocalId());
                 List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                         invoice.getId(),
@@ -212,7 +212,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
             }
         } else {
-            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(invoice.getId()/*, date, new ArrayList<Long>()*/);
+            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(harvestOrPurchase.getIdInvoiceDetail()/*, date, new ArrayList<Long>()*/);
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override
@@ -221,10 +221,12 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         if (response.isSuccessful() && response.body() != null) {
                             mPresenter.onHarvestDeleted(response.body());
                         } else
+                            Log.d("DEBUG", "ERROR BORRANDO1");
                             manageError(mPresenter.context.getString(R.string.error_deleting_harvest), response);
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("DEBUG", "ERROR BORRANDO2");
                         onError(mPresenter.context.getString(R.string.error_deleting_harvest));
                     }
                 }
@@ -233,6 +235,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 @Override
                 public void onFailure(Call<InvoiceDetailsResponse> call, Throwable t) {
                     t.printStackTrace();
+                    Log.d("DEBUG", "ERROR BORRANDO3");
                     onError(mPresenter.context.getString(R.string.error_deleting_harvest));
                 }
             });

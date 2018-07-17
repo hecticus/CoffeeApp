@@ -54,7 +54,7 @@ public class InvoiceDetailsResponse {
     public List<HarvestOfDay> getHarvests() {
         if(!control) {
             for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
-                harvests.add(new HarvestOfDay(invoiceDetail.getInvoice().getInvoiceStartDate(), invoiceDetail.getInvoice().getInvoiceTotal()));
+                harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), (invoiceDetail.getItemType().getCost()*invoiceDetail.getAmount()), invoiceDetail.getId()));
             }
             control = true;
         }
