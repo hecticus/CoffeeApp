@@ -1,3 +1,4 @@
+import { ToastrManager } from 'ng6-toastr-notifications';
 import { Status } from './../../core/models/status';
 import { StatusProviderService } from '../status/status-provider.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -117,6 +118,7 @@ export class ProviderUpdateComponent implements OnInit  {
 		private location: Location,
 		private providerService: ProviderService,
 		private statusProviderService: StatusProviderService,
+		private toastr: ToastrManager
 	) {}
 
 	ngOnInit () {
@@ -149,12 +151,12 @@ export class ProviderUpdateComponent implements OnInit  {
 		console.log(789);
 		console.log(this.form.value);
 
-		this.providerService.update(<Provider> this.form.value);
-		// .subscribe(store => {
-			// this.notificationService.sucessInsert(store.name);
-			// this.location.back();
-			console.log(this.form.value);
-		// });, err => this.notificationService.error(err));
+		this.providerService.update(<Provider> this.form.value)
+			.subscribe(provider => {
+				this.toastr.successToastr('Success Update', provider.nameProvider);
+				this.location.back();
+				console.log(this.form.value);
+			}, err => this.toastr.errorToastr('This is error', err));
 	}
 
 }

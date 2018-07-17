@@ -16,7 +16,7 @@ import { Status } from '../../core/models/status';
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Create Provider</h2>
-		<form [formGroup]="form"  (ngSubmit)="create()">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Provider data</span></legend>
 				<div class="wrap-fields">
@@ -35,7 +35,6 @@ import { Status } from '../../core/models/status';
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 					</div>
 				</div>
-<!--
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
@@ -47,21 +46,18 @@ import { Status } from '../../core/models/status';
 						<app-validator [control]="form.controls['providerType']"></app-validator>
 					</div>
 				</div>
-
-
+				<!-- -->
 				<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControlName]="'status'">
-								<mat-option>-- None --</mat-option>
-								<mat-option *ngFor="let s of status " [value]="{id: s.id}">{{s.name}}</mat-option>
-							</mat-select>
-							<mat-label>Status</mat-label>
-						</mat-form-field>
-						<app-validator  [control]="form.controls['status']"></app-validator>
-					</div>
+						<div class="field form-field">
+							<mat-form-field class="example-full-width">
+								<mat-select required [formControl]="form.controls['statusProvider']">
+									<mat-option *ngFor="let f of status" [value]="f.id">{{f.name}}</mat-option>
+								</mat-select>
+								<mat-label><b>Status</b></mat-label>
+							</mat-form-field>
+							<app-validator [control]="form.controls['statusProvider']"></app-validator>
+						</div>
 				</div>
-				-->
 			</fieldset>
 			<fieldset>
 				<legend><span>Contact data</span></legend>
@@ -73,7 +69,6 @@ import { Status } from '../../core/models/status';
 						<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
 					</div>
 				</div>
-
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -82,7 +77,6 @@ import { Status } from '../../core/models/status';
 						<app-validator  [control]="form.controls['addressProvider']"></app-validator>
 					</div>
 				</div>
-
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -96,8 +90,6 @@ import { Status } from '../../core/models/status';
 						<app-validator [control]="form.controls['emailProvider']"></app-validator>
 					</div>
 				</div>
-
-
 			</fieldset>
 
 			<div class="options row">
