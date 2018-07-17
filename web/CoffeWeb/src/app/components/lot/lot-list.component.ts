@@ -145,8 +145,6 @@ export class LotListComponent implements OnInit {
 				this.dataSource.data = data['result'];
 				console.log(this.dataSource);
 		});
-
-
 	}
 
 	create() {
@@ -177,6 +175,9 @@ export class LotListComponent implements OnInit {
 
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
+	}
+	test() {
+		console.log(123456);
 	}
 
 }

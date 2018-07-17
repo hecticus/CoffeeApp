@@ -2,10 +2,6 @@
     background: black;
 }
 
-.frichi {
-    background: black;
-}
-
 .image {
     height: 64px;
     position: relative;
@@ -65,4 +61,14 @@ label {
 
 a {
     color: white;
+}
+
+back {
+    background: black;
+    width: 100%;
+    height: 100%;
+}
+
+:host body {
+    background: black;
 }
