@@ -97,7 +97,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                 onError(mPresenter.context.getString(R.string.error_getting_harvests));
             }
         } else {
-            Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider(/*Util.getCurrentDate(),*/ Constants.TYPE_HARVESTER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-25"
+            Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_HARVESTER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-25"
 
             call.enqueue(new Callback<InvoiceListResponse>() {
                 @DebugLog

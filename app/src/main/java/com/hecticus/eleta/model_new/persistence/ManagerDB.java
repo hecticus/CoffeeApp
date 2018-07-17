@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.request.invoice.PurityPost;
+import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.farm.Farm;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
@@ -85,6 +86,32 @@ public class ManagerDB {
                         Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
 
                     realm.insertOrUpdate(provider);
+                }
+            });
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+        realm.close();
+        return true;
+    }
+
+    @DebugLog
+    public static boolean updateStatusInvoice(final Invoice invoice) {
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Invoice existing = realm.where(Invoice.class).equalTo("id", invoice.getId()).findFirst();
+                    if (existing != null && invoice.getId()!=existing.getId()) {
+                        existing.deleteFromRealm();
+                        Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
+                    } else
+                        Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
+                    invoice.setStatusInvo("Closed");
+                    realm.insertOrUpdate(invoice);
                 }
             });
         } catch (Exception e) {
@@ -457,9 +484,12 @@ public class ManagerDB {
                             invoice.setProviderId(invoice.getProvider().getIdProvider());
                             invoice.setIdentificationDocProvider(invoice.getProvider().getIdentificationDocProvider());
                         }
+                        invoice.setStatusInvo(invoice.getInvoiceStatus().getName());
                         invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
                         invoice.setId2(invoice.getId() + "-" + invoice.getLocalId());
                         realm.insertOrUpdate(invoice);
+                        Gson g = new Gson();
+                        Log.d("DEBUG", g.toJson(invoice));
                         Log.d("Repository", "--->Inserted " + invoice.toString());
                     }
                 });
@@ -747,7 +777,7 @@ public class ManagerDB {
                 .equalTo("date", invoicePost.getDate())
                 .equalTo("isClosed", false)
                 .equalTo("deleteOffline", false)
-                .lessThan("invoiceStatus", 3)
+                .equalTo("statusInvo", "Open")
                 .findFirst();
 
         if (existingInvoice == null) {
@@ -762,6 +792,7 @@ public class ManagerDB {
             existingInvoice.setLocalId(nextLocalInvoiceId);
             existingInvoice.setAddOffline(true);
             existingInvoice.setId2(existingInvoice.getId() + "-" + existingInvoice.getLocalId());
+            existingInvoice.setStatusInvo("Open");
         } else
             Log.d("BUG", "--->saveNewInvoice (It existed before):" + existingInvoice);
 
@@ -874,7 +905,7 @@ public class ManagerDB {
                 .equalTo("date", invoice.getDate())
                 .equalTo("isClosed", invoice.isClosed())
                 .equalTo("deleteOffline", false)
-                //.equalTo("invoiceStatus", invoice.getInvoiceStatus()) todo nose
+                .equalTo("statusInvo", invoice.getStatusInvo()) //todo nose
                 .beginGroup()
                 .equalTo("addOffline", true).
                         or()
@@ -898,7 +929,7 @@ public class ManagerDB {
                     .equalTo("date", invoicePost.getDate())
                     .equalTo("isClosed", false)
                     .equalTo("deleteOffline", false)
-                    //.lessThan("invoiceStatus", 3) todo no se
+                    .equalTo("statusInvo", "Open") //todo no se
                     .equalTo("addOffline", true)
                     .findFirst();
 
@@ -909,7 +940,7 @@ public class ManagerDB {
                     .equalTo("providerId", invoicePost.getProviderId())
                     .equalTo("date", invoicePost.getDate())
                     .equalTo("isClosed", false)
-                    .lessThan("invoiceStatus", 3)
+                    .equalTo("statusInvo", "Open") //todo no se
                     .beginGroup()
                     .equalTo("addOffline", true).
                             or()

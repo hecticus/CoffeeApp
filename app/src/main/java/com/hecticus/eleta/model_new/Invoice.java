@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model_new.Provider;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Invoice implements Serializable {
     private Double totalInvoice;
     private String closedDateInvoice;
     private Boolean buyOption;
+    private StatusInvoice statusInvoice;
     private List<InvoiceDetail> itemtypes;
     private String startDate;
     private Provider provider;
@@ -40,6 +42,12 @@ public class Invoice implements Serializable {
         for(int i=0; i<invoicePost.getItems().size(); i++ ) {
             itemtypes.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
         }
+    }
+
+    public Invoice(com.hecticus.eleta.model.response.invoice.Invoice invoicePost, com.hecticus.eleta.model.response.providers.Provider provider, StatusInvoice statusInvoice) {
+        this.id = (long) invoicePost.getId();
+        this.statusInvoice = statusInvoice;
+        this.provider = new Provider(invoicePost.getProviderId().longValue());
     }
 
 
@@ -121,5 +129,13 @@ public class Invoice implements Serializable {
 
     public void setProvider(Provider provider) {
         this.provider = provider;
+    }
+
+    public StatusInvoice getStatusInvoice() {
+        return statusInvoice;
+    }
+
+    public void setStatusInvoice(StatusInvoice statusInvoice) {
+        this.statusInvoice = statusInvoice;
     }
 }

@@ -30,6 +30,8 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Expose
     private int id = -1;
 
+    private String statusInvo = "Open";
+
     @Ignore
     @SerializedName("provider")
     @Expose
@@ -75,7 +77,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     }
 
     public Invoice(InvoicePost invoicePost) {
-        invoiceStatus = new StatusInvoice(11, false, "Activa", null);
+        //invoiceStatus = new StatusInvoice(11, false, "Open", null);
         invoiceStartDate = invoicePost.getStartDate();
         invoiceClosedDate = invoicePost.getStartDate();
         invoiceTotal = invoicePost.getTotal();
@@ -84,6 +86,14 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         identificationDocProvider = invoicePost.getIdentificationDocProvider();
         providerId = invoicePost.getProviderId();
         date = invoiceStartDate.split(" ")[0];
+    }
+
+    public String getStatusInvo() {
+        return statusInvo;
+    }
+
+    public void setStatusInvo(String statusInvo) {
+        this.statusInvo = statusInvo;
     }
 
     @Override
@@ -96,8 +106,8 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @Override
     public boolean canDelete() {
-        Log.d("DEBUGGGGGGGG", String.valueOf(!getInvoiceStatus().getDescription().equals("Closed")));
-        if(getInvoiceStatus().getDescription().equals("Closed")){
+        //Log.d("DEBUGGGGGGGG", String.valueOf(!getInvoiceStatus().getDescription().equals("Closed")));
+        if(/*getInvoiceStatus().getDescription()*/getStatusInvo().equals("Closed")){
             return false;
         }else{
             return true; //invoiceStatus < 3; todo nose
@@ -254,7 +264,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         return "Invoice{" +
                 "invoiceId=" + id +
                 ", provider=" + provider +
-                ", invoiceStatus=" + invoiceStatus +
+                //", invoiceStatus=" + invoiceStatus +
                 ", invoiceStartDate='" + invoiceStartDate + '\'' +
                 ", invoiceClosedDate='" + invoiceClosedDate + '\'' +
                 ", invoiceTotal=" + invoiceTotal +

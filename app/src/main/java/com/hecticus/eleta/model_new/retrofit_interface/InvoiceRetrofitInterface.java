@@ -83,7 +83,7 @@ DELETE  /invoiceDetail/:id                                                      
 
     //todo cambio
     @GET("invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
-    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(/*@Query("startDate") String date,*/ @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
+    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
 
     //todo cambio
     @GET("invoiceDetail")///findAllByIdInvoice/{invoiceId}")
@@ -109,7 +109,7 @@ DELETE  /invoiceDetail/:id                                                      
     Call<ReceiptResponse> getReceipt(@Path("id") int invoiceId);
 
     //todo cambio
-    @PUT("invoice")
-    Call<Message> closeInvoice(@Path("id") int id, @Body CloseInvoicePost post);
+    @PUT("invoice/{id}")
+    Call<Message> closeInvoice(@Path("id") int invoiceId, @Body Invoice post);
 
 }

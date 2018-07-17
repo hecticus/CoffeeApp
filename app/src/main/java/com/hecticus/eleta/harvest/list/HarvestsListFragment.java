@@ -145,13 +145,14 @@ public class HarvestsListFragment extends BaseFragment implements HarvestsListCo
     @DebugLog
     @Override
     public void goToHarvestsListByHarvester(Invoice invoice) {
-        try {
+        //try {
             Intent intent = new Intent(getActivity(), HarvestsOfDayListActivity.class);
-            intent.putExtra("invoice", Util.getGson().toJson(invoice));
+
+            intent.putExtra("invoice", invoice.getId()); //Util.getGson().toJson(invoice));
             startActivity(intent);
-        } catch (ClassNotFoundException e) {
+        /*} catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @DebugLog

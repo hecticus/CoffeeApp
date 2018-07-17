@@ -95,7 +95,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void deleteHarvestOrPurchase(Invoice invoice, String date, String harvestOrPurchaseId);
 
-        void closeInvoiceRequest(CloseInvoicePost post);
+        void closeInvoiceRequest(com.hecticus.eleta.model_new.Invoice post);
 
         void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse);
 

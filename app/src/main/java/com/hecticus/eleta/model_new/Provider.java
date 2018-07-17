@@ -27,6 +27,10 @@ public class Provider {
     public Provider() {
     }
 
+    public Provider(Long id) {
+        this.id = id;
+    }
+
     public Provider(com.hecticus.eleta.model.response.providers.Provider provider, int idProvider) {
         this.id = (long) idProvider;
         this.nitProvider = provider.getIdentificationDocProvider();

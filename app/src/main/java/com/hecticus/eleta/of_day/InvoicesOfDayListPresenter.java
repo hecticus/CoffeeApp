@@ -6,8 +6,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
+import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
@@ -150,8 +152,9 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @Override
     public boolean isCurrentClosedInvoice() {//3 = a factura cerrada
-        Log.d("DEBUGGGGGGGG", String.valueOf(currentInvoice.getInvoiceStatus().getDescription().equals("Closed")));
-        return currentInvoice.getInvoiceStatus().getDescription().equals("Closed");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
+        /*Gson g= new Gson();
+        Log.d("DEBUGGGGGGGG", g.toJson(currentInvoice));*/
+        return currentInvoice.getStatusInvo().equals("Closed");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
     }
 
     @DebugLog
@@ -195,8 +198,14 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void closeInvoice() {
         mView.showWorkingIndicator();
-        CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getId(), Util.getTomorrowDate());
-        mRepository.closeInvoiceRequest(closePost);
+        //CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getId(), Util.getTomorrowDate());
+        Invoice invoice = ManagerDB.getInvoiceById(currentInvoice.getId());
+        ManagerDB.updateStatusInvoice(invoice);
+        com.hecticus.eleta.model_new.Invoice invoice1
+                = new com.hecticus.eleta.model_new.Invoice(invoice,
+                invoice.getProvider(),
+                new StatusInvoice(12, false, "Closed", null));
+        mRepository.closeInvoiceRequest(invoice1);
     }
 
     @DebugLog

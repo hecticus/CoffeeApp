@@ -75,13 +75,18 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
         ButterKnife.bind(this);
 
         Invoice initialInvoice = null;
+        //Log.d("DEBUG extra", getIntent().getStringExtra("invoice"));
         if (getIntent().getIntExtra("invoice",-1) > -1) {
-            Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+            //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
 
             initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
             Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
         } else
             Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
+
+
+        /*Gson g= new Gson();
+        Log.d("DEBUGGGGGGGG crate", g.toJson(initialInvoice));*/
         mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice, true);
         initViews();
     }
