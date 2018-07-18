@@ -23,6 +23,7 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.harvest.list.HarvestsListFragment;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.login.LoginActivity;
+import com.hecticus.eleta.model.response.harvest.Harvest;
 import com.hecticus.eleta.model_new.GlobalRequests;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.SyncManager;
@@ -89,11 +90,25 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             }
 
             public void onPageSelected(int position) {
-                if (position == 2 && reloadProviders) {
+                if (position == 2 /*&& reloadProviders*/) {
                     reloadProviders = false;
                     Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
                     if (page != null && page instanceof ProvidersListFragment) {
                         ((ProvidersListFragment) page).refreshList();
+                    }
+                } else {
+                    if (position == 1 ){
+                        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+                        if (page != null && page instanceof PurchasesListFragment) {
+                            ((PurchasesListFragment) page).refreshList();
+                        }
+                    } else {
+                        if (position == 0 ){
+                            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+                            if (page != null && page instanceof HarvestsListFragment) {
+                                ((HarvestsListFragment) page).refreshList();
+                            }
+                        }
                     }
                 }
             }
