@@ -43,7 +43,7 @@ public class Provider extends AbstractEntity{
 
     @Constraints.Required
     @Constraints.MaxLength(60)
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 60, unique = true)
     private String nameProvider;
 
     @Constraints.Required
@@ -51,22 +51,21 @@ public class Provider extends AbstractEntity{
     @Column(nullable = false,length = 60)
     private String addressProvider;
 
-    @Constraints.Required
+//    @Constraints.Required
     @Constraints.MaxLength(20)
-    @Column(nullable = false, length = 20)
+    @Column( length = 20)
     private String numberProvider;
 
     @Constraints.Email
-    @Constraints.Required
-    @Column( nullable = false)
+//    @Constraints.Required
     private String emailProvider;
 
     @Constraints.MaxLength(255)
     private String photoProvider;
 
-    @Constraints.Required
+//    @Constraints.Required
     @Constraints.MaxLength(50)
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 50)
     private String contactNameProvider;
 
     @ManyToOne
@@ -169,9 +168,16 @@ public class Provider extends AbstractEntity{
         return finder.byId(id);
     }
 
-
     public static Provider findByNit(String nitProvider) {
-        return finder.query().where().eq("nitProvider", nitProvider).findUnique();
+        return finder.query().where().eq("nitProvider", nitProvider).setIncludeSoftDeletes().findUnique();
+    }
+
+    public static Provider findByProvider(Provider provider) {
+        return finder.query().where()
+                .or()
+                    .startsWith("nitProvider", provider.getNitProvider())
+                    .startsWith("nameProvider", provider.getNameProvider())
+                .setIncludeSoftDeletes().findUnique();
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,

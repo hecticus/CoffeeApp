@@ -61,12 +61,20 @@ public class Providers extends Controller {
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Provider provider = Json.fromJson(json, Provider.class);
-
-//          if (Provider.findByNit(provider.getNitProvider()) ){
-//
-//          } else() {
-//                provider.save();
-//            }
+            Provider aux = Provider.findByProvider(provider);
+            if (aux != null ) {
+//                if (aux.getId() != null){
+                    provider.setId(aux.getId());
+                    aux = provider;
+                    aux.setDeleted(false);
+                    aux.update();
+                    provider = aux;
+//                }else {
+//                    provider.save();
+//                }
+            }else {
+                provider.save();
+            }
             return  Response.createdEntity(Json.toJson(provider));
         }catch(Exception e){
             return Response.responseExceptionCreated(e);

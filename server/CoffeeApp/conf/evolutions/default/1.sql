@@ -168,8 +168,8 @@ create table providers (
   nit_provider                  varchar(255) not null,
   name_provider                 varchar(60) not null,
   address_provider              varchar(60) not null,
-  number_provider               varchar(20) not null,
-  email_provider                varchar(255) not null,
+  number_provider               varchar(20),
+  email_provider                varchar(255),
   photo_provider                varchar(255),
   contact_name_provider         varchar(50) not null,
   status_provider_id            bigint,
@@ -177,7 +177,7 @@ create table providers (
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_providers_nit_provider unique (nit_provider),
-  constraint uq_providers_contact_name_provider unique (contact_name_provider),
+  constraint uq_providers_name_provider unique (name_provider),
   constraint pk_providers primary key (id)
 );
 
