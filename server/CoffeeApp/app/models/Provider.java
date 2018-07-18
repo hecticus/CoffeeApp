@@ -231,6 +231,23 @@ public class Provider extends AbstractEntity{
     }
 
 
+//    public static String uploadPhoto(String base64Photo, String ext) {
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        //    ArrayNode arrayNode = mapper.createArrayNode();
+//        ObjectNode request = mapper.createObjectNode();
+//
+//        request.put("fileExtension", ext);
+//        request.put("photo", base64Photo);
+//        Multimedia multimedia = new Multimedia();
+//
+//
+//        JsonNode result = multimedia.uploadPhoto(request);
+//
+//        return result.get("url").asText();
+//
+//    }
+
     public static String uploadPhoto(String base64Photo, String ext) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -245,6 +262,6 @@ public class Provider extends AbstractEntity{
         JsonNode result = multimedia.uploadPhoto(request);
 
         return result.get("url").asText();
-
     }
+
 }

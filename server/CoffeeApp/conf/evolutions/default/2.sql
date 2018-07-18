@@ -1,5 +1,19 @@
 # --- !Ups
 
+INSERT INTO `config` (id, config_key, config_value, description) VALUES
+(1,'SecurityEnabled','Enabled',NULL),
+(2,'Content-Type','application/json',NULL),
+(3,'method','POST',NULL),
+(4,'cdn-container','test01',''),
+(5,'cdn-parent','example',NULL),
+(6,'Url-WS-Rackspace','http://10.0.3.4:9000/media/create','url del servicio que sube la imagen al rackspace'),
+(7,'nameCompany','Cafe de Eleta, S.A',NULL),
+(8,'invoiceDescription','Recibo Diario de Cafe',NULL),
+(9,'invoiceType','Cosecha Propia',NULL),
+(10,'RUC','R.U.C 1727-188-34109 D.V. 69',NULL),
+(11,'telephonoCompany','6679-4752',NULL);
+
+
 INSERT INTO `status` ( id, dtype, name, description) VALUES
   (1,  'farm',          'Active',     'No deudor'),
   (2,  'farm',          'Inactive',   'No deudor'),
@@ -263,7 +277,5 @@ TRUNCATE item_types;
 TRUNCATE invoice_details;
 
 TRUNCATE invoicesdetails_purities;
-
-TRUNCATE status;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -2,12 +2,9 @@ package controllers;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.parsers.queryStringBindable.Pager;
 import controllers.utils.*;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
-import models.Farm;
-import models.Provider;
 import models.ProviderType;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.ResponseCollection;
@@ -18,11 +15,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 import static play.mvc.Controller.request;
 

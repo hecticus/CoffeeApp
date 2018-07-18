@@ -16,12 +16,7 @@ public class Config extends Model {
 
     @Id
     @Column(length = 50, unique = true, nullable = false)
-    private Long config;
-
-    @Constraints.Required
-    @Constraints.MaxLength(20)
-    @Column(nullable = false, length = 20, unique = true)
-    private String nameConfig;
+    private Long id;
 
     @Constraints.Required
     @Constraints.MaxLength(50)
@@ -30,7 +25,7 @@ public class Config extends Model {
 
     @Constraints.Required
     @Column(nullable = false)
-    private String value;
+    private String configValue;
 
     @Column(columnDefinition = "text")
     private String description;
@@ -45,12 +40,20 @@ public class Config extends Model {
         this.configKey = configKey;
     }
 
-    public String getValue() {
-        return value;
+    public Long getId() {
+        return id;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getConfigvalue() {
+        return configValue;
+    }
+
+    public void setConfigvalue(String configvalue) {
+        this.configValue = configvalue;
     }
 
     public String getDescription() {
@@ -63,18 +66,18 @@ public class Config extends Model {
 
     public static String getString(String key){
         Config config = finder.query().where().eq("configKey", key).findUnique();
-        return config.getValue();
+        return config.getConfigvalue();
     }
 
     public static void setString(String key, String value){
         Config config = finder.query().where().eq("configKey", key).findUnique();
         if(config != null){
-            config.setValue(value);
+            config.setConfigvalue(value);
             config.update();
         }else{
             config = new Config();
             config.setConfigKey(key);
-            config.setValue(value);
+            config.setConfigvalue(value);
             config.save();
         }
     }
@@ -82,13 +85,13 @@ public class Config extends Model {
     public static void setString(String key, String value, String description){
         Config config = finder.query().where().eq("configKey", key).findUnique();
         if(config != null){
-            config.setValue(value);
+            config.setConfigvalue(value);
             config.setDescription(description);
             config.update();
         }else{
             config = new Config();
             config.setConfigKey(key);
-            config.setValue(value);
+            config.setConfigvalue(value);
             config.setDescription(description);
             config.save();
         }

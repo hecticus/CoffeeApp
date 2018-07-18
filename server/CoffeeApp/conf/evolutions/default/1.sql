@@ -46,13 +46,11 @@ create table auth_client_credential (
 );
 
 create table config (
-  config                        bigint(50) auto_increment not null,
-  name_config                   varchar(20) not null,
+  id                            bigint(50) auto_increment not null,
   config_key                    varchar(50) not null,
-  value                         varchar(255) not null,
+  config_value                  varchar(255) not null,
   description                   text,
-  constraint uq_config_name_config unique (name_config),
-  constraint pk_config primary key (config)
+  constraint pk_config primary key (id)
 );
 
 create table farms (

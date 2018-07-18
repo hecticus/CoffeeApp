@@ -126,10 +126,71 @@ public class Providers extends Controller {
             return NsExceptionsUtils.delete(e);
         }
     }
+//
+////    @CoffeAppsecurity
+//    public Result  uploadPhotoProvider(){
+//        try  {
+//            JsonNode json = request().body().asJson();
+//            if(json == null)
+//                return Response.requiredJson();
+//
+//            JsonNode idprovider = json.get("idProvider");
+//            Long idProvider;
+//            if (idprovider == null) {
+//                JsonNode identificationDocProvider = json.get("identificationDocProvider");
+//                if(identificationDocProvider == null){
+//                    return Response.requiredParameter("identificationDocProvider or idProvider");
+//                }else{
+//                    Provider testp = Provider.findByNit(identificationDocProvider.asText());
+////                    Provider testp = Provider.getByIdentificationDoc(identificationDocProvider.asText());
+//                    if(testp != null){
+//                        idProvider = testp.getId();
+////                        idProvider = testp.getIdProvider();
+//                    }else{
+//                        return Response.requiredParameter("identificationDocProvider invalid");
+//                    }
+//                }
+//            }else{
+//                idProvider = idprovider.asLong();
+//            }
+//
+//            JsonNode base64Photo_json = json.get("photoProvider");
+//            if (base64Photo_json == null)
+//                return Response.requiredParameter("photoProvider");
+//
+//            String base64Photo = base64Photo_json.asText();
+//
+//            String url;
+//            if(base64Photo.contains("data:image/jpeg;base64,"))
+//            {
+//                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
+//                url = Provider.uploadPhoto(base64Photo,"jpg");
+//            }
+//            else {
+//                base64Photo = base64Photo.replace("data:image/png;base64,", "");
+//                url = Provider.uploadPhoto(base64Photo,"png");
+//            }
+//
+//            Provider provider = Provider.findById(idProvider);
+//
+//            provider.setPhotoProvider(url);
+//
+//            provider.update();
+//
+//            ObjectNode response = Json.newObject();
+//            response.put("urlPhoto", url);
+//            return Response.updatedEntity(response);
+//
+//        } catch (Exception e) {
+//            return ExceptionsUtils.find(e);
+//        }
+//    }
 
-    @CoffeAppsecurity
-    public Result  uploadPhotoProvider(){
-        try  {
+
+    public Result  uploadPhotoProvider()
+    {
+        try
+        {
             JsonNode json = request().body().asJson();
             if(json == null)
                 return Response.requiredJson();
@@ -142,7 +203,7 @@ public class Providers extends Controller {
                     return Response.requiredParameter("identificationDocProvider or idProvider");
                 }else{
                     Provider testp = Provider.findByNit(identificationDocProvider.asText());
-//                    Provider testp = Provider.getByIdentificationDoc(identificationDocProvider.asText());
+//                    Provider testp = providerDao.getByIdentificationDoc(identificationDocProvider.asText());
                     if(testp != null){
                         idProvider = testp.getId();
 //                        idProvider = testp.getIdProvider();
@@ -165,17 +226,21 @@ public class Providers extends Controller {
             {
                 base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
                 url = Provider.uploadPhoto(base64Photo,"jpg");
+//                url = providerDao.uploadPhoto(base64Photo,"jpg");
             }
             else {
                 base64Photo = base64Photo.replace("data:image/png;base64,", "");
                 url = Provider.uploadPhoto(base64Photo,"png");
+//                url = providerDao.uploadPhoto(base64Photo,"png");
             }
 
             Provider provider = Provider.findById(idProvider);
+//            Provider provider = providerDao.findById(idProvider);
 
             provider.setPhotoProvider(url);
 
             provider.update();
+//            provider = providerDao.update(provider);
 
             ObjectNode response = Json.newObject();
             response.put("urlPhoto", url);
