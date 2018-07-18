@@ -340,6 +340,9 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
         provider.setPhotoProvider(base64Image);
 
+        Gson g = new Gson();
+        Log.d("DEBUG imege", g.toJson(provider));
+
         Call<ProviderImageUpdateResponse> call = providerImageApi.updateProviderImage(provider);
         call.enqueue(new Callback<ProviderImageUpdateResponse>() {
             @DebugLog
@@ -368,7 +371,9 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                         Log.e("DETAILS", "--->uploadImageRequest Error with error");
                         e.printStackTrace();
                     }
-                    Log.d("DEBUG msj error", "da");
+
+                    Log.d("DEBUG msj error", "da" + errorMessage);
+
                     onImageUpdateError(provider, previousProviderImageString, errorMessage);
                 }
             }

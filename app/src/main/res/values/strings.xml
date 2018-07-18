@@ -120,6 +120,11 @@
     <string name="pounds_unripe">Pounds Unripe</string>
     <string name="observations">Observations</string>
     <string name="error">Error</string>
+    <string name="error_credentials">User or password is not correct.</string>
+    <string name="error_connection">Connection failed. Try it again later</string>
+    <string name="error_insufficient_permits">Insufficient permits</string>
+    <string name="error_login_is_not_internet">Does not have internet connection</string>
+    <string name="error_something_went_wrong">Something went wrong. Try it again later</string>
     <string name="harvests">Harvests</string>
 
     <string name="cancel">Cancel</string>

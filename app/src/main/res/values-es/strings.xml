@@ -63,6 +63,11 @@
     <string name="dni_or_name">DNI o Nombre</string>
     <string name="edit">Editar</string>
     <string name="error">Error</string>
+    <string name="error_credentials">Usuario o contraseña incorrectos.</string>
+    <string name="error_insufficient_permits">Permisos insuficientes</string>
+    <string name="error_something_went_wrong">Algo salio mal. Intentelo de nuevo más tarde</string>
+    <string name="error_login_is_not_internet">No posee conexion a internet</string>
+    <string name="error_connection">Error en la conexión. Intentelo de nuevo más tarde</string>
     <string name="error_deleting_purchase">Error borrando compra</string>
     <string name="error_getting_providers">Error obteniendo proveedores</string>
     <string name="error_in_recovery">¡Error recuperando contraseña!</string>
