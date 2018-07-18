@@ -34,6 +34,6 @@ public interface UserRetrofitInterface {
     @GET("oauth/revokeToken")
     Call<ResponseBody> logOutRequest(/*@Header("Authorization") String token*/);
 
-    @GET("user/reset/{email}")
-    Call<Message> recoverPasswordRequest(@Path("email") String email);
+    @GET("oauth/auth")
+    Call<ResponseBody> recoverPasswordRequest(@Path("email") String email);
 }

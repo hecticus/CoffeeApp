@@ -23,6 +23,7 @@ import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -123,7 +124,9 @@ public class RecoveryPasswordActivity extends BaseActivity {
 
     @DebugLog
     public void recoverPasswordRequest(String email) {
-        Call<Message> call = userApi.recoverPasswordRequest(email);
+        Call<ResponseBody> call = userApi.recoverPasswordRequest(email);
+
+        /*Call<Message> call = userApi.recoverPasswordRequest(email);
         call.enqueue(new Callback<Message>() {
             @DebugLog
             @Override
@@ -150,7 +153,7 @@ public class RecoveryPasswordActivity extends BaseActivity {
                 Log.e("RETRO", "--->" + RecoveryPasswordActivity.class.getSimpleName() + " onFailure +" + call + " + " + t);
                 showErrorMessage();
             }
-        });
+        });*/
     }
 
 }

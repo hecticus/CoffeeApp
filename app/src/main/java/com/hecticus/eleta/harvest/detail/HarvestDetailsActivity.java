@@ -373,6 +373,6 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @DebugLog
     @Override
     public void onAcceptConfirm() {
-        mPresenter.acceptSave();
+        mPresenter.acceptSave(getIntent().getIntExtra("idProvider", -1));
     }
 }

@@ -52,6 +52,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     private final HarvestRetrofitInterface harvestApi;
 
 
+
     public HarvestDetailsRepository(HarvestDetailsPresenter presenterParam, Context context) {
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -137,8 +138,15 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
                 Gson g = new Gson();
-                Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
-                Log.d("debug json", g.toJson(invoice));
+                Log.d("debug json444", "DDEC");
+                Invoice invoice;
+                //try{
+                    invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
+                /*} catch (Exception e){
+                    //invoice = new Invoice(invoicePost, ManagerDB.getProviderById());
+
+                }*/
+                Log.d("debug json555", g.toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog

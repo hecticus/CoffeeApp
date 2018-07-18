@@ -83,7 +83,7 @@ public class HarvestDetailsContract {
 
         void invalidToken();
 
-        void acceptSave();
+        void acceptSave(int idProvider);
 
     }
 

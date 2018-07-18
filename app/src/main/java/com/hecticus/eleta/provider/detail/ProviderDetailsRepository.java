@@ -145,6 +145,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             //Log.d("DEBUg desde bd", ManagerDB.getProviderByIdentificationDoc(providerParam.getIdentificationDocProvider()).toString());
         } else {
             Log.d("DETAILS", "--->Sent provider: " + providerParam);
+            Gson g = new Gson();
+            Log.d("DEBUG DETAILS555",  g.toJson(providerParam));
 
             Call<ProviderCreationResponse> call = providerDetailsDataApi.createProvider(providerParam);
 
@@ -176,8 +178,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @DebugLog
                 @Override
                 public void onInvalidToken() {
-                    /*Session.clearPreferences(mPresenter.context);
-                    mPresenter.invalidToken();*/
+                    //Session.clearPreferences(mPresenter.context);
+                    //mPresenter.invalidToken();
                 }
             });
         }
@@ -352,6 +354,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("DEBUG msj error", "5161");
                         onImageUpdateError(provider, previousProviderImageString, null);
                     }
                 } else {
@@ -365,6 +368,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                         Log.e("DETAILS", "--->uploadImageRequest Error with error");
                         e.printStackTrace();
                     }
+                    Log.d("DEBUG msj error", "da");
                     onImageUpdateError(provider, previousProviderImageString, errorMessage);
                 }
             }

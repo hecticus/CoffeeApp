@@ -30,6 +30,7 @@ import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.StatusProvider;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderType;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.FileUtils;
 import com.hecticus.eleta.util.GlideApp;
@@ -286,25 +287,26 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         }
 
 
-        if (phoneEditText.getText().trim().isEmpty()) {
+        /*if (phoneEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.phone_empty));
             return false;
-        }
+        }*/
 
-
-        if (emailEditText.getText().trim().isEmpty()) {
-            showMessage(getString(R.string.email_empty));
-            return false;
-        }
 
         if (!mPresenter.isHarvester() && contactEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.contact_empty));
             return false;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText()).matches()) {
-            showMessage(getString(R.string.email_invalid));
+        /*if (emailEditText.getText().trim().isEmpty()) {
+            showMessage(getString(R.string.email_empty));
             return false;
+        }*/
+        if(!emailEditText.getText().trim().isEmpty()) {
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText()).matches()) {
+                showMessage(getString(R.string.email_invalid));
+                return false;
+            }
         }
 
         return true;
@@ -483,7 +485,9 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             try {
                 HomeActivity.reloadProviders = true;
                 Intent intent = new Intent();
-                intent.putExtra("provider", Util.getGson().toJson(provider));
+                ManagerDB.saveNewProvider(provider);
+                intent.putExtra("provider",Util.getGson().toJson(provider));
+                intent.putExtra("idProvider", provider.getIdProvider());//Util.getGson().toJson(provider));
                 setResult(RESULT_OK, intent);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

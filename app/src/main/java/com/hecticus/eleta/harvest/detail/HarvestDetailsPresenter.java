@@ -387,9 +387,11 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     @DebugLog
     @Override
-    public void acceptSave() {
+    public void acceptSave(int idProvider) {
         Log.d("BUG", "--->currentProvider onSaveConfirmedInDialog: " + currentProvider);
-
+        if(idProvider!=-1){
+            invoicePost.setInvoiceId(idProvider);
+        }
         mView.showWorkingIndicator();
         invoicePost.setIdentificationDocProvider(currentProvider.getIdentificationDocProvider());
         invoicePost.setProviderName(currentProvider.getFullNameProvider());
