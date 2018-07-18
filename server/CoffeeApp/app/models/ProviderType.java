@@ -72,6 +72,10 @@ public class ProviderType  extends AbstractEntity {
         return finder.byId(id);
     }
 
+    public static ProviderType findByName(String name){
+        return finder.query().where().startsWith("nameProviderType", name).setIncludeSoftDeletes().findUnique();
+    }
+
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
                                                String sort, String name, boolean delete){
 
@@ -97,6 +101,4 @@ public class ProviderType  extends AbstractEntity {
                 index,
                 size);
     }
-
-
 }

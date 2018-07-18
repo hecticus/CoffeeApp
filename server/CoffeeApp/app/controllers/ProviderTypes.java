@@ -52,7 +52,16 @@ public class ProviderTypes {
                 return Response.invalidParameter(form.errorsAsJson());
 
             ProviderType providerType = form.get();
-            providerType.save();
+            ProviderType aux = ProviderType.findByName(providerType.getNameProviderType());
+            if (aux != null ) {
+                providerType.setId(aux.getId());
+                aux = providerType;
+                aux.setDeleted(false);
+                aux.update();
+                providerType = aux;
+            }else {
+                providerType.save();
+            }
             return Response.createdEntity(Json.toJson(providerType));
         }catch(Exception e){
             return NsExceptionsUtils.create(e);
