@@ -3,23 +3,19 @@ import { ValidatorComponent } from './validator/validator.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
 
 
 @NgModule({
 	declarations: [
 		ValidatorComponent,
-		ModalComponent,
 
 	],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule
-
 	],
 	exports: [
 		ValidatorComponent,
-		ModalComponent,
 	],
 	providers: []
 })

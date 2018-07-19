@@ -63,7 +63,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 
 			</div>
 		</div>
-
+<!--
 		<app-modal [(closed)]="confirmDelete">
 			<ng-template modalContentDirective>
 				<div class="dialog-content">
@@ -79,7 +79,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 					</div>
 				</div>
 			</ng-template>
-		</app-modal>
+		</app-modal>-->
 
 	`
 })
