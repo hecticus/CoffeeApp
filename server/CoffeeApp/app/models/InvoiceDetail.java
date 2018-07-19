@@ -2,6 +2,7 @@ package models;
 
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
+import io.ebean.annotation.Formula;
 import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
@@ -68,6 +69,10 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     @Column(columnDefinition = "text")
     private String note;
+
+    @Formula(select = "(SELECT  i.amount_invoice_detail * i.price_item_type_by_lot " +
+            "FROM  invoice_details i WHERE i.deleted = 0 AND i.id = ${ta}.id)")
+    private BigDecimal totalInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
@@ -143,6 +148,14 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     public void setFreight(boolean freight) {
         this.freight = freight;
+    }
+
+    public BigDecimal getTotalInvoiceDetail() {
+        return totalInvoiceDetail;
+    }
+
+    public void setTotalInvoiceDetail(BigDecimal totalInvoiceDetail) {
+        this.totalInvoiceDetail = totalInvoiceDetail;
     }
 
     public String getNote() {
