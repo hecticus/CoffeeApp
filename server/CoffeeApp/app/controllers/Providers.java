@@ -63,16 +63,16 @@ public class Providers extends Controller {
             Provider provider = Json.fromJson(json, Provider.class);
             Provider aux = Provider.findByProvider(provider);
             if (aux != null ) {
-//                if (aux.getId() != null){
                     provider.setId(aux.getId());
                     aux = provider;
                     aux.setDeleted(false);
                     aux.update();
                     provider = aux;
-//                }else {
-//                    provider.save();
-//                }
             }else {
+                Provider auxName = Provider.findByName(provider.getNameProvider());
+                if (auxName != null ) {
+                    return controllers.utils.Response.invalidParameter(provider.getNameProvider());
+                }
                 provider.save();
             }
             return  Response.createdEntity(Json.toJson(provider));
@@ -105,6 +105,9 @@ public class Providers extends Controller {
     @CoffeAppsecurity
     public Result delete(Long id) {
         try{
+            if (Invoice.invoicesByProviderId(id) != null){
+                return controllers.utils.Response.constraintViolation("Invoices Open");
+            }
             Ebean.delete(Provider.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
@@ -120,72 +123,11 @@ public class Providers extends Controller {
                 return controllers.utils.Response.requiredJson();
 
             Ebean.deleteAll(Provider.class, controllers.utils.JsonUtils.toArrayLong(json, "ids"));
-
             return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
     }
-//
-////    @CoffeAppsecurity
-//    public Result  uploadPhotoProvider(){
-//        try  {
-//            JsonNode json = request().body().asJson();
-//            if(json == null)
-//                return Response.requiredJson();
-//
-//            JsonNode idprovider = json.get("idProvider");
-//            Long idProvider;
-//            if (idprovider == null) {
-//                JsonNode identificationDocProvider = json.get("identificationDocProvider");
-//                if(identificationDocProvider == null){
-//                    return Response.requiredParameter("identificationDocProvider or idProvider");
-//                }else{
-//                    Provider testp = Provider.findByNit(identificationDocProvider.asText());
-////                    Provider testp = Provider.getByIdentificationDoc(identificationDocProvider.asText());
-//                    if(testp != null){
-//                        idProvider = testp.getId();
-////                        idProvider = testp.getIdProvider();
-//                    }else{
-//                        return Response.requiredParameter("identificationDocProvider invalid");
-//                    }
-//                }
-//            }else{
-//                idProvider = idprovider.asLong();
-//            }
-//
-//            JsonNode base64Photo_json = json.get("photoProvider");
-//            if (base64Photo_json == null)
-//                return Response.requiredParameter("photoProvider");
-//
-//            String base64Photo = base64Photo_json.asText();
-//
-//            String url;
-//            if(base64Photo.contains("data:image/jpeg;base64,"))
-//            {
-//                base64Photo = base64Photo.replace("data:image/jpeg;base64,", "");
-//                url = Provider.uploadPhoto(base64Photo,"jpg");
-//            }
-//            else {
-//                base64Photo = base64Photo.replace("data:image/png;base64,", "");
-//                url = Provider.uploadPhoto(base64Photo,"png");
-//            }
-//
-//            Provider provider = Provider.findById(idProvider);
-//
-//            provider.setPhotoProvider(url);
-//
-//            provider.update();
-//
-//            ObjectNode response = Json.newObject();
-//            response.put("urlPhoto", url);
-//            return Response.updatedEntity(response);
-//
-//        } catch (Exception e) {
-//            return ExceptionsUtils.find(e);
-//        }
-//    }
-
 
     public Result  uploadPhotoProvider()
     {

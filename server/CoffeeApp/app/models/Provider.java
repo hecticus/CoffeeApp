@@ -40,7 +40,7 @@ public class Provider extends AbstractEntity{
 
     @Constraints.Required
     @Constraints.MaxLength(60)
-    @Column(nullable = false, length = 60, unique = true)
+    @Column(nullable = false, length = 60)
     private String nameProvider;
 
     @Constraints.Required
@@ -170,12 +170,28 @@ public class Provider extends AbstractEntity{
     }
 
     public static Provider findByProvider(Provider provider) {
+
+        if(provider.getProviderType().getId().intValue() == 1) {
+            return finder.query().where()
+                    .eq("deleted", true)
+                    .eq("providerType.id", 1)
+                    .or()
+                        .startsWith("nitProvider", provider.getNitProvider())
+                        .startsWith("nameProvider", provider.getNameProvider()).findUnique();
+        }
         return finder.query().where()
                 .eq("deleted", true)
-                .or()
-                    .startsWith("nitProvider", provider.getNitProvider())
-                    .startsWith("nameProvider", provider.getNameProvider())
+                .startsWith("nitProvider", provider.getNitProvider()).findUnique();
+
+    }
+
+    public static Provider findByName(String provider) {
+
+        return finder.query().where()
+                .eq("nameProvider", provider)
+                .eq("providerType.id", 1)
                 .findUnique();
+
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
@@ -227,6 +243,7 @@ public class Provider extends AbstractEntity{
                 index,
                 size);
     }
+
 
 
 //    public static String uploadPhoto(String base64Photo, String ext) {

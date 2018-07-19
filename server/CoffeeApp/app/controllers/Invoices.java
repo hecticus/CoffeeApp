@@ -88,7 +88,9 @@ public class Invoices extends Controller {
     @CoffeAppsecurity
     public  Result delete(Long id) {
         try{
+            List<InvoiceDetail> ids = InvoiceDetail.findByProviderId(id);
             Ebean.delete(Invoice.findById(id));
+            Ebean.deleteAll(InvoiceDetail.class, ids);
             return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
             return Response.responseExceptionDeleted(e);

@@ -176,7 +176,6 @@ create table providers (
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_providers_nit_provider unique (nit_provider),
-  constraint uq_providers_name_provider unique (name_provider),
   constraint pk_providers primary key (id)
 );
 
