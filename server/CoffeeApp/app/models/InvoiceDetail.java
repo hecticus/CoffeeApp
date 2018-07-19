@@ -25,8 +25,8 @@ public class  InvoiceDetail  extends AbstractEntity{
     private Invoice invoice;
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
+    @Constraints.Required
+    @JoinColumn(nullable = false)
     private ItemType itemType;
 
     @ManyToOne
@@ -64,9 +64,10 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(nullable = false, length = 100)
     private String nameDelivered;
 
+    private boolean freight;
+
     @Column(columnDefinition = "text")
     private String note;
-
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
@@ -77,6 +78,7 @@ public class  InvoiceDetail  extends AbstractEntity{
         costItemType = BigDecimal.ZERO;
         priceItemTypeByLot = BigDecimal.ZERO;
         invoiceDetailPurity = new ArrayList<>();
+        freight = false;
     }
 
     public Invoice getInvoice() {
@@ -133,6 +135,22 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     public void setAmountInvoiceDetail(BigDecimal amountInvoiceDetail) {
         this.amountInvoiceDetail = amountInvoiceDetail;
+    }
+
+    public boolean isFreight() {
+        return freight;
+    }
+
+    public void setFreight(boolean freight) {
+        this.freight = freight;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getNoteInvoiceDetail() {

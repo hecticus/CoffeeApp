@@ -32,6 +32,7 @@ public class ProviderType  extends AbstractEntity {
 
     @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @JsonIgnore
     private List<ItemType> itemTypes;
 
     public static Finder<Long, ProviderType> finder = new Finder<>(ProviderType.class);
@@ -73,7 +74,10 @@ public class ProviderType  extends AbstractEntity {
     }
 
     public static ProviderType findByName(String name){
-        return finder.query().where().startsWith("nameProviderType", name).setIncludeSoftDeletes().findUnique();
+        return finder.query().where()
+                .eq("deleted", false)
+                .startsWith("nameProviderType", name)
+                .findUnique();
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,

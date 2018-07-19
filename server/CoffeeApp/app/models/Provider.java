@@ -28,9 +28,6 @@ import java.util.List;
 @Table(name="providers")
 public class Provider extends AbstractEntity{
 
-//    @ManyToOne(optional = false)
-//    @JsonBackReference
-//    @JoinColumn(nullable = false)
     @ManyToOne
     @Constraints.Required
     @JoinColumn(nullable = false)
@@ -174,10 +171,11 @@ public class Provider extends AbstractEntity{
 
     public static Provider findByProvider(Provider provider) {
         return finder.query().where()
+                .eq("deleted", true)
                 .or()
                     .startsWith("nitProvider", provider.getNitProvider())
                     .startsWith("nameProvider", provider.getNameProvider())
-                .setIncludeSoftDeletes().findUnique();
+                .findUnique();
     }
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,

@@ -36,9 +36,12 @@ public class Invoice extends AbstractEntity{
 //    @JsonBackReference
     private StatusInvoice statusInvoice;
 
-    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
+    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot) " +
             "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
     private BigDecimal totalInvoice;
+//    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
+//            "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
+//    private BigDecimal totalInvoice;
 
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
@@ -46,13 +49,13 @@ public class Invoice extends AbstractEntity{
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false, insertable = false)
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private ZonedDateTime startDateInvoice;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private ZonedDateTime closedDateInvoice;
 
     // GETTER AND SETTER

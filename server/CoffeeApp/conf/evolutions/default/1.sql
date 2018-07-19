@@ -89,7 +89,7 @@ create table invoices (
 create table invoice_details (
   id                            bigint auto_increment not null,
   invoice_id                    bigint,
-  item_type_id                  bigint,
+  item_type_id                  bigint not null,
   lot_id                        bigint,
   store_id                      bigint,
   price_item_type_by_lot        decimal(38) not null,
@@ -97,6 +97,7 @@ create table invoice_details (
   amount_invoice_detail         decimal(38) not null,
   name_received                 varchar(100) not null,
   name_delivered                varchar(100) not null,
+  freight                       tinyint(1) default 0 not null,
   note                          text,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,

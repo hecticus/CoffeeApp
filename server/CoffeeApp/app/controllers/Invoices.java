@@ -22,6 +22,7 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -174,24 +175,16 @@ public class Invoices extends Controller {
             for (Invoice i : invoices ) {
                 StatusInvoice status = i.getStatusInvoice();
                 if( status != null & status.getId().intValue() == 11) {
-//                    if (status.getId().intValue() == 11) {
                         System.out.println(status.getId());
                         System.out.println(i.getId() + "Id");
                         newInvoice = i;
                         break;
-//                    }
-//                    }else{
-//                        newInvoice = new Invoice();
-//                        newInvoice.setProvider(invoice.getProvider());
-//                        newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-//                    }
                 }else{
                     newInvoice = new Invoice();
                     newInvoice.setProvider(invoice.getProvider());
                     newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
                 }
             }
-//            newInvoice.save();
         }
 
 
@@ -201,6 +194,17 @@ public class Invoices extends Controller {
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
 
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
+
+            invoiceDetail.setCostItemType(ItemType.findById(
+                    item.get("itemType").findValue("id").asLong()).getCostItemType());
+            BigDecimal ii = ItemType.findById(
+                    item.get("itemType").findValue("id").asLong()).getCostItemType();
+            if (option) {
+                System.out.println(Lot.findById(item.findValue("lot").get("id").asLong()));
+                invoiceDetail.setPriceItemTypeByLot(Lot.findById(
+                        item.get("lot").findValue("id").asLong()).getPriceLot());
+            }
+
             invoiceDetail.save();
 
             // Buscos la lista de invoicesDetail asociado a esa Invoice
@@ -210,12 +214,6 @@ public class Invoices extends Controller {
             newInvoice.setInvoiceDetails(invoiceDetails);
 
             newInvoice.save();
-//            if (!invoices.isEmpty()){
-//                newInvoice.update();
-//            } else {
-//                newInvoice.save();
-//            }
-
             invoiceDetail.setInvoice(newInvoice);
             invoiceDetail.save();
 
