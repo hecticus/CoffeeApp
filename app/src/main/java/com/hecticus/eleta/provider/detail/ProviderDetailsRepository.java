@@ -102,7 +102,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
     @DebugLog
     @Override
-    public void createProviderRequest(Provider providerParam, final String imagePath) {
+    public void createProviderRequest(final Provider providerParam, final String imagePath) {
 
         if (providerParam.getIdProviderType() == -1) {
             Log.d("DETAILS", "--->Populating provider type: " + providerParam.getProviderType().getIdProviderType());
@@ -173,6 +173,24 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                         Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + code + "):" + response.body());
                         onCreateError(mPresenter.context.getString(R.string.already_exists));
                     }
+                    /*if(){ //nombre existe
+                        if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
+                            onCreateError(mPresenter.context.getString(R.string.already_exists_name_provider));
+                        } //else {// es cosechador creo q no va
+                            //onCreateError(mPresenter.context.getString(R.string.already_exists));
+                        //}
+                    } else{
+                        if () {//ruc or nit existe
+                            if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
+                                onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
+                            } else {// es cosechador
+                                onCreateError(mPresenter.context.getString(R.string.dni_already_exists));
+                            }
+                        } else {
+                            Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
+                            onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                        }
+                    }*/
                 }
 
                 @DebugLog

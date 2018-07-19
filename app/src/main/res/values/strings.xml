@@ -149,6 +149,7 @@
     <string name="price">Price</string>
     <string name="dispatched_by">Dispatched by</string>
     <string name="already_exists">Already exists!</string>
+    <string name="already_exists_name_provider">The name of the provider already exists</string>
 
     <string name="dni_empty">El DNI no puede estar vacío</string>
     <string name="ruc_empty">El RUC no puede estar vacío</string>

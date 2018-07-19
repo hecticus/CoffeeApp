@@ -127,6 +127,8 @@
     <string name="dispatched_by">Entregado por</string>
     <string name="already_exists">¡Ya existe!</string>
 
+    <string name="already_exists_name_provider">Ya existe el nombre del proveedor</string>
+
     <string-array name="providers_type">
         <item>Cosechador</item>
         <item>Proveedor</item>
