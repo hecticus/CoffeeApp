@@ -1,4 +1,8 @@
-.frao {
+:host .frao {
+    background: white;
+}
+
+.contWhite {
     background: white;
 }
 
@@ -39,6 +43,7 @@ header {
 
 .grid-h .content {
     flex: 1 1 auto;
+    background-color: white;
 }
 
 .grid-v {
@@ -55,6 +60,7 @@ header {
     flex: 1 1 auto;
     padding: 30px;
     position: relative;
+    background-color: white;
 }
 
 .grid-v .footer {

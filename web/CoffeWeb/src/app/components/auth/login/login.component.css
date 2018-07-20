@@ -1,5 +1,9 @@
 :host .frao {
-    background-color: black !important;
+    background-color: black;
+}
+
+.container {
+    max-width: 500px;
 }
 
 .image {
@@ -17,7 +21,7 @@
 }
 
 .form-control {
-    width: 50%;
+    width: 100%;
     height: 34px;
     border: 1px solid #ccc;
     padding: 6px 12px;
@@ -71,4 +75,9 @@ back {
 
 :host body {
     background: black;
+}
+
+a:not([href]):not([tabindex]) {
+    /* color: inherit; */
+    text-decoration: none;
 }
