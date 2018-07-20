@@ -70,7 +70,11 @@ public class Providers extends Controller {
                         aux.update();
                         provider = aux;
                     } else{
-                        return controllers.utils.Response.invalidParameter(provider.getNameProvider() +" or "+
+                        if (aux.getProviderType().getId().intValue() == 1) {
+                            return controllers.utils.Response.invalidParameter("There is  a provider active with name:"+provider.getNameProvider() +" or RUC:"+
+                                    provider.getNitProvider());
+                        }
+                        return controllers.utils.Response.invalidParameter("There is  a provider active with RUC:"+
                                 provider.getNitProvider());
                     }
 

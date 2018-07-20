@@ -1,111 +1,3 @@
-# --- !Ups
-
-INSERT INTO `config` (id, config_key, config_value, description) VALUES
-(1,'SecurityEnabled','Enabled',NULL),
-(2,'Content-Type','application/json',NULL),
-(3,'method','POST',NULL),
-(4,'cdn-container','test01',''),
-(5,'cdn-parent','example',NULL),
-(6,'Url-WS-Rackspace','http://10.0.3.4:9000/media/create','url del servicio que sube la imagen al rackspace'),
-(7,'nameCompany','Cafe de Eleta, S.A',NULL),
-(8,'invoiceDescription','Recibo Diario de Cafe',NULL),
-(9,'invoiceType','Cosecha Propia',NULL),
-(10,'RUC','R.U.C 1727-188-34109 D.V. 69',NULL),
-(11,'telephonoCompany','6679-4752',NULL);
-
-
-INSERT INTO `status` ( id, dtype, name, description) VALUES
-  (1,  'farm',          'Active',     'No deudor'),
-  (2,  'farm',          'Inactive',   'No deudor'),
-  (3,  'farm',          'Edit',       'No deudor'),
-  (11, 'invoice',       'Open',       'Deudor'),
-  (12, 'invoice',       'Closed',     'Deudor'),
-  (13, 'invoice',       'Canceled',   'Deudor'),
-  (14, 'invoice',       'Edit',       'Deudor'),
-  (31, 'lot',           'Active',      NULL),
-  (32, 'lot',           'Inactive',    NULL),
-  (33, 'lot',           'Edit',        NULL),
-  (41, 'provider',      'Active',      NULL),
-  (42, 'provider',      'Inactive',    NULL),
-  (43, 'provider',      'Consulted',   NULL),
-  (50, 'store',         'Active',      NULL),
-  (51, 'store',         'Inactive',    NULL),
-  (52, 'store',         'Consulted',   NULL);
-
-
-INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES
-(1, 0, 'Vendedor'),
-(2, 0, 'Cosechador'),
-(3, 1, 'prueba');
-
-INSERT INTO `providers` (id, nit_provider, name_provider, address_provider, number_provider,
-                         email_provider, provider_type_id, status_provider_id, contact_name_provider) VALUES
-(1130, '42424'	           ,  'Cosechador Tes'      ,   'wweq'	, 332432	  ,'DSDSD@com.com'	  ,	2,  41,	'Cosechador Test'),
-(1131, '12345-4-2424 DV 24',	'Proveedor Te'	      ,   'Here'	, 52454547	,'pt@test.com'	    ,	1,  41,	'None'),
-(1132, '42343-2-4234 DV 32',	'Proveedor altern'    ,   'dsfdsf', 3424	    ,'ddfd@sds.com'	    ,	1,  41,	'dfsdfsdf'),
-(1133, '67567-5-7567 DV 56',	'Proveedor '	        ,   'dfsdf'	, 432	      ,'32432@as.com'	    ,	1,  42,	'sdsd'),
-(1134, '12121-2-1212 DV 12',	'PROV'                ,   '342343', 234234	  ,'32423@ASA.COM'	  ,	1,  42,	'324'),
-(1135, '32432-4-2342 DV 42',	'Proveedor accidenta' ,   'sdfsdf', 324234	  ,'fdsfsdf@asas.com'	,	1,  42,  'dadsasd'),
-(1136, '324234234234'	     ,  'Cosechador novat'    ,   'wewe'	, 2323	    ,'sdsd@as.com'	    ,	2,  43,  'Cosechador novato'),
-(1137, '3324324234234'	   ,  'Cosechador novele'   ,   'sdasda', 123434	  ,'asdasd@asas.com'	,	2,  43,  'Cosechador novelero');
-
-INSERT INTO `farms` (id, deleted, status_farm_id, name_farm) VALUES
-(1, 0, 1, 'granja 1'),
-(2, 1, 1, 'granja 2'),
-(3, 0, 2, 'granja 3'),
-(4, 1, 3, 'Cafe Eleta');
-
-INSERT INTO `stores` (id, deleted, status_store_id, name_store )VALUES
- (1,  0, 50, 'store 1' ),
- (2,  1, 51, 'STORE 22'),
- (3,  1, 52, 'Beneficio');
-
-INSERT INTO `units` (id, name_unit) VALUES
-  (1,'libra');
-
-INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot, deleted, farm_id, status_lot_id, price_lot) VALUES
-  (1,     'LOTE 1',     '89lk',   895,      0,  1, 31,  89.00),
-  (2,     'LOTE 2',     '256252', 1233252,  0,  2, 31,  2252.00),
-  (3,     'LOTE 3',     '25625',  1233253,  1,  1, 31,  5230.00),
-  (4,     'LOTE 4',     '89',     89,       1,  2, 31,  100.00),
-  (5,     'LOTE 2',     '111',    111,      0,  1, 31,  111.00),
-  (6,     'LOTE 6',     '548',    58,       0,  2, 31,  8.00),
-  (7,     'LOTE 7',     '258',    2758,     1,  2, 31,  258.00),
-  (8,     'LOTE 8',     '56',     56,       1,  1, 31,  56.00),
-  (9,     'lote 09',    '123258', 123258,   1,  1, 31,  123258.00),
-  (10,    '#4',         '25663',  369,      1,  4, 31,  897646.00),
-  (11,    'LOTE 11',    '123',    1212,     1,  3, 31,  121212.00),
-  (12,    'lote 12',    '12312',  12121,    1,  2, 31,  121212.00),
-  (13,    'LOTE 01',    'gfyu',   126,      1,  1, 31,  126.00),
-  (14,    'LOTE 5',     '45',     45,       1,  1, 32,  45.00),
-  (15,    'LOTE 3',     '12',     55,       1,  1, 32,  55.00),
-  (16,    'LOTE 1',     '58',     89,       1,  2, 32,  89.00),
-  (17,    '258',        '5258',   44,       1,  2, 32,  77.00),
-  (18,    'MARWIN',     '12',     12,       1,  1, 32,  200.00),
-  (19,    'MARWIN',     '2222',   2222,     1,  3, 32,  2222.00),
-  (20,    'MARWIN',     '1',      1,        1,  2, 32,  111.00),
-  (21,    'MARWIN 1',   '1',      1,        1,  2, 32,  1.00),
-  (22,    'LOTE MAR',   '1',      1,        1,  2, 33,  222.00),
-  (23,    '#1',         '200',    250,      0,  4, 33,  250.00),
-  (24,    '#2',         '250',    300,      1,  4, 33,  500.00),
-  (25,    'LOTE 03',    '02',     2,        1,  1, 33,  2.00),
-  (26,    '#3',          '58',    58,       1,  4, 33,  58.00);
-
-INSERT INTO `item_types` (`id`,`deleted`,`name_item_type`,`cost_item_type`,
-                          `provider_type_id`,`unit_id`) VALUES
-(1,0,'Libras Maduro', 50.00,  1, 1),
-(2,0,'Libras Verdes', 20.00,  1, 1),
-(3,0,'Libras Seco', 30.00,  1, 1),
-(4,0,'Libras Cereza', 40.00,  2, 1),
-(5,0,'Libras Pergamino', 25.00,  2, 1),
-(6,1,'Libras Cosechas Eliminadas', 10.00,  1, 1),
-(7,1,'Libras Compras Eliminadas', 15.00,  2, 1);
-
-INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VALUES
-(1, 0, '% Granos Flotes',      20),
-(2, 0, '% Granos Bocados',     30),
-(3, 1, '% Granos Eliminados',  15);
-
 INSERT INTO `invoices` (`id`,`deleted`,`provider_id`, `status_invoice_id`) VALUES
 (600, 0, 1131, 11 ),
 (601, 0, 1130, 11 ),
@@ -246,6 +138,118 @@ INSERT INTO `invoicesdetails_purities` (`id`,`deleted`,`purity_id`,
 (39, 0, 1, 25,0,0,1261 ),
 (40, 0, 2, 10,0,0,1262 ),
 (41, 0, 1, 25,0,0,1262 );
+
+
+
+
+
+# --- !Ups
+
+INSERT INTO `config` (id, config_key, config_value, description) VALUES
+(1,'SecurityEnabled','Enabled',NULL),
+(2,'Content-Type','application/json',NULL),
+(3,'method','POST',NULL),
+(4,'cdn-container','test01',''),
+(5,'cdn-parent','example',NULL),
+(6,'Url-WS-Rackspace','http://10.0.3.4:9000/media/create','url del servicio que sube la imagen al rackspace'),
+(7,'nameCompany','Cafe de Eleta, S.A',NULL),
+(8,'invoiceDescription','Recibo Diario de Cafe',NULL),
+(9,'invoiceType','Cosecha Propia',NULL),
+(10,'RUC','R.U.C 1727-188-34109 D.V. 69',NULL),
+(11,'telephonoCompany','6679-4752',NULL);
+
+
+INSERT INTO `status` ( id, dtype, name, description) VALUES
+  (1,  'farm',          'Active',     'No deudor'),
+  (2,  'farm',          'Inactive',   'No deudor'),
+  (3,  'farm',          'Edit',       'No deudor'),
+  (11, 'invoice',       'Open',       'Deudor'),
+  (12, 'invoice',       'Closed',     'Deudor'),
+  (13, 'invoice',       'Canceled',   'Deudor'),
+  (14, 'invoice',       'Edit',       'Deudor'),
+  (31, 'lot',           'Active',      NULL),
+  (32, 'lot',           'Inactive',    NULL),
+  (33, 'lot',           'Edit',        NULL),
+  (41, 'provider',      'Active',      NULL),
+  (42, 'provider',      'Inactive',    NULL),
+  (43, 'provider',      'Consulted',   NULL),
+  (50, 'store',         'Active',      NULL),
+  (51, 'store',         'Inactive',    NULL),
+  (52, 'store',         'Consulted',   NULL);
+
+
+INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES
+(1, 0, 'Vendedor'),
+(2, 0, 'Cosechador'),
+(3, 1, 'prueba');
+
+INSERT INTO `providers` (id, nit_provider, name_provider, address_provider, number_provider,
+                         email_provider, provider_type_id, status_provider_id, contact_name_provider) VALUES
+(1130, '42424'	           ,  'Cosechador Tes'      ,   'wweq'	, 332432	  ,'DSDSD@com.com'	  ,	2,  41,	'Cosechador Test'),
+(1131, '12345-4-2424 DV 24',	'Proveedor Te'	      ,   'Here'	, 52454547	,'pt@test.com'	    ,	1,  41,	'None'),
+(1132, '42343-2-4234 DV 32',	'Proveedor altern'    ,   'dsfdsf', 3424	    ,'ddfd@sds.com'	    ,	1,  41,	'dfsdfsdf'),
+(1133, '67567-5-7567 DV 56',	'Proveedor '	        ,   'dfsdf'	, 432	      ,'32432@as.com'	    ,	1,  42,	'sdsd'),
+(1134, '12121-2-1212 DV 12',	'PROV'                ,   '342343', 234234	  ,'32423@ASA.COM'	  ,	1,  42,	'324'),
+(1135, '32432-4-2342 DV 42',	'Proveedor accidenta' ,   'sdfsdf', 324234	  ,'fdsfsdf@asas.com'	,	1,  42,  'dadsasd'),
+(1136, '324234234234'	     ,  'Cosechador novat'    ,   'wewe'	, 2323	    ,'sdsd@as.com'	    ,	2,  43,  'Cosechador novato'),
+(1137, '3324324234234'	   ,  'Cosechador novele'   ,   'sdasda', 123434	  ,'asdasd@asas.com'	,	2,  43,  'Cosechador novelero');
+
+INSERT INTO `farms` (id, deleted, status_farm_id, name_farm) VALUES
+(1, 0, 1, 'granja 1'),
+(2, 1, 1, 'granja 2'),
+(3, 0, 2, 'granja 3'),
+(4, 1, 3, 'Cafe Eleta');
+
+INSERT INTO `stores` (id, deleted, status_store_id, name_store )VALUES
+ (1,  0, 50, 'store 1' ),
+ (2,  1, 51, 'STORE 22'),
+ (3,  1, 52, 'Beneficio');
+
+INSERT INTO `units` (id, name_unit) VALUES
+  (1,'libra');
+
+INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot, deleted, farm_id, status_lot_id, price_lot) VALUES
+  (1,     'LOTE 1',     '89lk',   895,      0,  1, 31,  89.00),
+  (2,     'LOTE 2',     '256252', 1233252,  0,  2, 31,  2252.00),
+  (3,     'LOTE 3',     '25625',  1233253,  1,  1, 31,  5230.00),
+  (4,     'LOTE 4',     '89',     89,       1,  2, 31,  100.00),
+  (5,     'LOTE 2',     '111',    111,      0,  1, 31,  111.00),
+  (6,     'LOTE 6',     '548',    58,       0,  2, 31,  8.00),
+  (7,     'LOTE 7',     '258',    2758,     1,  2, 31,  258.00),
+  (8,     'LOTE 8',     '56',     56,       1,  1, 31,  56.00),
+  (9,     'lote 09',    '123258', 123258,   1,  1, 31,  123258.00),
+  (10,    '#4',         '25663',  369,      1,  4, 31,  897646.00),
+  (11,    'LOTE 11',    '123',    1212,     1,  3, 31,  121212.00),
+  (12,    'lote 12',    '12312',  12121,    1,  2, 31,  121212.00),
+  (13,    'LOTE 01',    'gfyu',   126,      1,  1, 31,  126.00),
+  (14,    'LOTE 5',     '45',     45,       1,  1, 32,  45.00),
+  (15,    'LOTE 3',     '12',     55,       1,  1, 32,  55.00),
+  (16,    'LOTE 1',     '58',     89,       1,  2, 32,  89.00),
+  (17,    '258',        '5258',   44,       1,  2, 32,  77.00),
+  (18,    'MARWIN',     '12',     12,       1,  1, 32,  200.00),
+  (19,    'MARWIN',     '2222',   2222,     1,  3, 32,  2222.00),
+  (20,    'MARWIN',     '1',      1,        1,  2, 32,  111.00),
+  (21,    'MARWIN 1',   '1',      1,        1,  2, 32,  1.00),
+  (22,    'LOTE MAR',   '1',      1,        1,  2, 33,  222.00),
+  (23,    '#1',         '200',    250,      0,  4, 33,  250.00),
+  (24,    '#2',         '250',    300,      1,  4, 33,  500.00),
+  (25,    'LOTE 03',    '02',     2,        1,  1, 33,  2.00),
+  (26,    '#3',          '58',    58,       1,  4, 33,  58.00);
+
+INSERT INTO `item_types` (`id`,`deleted`,`name_item_type`,`cost_item_type`,
+                          `provider_type_id`,`unit_id`) VALUES
+(1,0,'Libras Maduro', 50.00,  1, 1),
+(2,0,'Libras Verdes', 20.00,  1, 1),
+(3,0,'Libras Seco', 30.00,  1, 1),
+(4,0,'Libras Cereza', 40.00,  2, 1),
+(5,0,'Libras Pergamino', 25.00,  2, 1),
+(6,1,'Libras Cosechas Eliminadas', 10.00,  1, 1),
+(7,1,'Libras Compras Eliminadas', 15.00,  2, 1);
+
+INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VALUES
+(1, 0, '% Granos Flotes',      20),
+(2, 0, '% Granos Bocados',     30),
+(3, 1, '% Granos Eliminados',  15);
 
 
 
