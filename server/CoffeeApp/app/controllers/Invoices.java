@@ -409,8 +409,6 @@ public class Invoices extends Controller {
 //        openInvoice.update();// invoiceDao.update(openInvoice);
 //        return Response.updatedEntity(Json.toJson(openInvoice));
 //}
-
-
     @CoffeAppsecurity
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);

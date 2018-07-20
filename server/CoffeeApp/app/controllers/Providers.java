@@ -63,16 +63,18 @@ public class Providers extends Controller {
             Provider provider = Json.fromJson(json, Provider.class);
             Provider aux = Provider.findByProvider(provider);
             if (aux != null ) {
-                    provider.setId(aux.getId());
-                    aux = provider;
-                    aux.setDeleted(false);
-                    aux.update();
-                    provider = aux;
+                    if (aux.isDeleted()){
+                        provider.setId(aux.getId());
+                        aux = provider;
+                        aux.setDeleted(false);
+                        aux.update();
+                        provider = aux;
+                    } else{
+                        return controllers.utils.Response.invalidParameter(provider.getNameProvider() +" or "+
+                                provider.getNitProvider());
+                    }
+
             }else {
-                Provider auxName = Provider.findByName(provider.getNameProvider());
-                if (auxName != null ) {
-                    return controllers.utils.Response.invalidParameter(provider.getNameProvider());
-                }
                 provider.save();
             }
             return  Response.createdEntity(Json.toJson(provider));

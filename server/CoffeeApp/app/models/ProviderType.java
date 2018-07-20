@@ -75,8 +75,8 @@ public class ProviderType  extends AbstractEntity {
 
     public static ProviderType findByName(String name){
         return finder.query().where()
-                .eq("deleted", false)
-                .startsWith("nameProviderType", name)
+                .eq("nameProviderType", name)
+                .setIncludeSoftDeletes()
                 .findUnique();
     }
 

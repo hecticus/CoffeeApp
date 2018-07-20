@@ -46,11 +46,15 @@ public class ProviderTypes {
             ProviderType providerType = form.get();
             ProviderType aux = ProviderType.findByName(providerType.getNameProviderType());
             if (aux != null ) {
-                providerType.setId(aux.getId());
-                aux = providerType;
-                aux.setDeleted(false);
-                aux.update();
-                providerType = aux;
+                if (aux.isDeleted()) {
+                    providerType.setId(aux.getId());
+                    aux = providerType;
+                    aux.setDeleted(false);
+                    aux.update();
+                    providerType = aux;
+                }else {
+                    return controllers.utils.Response.invalidParameter(providerType.getNameProviderType());
+                    }
             }else {
                 providerType.save();
             }

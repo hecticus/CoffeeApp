@@ -170,20 +170,24 @@ public class Provider extends AbstractEntity{
     }
 
     public static Provider findByProvider(Provider provider) {
-
-        if(provider.getProviderType().getId().intValue() == 1) {
+        Integer idProviderType = provider.getProviderType().getId().intValue();
+        if( idProviderType == 1) {
             return finder.query().where()
-                    .eq("deleted", true)
                     .eq("providerType.id", 1)
                     .or()
-                        .startsWith("nitProvider", provider.getNitProvider())
-                        .startsWith("nameProvider", provider.getNameProvider()).findUnique();
+                        .eq("nitProvider", provider.getNitProvider())
+                        .eq("nameProvider", provider.getNameProvider())
+                    .setIncludeSoftDeletes()
+                    .findUnique();
         }
         return finder.query().where()
-                .eq("deleted", true)
-                .startsWith("nitProvider", provider.getNitProvider()).findUnique();
+                .eq("providerType.id", idProviderType)
+                .eq("nitProvider", provider.getNitProvider())
+                .setIncludeSoftDeletes()
+                .findUnique();
 
     }
+
 
     public static Provider findByName(String provider) {
 
