@@ -273,6 +273,14 @@ public class Media extends Model {
         this.id = id;
     }
 
+    public List<Provider> getProvidersModels() {
+        return providersModels;
+    }
+
+    public void setProvidersModels(List<Provider> providersModels) {
+        this.providersModels = providersModels;
+    }
+
     public String getMedia() {
         return media;
     }

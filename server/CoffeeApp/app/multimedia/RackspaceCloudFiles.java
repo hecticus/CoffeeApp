@@ -15,7 +15,6 @@ import org.jclouds.openstack.swift.v1.options.PutOptions;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.features.CDNApi;
-import play.Configuration;
 
 import javax.inject.Inject;
 import java.awt.image.BufferedImage;
