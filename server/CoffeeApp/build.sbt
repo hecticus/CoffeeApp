@@ -23,6 +23,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" % "play-mailer_2.11" % "5.0.0",
   "io.jsonwebtoken" % "jjwt" % "0.7.0",
   "org.apache.jclouds" % "jclouds-all" % "2.0.1",
+  "org.apache.tika" % "tika-core" % "1.16",
   "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.9.4",
   filters
 )
