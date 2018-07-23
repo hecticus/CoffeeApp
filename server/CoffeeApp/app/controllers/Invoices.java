@@ -211,7 +211,8 @@ public class Invoices extends Controller {
                 invoiceDetail.setPriceItemTypeByLot(Lot.findById(
                         item.get("lot").findValue("id").asLong()).getPriceLot());
             } else {
-                invoiceDetail.setPriceItemTypeByLot(new BigDecimal(0));
+                invoiceDetail.setPriceItemTypeByLot(item.get("priceItemTypeByLot").decimalValue());
+//                invoiceDetail.setPriceItemTypeByLot(new BigDecimal(0));
             }
 
             invoiceDetail.save();
