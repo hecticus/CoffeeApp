@@ -166,7 +166,9 @@ public class Provider extends AbstractEntity{
     }
 
     public static Provider findByNit(String nitProvider) {
-        return finder.query().where().eq("nitProvider", nitProvider).setIncludeSoftDeletes().findUnique();
+        return finder.query().where()
+                .eq("nitProvider", nitProvider)
+                .setIncludeSoftDeletes().findUnique();
     }
 
     public static Provider findByProvider(Provider provider) {
@@ -193,10 +195,12 @@ public class Provider extends AbstractEntity{
 
         return finder.query().where()
                 .eq("nameProvider", provider)
+//                .startsWith("nameProvider", provider)
                 .eq("providerType.id", 1)
                 .findUnique();
 
     }
+
 
     public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
                                                String sort, String name,  Long idProviderType,
@@ -248,6 +252,11 @@ public class Provider extends AbstractEntity{
                 size);
     }
 
+    public static Provider findNit(String nitProvider) {
+        return finder.query().where()
+                .eq("nitProvider", nitProvider)
+                .findUnique();
+    }
 
 
 //    public static String uploadPhoto(String base64Photo, String ext) {
