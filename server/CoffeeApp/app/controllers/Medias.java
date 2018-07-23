@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class Medias extends Controller {
 
-    public static final String DTYPE_PROVIDER_MODEL = "providerProfile";
+    public static final String DTYPE_PROVIDER_PROFILE = "providerProfile";
     public static final String DTYPE_USER_PROFILE = "userProfile";
 
     public static final String DTYPE_RESOLUTION_CLASSIC = "classic";
@@ -57,7 +57,7 @@ public class Medias extends Controller {
                 return Response.notFoundEntity("id[" + id + "]");
 
             Media media = form.get();
-            media.setDtype(DTYPE_PROVIDER_MODEL);
+            media.setDtype(DTYPE_PROVIDER_PROFILE);
             media.setDtypeResolution(DTYPE_RESOLUTION_PROFILE);
             media.insert();
             provider.setMediaProfile(media);

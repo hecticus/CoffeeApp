@@ -40,37 +40,37 @@ public class RackspaceCloudFiles {
     private static ObjectApi objectApi;
     private static CDNContainer cdnContainer;
 
-    @Inject
-    public RackspaceCloudFiles(Config config) {
-        Config configRackspace = config.getConfig("play.rackspace");
-        provider = configRackspace.getString("provider");
-        username = configRackspace.getString("username");
-        apiKey = configRackspace.getString("apiKey");
-        region = configRackspace.getString("region");
-        container = configRackspace.getString("cloudFiles.container");
-
-        try {
-            CloudFilesApi cloudFilesApi = ContextBuilder.newBuilder(provider)
-                    .credentials(username, apiKey)
-                    .buildApi(CloudFilesApi.class);
-
-            // no sirve porque no lo crea público
-            /*ContainerApi containerApi = cloudFilesApi.getContainerApi(region);
-            if (containerApi.get(container) == null) {// if the container does not exist, it creates it
-                containerApi.create(container);
-            }*/
-
-            objectApi = cloudFilesApi.getObjectApi(region, container);
-
-            CDNApi cdnApi = cloudFilesApi.getCDNApi(region);
-            cdnContainer = cdnApi.get(container);
-
-            System.out.println("*** Authentication to Rackspace Jclouds success...");
-        }catch (Exception e){
-            System.out.println("*** Authentication to Rackspace Jclouds failed...");
-            e.printStackTrace();
-        }
-    }
+//    @Inject
+//    public RackspaceCloudFiles(Config config) {
+//        Config configRackspace = config.getConfig("play.rackspace");
+//        provider = configRackspace.getString("provider");
+//        username = configRackspace.getString("username");
+//        apiKey = configRackspace.getString("apiKey");
+//        region = configRackspace.getString("region");
+//        container = configRackspace.getString("cloudFiles.container");
+//
+//        try {
+//            CloudFilesApi cloudFilesApi = ContextBuilder.newBuilder(provider)
+//                    .credentials(username, apiKey)
+//                    .buildApi(CloudFilesApi.class);
+//
+//            // no sirve porque no lo crea público
+//            /*ContainerApi containerApi = cloudFilesApi.getContainerApi(region);
+//            if (containerApi.get(container) == null) {// if the container does not exist, it creates it
+//                containerApi.create(container);
+//            }*/
+//
+//            objectApi = cloudFilesApi.getObjectApi(region, container);
+//
+//            CDNApi cdnApi = cloudFilesApi.getCDNApi(region);
+//            cdnContainer = cdnApi.get(container);
+//
+//            System.out.println("*** Authentication to Rackspace Jclouds success...");
+//        }catch (Exception e){
+//            System.out.println("*** Authentication to Rackspace Jclouds failed...");
+//            e.printStackTrace();
+//        }
+//    }
 
     public static String uploadObjectsToContainer(File file, String objectName) throws IOException {
         PutOptions putOptions = new PutOptions();
