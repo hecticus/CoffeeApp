@@ -90,6 +90,10 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private float amount =-1;
 
+    @SerializedName("totalInvoiceDetail")
+    @Expose
+    private float totalInvoiceDetail =-1;
+
     @SerializedName("freightInvoiceDetail")
     @Expose
     private boolean freight = false;
@@ -138,6 +142,14 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
 
     public void setLocalId(int localId) {
         this.localId = localId;
+    }
+
+    public float getTotalInvoiceDetail() {
+        return totalInvoiceDetail;
+    }
+
+    public void setTotalInvoiceDetail(float totalInvoiceDetail) {
+        this.totalInvoiceDetail = totalInvoiceDetail;
     }
 
     public String getWholeId() {

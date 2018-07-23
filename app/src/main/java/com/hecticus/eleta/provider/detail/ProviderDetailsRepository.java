@@ -150,7 +150,67 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
             Call<ProviderCreationResponse> call = providerDetailsDataApi.createProvider(providerParam);
 
-            new ManagerServices<>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
+            call.enqueue(new Callback<ProviderCreationResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProviderCreationResponse> call, @NonNull Response<ProviderCreationResponse> response) {
+                    try {
+                        Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
+                        Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        if (response.isSuccessful()) {
+                            try {
+                                mPresenter.uploadImage(response.body().getProvider(), imagePath);
+                                onProviderSaved(response.body().getProvider());
+                                Log.d("DETAILS", "--->Success createProviderRequest:" + response.body());
+                            } catch (Exception e) {
+                                onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                            }
+                        } else {
+                            JSONObject errorBody = new JSONObject(response.errorBody().string());
+                            String errorMessage = errorBody.getString("message");
+                            Log.d("DEBUG msj error:", errorMessage);
+                            if(errorMessage.equals("Duplicate entry '"+providerParam.getIdentificationDocProvider()+"' for key 'uq_providers_nit_provider'")){ //rut existe
+                                if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
+                                    onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
+                                } else {// es cosechador
+                                    onCreateError(mPresenter.context.getString(R.string.dni_already_exists));
+                                }
+                            } else{
+                                if (errorMessage.substring(0,57).equals("Invalid parameter: There is  a provider active with name:")) {//name existe
+                                    if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
+                                        onCreateError(mPresenter.context.getString(R.string.already_exists_name_provider));
+                                    }
+                                } else {
+                                    //Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
+                                    onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                        //onError();
+                    }
+
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(Call<ProviderCreationResponse> call, Throwable t) {
+                    t.printStackTrace();
+                    Log.e("RETRO", "--->ERROR");
+                    onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                }
+            });
+
+            /*new ManagerServices<>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
                 @DebugLog
                 @Override
                 public void onSuccess(Response<ProviderCreationResponse> response) {
@@ -166,31 +226,30 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @DebugLog
                 @Override
                 public void onError(boolean fail, int code, Response<ProviderCreationResponse> response, String errorMessage) {
-                    if (fail || code != 409) {
-                        Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
-                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                    } else {
-                        Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + code + "):" + response.body());
-                        onCreateError(mPresenter.context.getString(R.string.already_exists));
-                    }
-                    /*if(){ //nombre existe
+                    //if (fail || code != 409) {
+                        //Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
+                        //onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                    //} else {
+                        //Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + code + "):" + response.body());
+                        //onCreateError(mPresenter.context.getString(R.string.already_exists));
+                    //}/
+                    Log.d("DEBUG msj error:", errorMessage);
+                    if(errorMessage.equals("Duplicate entry '24543' for key 'uq_providers_nit_provider'")){ //rut existe
                         if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
-                            onCreateError(mPresenter.context.getString(R.string.already_exists_name_provider));
-                        } //else {// es cosechador creo q no va
-                            //onCreateError(mPresenter.context.getString(R.string.already_exists));
-                        //}
+                            onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
+                        } else {// es cosechador
+                            onCreateError(mPresenter.context.getString(R.string.dni_already_exists));
+                        }
                     } else{
-                        if () {//ruc or nit existe
+                        if (errorMessage.substring(0,57).equals("Invalid parameter: There is  a provider active with name:")) {//name existe
                             if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
-                                onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
-                            } else {// es cosechador
-                                onCreateError(mPresenter.context.getString(R.string.dni_already_exists));
+                                onCreateError(mPresenter.context.getString(R.string.already_exists_name_provider));
                             }
                         } else {
                             Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
                             onCreateError(mPresenter.context.getString(R.string.error_during_operation));
                         }
-                    }*/
+                    }
                 }
 
                 @DebugLog
@@ -199,7 +258,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                     //Session.clearPreferences(mPresenter.context);
                     //mPresenter.invalidToken();
                 }
-            });
+            });*/
         }
     }
 
