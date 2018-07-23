@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
-import models.Provider;
 import multimedia.MultimediaUtils;
 import multimedia.RackspaceCloudFiles;
 import org.apache.tika.mime.MimeTypeException;
@@ -113,9 +112,9 @@ public class Media extends Model {
     @ManyToMany(cascade = CascadeType.REMOVE)
     private List<Resolution> resolutions = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private List<Provider> providersModels = new ArrayList<>();
+//    @ManyToMany(cascade = CascadeType.REMOVE)
+//    @JsonIgnore
+//    private List<Provider> providersModels = new ArrayList<>();
 
 //    @ManyToMany(cascade = CascadeType.REMOVE)
 //    @JsonIgnore
@@ -271,14 +270,6 @@ public class Media extends Model {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Provider> getProvidersModels() {
-        return providersModels;
-    }
-
-    public void setProvidersModels(List<Provider> providersModels) {
-        this.providersModels = providersModels;
     }
 
     public String getMedia() {

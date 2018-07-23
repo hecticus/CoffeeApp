@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class Medias extends Controller {
 
-    public static final String DTYPE_PROVIDER_MODEL = "providerModel";
+    public static final String DTYPE_PROVIDER_MODEL = "providerProfile";
     public static final String DTYPE_USER_PROFILE = "userProfile";
 
     public static final String DTYPE_RESOLUTION_CLASSIC = "classic";
@@ -39,7 +39,7 @@ public class Medias extends Controller {
     private FormFactory formFactory;
 
     @CoffeAppsecurity
-    public Result createUserProfile(Long id) {
+    public Result createProviderProfile(Long id) {
         Ebean.beginTransaction();
         try {
             JsonNode request = request().body().asJson();
@@ -78,10 +78,10 @@ public class Medias extends Controller {
             Media entity = Media.findById(id);
             if(entity != null) {
 
-                Provider user = Provider.findByMediaProfileId(id);
-                if (user != null) {
-                    user.setMediaProfile(null);
-                    user.update();
+                Provider provider = Provider.findByMediaProfileId(id);
+                if (provider != null) {
+                    provider.setMediaProfile(null);
+                    provider.update();
                 }
 
                 Media.delete(id);

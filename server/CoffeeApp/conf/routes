@@ -166,6 +166,17 @@ POST    /lot/delete                                                             
 PUT     /lot/:id                                                                controllers.Lots.update(id : Long)
 DELETE  /lot/:id                                                                controllers.Lots.delete(id : Long)
 
+
+################################################################################
+##·······                          Media                             ··········#
+################################################################################
+GET     /medias                                                                  controllers.Medias.findAll()
+GET     /medias/:id                                                              controllers.Medias.findById(id: Long)
+DELETE  /medias/:id                                                              controllers.Medias.delete(id: Long)
+POST    /medias/delete                                                           controllers.Medias.deletes()
+POST    /medias/deleteUselessObjectsToContainer                                  controllers.Medias.deleteUselessObjectsToContainer()
+POST    /medias/deleteObjectsTest                                                controllers.Medias.deleteObjectsTest()
+
 ################################################################################
 ##·······                          Provider                          ··········#
 ################################################################################
@@ -188,7 +199,7 @@ GET     /provider                                                               
 GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
 POST    /provider                                                               controllers.Providers.create()
 POST    /provider/delete                                                        controllers.Providers.deletes()
-POST    /provider/uploadPhotoProvider                                           controllers.Providers.uploadPhotoProvider()
+POST    /provider/:id/mediaProfile                                              controllers.Medias.createProviderProfile(id: Long)
 PUT     /provider/:id                                                           controllers.Providers.update(id : Long)
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
 

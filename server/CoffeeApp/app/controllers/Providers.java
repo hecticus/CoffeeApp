@@ -1,8 +1,6 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
@@ -19,8 +17,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sm21 on 10/05/18.
