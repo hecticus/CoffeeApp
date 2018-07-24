@@ -217,34 +217,17 @@ INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot, deleted, farm_id, status_l
   (6,     'LOTE 6',     '548',    58,       0,  2, 31,  8.00),
   (7,     'LOTE 7',     '258',    2758,     1,  2, 31,  258.00),
   (8,     'LOTE 8',     '56',     56,       1,  1, 31,  56.00),
-  (9,     'lote 09',    '123258', 123258,   1,  1, 31,  123258.00),
-  (10,    '#4',         '25663',  369,      1,  4, 31,  897646.00),
-  (11,    'LOTE 11',    '123',    1212,     1,  3, 31,  121212.00),
-  (12,    'lote 12',    '12312',  12121,    1,  2, 31,  121212.00),
-  (13,    'LOTE 01',    'gfyu',   126,      1,  1, 31,  126.00),
-  (14,    'LOTE 5',     '45',     45,       1,  1, 32,  45.00),
-  (15,    'LOTE 3',     '12',     55,       1,  1, 32,  55.00),
-  (16,    'LOTE 1',     '58',     89,       1,  2, 32,  89.00),
-  (17,    '258',        '5258',   44,       1,  2, 32,  77.00),
-  (18,    'MARWIN',     '12',     12,       1,  1, 32,  200.00),
-  (19,    'MARWIN',     '2222',   2222,     1,  3, 32,  2222.00),
-  (20,    'MARWIN',     '1',      1,        1,  2, 32,  111.00),
-  (21,    'MARWIN 1',   '1',      1,        1,  2, 32,  1.00),
-  (22,    'LOTE MAR',   '1',      1,        1,  2, 33,  222.00),
-  (23,    '#1',         '200',    250,      0,  4, 33,  250.00),
-  (24,    '#2',         '250',    300,      1,  4, 33,  500.00),
-  (25,    'LOTE 03',    '02',     2,        1,  1, 33,  2.00),
-  (26,    '#3',          '58',    58,       1,  4, 33,  58.00);
+  (9,     'lote 09',    '123258', 123258,   1,  1, 31,  123258.00);
 
 INSERT INTO `item_types` (`id`,`deleted`,`name_item_type`,`cost_item_type`,
                           `provider_type_id`,`unit_id`) VALUES
-(1,0,'Libras Maduro', 50.00,  1, 1),
-(2,0,'Libras Verdes', 20.00,  1, 1),
-(3,0,'Libras Seco', 30.00,  1, 1),
-(4,0,'Libras Cereza', 40.00,  2, 1),
-(5,0,'Libras Pergamino', 25.00,  2, 1),
-(6,1,'Libras Cosechas Eliminadas', 10.00,  1, 1),
-(7,1,'Libras Compras Eliminadas', 15.00,  2, 1);
+(1,0,'Libras Maduro',               0,  1, 1),
+(2,0,'Libras Verdes',               0,  1, 1),
+(3,0,'Libras Seco',                 0,  1, 1),
+(4,0,'Libras Cereza',               0,  2, 1),
+(5,0,'Libras Pergamino',            0,  2, 1),
+(6,1,'Libras Cosechas Eliminadas',  0,  1, 1),
+(7,1,'Libras Compras Eliminadas',   0,  2, 1);
 
 INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VALUES
 (1, 0, '% Granos Flotes',      20),
@@ -257,6 +240,8 @@ INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VAL
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE config;
 
 TRUNCATE status;
 
