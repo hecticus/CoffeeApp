@@ -1,20 +1,13 @@
 package models;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.multimediaUtils.Multimedia;
 import controllers.utils.ListPagerCollection;
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
-import io.ebean.SqlRow;
 import io.ebean.text.PathProperties;
 import models.status.StatusProvider;
+import multimedia.models.Media;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -57,9 +50,6 @@ public class Provider extends AbstractEntity{
 //    @Constraints.Required
     private String emailProvider;
 
-    @Constraints.MaxLength(255)
-    private String photoProvider;
-
 //    @Constraints.Required
     @Constraints.MaxLength(50)
     @Column(nullable = false, length = 50)
@@ -69,6 +59,9 @@ public class Provider extends AbstractEntity{
 //    @JsonBackReference
 //    @Constraints.Required
     private StatusProvider statusProvider;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Media mediaProfile;
 
     @OneToMany(mappedBy = "provider")
 //    @JsonManagedReference
@@ -105,6 +98,14 @@ public class Provider extends AbstractEntity{
         this.nameProvider = nameProvider;
     }
 
+    public Media getMediaProfile() {
+        return mediaProfile;
+    }
+
+    public void setMediaProfile(Media mediaProfile) {
+        this.mediaProfile = mediaProfile;
+    }
+
     public String getAddressProvider() {
         return addressProvider;
     }
@@ -127,14 +128,6 @@ public class Provider extends AbstractEntity{
 
     public void setEmailProvider(String emailProvider) {
         this.emailProvider = emailProvider;
-    }
-
-    public String getPhotoProvider() {
-        return photoProvider;
-    }
-
-    public void setPhotoProvider(String photoProvider) {
-        this.photoProvider = photoProvider;
     }
 
     public String getContactNameProvider() {
@@ -171,6 +164,10 @@ public class Provider extends AbstractEntity{
                 .setIncludeSoftDeletes().findUnique();
     }
 
+    public static Provider findByMediaProfileId(Long mediaProfileId){
+        return finder.query().where().eq("mediaProfile.id", mediaProfileId).findUnique();
+    }
+
     public static Provider findByProvider(Provider provider) {
         Integer idProviderType = provider.getProviderType().getId().intValue();
         if( idProviderType == 1) {
@@ -190,15 +187,12 @@ public class Provider extends AbstractEntity{
 
     }
 
-
     public static Provider findByName(String provider) {
 
         return finder.query().where()
                 .eq("nameProvider", provider)
-//                .startsWith("nameProvider", provider)
-                .eq("providerType.id", 1)
+                .eq("providerType.id", 2)
                 .findUnique();
-
     }
 
 
@@ -250,46 +244,6 @@ public class Provider extends AbstractEntity{
                 expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
-    }
-
-    public static Provider findNit(String nitProvider) {
-        return finder.query().where()
-                .eq("nitProvider", nitProvider)
-                .findUnique();
-    }
-
-
-//    public static String uploadPhoto(String base64Photo, String ext) {
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        //    ArrayNode arrayNode = mapper.createArrayNode();
-//        ObjectNode request = mapper.createObjectNode();
-//
-//        request.put("fileExtension", ext);
-//        request.put("photo", base64Photo);
-//        Multimedia multimedia = new Multimedia();
-//
-//
-//        JsonNode result = multimedia.uploadPhoto(request);
-//
-//        return result.get("url").asText();
-//
-//    }
-
-    public static String uploadPhoto(String base64Photo, String ext) {
-
-        ObjectMapper mapper = new ObjectMapper();
-        //    ArrayNode arrayNode = mapper.createArrayNode();
-        ObjectNode request = mapper.createObjectNode();
-
-        request.put("fileExtension", ext);
-        request.put("photo", base64Photo);
-        Multimedia multimedia = new Multimedia();
-
-
-        JsonNode result = multimedia.uploadPhoto(request);
-
-        return result.get("url").asText();
     }
 
 }

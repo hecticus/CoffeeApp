@@ -144,7 +144,7 @@ public class Invoices extends Controller {
         if(json == null)
             return Response.requiredJson();
 
-        // 1 true  harvest    //////// 2 false buy coffe
+        // 1 true  harvest    //////// 0 false buyCoffe
         JsonNode buyOption = json.get("buyOption");
         if (buyOption ==  null)
             return Response.requiredParameter("buyOption");
@@ -154,71 +154,71 @@ public class Invoices extends Controller {
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
 
+        JsonNode startDate =  json.get("startDate");;
+        if (startDate ==  null)
+            return Response.requiredParameter("startDateInvoiceDetail");
+        String fecha = startDate.asText().split(" ")[0];
+
         Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
         if (form.hasErrors())
             return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-        JsonNode startDate =  json.get("startDate");;
-        if (startDate ==  null)
-            return Response.requiredParameter("startDateInvoiceDetail");
-        Invoice invoice = Json.fromJson(json, Invoice.class);
-        String fecha = startDate.asText().split(" ")[0];
+        Invoice invoice2 = Json.fromJson(json, Invoice.class);
+        // Tengo el invoice recibido
+        Invoice invoice = form.get();
 
-
-        List<Invoice> invoices = Invoice.getOpenByProviderId(invoice.getProvider().getId(), fecha);
+//        List<Invoice> invoices = Invoice.getOpenByProviderId(invoice.getProvider().getId(), fecha);
+        Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
 
         Invoice newInvoice = null;
 
-        if(invoices.isEmpty()){
+        if(invoices == null){
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
         }else{
-            for (Invoice i : invoices ) {
-                StatusInvoice status = i.getStatusInvoice();
-                if( status != null & status.getId().intValue() == 11) {
-                        System.out.println(status.getId());
-                        System.out.println(i.getId() + "Id");
-                        newInvoice = i;
-                        break;
-                }
-//                else{
-//                    newInvoice = new Invoice();
-//                    newInvoice.setProvider(invoice.getProvider());
-//                    newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-//                }
-            }
+            newInvoice = invoices;
         }
 
-
         for (JsonNode item : itemtypes) {
+
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
             if (formDetail.hasErrors())
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
 
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
 
-            invoiceDetail.setCostItemType(ItemType.findById(
-                    item.get("itemType").findValue("id").asLong()).getCostItemType());
-            BigDecimal ii = ItemType.findById(
-                    item.get("itemType").findValue("id").asLong()).getCostItemType();
-
             if (option) {
-                JsonNode idLot = json.get("lot");
+                // Harvest -- true
+                JsonNode idLot = item.get("lot");
                 if (idLot == null)
                     return Response.requiredParameter("lot");
 
-                invoiceDetail.setPriceItemTypeByLot(Lot.findById(
-                        item.get("lot").findValue("id").asLong()).getPriceLot());
-            } else {
-                invoiceDetail.setPriceItemTypeByLot(new BigDecimal(0));
-            }
+                Lot lot = Lot.findById(invoiceDetail.getLot().getId());
+                System.out.println(lot.getNameLot());
 
-            invoiceDetail.save();
+                System.out.println(invoiceDetail.getLot().getId());
+                invoiceDetail.setLot(lot);
+                invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
+                invoiceDetail.setCostItemType(new BigDecimal(0));
+            } else {
+                // Coffee -- false
+                JsonNode price = item.get("price");
+                if (price == null)
+                    return Response.requiredParameter("price");
+
+                JsonNode store = item.get("store");
+                if (store == null)
+                    return Response.requiredParameter("store");
+
+                invoiceDetail.setPriceItemTypeByLot(new BigDecimal(0));
+                invoiceDetail.setCostItemType(price.decimalValue());
+
+            }
 
             // Buscos la lista de invoicesDetail asociado a esa Invoice
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
-//            if(newInvoice.getInvoiceDetails().isEmpty())
+
             invoiceDetails.add(invoiceDetail);
             newInvoice.setInvoiceDetails(invoiceDetails);
 
@@ -266,6 +266,5 @@ public class Invoices extends Controller {
         response.set("invoice", Json.toJson(invoice));
         return Response.createdEntity(response);
     }
-
 
 }
