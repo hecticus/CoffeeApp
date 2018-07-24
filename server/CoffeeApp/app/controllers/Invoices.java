@@ -180,25 +180,6 @@ public class Invoices extends Controller {
             newInvoice = invoices;
         }
 
-
-
-//        if(invoices.isEmpty()){
-//            newInvoice = new Invoice();
-//            newInvoice.setProvider(invoice.getProvider());
-//            newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-//        }else{
-//            for (Invoice i : invoices ) {
-//                StatusInvoice status = i.getStatusInvoice();
-//                if( status != null & status.getId().intValue() == 11) {
-//                        System.out.println(status.getId());
-//                        System.out.println(i.getId() + "Id");
-//                        newInvoice = i;
-//                        break;
-//                }
-//            }
-//        }
-
-
         for (JsonNode item : itemtypes) {
 
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
@@ -206,13 +187,6 @@ public class Invoices extends Controller {
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
 
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
-//            InvoiceDetail invoiceDetail = formDetail.get();
-//
-//            invoiceDetail.setCostItemType(ItemType.findById(
-//                    item.get("itemType").findValue("id").asLong()).getCostItemType());
-//
-//            BigDecimal ii = ItemType.findById(
-//                    item.get("itemType").findValue("id").asLong()).getCostItemType();
 
             if (option) {
                 // Harvest -- true
@@ -228,14 +202,13 @@ public class Invoices extends Controller {
                 invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
                 invoiceDetail.setCostItemType(new BigDecimal(0));
             } else {
-
                 // Coffee -- false
                 JsonNode price = item.get("price");
                 if (price == null)
                     return Response.requiredParameter("price");
 
                 JsonNode store = item.get("store");
-                if (price == null)
+                if (store == null)
                     return Response.requiredParameter("store");
 
                 invoiceDetail.setPriceItemTypeByLot(new BigDecimal(0));
@@ -243,11 +216,9 @@ public class Invoices extends Controller {
 
             }
 
-//            invoiceDetail.save();
-
             // Buscos la lista de invoicesDetail asociado a esa Invoice
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
-//            if(newInvoice.getInvoiceDetails().isEmpty())
+
             invoiceDetails.add(invoiceDetail);
             newInvoice.setInvoiceDetails(invoiceDetails);
 
@@ -295,6 +266,5 @@ public class Invoices extends Controller {
         response.set("invoice", Json.toJson(invoice));
         return Response.createdEntity(response);
     }
-
 
 }

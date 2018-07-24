@@ -221,13 +221,13 @@ INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot, deleted, farm_id, status_l
 
 INSERT INTO `item_types` (`id`,`deleted`,`name_item_type`,`cost_item_type`,
                           `provider_type_id`,`unit_id`) VALUES
-(1,0,'Libras Maduro',               0,  1, 1),
-(2,0,'Libras Verdes',               0,  1, 1),
-(3,0,'Libras Seco',                 0,  1, 1),
-(4,0,'Libras Cereza',               0,  2, 1),
-(5,0,'Libras Pergamino',            0,  2, 1),
-(6,1,'Libras Cosechas Eliminadas',  0,  1, 1),
-(7,1,'Libras Compras Eliminadas',   0,  2, 1);
+(1,0,'Libras Maduro',               10,  1, 1),
+(2,0,'Libras Verdes',               20,  1, 1),
+(3,0,'Libras Seco',                 30,  1, 1),
+(4,0,'Libras Cereza',               10,  2, 1),
+(5,0,'Libras Pergamino',            20,  2, 1),
+(6,1,'Libras Cosechas Eliminadas',  10,  1, 1),
+(7,1,'Libras Compras Eliminadas',   10,  2, 1);
 
 INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VALUES
 (1, 0, '% Granos Flotes',      20),
