@@ -70,7 +70,7 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(columnDefinition = "text")
     private String note;
 
-    @Formula(select = "(SELECT  i.amount_invoice_detail * i.price_item_type_by_lot " +
+    @Formula(select = "(SELECT  (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type)" +
             "FROM  invoice_details i WHERE i.deleted = 0 AND i.id = ${ta}.id)")
     private BigDecimal totalInvoiceDetail;
 
