@@ -36,12 +36,12 @@ public class Invoice extends AbstractEntity{
 //    @JsonBackReference
     private StatusInvoice statusInvoice;
 
-    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot) " +
-            "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
-    private BigDecimal totalInvoice;
-//    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
+//    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot) " +
 //            "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
 //    private BigDecimal totalInvoice;
+    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
+            "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
+    private BigDecimal totalInvoice;
 
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
@@ -120,7 +120,7 @@ public class Invoice extends AbstractEntity{
        return finder.query().where()
                .eq("provider.id", id_provider)
                .startsWith("createdAt", fecha)
-              .findList();
+               .findList();
     }
 
     public static Invoice invoicesByProviderId(Long id_provider){
@@ -128,6 +128,14 @@ public class Invoice extends AbstractEntity{
                 .eq("provider.id", id_provider)
                 .eq("statusInvoice.id", 11 )
                 .eq("deleted",false )
+                .findUnique();
+    }
+
+    public static Invoice invoicesByProvider(Provider provider, String fecha){
+        return finder.query().where()
+                .eq("provider.id", provider.getId())
+                .startsWith("createdAt", fecha)
+                .eq("statusInvoice.id", 11 )
                 .findUnique();
     }
 
