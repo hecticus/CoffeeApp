@@ -263,26 +263,13 @@ public class Invoices extends Controller {
                     }
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                    invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
+                    invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
                     if(auxCreate) invoiceDetailPurity.save();
                     else invoiceDetailPurity.update();
 
 
-//                    Purity puritys = purityDao.findById(idPurity.asLong());
-//
-//                    invoiceDetailPurity = invoiceDetailPurityDao.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
-//
-//                    if(invoiceDetailPurity==null)
-//                    {
-//                        invoiceDetailPurity = new InvoiceDetailPurity();
-//                        auxCreate=true;
-//                    }
-//
-//                    invoiceDetailPurity.setPurity(puritys);
-//                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
-//                    invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-//                    if(auxCreate) invoiceDetailPurityDao.create(invoiceDetailPurity);
-//                    else invoiceDetailPurityDao.update(invoiceDetailPurity);
                 }
             }
         }

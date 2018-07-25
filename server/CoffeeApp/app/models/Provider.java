@@ -2,12 +2,11 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
-import io.ebean.Ebean;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.text.PathProperties;
 import models.status.StatusProvider;
-import multimedia.models.Media;
+import oldmultimedia.models.Media;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;

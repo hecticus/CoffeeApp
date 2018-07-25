@@ -1,22 +1,17 @@
-package multimedia;
+package oldmultimedia;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import org.jclouds.ContextBuilder;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
-import com.typesafe.config.Config;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
 import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.openstack.swift.v1.options.PutOptions;
-import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
-import org.jclouds.rackspace.cloudfiles.v1.features.CDNApi;
 
-import javax.inject.Inject;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;

@@ -2,7 +2,7 @@ package controllers;
 
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
-import multimedia.models.Resolution;
+import oldmultimedia.models.Resolution;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;

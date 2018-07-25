@@ -37,7 +37,7 @@ public class InvoiceDetailPurity extends AbstractEntity{
     @Column(nullable = false)
     private Integer discountRatePurity;
 
-    //Todo Hacer formula que lo calcule
+    //TODO Hacer formula que lo calcule
     @Constraints.Required
     @Column(nullable = false)
     private Integer totalDiscountPurity;

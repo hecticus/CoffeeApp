@@ -1,4 +1,4 @@
-package multimedia;
+package oldmultimedia;
 
 import org.apache.tika.Tika;
 import org.apache.tika.mime.MimeType;

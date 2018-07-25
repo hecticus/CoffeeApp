@@ -70,8 +70,18 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(columnDefinition = "text")
     private String note;
 
-    @Formula(select = "(SELECT  (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type)" +
-            "FROM  invoice_details i WHERE i.deleted = 0 AND i.id = ${ta}.id)")
+//    @Formula(select = "(" +
+//            "SELECT ((i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) - (SELECT SUM(p.total_discount_purity) FROM invoicesdetails_purities p WHERE p.deleted = 0 AND p.invoice_detail_id = ${ta}.id ))" +
+//            "FROM invoice_details i " +
+//            "WHERE i.deleted = 0 AND i.id = ${ta}.id" +
+//            ")")
+//    private BigDecimal totalInvoiceDetail;
+
+    @Formula(select = "(" +
+                "SELECT (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type)" +
+                "FROM invoice_details i " +
+                "WHERE i.deleted = 0 AND i.id = ${ta}.id" +
+            ")")
     private BigDecimal totalInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)

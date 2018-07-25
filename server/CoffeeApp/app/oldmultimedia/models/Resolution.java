@@ -1,4 +1,4 @@
-package multimedia.models;
+package oldmultimedia.models;
 
 import com.fasterxml.jackson.annotation.*;
 import io.ebean.Finder;

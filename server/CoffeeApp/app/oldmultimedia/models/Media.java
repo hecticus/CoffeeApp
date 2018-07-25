@@ -1,4 +1,4 @@
-package multimedia.models;
+package oldmultimedia.models;
 
 import io.ebean.Ebean;
 import io.ebean.Finder;
@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
-import multimedia.MultimediaUtils;
-import multimedia.RackspaceCloudFiles;
+import oldmultimedia.MultimediaUtils;
+import oldmultimedia.RackspaceCloudFiles;
 import org.apache.tika.mime.MimeTypeException;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
