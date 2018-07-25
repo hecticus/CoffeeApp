@@ -59,8 +59,11 @@ public class Provider extends AbstractEntity{
 //    @Constraints.Required
     private StatusProvider statusProvider;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Media mediaProfile;
+//    @OneToOne(cascade = CascadeType.REMOVE)
+//    private Media mediaProfile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Multimedia multimediaProfile;
 
     @OneToMany(mappedBy = "provider")
 //    @JsonManagedReference
@@ -97,12 +100,12 @@ public class Provider extends AbstractEntity{
         this.nameProvider = nameProvider;
     }
 
-    public Media getMediaProfile() {
-        return mediaProfile;
+    public Multimedia getMultimediaProfile() {
+        return multimediaProfile;
     }
 
-    public void setMediaProfile(Media mediaProfile) {
-        this.mediaProfile = mediaProfile;
+    public void setMultimediaProfile(Multimedia multimediaProfile) {
+        this.multimediaProfile = multimediaProfile;
     }
 
     public String getAddressProvider() {

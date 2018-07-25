@@ -170,12 +170,12 @@ DELETE  /lot/:id                                                                
 ################################################################################
 ##·······                          Media                             ··········#
 ################################################################################
-GET     /medias                                                                  controllers.Medias.findAll()
-GET     /medias/:id                                                              controllers.Medias.findById(id: Long)
-DELETE  /medias/:id                                                              controllers.Medias.delete(id: Long)
-POST    /medias/delete                                                           controllers.Medias.deletes()
-POST    /medias/deleteUselessObjectsToContainer                                  controllers.Medias.deleteUselessObjectsToContainer()
-POST    /medias/deleteObjectsTest                                                controllers.Medias.deleteObjectsTest()
+GET     /Multimedias                                                            controllers.Multimedias.findAll()
+GET     /Multimedias/:id                                                        controllers.Multimedias.findById(id: Long)
+DELETE  /Multimedias/:id                                                        controllers.Multimedias.delete(id: Long)
+POST    /Multimedias/delete                                                     controllers.Multimedias.deletes()
+POST    /Multimedias/deleteUselessObjectsToContainer                            controllers.Multimedias.deleteUselessObjectsToContainer()
+POST    /Multimedias/deleteObjectsTest                                          controllers.Multimedias.deleteObjectsTest()
 
 ################################################################################
 ##·······                          Provider                          ··········#
@@ -199,7 +199,7 @@ GET     /provider                                                               
 GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
 POST    /provider                                                               controllers.Providers.create()
 POST    /provider/delete                                                        controllers.Providers.deletes()
-POST    /provider/:id/mediaProfile                                              controllers.Medias.createProviderProfile(id: Long)
+POST    /provider/:id/mediaProfile                                              controllers.Multimedias.createProviderProfile(id: Long)
 PUT     /provider/:id                                                           controllers.Providers.update(id : Long)
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
 
