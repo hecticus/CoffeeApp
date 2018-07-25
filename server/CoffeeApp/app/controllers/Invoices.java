@@ -140,6 +140,7 @@ public class Invoices extends Controller {
     @CoffeAppsecurity
     public  Result buyHarvestsAndCoffe( ){
 
+        boolean auxCreate = false;
         JsonNode json = request().body().asJson();
         if(json == null)
             return Response.requiredJson();
@@ -167,18 +168,28 @@ public class Invoices extends Controller {
         // Tengo el invoice recibido
         Invoice invoice = form.get();
 
-//        List<Invoice> invoices = Invoice.getOpenByProviderId(invoice.getProvider().getId(), fecha);
-        Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
+        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
+
+//        Invoice invoices = invoiceList.get(0);
+//        Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
 
         Invoice newInvoice = null;
 
-        if(invoices == null){
+        if(invoiceList.isEmpty()){
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
         }else{
-            newInvoice = invoices;
+            newInvoice = invoiceList.get(0);
         }
+
+//        if(invoices == null){
+//            newInvoice = new Invoice();
+//            newInvoice.setProvider(invoice.getProvider());
+//            newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
+//        }else{
+//            newInvoice = invoices;
+//        }
 
         for (JsonNode item : itemtypes) {
 
@@ -232,7 +243,7 @@ public class Invoices extends Controller {
                 if (purities == null)
                     return Response.requiredParameter("purities");
                 for(JsonNode purity : purities) {
-                    InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
+//                    InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
                     JsonNode idPurity = purity.get("idPurity");
                     if (idPurity == null)
                         return Response.requiredParameter("idPurity");
@@ -243,10 +254,35 @@ public class Invoices extends Controller {
 
                     Purity puritys = Purity.findById(idPurity.asLong());
 
+                    InvoiceDetailPurity invoiceDetailPurity = InvoiceDetailPurity.getByIdInvopiceDetailsByIdPurity(
+                            invoiceDetail.getId(), idPurity.asLong());
+
+                    if(invoiceDetailPurity==null) {
+                        invoiceDetailPurity = new InvoiceDetailPurity();
+                        auxCreate = true;
+                    }
                     invoiceDetailPurity.setPurity(puritys);
                     invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-                    invoiceDetailPurity.save();
+                    if(auxCreate) invoiceDetailPurity.save();
+                    else invoiceDetailPurity.update();
+
+
+//                    Purity puritys = purityDao.findById(idPurity.asLong());
+//
+//                    invoiceDetailPurity = invoiceDetailPurityDao.getByIdInvopiceDetailsByIdPurity(invoiceDetail.getIdInvoiceDetail(), idPurity.asLong());
+//
+//                    if(invoiceDetailPurity==null)
+//                    {
+//                        invoiceDetailPurity = new InvoiceDetailPurity();
+//                        auxCreate=true;
+//                    }
+//
+//                    invoiceDetailPurity.setPurity(puritys);
+//                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+//                    invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
+//                    if(auxCreate) invoiceDetailPurityDao.create(invoiceDetailPurity);
+//                    else invoiceDetailPurityDao.update(invoiceDetailPurity);
                 }
             }
         }

@@ -95,6 +95,12 @@ public class InvoiceDetailPurity extends AbstractEntity{
         return finder.byId(id);
     }
 
+    public static InvoiceDetailPurity getByIdInvopiceDetailsByIdPurity(Long IdInvopiceDetail, Long IdPurity) {
+        return finder.query().where()
+                .eq("invoiceDetail.id",IdInvopiceDetail)
+                .eq("purity.id",IdPurity)
+                .findUnique();
+    }
     public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
                                               String sort, Long purity, Long invoiceDetail, boolean delete){
         ExpressionList expressionList = finder.query().where();

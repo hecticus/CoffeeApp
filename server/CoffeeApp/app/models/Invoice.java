@@ -139,6 +139,14 @@ public class Invoice extends AbstractEntity{
                 .findUnique();
     }
 
+    public static List<Invoice> invoicesListByProvider(Provider provider, String fecha){
+        return finder.query().where()
+                .eq("provider.id", provider.getId())
+                .startsWith("createdAt", fecha)
+                .eq("statusInvoice.id", 11 )
+                .findList();
+    }
+
     public static Invoice findById(Long id){
         return finder.byId(id);
     }

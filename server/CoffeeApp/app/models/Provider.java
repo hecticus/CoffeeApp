@@ -191,7 +191,7 @@ public class Provider extends AbstractEntity{
 
         return finder.query().where()
                 .eq("nameProvider", provider)
-                .eq("providerType.id", 2)
+                .eq("providerType.id", 1)
                 .findUnique();
     }
 

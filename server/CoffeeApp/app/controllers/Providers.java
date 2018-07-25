@@ -65,9 +65,8 @@ public class Providers extends Controller {
                     aux.setDeleted(false);
                     aux.update();
                     provider = aux;
-                } else if (Provider.findByName(provider.getNameProvider()) != null ) {
+                } else if (Provider.findByName(provider.getNameProvider()) != null & provider.getProviderType().getId().intValue() == 1 ) {
                     return controllers.utils.Response.invalidParameter("There is  a provider active with name: " + provider.getNameProvider());
-
                 }
             }
             provider.save();
