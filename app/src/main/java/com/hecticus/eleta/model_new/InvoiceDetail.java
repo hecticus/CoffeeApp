@@ -22,7 +22,7 @@ public class InvoiceDetail {
     private String createdAt;
     private String updatedAt;
     private String noteInvoiceDetail;
-    private Float priceItemTypeByLot;
+    private Float price;
     private Float costItemType;
     private Float amountInvoiceDetail;
     private String nameReceived;
@@ -39,7 +39,7 @@ public class InvoiceDetail {
     public InvoiceDetail(InvoiceDetails invoiceDetails, InvoicePost invoicePost) {
         this.id = (long) invoiceDetails.getId();
         this.noteInvoiceDetail = invoiceDetails.getObservation();
-        this.priceItemTypeByLot = invoiceDetails.getPriceByLot();
+        this.price = invoiceDetails.getPriceByLot();
         this.costItemType = invoiceDetails.getPriceItem();
         this.nameReceived = invoiceDetails.getReceiverName();
         this.nameDelivered = invoiceDetails.getDispatcherName();
@@ -62,7 +62,7 @@ public class InvoiceDetail {
     public InvoiceDetail(ItemPost itemPost, InvoicePost invoicePost) {
         //id = Long.valueOf(itemPost.getInvoiceDetailId());
         noteInvoiceDetail = invoicePost.getObservations();
-        priceItemTypeByLot = itemPost.getPrice();
+        price = itemPost.getPrice();
         costItemType = itemPost.getAmount();
         amountInvoiceDetail= itemPost.getAmount();
         nameReceived = invoicePost.getReceiverName();
@@ -120,11 +120,11 @@ public class InvoiceDetail {
     }
 
     public Float getPriceItemTypeByLot() {
-        return priceItemTypeByLot;
+        return price;
     }
 
     public void setPriceItemTypeByLot(Float priceItemTypeByLot) {
-        this.priceItemTypeByLot = priceItemTypeByLot;
+        this.price = priceItemTypeByLot;
     }
 
     public Float getCostItemType() {

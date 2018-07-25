@@ -74,7 +74,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private Store store = null;
 
-    @SerializedName("priceItemTypeByLot")
+    @SerializedName("priceItemTypeByLot")//("price")//
     @Expose
     private float priceByLot =-1;
 

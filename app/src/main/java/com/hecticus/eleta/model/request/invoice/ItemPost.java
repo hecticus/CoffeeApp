@@ -34,7 +34,7 @@ public class ItemPost extends RealmObject implements JsonSerializer<ItemPost> {
     @Expose
     private float amount = 0;
 
-    @SerializedName("priceItemTypeByLot")
+    @SerializedName("price")//("priceItemTypeByLot")
     @Expose
     private float price = 0;
 

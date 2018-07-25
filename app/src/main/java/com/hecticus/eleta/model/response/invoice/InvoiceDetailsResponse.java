@@ -1,8 +1,11 @@
 package com.hecticus.eleta.model.response.invoice;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.harvest.Harvest;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 
@@ -54,6 +57,7 @@ public class InvoiceDetailsResponse {
     public List<HarvestOfDay> getHarvests() {
         if(!control) {
             for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
+                Log.d("DEBUG total", String.valueOf(invoiceDetail.getTotalInvoiceDetail()));
                 harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), invoiceDetail.getTotalInvoiceDetail(), invoiceDetail.getId()));
             }
             control = true;
