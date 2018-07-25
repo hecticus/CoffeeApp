@@ -453,10 +453,9 @@ form {
     width: 100%;
 }
 
-fieldset {
-    width: 100%;
-    border: 0;
-    margin-bottom: 30px;
+.fieldset {
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 legend {

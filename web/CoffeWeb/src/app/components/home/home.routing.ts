@@ -1,8 +1,9 @@
+import { InvoiceComponent } from './../invoice/invoice.component';
+import { ProviderComponent } from './../provider/provider.component';
 import { providerRoutes } from '../provider/provider.routing';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { NgModule } from '@angular/core';
-import { ProviderRoutingModule } from '../provider/provider.routing';
 import { invoiceRoutes } from '../invoice/invoice.routing';
 import { lotRoutes } from '../lot/lot.routing';
 
@@ -13,7 +14,8 @@ const homeRoutes: Routes = [
 		children: [
 			{
 				path: '',
-				component: HomeComponent,
+				pathMatch: 'full',
+				component: InvoiceComponent,
 				data: {
 					breadcrumb: '',
 					icon: ''

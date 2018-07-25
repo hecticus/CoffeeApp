@@ -42,7 +42,7 @@ import { BaseService } from '../../core/base.service';
 			<!-- Definition table -->
 			<table class="table" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-				<!-- Checkbox Column 
+				<!-- Checkbox Colum
 				<ng-container matColumnDef="select">
 				  <th mat-header-cell *matHeaderCellDef>
 					<mat-checkbox (change)="$event ? masterToggle() : null"
@@ -105,7 +105,14 @@ import { BaseService } from '../../core/base.service';
 				<ng-container matColumnDef="nameDelivered">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Delivered</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef> Total </td>
+				</ng-container>
 
+				<!-- Position nameDelivered-->
+				<ng-container matColumnDef="totalInvoiceDetail">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total Detail</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.totalInvoiceDetail|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef> jjj </td>
 				</ng-container>
 
 				<!-- Position nameDelivered
@@ -121,7 +128,8 @@ import { BaseService } from '../../core/base.service';
 				</ng-container>-->
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
+				<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
+				
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
@@ -139,7 +147,7 @@ export class InvoiceDetailListComponent implements OnInit {
 	columnsToDisplay = ['itemType.nameItemType',
 	'lot.nameLot', 'store.nameStore', 'priceItemTypeByLot',
 	'costItemType', 'amountInvoiceDetail', 'nameReceived',
-	'nameDelivered' ];
+	'nameDelivered', 'totalInvoiceDetail' ];
 
 	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs
