@@ -24,7 +24,6 @@ public class BaseGrant {
     private AuthJWT authJWT;
 
     @Inject
-//    public BaseGrant(Configuration config){
     public BaseGrant(Config config){
         //ClassLoader classLoader = Thread.currentThread().getContextClassLoader(); TODO intentar esto en vez de injectar
         //ConfigFactory.load(classLoader,"conf/application.conf");

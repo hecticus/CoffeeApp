@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysql.jdbc.MysqlDataTruncation;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import controllers.utils.ListPager;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -17,10 +16,6 @@ import java.util.regex.Pattern;
 import static play.mvc.Http.Status.CONFLICT;
 import static play.mvc.Http.Status.PRECONDITION_FAILED;
 import static play.mvc.Results.*;
-
-import org.modelmapper.ModelMapper;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yenny on 9/7/16.
@@ -72,24 +67,6 @@ public class Response {
 
     public static Result foundEntity(JsonNode result){
         return ok(buildExtendResponse("Successful search", result));
-    }
-
-    /*public static Result foundEntity(JsonNode result, ListPager.Pager pager){
-        return ok(buildExtendResponse("Successful search", result, Json.toJson(pager)));
-    }*/
-
-    public static Result foundEntity(ListPager listPager){
-        return ok(buildExtendResponse(
-                "Successful search",
-                Json.toJson(listPager.entities),
-                Json.toJson(listPager.pager)));
-    }
-
-    public static Result foundEntity(ListPager listPager, Class typeDest){
-        return ok(buildExtendResponse(
-                "Successful search",
-                JsonUtils.toJson(listPager.entities, typeDest),
-                Json.toJson(listPager.pager)));
     }
 
     /*
@@ -245,19 +222,6 @@ public class Response {
         while(null != (cause = result.getCause())  && (result != cause) )
             result = cause;
         return result;
-    }
-
-    public static JsonNode toJson(Object object, Class typeDest){
-        if(object != null)
-            object = new ModelMapper().map(object, typeDest);
-        return Json.toJson(object);
-    }
-
-    public static JsonNode toJson(List<?> objectSources, Class typeDest){
-        List<Object> objectDests = new ArrayList<>();
-        for(Object objectSource: objectSources)
-            objectDests.add(new ModelMapper().map(objectSource, typeDest));
-        return Json.toJson(objectDests);
     }
 
     public static Result responseExceptionDeleted(Exception e){

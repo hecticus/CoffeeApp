@@ -105,7 +105,7 @@ public class Stores {
     @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            return Response.foundEntity(Response.toJson(Store.findById(id), Store.class));
+            return Response.foundEntity(Json.toJson(Store.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

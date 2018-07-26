@@ -22,7 +22,6 @@ import java.util.List;
 @Table(name = "multimedia_cdn")
 public class MultimediaCDN extends BaseModel {
 
-    @Constraints.Required
     @Transient
     private String path;
 

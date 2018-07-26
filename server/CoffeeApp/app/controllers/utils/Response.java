@@ -8,15 +8,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mysql.jdbc.MysqlDataTruncation;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import io.ebean.Ebean;
 import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.libs.Json;
 import play.mvc.Result;
 
-import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

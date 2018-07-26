@@ -14,7 +14,7 @@ import org.jclouds.openstack.swift.v1.options.PutOptions;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApi;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.features.CDNApi;
-import play.Configuration;
+import com.typesafe.config.Config;
 
 import javax.inject.Inject;
 import java.awt.image.BufferedImage;
@@ -40,14 +40,14 @@ public class RackspaceCloudFiles {
     private static ObjectApi objectApi;
     private static CDNContainer cdnContainer;
 
+
     @Inject
-    public RackspaceCloudFiles(Configuration config) {
-        Configuration configRackspace = config.getConfig("play.rackspace");
-        provider = configRackspace.getString("provider");
-        username = configRackspace.getString("username");
-        apiKey = configRackspace.getString("apiKey");
-        region = configRackspace.getString("region");
-        container = configRackspace.getString("cloudFiles.container");
+    public RackspaceCloudFiles(Config config) {
+        provider = config.getString("play.rackspace.provider");
+        username = config.getString("play.rackspace.username");
+        apiKey = config.getString("play.rackspace.apiKey");
+        region = config.getString("play.rackspace.region");
+        container = config.getString("play.rackspace.cloudFiles.container");
 
         try {
             CloudFilesApi cloudFilesApi = ContextBuilder.newBuilder(provider)

@@ -11,12 +11,12 @@ import java.util.List;
 @Entity
 public class Multimedia extends AbstractEntity {
 
-    @Constraints.Required
-    @Transient
-    private String media; //base64
-
-    @Transient
-    private String mediaOptional; //base64 for captures
+//    @Constraints.Required
+//    @Transient
+//    private String media; //base64
+//
+//    @Transient
+//    private String mediaOptional; //base64 for captures
 
     private String dtype;
 
@@ -30,37 +30,37 @@ public class Multimedia extends AbstractEntity {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     private MultimediaCDN multimediaCDN;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private MultimediaCDN multimediaCDNOptional; // for captures in videos
+//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    private MultimediaCDN multimediaCDNOptional; // for captures in videos
 
-    @OneToOne
-    private User user;
+//    @OneToOne
+//    private User user;
 
     @OneToOne
     private Provider provider;
 
     private static Finder<Long, Multimedia> finder = new Finder<>(Multimedia.class);
 
-    @PrePersist
-    public void createMultimedia() throws Exception {
-        try {
-            if(this.media != null) {
-                this.multimediaCDN = new MultimediaCDN();
-                this.multimediaCDN.setMediaBase64(this.media);
-                this.multimediaCDN.setPath(this.dtype.concat("/").concat(this.name));
-                this.multimediaCDN.save();
-            }
+//    @PrePersist
+//    public void createMultimedia() throws Exception {
+//        try {
+//            if(this.media != null) {
+//                this.multimediaCDN = new MultimediaCDN();
 
-            if(this.mediaOptional != null) {
-                this.multimediaCDNOptional = new MultimediaCDN();
-                this.multimediaCDNOptional.setMediaBase64(this.media);
-                this.multimediaCDNOptional.setPath(multimediaCDN.getPath());
-                this.multimediaCDNOptional.save();
-            }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
+//                this.multimediaCDN.setPath(this.dtype.concat("/").concat(this.name));
+//                this.multimediaCDN.save();
+//            }
+//
+//            if(this.mediaOptional != null) {
+//                this.multimediaCDNOptional = new MultimediaCDN();
+//                this.multimediaCDNOptional.setMediaBase64(this.media);
+//                this.multimediaCDNOptional.setPath(multimediaCDN.getPath());
+//                this.multimediaCDNOptional.save();
+//            }
+//        } catch (Exception e) {
+//            throw new Exception(e.getMessage());
+//        }
+//    }
 
     public static Multimedia findById(Long id){
         return finder.byId(id);
@@ -74,21 +74,21 @@ public class Multimedia extends AbstractEntity {
         return finder.all();
     }
 
-    public String getMedia() {
-        return media;
-    }
+//    public String getMedia() {
+//        return media;
+//    }
+//
+//    public void setMedia(String media) {
+//        this.media = media;
+//    }
 
-    public void setMedia(String media) {
-        this.media = media;
-    }
-
-    public String getMediaOptional() {
-        return mediaOptional;
-    }
-
-    public void setMediaOptional(String mediaOptional) {
-        this.mediaOptional = mediaOptional;
-    }
+//    public String getMediaOptional() {
+//        return mediaOptional;
+//    }
+//
+//    public void setMediaOptional(String mediaOptional) {
+//        this.mediaOptional = mediaOptional;
+//    }
 
     public String getDtype() {
         return dtype;
@@ -122,21 +122,21 @@ public class Multimedia extends AbstractEntity {
         this.multimediaCDN = multimediaCDN;
     }
 
-    public MultimediaCDN getMultimediaCDNOptional() {
-        return multimediaCDNOptional;
-    }
-
-    public void setMultimediaCDNOptional(MultimediaCDN multimediaCDNOptional) {
-        this.multimediaCDNOptional = multimediaCDNOptional;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public MultimediaCDN getMultimediaCDNOptional() {
+//        return multimediaCDNOptional;
+//    }
+//
+//    public void setMultimediaCDNOptional(MultimediaCDN multimediaCDNOptional) {
+//        this.multimediaCDNOptional = multimediaCDNOptional;
+//    }
+//
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public Provider getProvider() {
         return provider;
@@ -145,4 +145,5 @@ public class Multimedia extends AbstractEntity {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
+
 }

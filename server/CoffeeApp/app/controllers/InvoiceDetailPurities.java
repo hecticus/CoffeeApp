@@ -102,7 +102,7 @@ public class InvoiceDetailPurities  extends Controller {
     public Result findById(Long id) {
         try {
             InvoiceDetailPurity invoiceDetailPurity = InvoiceDetailPurity.findById(id);
-            return Response.foundEntity(Response.toJson(invoiceDetailPurity, InvoiceDetailPurity.class));
+            return Response.foundEntity(Json.toJson(invoiceDetailPurity));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

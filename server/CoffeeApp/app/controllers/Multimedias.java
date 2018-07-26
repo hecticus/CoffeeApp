@@ -1,14 +1,16 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.JsonUtils;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.Ebean;
 import models.Multimedia;
 import models.Provider;
-import oldmultimedia.RackspaceCloudFiles;
-import oldmultimedia.models.Media;
+import multimedia.RackspaceCloudFiles;
+import multimedia.models.MultimediaCDN;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -31,29 +33,75 @@ public class Multimedias extends Controller {
     private FormFactory formFactory;
 
     @CoffeAppsecurity
-    public Result createProviderProfile(Long id) {
-        Ebean.beginTransaction();
+    public Result createProviderProfile() {
         try {
             JsonNode request = request().body().asJson();
             if(request == null)
                 return Response.requiredJson();
-            if(!request.hasNonNull("multimedia"))
-                return Response.requiredParameter("multimedia");
+
+            JsonNode multimediaCDN = request.findValue("multimediaCDN");
+            Form<MultimediaCDN> formCDN = formFactory.form(MultimediaCDN.class).bind(multimediaCDN);
+            if (formCDN.hasErrors())
+                return Response.invalidParameter(formCDN.errorsAsJson());
+
+            MultimediaCDN multimediaCDN1 = formCDN.get();
+
+            JsonNode name = request.findValue("name");
+            multimediaCDN1.setPath(DTYPE_PROVIDER_PROFILE.concat("/").concat(name.asText()));
+//            multimediaCDN1.save();
+
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
+            node.set("multimediaCDN",  Json.toJson(multimediaCDN1));
 
             Form<Multimedia> form = formFactory.form(Multimedia.class).bindFromRequest();
             if (form.hasErrors())
                 return Response.invalidParameter(form.errorsAsJson());
 
-            Provider provider = Provider.findById(id);
-            if (provider == null)
-                return Response.notFoundEntity("id[" + id + "]");
-
             Multimedia multimedia = form.get();
             multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
-            multimedia.insert();
-            provider.setMultimediaProfile(multimedia);
-            provider.update();   // TODO revisar que se borre el anterior
-            Ebean.commitTransaction();
+            multimedia.save();
+
+            return Response.createdEntity(Json.toJson(multimedia));
+        }catch(Exception e){
+            return NsExceptionsUtils.create(e);
+        }
+    }
+
+//    @CoffeAppsecurity
+    public Result createProviderProfile(Long id) {
+        try {
+
+            Provider provider = Provider.findById(id);
+            JsonNode request = request().body().asJson();
+            if(request == null)
+                return Response.requiredJson();
+
+            JsonNode multimediaCDN = request.findValue("multimediaCDN");
+            Form<MultimediaCDN> formCDN = formFactory.form(MultimediaCDN.class).bind(multimediaCDN);
+            if (formCDN.hasErrors())
+                return Response.invalidParameter(formCDN.errorsAsJson());
+
+            MultimediaCDN multimediaCDN1 = formCDN.get();
+
+            JsonNode name = request.findValue("name");
+            multimediaCDN1.setPath(DTYPE_PROVIDER_PROFILE.concat("/").concat(name.asText()));
+//            multimediaCDN1.save();
+
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
+            node.set("multimediaCDN",  Json.toJson(multimediaCDN1));
+//            node.putPOJO("provider", provider);
+
+            Form<Multimedia> form = formFactory.form(Multimedia.class).bindFromRequest();
+            if (form.hasErrors())
+                return Response.invalidParameter(form.errorsAsJson());
+
+            Multimedia multimedia = form.get();
+            multimedia.setProvider(provider);
+            multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
+            multimedia.save();
+
+//            provider.setMultimediaProfile(multimedia);
+//            provider.update();
 
             return Response.createdEntity(Json.toJson(multimedia));
         }catch(Exception e){
@@ -63,21 +111,11 @@ public class Multimedias extends Controller {
 
 
     @CoffeAppsecurity
-    public Result delete(Long id) { // TODO terimar delete por cada relaci[on y eliminar este métooo
+    public Result delete(Long id) {
         Ebean.beginTransaction();
         try {
-            Media entity = Media.findById(id);
-            if(entity != null) {
+            Ebean.delete(Multimedia.class, id);
 
-                Provider provider = Provider.findByMediaProfileId(id);
-                if (provider != null) {
-                    provider.setMultimediaProfile(null);
-                    provider.update();
-                }
-
-                Media.delete(id);
-                Ebean.commitTransaction();
-            }
             return Response.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
@@ -94,7 +132,7 @@ public class Multimedias extends Controller {
             if(request == null)
                 return Response.requiredJson();
 
-            Ebean.deleteAll(Media.class, Media.findByIds(JsonUtils.toArrayLong(request, "ids")));
+            Ebean.deleteAll(Multimedia.class,Multimedia.findByIds(JsonUtils.toArrayLong(request, "ids")));
 
             return Response.deletedEntity();
         } catch (Exception e) {
@@ -106,56 +144,45 @@ public class Multimedias extends Controller {
     @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            Media media = Media.findById(id);
+            Multimedia  multimedia = Multimedia.findById(id);
 
-            return Response.foundEntity(Json.toJson(media));
+            return Response.foundEntity(Json.toJson(multimedia));
         }catch(Exception e){
             return NsExceptionsUtils.find(e);
         }
     }
 
-    @CoffeAppsecurity
+//    @CoffeAppsecurity
     public Result findAll() {
         try {
-            List<Media> medias = Media.findAll();
+            List<Multimedia> multimedias = Multimedia.findAll();
 
-            return Response.foundEntity(Json.toJson(medias));
+            return Response.foundEntity(Json.toJson(multimedias));
         }catch(Exception e){
             return NsExceptionsUtils.find(e);
         }
     }
 
     @CoffeAppsecurity
-    public Result deleteUselessObjectsToContainer(){ // TODO revisar método
+    public Result deleteUselessObjectsToContainer(){
         try {
-            List<Media> medias = Media.findAll();
-            List<String> objectsNames = new ArrayList();
+            List<String> objectsNamesCDN = rackspaceCloudFiles.getObjectNames();
+            List<MultimediaCDN> MultimediaCDNs = MultimediaCDN.findAll();
+            List<String> objectsNames = new ArrayList<>();
 
-            for (Media media: medias) {
-                if(media.getNameCdn() != null){
-                    objectsNames.add(media.getNameCdn());
-                }
-                if(!media.getResolutions().isEmpty()) {
-                    objectsNames.addAll(media.getNameCdnResolutions());
-                }
-                if(media.getNameCdnOptional() != null) {
-                    objectsNames.add(media.getNameCdnOptional());
+            for (MultimediaCDN multimediaCDN : MultimediaCDNs) {
+                if(multimediaCDN.getNameCdn() != null) {
+                    objectsNames.add(multimediaCDN.getNameCdn());
                 }
             }
-            System.out.println(medias.size());
-            System.out.println(objectsNames.size());
 
-            //rackspaceCloudFiles.deleteObjectsUselessToContainer(objectsNames);
-            return Response.deletedEntity();
-        }catch(Exception e){
-            return NsExceptionsUtils.delete(e);
-        }
-    }
+            //System.out.println(objectsNames.size());
+            //System.out.println(objectsNamesCDN.size());
 
-    @CoffeAppsecurity
-    public Result deleteObjectsTest(){ // TODO revisar método
-        try {
-            rackspaceCloudFiles.deleteObjectsTest();
+            objectsNamesCDN.removeIf(x -> objectsNames.contains(x));
+
+            rackspaceCloudFiles.deleteObjectsToContainer(objectsNamesCDN);
+
             return Response.deletedEntity();
         }catch(Exception e){
             return NsExceptionsUtils.delete(e);

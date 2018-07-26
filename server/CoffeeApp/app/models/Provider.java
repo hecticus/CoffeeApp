@@ -6,7 +6,6 @@ import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.text.PathProperties;
 import models.status.StatusProvider;
-import oldmultimedia.models.Media;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -62,7 +61,7 @@ public class Provider extends AbstractEntity{
 //    @OneToOne(cascade = CascadeType.REMOVE)
 //    private Media mediaProfile;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    @OneToOne(mappedBy = "provider", cascade = CascadeType.REMOVE)
     private Multimedia multimediaProfile;
 
     @OneToMany(mappedBy = "provider")

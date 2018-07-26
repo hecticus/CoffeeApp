@@ -98,7 +98,7 @@ public class Lots extends Controller {
     @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            return Response.foundEntity(Response.toJson(Lot.findById(id), Lot.class));
+            return Response.foundEntity(Json.toJson(Lot.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

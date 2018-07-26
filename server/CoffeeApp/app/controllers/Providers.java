@@ -25,12 +25,6 @@ public class Providers extends Controller {
 
     @Inject
     private FormFactory formFactory;
-    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
-
-    public Providers(){
-        propertiesCollection.putPropertiesCollection("s", "(idProvider, fullNameProvider)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
 
     @CoffeAppsecurity
     public Result preCreate() {
@@ -140,7 +134,7 @@ public class Providers extends Controller {
                            String phoneNumberProvider, String emailProvider,
                            String contactNameProvider, Long status, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+            PathProperties pathProperties = PathProperties.parse(collection);
             ListPagerCollection listPager = Provider.findAll( index, size,  pathProperties, sort, name,
                                                             idProviderType, identificationDocProvider, addressProvider,
                                                             phoneNumberProvider, emailProvider,  contactNameProvider,

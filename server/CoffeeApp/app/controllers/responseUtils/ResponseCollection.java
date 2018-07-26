@@ -1,5 +1,7 @@
 package controllers.responseUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -13,6 +15,7 @@ import play.libs.Json;
 import play.mvc.Result;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.time.format.DateTimeParseException;
 import static play.mvc.Http.Status.CONFLICT;
 import static play.mvc.Results.*;
@@ -59,18 +62,36 @@ public class ResponseCollection {
     }
 
     public static Result foundEntity(ListPagerCollection listPager, PathProperties pathProperties){
-        return ok(buildExtendResponse(
-                "Successful search",
-                pathProperties != null && !pathProperties.getPathProps().isEmpty() ? JsonUtils.toJson(listPager.entities, pathProperties) :  Json.toJson(listPager.entities),
-                Json.toJson(listPager.pager)
-        ));
+        JsonNode jsonEntities = null;
+
+        if (pathProperties != null) {
+            try {
+                jsonEntities = new ObjectMapper().readTree(Ebean.json().toJson(listPager.entities, pathProperties));
+                jsonEntities = Json.toJson(jsonEntities);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return internalServerErrorLF();
+            }
+        }else{
+            jsonEntities = Json.toJson(listPager.entities);
+        }
+        return ok(buildExtendResponse("Successful search", jsonEntities, Json.toJson(listPager.pager)));
     }
 
     public static Result foundEntity(Object object, PathProperties pathProperties){
-        return ok(buildExtendResponse(
-                "Successful search",
-                pathProperties != null ? JsonUtils.toJson(object, pathProperties) :  Json.toJson(object)
-        ));
+        JsonNode jsonEntity;
+
+        if (pathProperties != null) {
+            try {
+                jsonEntity = new ObjectMapper().readTree(Ebean.json().toJson(object, pathProperties));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return internalServerErrorLF();
+            }
+        }else{
+            jsonEntity = Json.toJson(object);
+        }
+        return ok(buildExtendResponse("Successful search", jsonEntity));
     }
 
     public static Result updatedEntity(JsonNode result){

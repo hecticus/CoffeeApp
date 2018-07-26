@@ -99,7 +99,7 @@ public class Units extends Controller {
     @CoffeAppsecurity
     public Result findById(Long id) {
         try {
-            return Response.foundEntity(Response.toJson(Unit.findById(id), Unit.class));
+            return Response.foundEntity(Json.toJson(Unit.findById(id)));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

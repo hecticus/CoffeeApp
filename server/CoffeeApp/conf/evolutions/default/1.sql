@@ -145,44 +145,17 @@ create table lots (
   constraint pk_lots primary key (id)
 );
 
-create table media (
-  id                            bigint auto_increment not null,
-  dtype                         varchar(50) not null,
-  url                           text not null,
-  name_cdn                      varchar(200) not null,
-  mime_type                     varchar(200) not null,
-  size                          varchar(50),
-  name                          varchar(100),
-  description                   text,
-  url_optional                  text,
-  name_cdn_optional             varchar(200),
-  mime_type_optional            varchar(255),
-  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  constraint pk_media primary key (id)
-);
-
-create table media_resolution (
-  media_id                      bigint not null,
-  resolution_id                 bigint not null,
-  constraint pk_media_resolution primary key (media_id,resolution_id)
-);
-
 create table multimedia (
   id                            bigint auto_increment not null,
   dtype                         varchar(255),
   name                          varchar(100),
   description                   text,
   multimedia_cdn_id             bigint not null,
-  multimedia_cdnoptional_id     bigint,
-  user_id                       bigint,
   provider_id                   bigint,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_multimedia_multimedia_cdn_id unique (multimedia_cdn_id),
-  constraint uq_multimedia_multimedia_cdnoptional_id unique (multimedia_cdnoptional_id),
-  constraint uq_multimedia_user_id unique (user_id),
   constraint uq_multimedia_provider_id unique (provider_id),
   constraint pk_multimedia primary key (id)
 );
@@ -223,10 +196,12 @@ create table providers (
   email_provider                varchar(255),
   contact_name_provider         varchar(50) not null,
   status_provider_id            bigint,
+  multimedia_profile_id         bigint,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_providers_nit_provider unique (nit_provider),
+  constraint uq_providers_multimedia_profile_id unique (multimedia_profile_id),
   constraint pk_providers primary key (id)
 );
 
@@ -262,15 +237,6 @@ create table multimedia_rescale_cdn (
   name_cdn                      varchar(200) not null,
   multimedia_id                 bigint not null,
   constraint pk_multimedia_rescale_cdn primary key (id)
-);
-
-create table resolution (
-  id                            bigint auto_increment not null,
-  dtype                         varchar(50) not null,
-  name                          varchar(100) not null,
-  width                         integer not null,
-  height                        integer not null,
-  constraint pk_resolution primary key (id)
 );
 
 create table auth_role (
@@ -413,17 +379,7 @@ create index ix_lots_farm_id on lots (farm_id);
 alter table lots add constraint fk_lots_status_lot_id foreign key (status_lot_id) references status (id) on delete restrict on update restrict;
 create index ix_lots_status_lot_id on lots (status_lot_id);
 
-alter table media_resolution add constraint fk_media_resolution_media foreign key (media_id) references media (id) on delete restrict on update restrict;
-create index ix_media_resolution_media on media_resolution (media_id);
-
-alter table media_resolution add constraint fk_media_resolution_resolution foreign key (resolution_id) references resolution (id) on delete restrict on update restrict;
-create index ix_media_resolution_resolution on media_resolution (resolution_id);
-
 alter table multimedia add constraint fk_multimedia_multimedia_cdn_id foreign key (multimedia_cdn_id) references multimedia_cdn (id) on delete restrict on update restrict;
-
-alter table multimedia add constraint fk_multimedia_multimedia_cdnoptional_id foreign key (multimedia_cdnoptional_id) references multimedia_cdn (id) on delete restrict on update restrict;
-
-alter table multimedia add constraint fk_multimedia_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
 
 alter table multimedia add constraint fk_multimedia_provider_id foreign key (provider_id) references providers (id) on delete restrict on update restrict;
 
@@ -438,6 +394,8 @@ create index ix_providers_provider_type_id on providers (provider_type_id);
 
 alter table providers add constraint fk_providers_status_provider_id foreign key (status_provider_id) references status (id) on delete restrict on update restrict;
 create index ix_providers_status_provider_id on providers (status_provider_id);
+
+alter table providers add constraint fk_providers_multimedia_profile_id foreign key (multimedia_profile_id) references multimedia (id) on delete restrict on update restrict;
 
 alter table multimedia_rescale_cdn add constraint fk_multimedia_rescale_cdn_multimedia_id foreign key (multimedia_id) references multimedia_cdn (id) on delete restrict on update restrict;
 create index ix_multimedia_rescale_cdn_multimedia_id on multimedia_rescale_cdn (multimedia_id);
@@ -512,17 +470,7 @@ drop index ix_lots_farm_id on lots;
 alter table lots drop foreign key fk_lots_status_lot_id;
 drop index ix_lots_status_lot_id on lots;
 
-alter table media_resolution drop foreign key fk_media_resolution_media;
-drop index ix_media_resolution_media on media_resolution;
-
-alter table media_resolution drop foreign key fk_media_resolution_resolution;
-drop index ix_media_resolution_resolution on media_resolution;
-
 alter table multimedia drop foreign key fk_multimedia_multimedia_cdn_id;
-
-alter table multimedia drop foreign key fk_multimedia_multimedia_cdnoptional_id;
-
-alter table multimedia drop foreign key fk_multimedia_user_id;
 
 alter table multimedia drop foreign key fk_multimedia_provider_id;
 
@@ -537,6 +485,8 @@ drop index ix_providers_provider_type_id on providers;
 
 alter table providers drop foreign key fk_providers_status_provider_id;
 drop index ix_providers_status_provider_id on providers;
+
+alter table providers drop foreign key fk_providers_multimedia_profile_id;
 
 alter table multimedia_rescale_cdn drop foreign key fk_multimedia_rescale_cdn_multimedia_id;
 drop index ix_multimedia_rescale_cdn_multimedia_id on multimedia_rescale_cdn;
@@ -581,10 +531,6 @@ drop table if exists item_types;
 
 drop table if exists lots;
 
-drop table if exists media;
-
-drop table if exists media_resolution;
-
 drop table if exists multimedia;
 
 drop table if exists multimedia_cdn;
@@ -600,8 +546,6 @@ drop table if exists provider_type;
 drop table if exists purities;
 
 drop table if exists multimedia_rescale_cdn;
-
-drop table if exists resolution;
 
 drop table if exists auth_role;
 

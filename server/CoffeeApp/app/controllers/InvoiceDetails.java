@@ -11,7 +11,6 @@ import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.Response;
 import controllers.responseUtils.ResponseCollection;
-import controllers.responseUtils.responseObject.InvoiceDetailShortResponse;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -20,8 +19,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
 
 
 /**
@@ -109,7 +106,7 @@ public class InvoiceDetails extends Controller {
     public Result findById(Long id) {
         try {
             InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
-            return Response.foundEntity(Response.toJson(invoiceDetail, InvoiceDetail.class));
+            return Response.foundEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
