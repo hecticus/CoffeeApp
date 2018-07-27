@@ -24,7 +24,9 @@ import javax.inject.Inject;
 public class Providers extends Controller {
 
     @Inject
-    private FormFactory formFactory;
+    private FormFactory formFactory;private static
+    PropertiesCollection propertiesCollection = new PropertiesCollection();
+
 
     @CoffeAppsecurity
     public Result preCreate() {
@@ -134,7 +136,10 @@ public class Providers extends Controller {
                            String phoneNumberProvider, String emailProvider,
                            String contactNameProvider, Long status, boolean deleted){
         try {
-            PathProperties pathProperties = PathProperties.parse(collection);
+            PathProperties pathProperties = null;
+            if (collection != null)
+                pathProperties = PathProperties.parse(collection);
+
             ListPagerCollection listPager = Provider.findAll( index, size,  pathProperties, sort, name,
                                                             idProviderType, identificationDocProvider, addressProvider,
                                                             phoneNumberProvider, emailProvider,  contactNameProvider,
