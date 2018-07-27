@@ -151,12 +151,10 @@ create table multimedia (
   name                          varchar(100),
   description                   text,
   multimedia_cdn_id             bigint not null,
-  provider_id                   bigint,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_multimedia_multimedia_cdn_id unique (multimedia_cdn_id),
-  constraint uq_multimedia_provider_id unique (provider_id),
   constraint pk_multimedia primary key (id)
 );
 
@@ -381,8 +379,6 @@ create index ix_lots_status_lot_id on lots (status_lot_id);
 
 alter table multimedia add constraint fk_multimedia_multimedia_cdn_id foreign key (multimedia_cdn_id) references multimedia_cdn (id) on delete restrict on update restrict;
 
-alter table multimedia add constraint fk_multimedia_provider_id foreign key (provider_id) references providers (id) on delete restrict on update restrict;
-
 alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_permission foreign key (auth_permission_id) references auth_permission (id) on delete restrict on update restrict;
 create index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role (auth_permission_id);
 
@@ -471,8 +467,6 @@ alter table lots drop foreign key fk_lots_status_lot_id;
 drop index ix_lots_status_lot_id on lots;
 
 alter table multimedia drop foreign key fk_multimedia_multimedia_cdn_id;
-
-alter table multimedia drop foreign key fk_multimedia_provider_id;
 
 alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_permission;
 drop index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role;

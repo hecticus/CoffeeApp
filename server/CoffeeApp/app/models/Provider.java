@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
@@ -61,7 +62,11 @@ public class Provider extends AbstractEntity{
 //    @OneToOne(cascade = CascadeType.REMOVE)
 //    private Media mediaProfile;
 
-//    @OneToOne(mappedBy = "provider", cascade = CascadeType.REMOVE)
+//    @JsonBackReference
+    @OneToOne()//, mappedBy = "provider", cascade = CascadeType.REMOVE)
+//    @OneToOne( mappedBy = "provider", cascade = CascadeType.REMOVE)
+//    @JoinColumn( referencedColumnName = "id")
+//    @PrimaryKeyJoinColumn
     private Multimedia multimediaProfile;
 
     @OneToMany(mappedBy = "provider")

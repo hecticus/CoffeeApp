@@ -1,6 +1,7 @@
 package models;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.ebean.Finder;
 import multimedia.models.MultimediaCDN;
 import play.data.validation.Constraints;
@@ -36,8 +37,9 @@ public class Multimedia extends AbstractEntity {
 //    @OneToOne
 //    private User user;
 
-    @OneToOne
-    private Provider provider;
+//    @OneToOne
+////    @JsonManagedReference
+//    private Provider provider;
 
     private static Finder<Long, Multimedia> finder = new Finder<>(Multimedia.class);
 
@@ -138,12 +140,12 @@ public class Multimedia extends AbstractEntity {
 //        this.user = user;
 //    }
 
-    public Provider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
+//    public Provider getProvider() {
+//        return provider;
+//    }
+//
+//    public void setProvider(Provider provider) {
+//        this.provider = provider;
+//    }
 
 }

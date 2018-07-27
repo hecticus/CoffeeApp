@@ -96,12 +96,13 @@ public class Multimedias extends Controller {
                 return Response.invalidParameter(form.errorsAsJson());
 
             Multimedia multimedia = form.get();
-            multimedia.setProvider(provider);
+//            multimedia.setProvider(provider);
             multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
             multimedia.save();
 
-//            provider.setMultimediaProfile(multimedia);
-//            provider.update();
+            System.out.println(multimedia.getName() + multimedia.getId());
+            provider.setMultimediaProfile(multimedia);
+            provider.update();
 
             return Response.createdEntity(Json.toJson(multimedia));
         }catch(Exception e){
