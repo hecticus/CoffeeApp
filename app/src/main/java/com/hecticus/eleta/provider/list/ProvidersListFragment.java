@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -197,7 +198,9 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
             intent.putExtra("isForProviderCreation", false);
             intent.putExtra("canEdit", true);
             intent.putExtra("isHarvester", selectedProvider.isHarvester());
-            intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
+            Log.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
+            //intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
+            intent.putExtra("provider", selectedProvider.getIdProvider());
             startActivity(intent);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

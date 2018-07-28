@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model_new.Media;
+import com.hecticus.eleta.model_new.MultimediaCDN;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.ManagerServices;
@@ -420,7 +422,9 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         Gson g = new Gson();
         Log.d("DEBUG imege", g.toJson(provider));
 
-        Call<ProviderImageUpdateResponse> call = providerImageApi.updateProviderImage(provider);
+        Media media = new Media("image", new MultimediaCDN(base64Image));
+
+        Call<ProviderImageUpdateResponse> call = providerImageApi.updateProviderImage(provider.getIdProvider(), media);
         call.enqueue(new Callback<ProviderImageUpdateResponse>() {
             @DebugLog
             @Override

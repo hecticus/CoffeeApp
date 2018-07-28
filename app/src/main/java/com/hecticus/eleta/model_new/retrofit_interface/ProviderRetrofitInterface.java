@@ -5,6 +5,7 @@ import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
 import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
+import com.hecticus.eleta.model_new.Media;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -62,8 +63,8 @@ DELETE  /provider/:id                                                           
     @PUT("provider/{id}")
     Call<ProviderCreationResponse> updateProviderData(@Path("id") int id, @Body Provider providerToUpdate);
 
-    @POST("provider/uploadPhotoProvider")
-    Call<ProviderImageUpdateResponse> updateProviderImage(@Body Provider providerWithBase64Image);
+    @POST("provider/{id}/mediaProfile")//("provider/uploadPhotoProvider")
+    Call<ProviderImageUpdateResponse> updateProviderImage(@Path("id") int id, @Body Media media);
 
     @GET("provider")
     Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("nameProvider") String name);

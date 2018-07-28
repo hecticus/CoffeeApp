@@ -265,7 +265,9 @@ public class SyncManager {
         //final String previousProviderImageString = provider.getPhotoProvider();
         provider.setPhotoProvider(base64Image);
 
-        Call<ProviderImageUpdateResponse> call = providersApi.updateProviderImage(provider);
+        Media media = new Media("image", new MultimediaCDN(base64Image));
+
+        Call<ProviderImageUpdateResponse> call = providersApi.updateProviderImage(provider.getIdProvider(), media);
 
         call.enqueue(new Callback<ProviderImageUpdateResponse>() {
             @DebugLog

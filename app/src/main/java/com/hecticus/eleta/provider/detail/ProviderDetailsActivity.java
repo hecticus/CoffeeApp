@@ -96,8 +96,9 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         boolean isHarvester = getIntent().getBooleanExtra("isHarvester", false);
         fromProvidersList = getIntent().getBooleanExtra("fromProvidersList", true);
 
-        if (getIntent().getStringExtra("provider") != null) {
-            initialProvider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
+        if (getIntent().getIntExtra("provider",-1) != -1) {//(getIntent().getStringExtra("provider") != null) {
+            initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider",-1));//new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
+            Log.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
         }
 
         mPresenter = new ProviderDetailsPresenter(this, this, initialProvider, isForProviderCreation, canEdit, isHarvester);
