@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.harvest.detail.HarvestDetailsActivity;
 import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.invoice.Invoice;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.of_day.HarvestsOfDayListActivity;
 import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.util.Constants;
@@ -147,7 +149,21 @@ public class HarvestsListFragment extends BaseFragment implements HarvestsListCo
     public void goToHarvestsListByHarvester(Invoice invoice) {
         try {//todo invoice
             Intent intent = new Intent(getActivity(), HarvestsOfDayListActivity.class);
-            intent.putExtra("invoice", Util.getGson().toJson(invoice));//invoice.getInvoiceId()); //
+            Boolean control;
+            if(invoice.getInvoiceId()==-1){
+                control=false;
+            } else {
+                control=true;
+            }
+            intent.putExtra("control", control);//ManagerDB.getInvoiceByIdBoolean(invoice.getInvoiceId()));
+            if(control){ //true= id, false=gson
+                intent.putExtra("invoice", invoice.getInvoiceId()); //Util.getGson().toJson(invoice));//
+            }else{
+                Log.d("DEBUG STATUS", invoice.getStatusInvo());
+                intent.putExtra("invoice", Util.getGson().toJson(invoice));//invoice.getInvoiceId()); //
+
+            }
+            //intent.putExtra("invoice", invoice.getInvoiceId()); //Util.getGson().toJson(invoice));//
             startActivity(intent);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

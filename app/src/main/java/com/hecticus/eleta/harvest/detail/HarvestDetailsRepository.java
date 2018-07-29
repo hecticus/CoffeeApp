@@ -124,6 +124,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             if (isAdd) {
                 if (ManagerDB.saveNewInvoice(Constants.TYPE_HARVESTER, invoicePost)) {
                     onHarvestUpdated();
+
                 } else {
                     onError();
                 }
@@ -271,7 +272,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
                 try {
                     if (response.isSuccessful() && response.body() != null) {
-                        ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests());
+                        ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                         onHarvestUpdated();
                     } else

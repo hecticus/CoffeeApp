@@ -904,6 +904,15 @@ public class ManagerDB {
     }
 
     @DebugLog
+    public static Boolean getInvoiceByIdBoolean(int id) {
+        if(Realm.getDefaultInstance().where(Invoice.class).equalTo("id", id).findFirst()==null){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @DebugLog
     public static boolean invoiceHasOfflineOperation(Invoice invoice) {
         Realm realm = Realm.getDefaultInstance();
 
@@ -985,7 +994,8 @@ public class ManagerDB {
                 .equalTo("providerId", invoicePost.getProviderId())
                 .equalTo("date", invoicePost.getDate())
                 .equalTo("isClosed", false)
-                .lessThan("invoiceStatus", 3)
+                .equalTo("statusInvo", "Open")
+                //.lessThan("invoiceStatus", 3)
                 .findFirst();
 
         if (savedInvoice != null) {

@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.purchases.detail.PurchaseDetailsActivity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.PermissionUtil;
+import com.hecticus.eleta.util.Util;
 
 import java.util.List;
 
@@ -144,14 +146,28 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
 
     @Override
     public void goToPurchasesListByProvider(Invoice invoice) {
-        //try {
+        try {
         //todo invoice
             Intent intent = new Intent(getActivity(), PurchasesOfDayListActivity.class);
-            intent.putExtra("invoice", invoice.getInvoiceId());
+            Boolean control;
+            if(invoice.getInvoiceId()==-1){
+                control=false;
+            } else {
+                control=true;
+            }
+            intent.putExtra("control", control);
+            if(control){ //true= id, false=gson
+                intent.putExtra("invoice", invoice.getInvoiceId()); //Util.getGson().toJson(invoice));//
+            }else{
+                Log.d("DEBUG STATUS", invoice.getStatusInvo());
+                intent.putExtra("invoice", Util.getGson().toJson(invoice));//invoice.getInvoiceId()); //
+
+            }
+            //intent.putExtra("invoice", invoice.getInvoiceId());
             startActivity(intent);
-        /*} catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     @DebugLog

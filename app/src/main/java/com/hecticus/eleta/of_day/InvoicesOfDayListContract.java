@@ -64,11 +64,11 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         boolean isCurrentClosedInvoice();
 
-        void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse);
+        void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control);
 
         //void updatePager(Pager pager);
 
-        void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse);
+        void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control);
 
         void closeInvoice();
 
@@ -97,7 +97,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void closeInvoiceRequest(com.hecticus.eleta.model_new.Invoice post);
 
-        void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse);
+        void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control);
 
         void getReceiptOfInvoiceForPrinting(Invoice invoiceParam);
 

@@ -158,12 +158,12 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @DebugLog
     @Override
-    public void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse) {
+    public void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control) {
 
-        Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());//invoiceDetailsResponse.getListInvoiceDetails().size());
+        //Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());//invoiceDetailsResponse.getListInvoiceDetails().size());
 
         detailsList = invoiceDetailsResponse.getListInvoiceDetails();
-        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();
+        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
         mView.hideWorkingIndicator();
         /*if (currentPage == Constants.INITIAL_PAGE_IN_PAGER) {
             mView.updateHarvestsOrPurchasesList(harvestsList);
@@ -177,9 +177,9 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @DebugLog
     @Override
-    public void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse) {
+    public void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control) {
         detailsList = invoiceDetailsResponse.getListInvoiceDetails();
-        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests();
+        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
         mView.hideWorkingIndicator();
         mView.showMessage(context.getString(R.string.harvest_deleted_successful));
 

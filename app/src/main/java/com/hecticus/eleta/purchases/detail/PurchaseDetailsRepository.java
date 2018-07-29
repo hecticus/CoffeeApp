@@ -232,7 +232,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                                    @NonNull Response<InvoiceDetailsResponse> response) {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
-                        ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests());
+                        ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                     }
                 } catch (Exception e) {

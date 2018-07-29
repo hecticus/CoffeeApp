@@ -112,6 +112,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM OFFLINE");
 
             List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
+            Log.d("DEBUG harvestofday", String.valueOf(invoiceList.size()));
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                     invoice.getInvoiceId(),
                     invoice.getLocalId(),
@@ -129,7 +130,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 localResponse.setListInvoiceDetails(detailsList);
             }
 
-            mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(localResponse);
+            mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(localResponse, false);
 
         } else {
 
@@ -147,11 +148,11 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
                             Log.d("DEBUG", "paso3");
-                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests());
+                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests(true));
                             Log.d("DEBUG", "paso4");
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             Log.d("DEBUG", "paso5");
-                            onGetHarvestsSuccess(response.body());
+                            onGetHarvestsSuccess(response.body(), true);
                             Log.d("DEBUG", "paso6");
                         } else
                             manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
@@ -203,7 +204,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     Log.d("HOD", "--->Invoice has no items of day to also delete");
                 }
 
-                mPresenter.onHarvestDeleted(response);
+                mPresenter.onHarvestDeleted(response, false);
             } else {
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
             }
@@ -215,7 +216,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 public void onResponse(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Response<InvoiceDetailsResponse> response) {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-                            mPresenter.onHarvestDeleted(response.body());
+                            mPresenter.onHarvestDeleted(response.body(), true);
                         } else
                             Log.d("DEBUG", "ERROR BORRANDO1");
                             manageError(mPresenter.context.getString(R.string.error_deleting_harvest), response);
@@ -273,8 +274,8 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
     @DebugLog
     @Override
-    public void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse) {
-        mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(invoiceDetailsResponse);
+    public void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control) {
+        mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(invoiceDetailsResponse, control);
     }
 
     @DebugLog

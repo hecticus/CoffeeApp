@@ -75,19 +75,31 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
         ButterKnife.bind(this);
 
         Invoice initialInvoice = null;
-        //Log.d("DEBUG extra", getIntent().getStringExtra("invoice"));
-        if (getIntent().getStringExtra("invoice") != null) {//getIntent().getIntExtra("invoice",-1) > -1) {
-            //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
-            //todo nose
-            //todo invoice
-            //initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
-            Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
-            initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+        if(getIntent().getBooleanExtra("control", false)) {
+            if (getIntent().getIntExtra("invoice", -1) > -1) {//getIntent().getStringExtra("invoice") != null) {//
+                //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+                //todo nose
+                //todo invoice
+                initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+                //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+                //initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
 
-            Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
-        } else
-            Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
+                Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
+            } else
+                Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
+        } else {
+            if (getIntent().getStringExtra("invoice") != null) {//getIntent().getIntExtra("invoice", -1) > -1) {//
+                //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+                //todo nose
+                //todo invoice
+                //initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+                //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+                initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
 
+                Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
+            } else
+                Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
+        }
         mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice, true);
         initViews();
     }

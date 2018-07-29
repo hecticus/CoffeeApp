@@ -25,7 +25,7 @@ public class InvoiceDetailsResponse {
     @Expose
     private List<InvoiceDetails> listInvoiceDetails;
 
-    private Boolean control = false;
+    private Boolean controlLocal = false;
 
     private List<HarvestOfDay> harvests = new ArrayList<HarvestOfDay>();
 
@@ -54,13 +54,16 @@ public class InvoiceDetailsResponse {
         this.listInvoiceDetails = listInvoiceDetails;
     }
 
-    public List<HarvestOfDay> getHarvests() {
-        if(!control) {
-            for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
-                Log.d("DEBUG total", String.valueOf(invoiceDetail.getTotalInvoiceDetail()));
-                harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), invoiceDetail.getTotalInvoiceDetail(), invoiceDetail.getId()));
+    public List<HarvestOfDay> getHarvests(Boolean control) {
+        //todo crash
+        if(control) {
+            if (!controlLocal) {
+                for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
+                    Log.d("DEBUG total", String.valueOf(invoiceDetail.getTotalInvoiceDetail()));
+                    harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), invoiceDetail.getTotalInvoiceDetail(), invoiceDetail.getId()));
+                }
+                controlLocal = true;
             }
-            control = true;
         }
         return harvests;
     }
