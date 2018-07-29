@@ -9,14 +9,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseFragment;
 import com.hecticus.eleta.base.BaseModel;
@@ -28,7 +26,6 @@ import com.hecticus.eleta.print.PrintPreviewActivity;
 import com.hecticus.eleta.purchases.detail.PurchaseDetailsActivity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.PermissionUtil;
-import com.hecticus.eleta.util.Util;
 
 import java.util.List;
 
@@ -148,8 +145,9 @@ public class PurchasesListFragment extends BaseFragment implements PurchasesList
     @Override
     public void goToPurchasesListByProvider(Invoice invoice) {
         //try {
+        //todo invoice
             Intent intent = new Intent(getActivity(), PurchasesOfDayListActivity.class);
-            intent.putExtra("invoice", invoice.getId());
+            intent.putExtra("invoice", invoice.getInvoiceId());
             startActivity(intent);
         /*} catch (ClassNotFoundException e) {
             e.printStackTrace();

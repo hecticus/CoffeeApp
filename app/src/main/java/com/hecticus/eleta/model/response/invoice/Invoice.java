@@ -1,7 +1,5 @@
 package com.hecticus.eleta.model.response.invoice;
 
-import android.util.Log;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -30,6 +28,8 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Expose
     private int id = -1;
 
+    @SerializedName("statusInvo")
+    @Expose
     private String statusInvo = "Open";
 
     @Ignore
@@ -115,12 +115,12 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     }
 
-    public int getId() {
+    public int getInvoiceId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setInvoiceId(int idInvoice) {
+        this.id = idInvoice;
     }
 
     public Provider getProvider() {
@@ -248,8 +248,8 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         return id2;
     }
 
-    public void setId2(String id) {
-        this.id2 = id;
+    public void setId2(String id2) {
+        this.id2 = id2;
     }
 
     public String getBestAvailableProviderName() {
@@ -284,8 +284,9 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @Override
     public JsonElement serialize(Invoice src, Type typeOfSrc, JsonSerializationContext context) {
-        final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("id", src.getId2());
+        /*final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("invoiceId", src.getInvoiceId());
+        jsonObject.addProperty("statusInvo", src.getStatusInvo());
         //jsonObject.addProperty("statusInvoice", src.getInvoiceStatus());
         jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
         jsonObject.addProperty("startDateInvoice", src.getInvoiceStartDate());
@@ -301,6 +302,26 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         jsonObject.addProperty("date", src.getDate());
         jsonObject.addProperty("isClosed", src.isClosed());
         jsonObject.addProperty("id", src.getId2());
+
+        return jsonObject;*/
+        final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("idInvoice", src.getInvoiceId());
+        jsonObject.addProperty("statusInvo", src.getStatusInvo());
+        //jsonObject.addProperty("statusInvoice", src.getInvoiceStatus());
+        jsonObject.addProperty("identificationDocProvider", src.getIdentificationDocProvider());
+        jsonObject.addProperty("startDateInvoice", src.getInvoiceStartDate());
+        jsonObject.addProperty("closedDateInvoice", src.getInvoiceClosedDate());
+        jsonObject.addProperty("totalInvoice", src.getInvoiceTotal());
+        jsonObject.addProperty("type", src.getType());
+        jsonObject.addProperty("providerName", src.getProviderName());
+        jsonObject.addProperty("providerId", src.getProviderId());
+        jsonObject.addProperty("addOffline", src.isAddOffline());
+        jsonObject.addProperty("deleteOffline", src.isDeleteOffline());
+        jsonObject.addProperty("editOffline", src.isEditOffline());
+        jsonObject.addProperty("localId", src.getLocalId());
+        jsonObject.addProperty("date", src.getDate());
+        jsonObject.addProperty("isClosed", src.isClosed());
+        jsonObject.addProperty("id2", src.getId2());
 
         return jsonObject;
     }

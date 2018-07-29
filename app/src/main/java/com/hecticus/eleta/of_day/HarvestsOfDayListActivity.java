@@ -76,17 +76,18 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
 
         Invoice initialInvoice = null;
         //Log.d("DEBUG extra", getIntent().getStringExtra("invoice"));
-        if (getIntent().getIntExtra("invoice",-1) > -1) {
+        if (getIntent().getStringExtra("invoice") != null) {//getIntent().getIntExtra("invoice",-1) > -1) {
             //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+            //todo nose
+            //todo invoice
+            //initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+            Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+            initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
 
-            initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
             Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
         } else
             Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
 
-
-        /*Gson g= new Gson();
-        Log.d("DEBUGGGGGGGG crate", g.toJson(initialInvoice));*/
         mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice, true);
         initViews();
     }

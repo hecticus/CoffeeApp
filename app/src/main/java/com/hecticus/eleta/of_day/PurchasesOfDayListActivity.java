@@ -81,6 +81,8 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
         Invoice initialInvoice = null;
         if (getIntent().getIntExtra("invoice",-1) > -1){  // getIntent().getStringExtra("invoice") != null) {
             Log.d("DEBUG", String.valueOf(getIntent().getIntExtra("invoice", -1)));
+            //todo nose
+            //todo invoice
             initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));/*new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);*/
         }
         mPresenter = new InvoicesOfDayListPresenter(this, this, initialInvoice, false);

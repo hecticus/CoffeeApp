@@ -112,8 +112,8 @@ public class Util {
             text.append(receiptResponse.getInvoiceType()).append("\n\n");
 
             // Invoice number, hidden if local
-            if (receiptResponse.getInvoice().getId() > 0)
-                text.append(context.getString(R.string.receipt)).append(": ").append(String.format("%08d", receiptResponse.getInvoice().getId())).append("\n");
+            if (receiptResponse.getInvoice().getInvoiceId() > 0)
+                text.append(context.getString(R.string.receipt)).append(": ").append(String.format("%08d", receiptResponse.getInvoice().getInvoiceId())).append("\n");
 
         } else { //Is purchase
 
@@ -121,8 +121,8 @@ public class Util {
             text.append(context.getString(R.string.phone)).append(": ").append(receiptResponse.getCompanyTelephone()).append("\n\n");
 
             // Invoice number, hidden if local
-            if (receiptResponse.getInvoice().getId() > 0)
-                text.append(context.getString(R.string.proof_of_delivery)).append(": ").append(String.format("%08d", receiptResponse.getInvoice().getId())).append("\n");
+            if (receiptResponse.getInvoice().getInvoiceId() > 0)
+                text.append(context.getString(R.string.proof_of_delivery)).append(": ").append(String.format("%08d", receiptResponse.getInvoice().getInvoiceId())).append("\n");
 
         }
 

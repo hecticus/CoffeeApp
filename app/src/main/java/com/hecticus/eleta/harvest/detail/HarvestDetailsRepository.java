@@ -164,7 +164,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                         try {
                             if (response.isSuccessful()) {
                                 //onHarvestUpdated();
-                                getDetails(response.body().getResult().getId());
+                                getDetails(response.body().getResult().getInvoiceId());
                             } else {
                                 Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                                 manageError(response);
@@ -238,7 +238,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 try {
                     if (response.isSuccessful()) {
                         //onHarvestUpdated();
-                        getDetails(response.body().getResult().getId());
+                        getDetails(response.body().getResult().getInvoiceId());
                     } else {
                         Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                         manageError(response);

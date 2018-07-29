@@ -162,7 +162,8 @@ public class HarvestsListPresenter implements HarvestsListContract.Actions {
         for (int i = 0; i < sortableInvoicesList.size(); i++) {
             Log.d("SORT", "--->" + i + ": " + sortableInvoicesList.get(i).getBestAvailableProviderName());
         }
-
+        //Log.d("DEBUG status1", String.valueOf(sortableInvoicesList.get(0).getStatusInvo()));
+        //Log.d("DEBUG status2", String.valueOf(sortableInvoicesList.get(1).getStatusInvo()));
         handleSuccessfulSortedHarvestsRequest(sortableInvoicesList);
     }
 

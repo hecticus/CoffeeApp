@@ -6,12 +6,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
 import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
-import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
@@ -135,6 +133,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                 }
             } else {
                 Log.e("BUG", "--->No invoice to request harvests of day");
+                //todo nose
                 mView.finishWithErrorMessage(context.getString(R.string.error));
             }
         } catch (Exception e) {
@@ -198,8 +197,8 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void closeInvoice() {
         mView.showWorkingIndicator();
-        //CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getId(), Util.getTomorrowDate());
-        Invoice invoice = ManagerDB.getInvoiceById(currentInvoice.getId());
+        //CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getInvoiceId(), Util.getTomorrowDate());
+        Invoice invoice = ManagerDB.getInvoiceById(currentInvoice.getInvoiceId());
         ManagerDB.updateStatusInvoice(invoice);
         com.hecticus.eleta.model_new.Invoice invoice1
                 = new com.hecticus.eleta.model_new.Invoice(invoice,

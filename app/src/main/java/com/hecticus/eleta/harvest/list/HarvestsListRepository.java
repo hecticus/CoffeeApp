@@ -146,7 +146,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
     @Override
     public void deleteHarvest(final Invoice harvestInvoice) {
 
-        final int remoteInvoiceId = harvestInvoice.getId();
+        final int remoteInvoiceId = harvestInvoice.getInvoiceId();
         final int localInvoiceId = harvestInvoice.getLocalId();
 
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(harvestInvoice)) {
@@ -199,10 +199,10 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
             Log.d("PRINT", "--->getReceiptDetails FROM OFFLINE");
 
-            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getId(), invoiceParam.getLocalId());
+            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getInvoiceId(), invoiceParam.getLocalId());
             List<InvoiceDetails> detailsList =
                     ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                            invoiceParam.getId(),
+                            invoiceParam.getInvoiceId(),
                             invoiceParam.getLocalId(),
                             true);
 
@@ -225,7 +225,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
             Log.d("PRINT", "--->getReceiptDetails FROM ONLINE");
 
-            Call<InvoiceDetailsResponse> call = harvestApi.getInvoiceDetails(invoiceParam.getId());
+            Call<InvoiceDetailsResponse> call = harvestApi.getInvoiceDetails(invoiceParam.getInvoiceId());
 
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
@@ -279,7 +279,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
             onGetReceiptSuccess(fakeReceiptResponse);
 
         } else {
-            Call<ReceiptResponse> call = harvestApi.getReceipt(invoiceParam.getId());
+            Call<ReceiptResponse> call = harvestApi.getReceipt(invoiceParam.getInvoiceId());
 
             call.enqueue(new Callback<ReceiptResponse>() {
                 @DebugLog

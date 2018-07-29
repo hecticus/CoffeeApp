@@ -435,13 +435,13 @@ public class SyncManager {
 
                         final Invoice invoiceInRealm = realm
                                 .where(Invoice.class)
-                                .equalTo("id", firstInvoicePost.getInvoiceLocalId())
+                                .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                 .findFirst();
 
                         HarvestOfDay harvestOfDay = null;
 
                         if (invoiceInRealm != null) {
-                            int properInvoiceId = invoiceInRealm.getId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getId();
+                            int properInvoiceId = invoiceInRealm.getInvoiceId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getInvoiceId();
                             String dateSuffix = firstInvoicePost.getStartDate().endsWith(".0") ? "" : ".0";
 
                             harvestOfDay = realm.
@@ -613,7 +613,7 @@ public class SyncManager {
 
             somethingHasBeenSynced = true;
 
-            Call<Message> call = invoiceApi.deleteInvoice(firstInvoice.getId());
+            Call<Message> call = invoiceApi.deleteInvoice(firstInvoice.getInvoiceId());
 
             new ManagerServices<>(call, new ManagerServices.ServiceListener<Message>() {
                 @DebugLog
@@ -759,7 +759,8 @@ public class SyncManager {
 
     @DebugLog
     private void onSuccessfulSync() {
-        FileUtils.clearTempImages();
+        //todo nose
+        //FileUtils.clearTempImages();
         HomeActivity.INSTANCE.syncSuccessful(failedImageUploads);
     }
 }

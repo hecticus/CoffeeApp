@@ -3,7 +3,6 @@ package com.hecticus.eleta.harvest.detail;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -414,7 +413,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
                 createdOffline = true;
             } else {
-                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getId());
+                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
             }
             invoicePost.setProviderId(currentProvider.getIdProvider());
             Log.d("DEBUG!!!!!", "--->"+ invoicePost.getProviderId());

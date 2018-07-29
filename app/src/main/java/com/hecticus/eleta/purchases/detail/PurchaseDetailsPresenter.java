@@ -562,9 +562,9 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             if (currentDetailsList.get(0).getInvoice() == null) {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
             } else {
-                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getId());
+                invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
             }
-            //invoice.setId2(currentDetailsList.get(0).getInvoice().getId());
+            //invoice.setId2(currentDetailsList.get(0).getInvoice().getInvoiceId());
             invoicePost.setProviderId(currentProvider.getIdProvider());
             invoicePost.setReceiverName(currentDetailsList.get(0).getReceiverName());
             invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());

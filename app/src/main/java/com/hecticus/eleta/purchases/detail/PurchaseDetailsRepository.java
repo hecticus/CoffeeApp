@@ -147,7 +147,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                             Log.d("DEBUG2", "PASO");
                             if (response.isSuccessful()) {
                                 Log.d("DEBUG3", "PASO");
-                                getAndSaveInvoiceDetails(response.body().getResult().getId());
+                                getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId());
                             } else {
                                 Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                                 manageError(response);
@@ -199,7 +199,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 try {
                     if (response.isSuccessful()) {
                         //onHarvestUpdated();
-                        getAndSaveInvoiceDetails(response.body().getResult().getId());
+                        getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId());
                     } else {
                         Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                         manageError(response);

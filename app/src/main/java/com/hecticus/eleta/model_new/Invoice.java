@@ -1,13 +1,10 @@
 package com.hecticus.eleta.model_new;
 
-import android.util.Log;
-
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.StatusInvoice;
-import com.hecticus.eleta.model_new.Provider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,7 +46,7 @@ public class Invoice implements Serializable {
     }
 
     public Invoice(com.hecticus.eleta.model.response.invoice.Invoice invoicePost, com.hecticus.eleta.model.response.providers.Provider provider, StatusInvoice statusInvoice) {
-        this.id = (long) invoicePost.getId();
+        this.id = (long) invoicePost.getInvoiceId();
         this.statusInvoice = statusInvoice;
         this.provider = new Provider(invoicePost.getProviderId().longValue());
     }

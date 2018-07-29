@@ -95,7 +95,7 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
     public void deletePurchase(BaseModel model) {
         mView.showWorkingIndicator();
         Invoice invoice = (Invoice) model;
-        mRepository.deletePurchase(invoice.getId(), invoice.getLocalId());
+        mRepository.deletePurchase(invoice.getInvoiceId(), invoice.getLocalId());
     }
 
     @DebugLog

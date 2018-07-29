@@ -7,7 +7,6 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
-import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
 import com.hecticus.eleta.model.response.Message;
 import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
@@ -18,11 +17,7 @@ import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +25,6 @@ import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,9 +111,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM OFFLINE");
 
-            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getId(), invoice.getLocalId());
+            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                    invoice.getId(),
+                    invoice.getInvoiceId(),
                     invoice.getLocalId(),
                     isForHarvest);
 
@@ -141,8 +135,8 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM ONLINE");
 
-            Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoice.getId());
-            Log.d("DEBUG", String.valueOf(invoice.getId()));
+            Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoice.getInvoiceId());
+            Log.d("DEBUG", String.valueOf(invoice.getInvoiceId()));
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override
@@ -153,7 +147,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
                             Log.d("DEBUG", "paso3");
-                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getId(), response.body().getHarvests());
+                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests());
                             Log.d("DEBUG", "paso4");
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             Log.d("DEBUG", "paso5");
@@ -184,9 +178,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     public void deleteHarvestOrPurchase(Invoice invoice, String date, HarvestOfDay harvestOrPurchase) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoice)) {
             if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
-                List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getId(), invoice.getLocalId());
+                List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
                 List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                        invoice.getId(),
+                        invoice.getInvoiceId(),
                         invoice.getLocalId(),
                         isForHarvest);
 
@@ -204,7 +198,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
                 if (harvestsOrPurchasesOfDayList.size() == 0) {
                     Log.d("HOD", "--->Invoice has " + harvestsOrPurchasesOfDayList.size() + " items of day to also delete");
-                    ManagerDB.delete(invoice.getId(), invoice.getLocalId());
+                    ManagerDB.delete(invoice.getInvoiceId(), invoice.getLocalId());
                 } else {
                     Log.d("HOD", "--->Invoice has no items of day to also delete");
                 }
@@ -302,7 +296,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
         } else {
 
-            Call<ReceiptResponse> call = invoiceApi.getReceipt(invoiceParam.getId());
+            Call<ReceiptResponse> call = invoiceApi.getReceipt(invoiceParam.getInvoiceId());
 
             call.enqueue(new Callback<ReceiptResponse>() {
                 @DebugLog

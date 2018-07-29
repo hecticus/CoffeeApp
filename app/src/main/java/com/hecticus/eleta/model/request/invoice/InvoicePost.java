@@ -34,6 +34,8 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
     @Expose
     private int invoiceId = -1;
 
+    private String statusInvo = "Open";
+
     @SerializedName("idProvider")
     @Expose
     private Integer providerId = -1;
@@ -89,6 +91,14 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
 
     public void setInvoicePostLocalId(int invoicePostLocalId) {
         this.invoicePostLocalId = invoicePostLocalId;
+    }
+
+    public String getStatusInvo() {
+        return statusInvo;
+    }
+
+    public void setStatusInvo(String statusInvo) {
+        this.statusInvo = statusInvo;
     }
 
     public int getInvoiceId() {
