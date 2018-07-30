@@ -160,10 +160,17 @@ public class Provider extends AbstractEntity{
         this.invoices = invoices;
     }
 
-    public static Provider findById(Long id) {
+
+    public static Provider findById(Long id){
         return finder.byId(id);
     }
 
+    public static Provider findId(Long id, PathProperties pathProperties){
+
+        if(pathProperties != null)
+            return finder.query().apply(pathProperties).setId(id).findUnique();
+        return finder.byId(id);
+    }
     public static Provider findByNit(String nitProvider) {
         return finder.query().where()
                 .eq("nitProvider", nitProvider)
@@ -210,7 +217,7 @@ public class Provider extends AbstractEntity{
 
         ExpressionList expressionList = finder.query().where();
 
-        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+        if(pathProperties != null)
             expressionList.apply(pathProperties);
 
         if(idProviderType != 0L)

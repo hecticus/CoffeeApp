@@ -3,12 +3,13 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.Response;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Provider;
 import models.ProviderType;
-import controllers.responseUtils.*;
+
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -24,22 +25,8 @@ import javax.inject.Inject;
 public class Providers extends Controller {
 
     @Inject
-    private FormFactory formFactory;private static
-    PropertiesCollection propertiesCollection = new PropertiesCollection();
+    private FormFactory formFactory;
 
-
-    @CoffeAppsecurity
-    public Result preCreate() {
-        try {
-            ProviderType providerType = new ProviderType();
-            Provider provider = new Provider();
-            provider.setProviderType(providerType);
-            return Response.foundEntity(
-                    Json.toJson(provider));
-        } catch (Exception e) {
-            return ExceptionsUtils.find(e);
-        }
-    }
 
     @CoffeAppsecurity
     public Result create() {
@@ -68,7 +55,7 @@ public class Providers extends Controller {
             provider.save();
             return  Response.createdEntity(Json.toJson(provider));
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -89,7 +76,7 @@ public class Providers extends Controller {
             return  Response.updatedEntity(Json.toJson(provider));
 
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -99,10 +86,10 @@ public class Providers extends Controller {
             if (Invoice.invoicesByProviderId(id) != null){
                 return controllers.utils.Response.constraintViolation("Invoices Open");
             }
-            Ebean.delete(Provider.findById(id));
+            Ebean.delete(Provider.findId(id, null));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return  NsExceptionsUtils.delete(e);
         }
     }
 
@@ -121,11 +108,16 @@ public class Providers extends Controller {
     }
 
     @CoffeAppsecurity
-    public Result findById(Long id) {
+    public Result findById(Long id, String collection) {
         try {
-            return Response.foundEntity(Json.toJson(Provider.findById(id)));
+            PathProperties pathProperties = null;
+            if (collection != null)
+                pathProperties = PathProperties.parse(collection);
+
+//            return Response.foundEntity(Json.toJson(Provider.findById(id)));
+            return Response.foundEntity(Provider.findId(id, pathProperties), pathProperties);
         }catch(Exception e){
-            return Response.internalServerErrorLF();
+            return NsExceptionsUtils.find(e);
         }
     }
 
@@ -145,9 +137,9 @@ public class Providers extends Controller {
                                                             phoneNumberProvider, emailProvider,  contactNameProvider,
                                                             status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return Response.foundEntity(listPager, pathProperties);
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return  NsExceptionsUtils.find(e);
         }
     }
 

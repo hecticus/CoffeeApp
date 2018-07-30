@@ -82,7 +82,7 @@ DELETE  /farm/:id                                                               
 #PUT     /invoice                                                                controllers.Invoices.update()
 #DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
 #New
-GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, statusInvoice: Long ?= 0L, deleted: Boolean ?= false)
+GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, statusInvoice: Long ?= 0L, deleted: Boolean ?= false)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
 #POST    /invoice/buyHarvestsAndCoffe                                            controllers.Invoices.buyHarvestsAndCoffe()
@@ -195,7 +195,7 @@ POST    /multimedias/deleteUselessObjectsToContainer                            
 #DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
 #NEW
 GET     /provider                                                               controllers.Providers.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, nameProvider: String ?= null, providerType: Long ?= 0L, nitProvider: String ?= null, addressProvider: String ?= null, numberProvider: String ?= null, emailProvider: String ?= null, contactNameProvider: String ?= null, statusProvider: Long ?= 0L, deleted: Boolean ?= false)
-GET     /provider/:id                                                           controllers.Providers.findById(id : Long)
+GET     /provider/:id                                                           controllers.Providers.findById(id : Long, collection: String ?= null)
 POST    /provider                                                               controllers.Providers.create()
 POST    /provider/delete                                                        controllers.Providers.deletes()
 #POST    /provider/mediaProfile                                                  controllers.Multimedias.createProviderProfile()

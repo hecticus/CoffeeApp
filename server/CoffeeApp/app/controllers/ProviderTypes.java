@@ -120,7 +120,11 @@ public class ProviderTypes {
     public Result findAll( Integer index, Integer size, String collection,
                            String sort, String name, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
+
+            PathProperties pathProperties = null;
+            if (collection != null)
+                pathProperties = PathProperties.parse(collection);
+
             ListPagerCollection listPager = ProviderType.findAll(index, size, pathProperties, sort, name, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
