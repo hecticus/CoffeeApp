@@ -55,6 +55,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         List<InvoiceDetails> detailsOfHarvest = new ArrayList<>();
 
         HarvestOfDay harvestOfDay = (HarvestOfDay) model;
+        //todo brayan
         for (InvoiceDetails detail : detailsList) {
             if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
                 Log.d("OFFLINE", "--->onClickEditButton adding detail (" + detail.getItemType() + ") to next view: " + detail);
@@ -73,9 +74,16 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
+
             } else
                 Log.d("OFFLINE", "--->onClickEditButton NOT adding detail (" + detail.getItemType() + ")to next view: " + detail);
         }
+
+
+        //detailsOfHarvest.add(ManagerDB.getInvoiceDetailById(harvestOfDay.getInvoiceId()));
+
+
+
         mView.goToHarvestOrPurchaseDetailsView(currentInvoice.getProvider(), detailsOfHarvest, ManagerDB.invoiceHasOfflineOperation(currentInvoice));
     }
 

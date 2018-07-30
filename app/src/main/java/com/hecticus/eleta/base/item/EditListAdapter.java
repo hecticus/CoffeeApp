@@ -48,6 +48,9 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
             if (!list.get(position).getInputValue().equals("")) {
                 genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());
                 genericItemViewHolder.getValueEditText().setText(list.get(position).getInputValue());
+            } else {
+                genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());
+                genericItemViewHolder.getValueEditText().setText(list.get(position).getInputValue());
             }
         } else {
             genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());

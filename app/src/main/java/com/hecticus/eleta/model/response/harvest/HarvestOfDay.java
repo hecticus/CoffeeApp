@@ -37,6 +37,7 @@ public class HarvestOfDay extends RealmObject implements BaseDetailModel {
     @PrimaryKey
     private String id = "";
     private int invoiceId = -1;
+    private int lotId = -1;
 
     //Remember to update toString if uncommented
     //private String invoiceWholeId = "";

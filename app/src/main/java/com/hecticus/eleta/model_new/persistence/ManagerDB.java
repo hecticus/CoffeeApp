@@ -16,6 +16,7 @@ import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.util.Constants;
 
 import java.util.ArrayList;
@@ -166,6 +167,13 @@ public class ManagerDB {
                 .equalTo("deleteOffline", false)
                 .equalTo("idProviderType", type)
                 .findAllSorted("fullNameProvider");
+    }
+
+    @DebugLog
+    public static InvoiceDetails getInvoiceDetailById(int id) {
+        return Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("id", id).findFirst();
     }
 
     @DebugLog

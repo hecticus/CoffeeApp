@@ -277,7 +277,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     @Override
     public void updateItems(List<ItemType> itemTypeList) {
-
+        Gson g = new Gson();
+        Log.d("DEBUG BRAYAN", g.toJson(itemTypeList));
         if (itemTypeList != null && itemTypeList.size() % 2 != 0)
             observationsEditText.setBackground();
 
