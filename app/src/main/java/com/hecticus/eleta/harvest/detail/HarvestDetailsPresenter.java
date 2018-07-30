@@ -3,6 +3,7 @@ package com.hecticus.eleta.harvest.detail;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -421,6 +422,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             invoicePost.setReceiverName(currentDetailsList.get(0).getReceiverName());
             invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());
             invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
+            Log.d("DEBUG", "PASO 1");
 
             if (invoicePost.getLot() == -1 && currentDetailsList.get(0).getLot() != null) {
                 invoicePost.setLot(currentDetailsList.get(0).getLot().getId());
@@ -431,10 +433,11 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             if (invoicePost.getItems() == null) {
                 invoicePost.setItems(new ArrayList<ItemPost>());
             }
+            Log.d("DEBUG", "PASO 2");
 
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
-            //Gson g = new Gson();
-            //Log.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
+            Gson g = new Gson();
+            Log.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
             //mRepository.saveHarvestRequest(invoicePost, false);
             mRepository.editHarvestRequest(invoicePost);
         }

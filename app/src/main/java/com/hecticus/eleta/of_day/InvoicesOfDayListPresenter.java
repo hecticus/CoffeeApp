@@ -153,7 +153,11 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     public boolean isCurrentClosedInvoice() {//3 = a factura cerrada
         /*Gson g= new Gson();
         Log.d("DEBUGGGGGGGG", g.toJson(currentInvoice));*/
-        return currentInvoice.getStatusInvo().equals("Closed");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
+        try {
+            return currentInvoice.getStatusInvo().equals("Closed");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
+        }catch (Exception e){
+            return currentInvoice.getInvoiceStatus().getDescription().equals("Closed");
+        }
     }
 
     @DebugLog

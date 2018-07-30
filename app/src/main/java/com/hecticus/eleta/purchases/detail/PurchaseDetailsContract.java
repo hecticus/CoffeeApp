@@ -91,6 +91,8 @@ public class PurchaseDetailsContract {
 
         void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd);
 
+        void editPurchaseRequest(InvoicePost invoicePost);
+
         void onError();
 
         void onError(String error);

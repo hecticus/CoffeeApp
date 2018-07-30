@@ -58,7 +58,7 @@ public class InvoiceDetailsResponse {
         //todo crash
         if(control) {
             if (!controlLocal) {
-                for (int i=0; i<listInvoiceDetails.size(); i++) {//(final InvoiceDetails invoiceDetail : listInvoiceDetails) {
+                /*for (int i=0; i<listInvoiceDetails.size(); i++) {//(final InvoiceDetails invoiceDetail : listInvoiceDetails) {
                     if (i == 0) {
                         Log.d("DEBUG INVOICE D", "0");
                         harvests.add(new HarvestOfDay(listInvoiceDetails.get(i).getStartDate(), listInvoiceDetails.get(i).getTotalInvoiceDetail(), listInvoiceDetails.get(i).getId()));
@@ -69,10 +69,10 @@ public class InvoiceDetailsResponse {
                             harvests.add(new HarvestOfDay(listInvoiceDetails.get(i).getStartDate(), listInvoiceDetails.get(i).getTotalInvoiceDetail(), listInvoiceDetails.get(i).getId()));
                         }
                     }
-                }
-                /*for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
-                    harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), invoiceDetail.getTotalInvoiceDetail(), invoiceDetail.getId()));
                 }*/
+                for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
+                    harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), invoiceDetail.getTotalInvoiceDetail(), invoiceDetail.getId()));
+                }
                 controlLocal = true;
             }
         }

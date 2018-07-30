@@ -26,11 +26,13 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
     private List<? extends BaseEditableModel> list;
     private boolean canEdit = false;
     private boolean cellPairWithBg = false;
+    private boolean isHarvest = false;
 
     @DebugLog
-    public EditListAdapter(boolean canEditParam, boolean cellPairWithBgParam) {
+    public EditListAdapter(boolean canEditParam, boolean cellPairWithBgParam, boolean isHarvestParam) {
         list = new ArrayList<>();
         canEdit = canEditParam;
+        isHarvest = isHarvestParam;
         cellPairWithBg = cellPairWithBgParam;
     }
 
@@ -42,10 +44,15 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
 
     @Override
     public void onBindViewHolder(final EditItemViewHolder genericItemViewHolder, final int position) {
-
-        genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());
-        genericItemViewHolder.getValueEditText().setText(list.get(position).getInputValue());
-
+        if(canEdit && isHarvest) {
+            if (!list.get(position).getInputValue().equals("")) {
+                genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());
+                genericItemViewHolder.getValueEditText().setText(list.get(position).getInputValue());
+            }
+        } else {
+            genericItemViewHolder.getDescriptionTextView().setText(list.get(position).getReadableDescription());
+            genericItemViewHolder.getValueEditText().setText(list.get(position).getInputValue());
+        }
         if (cellPairWithBg) {
             if (position % 2 == 0) {
                 genericItemViewHolder.getItemWholeLinearLayout().setBackgroundResource(R.color.colorBackgroundPairItem);

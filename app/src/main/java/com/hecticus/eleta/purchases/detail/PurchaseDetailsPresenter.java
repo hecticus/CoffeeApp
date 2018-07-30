@@ -582,7 +582,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
 
             updateOriginalDetailsPuritiesListWithChanges();
-            mRepository.savePurchaseRequest(invoicePost, false);
+            mRepository.editPurchaseRequest(invoicePost);
         }
     }
 }

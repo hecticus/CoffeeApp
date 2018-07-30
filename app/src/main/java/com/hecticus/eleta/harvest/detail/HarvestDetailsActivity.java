@@ -184,7 +184,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         itemsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new EditListAdapter(true, false);
+        mAdapter = new EditListAdapter(true, false, true);
         itemsRecyclerView.setAdapter(mAdapter);
     }
 
@@ -277,6 +277,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     @Override
     public void updateItems(List<ItemType> itemTypeList) {
+
         if (itemTypeList != null && itemTypeList.size() % 2 != 0)
             observationsEditText.setBackground();
 

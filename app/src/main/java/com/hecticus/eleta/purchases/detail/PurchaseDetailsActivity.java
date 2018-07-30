@@ -190,7 +190,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         purityRecyclerView.setLayoutManager(linearLayoutManager);
 
-        puritiesAdapter = new EditListAdapter(true, true);
+        puritiesAdapter = new EditListAdapter(true, true, false);
 
         purityRecyclerView.setAdapter(puritiesAdapter);
     }

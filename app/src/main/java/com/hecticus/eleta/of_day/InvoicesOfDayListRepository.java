@@ -3,6 +3,7 @@ package com.hecticus.eleta.of_day;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.SessionManager;
@@ -117,6 +118,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     invoice.getInvoiceId(),
                     invoice.getLocalId(),
                     isForHarvest);
+
+            Log.d("DEBUG json invoiceDe", "id" + String.valueOf(invoice.getInvoiceId()));
+            Log.d("DEBUG json invoiceDet", "idLocal" + String.valueOf(invoice.getLocalId()));
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 

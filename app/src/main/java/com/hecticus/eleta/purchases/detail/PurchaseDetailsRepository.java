@@ -121,16 +121,15 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 } else {
                     onError();
                 }
-            } else {
+            } /*else {
                 Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
                 if (ManagerDB.updateInvoiceDetails(invoicePost, mPresenter.getOriginalDetailsPuritiesList())) {
                     onPurchaseUpdated();
                 } else
                     onError();
-            }
+            }*/
         } else {
             Call<CreateInvoiceResponse> call;
-            //Gson g = new Gson();
             if (isAdd) {
                 Log.d("DEBUG1", "PASO");
                 Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
@@ -170,17 +169,30 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 //Log.d("DEBUG2", g.toJson(invoicePost));
                 //todo put
                 //call = invoiceApi.updateInvoiceDetail(invoicePost);
-                List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
-                for(int i=0; i<invoiceDetailsList.size(); i++){
-                    InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
-                    endPoint(invoiceDetail);
-                }
+
             }
 
         }
     }
 
-    void endPoint(InvoiceDetail invoiceDetail){
+    @Override
+    public void editPurchaseRequest(InvoicePost invoicePost) {
+        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost, false)) {
+            Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
+            if (ManagerDB.updateInvoiceDetails(invoicePost, mPresenter.getOriginalDetailsPuritiesList())) {
+                onPurchaseUpdated();
+            } else
+                onError();
+        } else {
+            List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
+            for(int i=0; i<invoiceDetailsList.size(); i++){
+                InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
+                endPoint(invoiceDetail);
+            }
+        }
+    }
+
+    private void endPoint(InvoiceDetail invoiceDetail){
         Call<CreateInvoiceResponse> call;
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId().intValue(), invoiceDetail);
         call.enqueue(new Callback<CreateInvoiceResponse>() {
