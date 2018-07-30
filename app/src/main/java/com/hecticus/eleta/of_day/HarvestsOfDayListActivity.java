@@ -94,7 +94,8 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
                 //todo invoice
                 //initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
                 //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
-                initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+                //initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
+                initialInvoice = ManagerDB.getInvoiceByIdLocal(new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class).getLocalId());
 
                 Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
             } else

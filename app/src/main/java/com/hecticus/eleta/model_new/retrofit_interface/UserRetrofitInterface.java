@@ -31,6 +31,9 @@ public interface UserRetrofitInterface {
     Call<ResponseBody> loginRequest(@Field("grant_type") String grant_type, @Field("username") String username
             , @Field("password") String password, @Field("client_id") String client_id);
 
+    @GET("user/{id}")
+    Call<ResponseBody> getUser(@Path("id") long id);
+
     @GET("oauth/revokeToken")
     Call<ResponseBody> logOutRequest(/*@Header("Authorization") String token*/);
 

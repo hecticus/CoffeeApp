@@ -904,12 +904,8 @@ public class ManagerDB {
     }
 
     @DebugLog
-    public static Boolean getInvoiceByIdBoolean(int id) {
-        if(Realm.getDefaultInstance().where(Invoice.class).equalTo("id", id).findFirst()==null){
-            return false;
-        } else {
-            return true;
-        }
+    public static Invoice getInvoiceByIdLocal(int id) {
+        return Realm.getDefaultInstance().where(Invoice.class).equalTo("localId", id).findFirst();
     }
 
     @DebugLog

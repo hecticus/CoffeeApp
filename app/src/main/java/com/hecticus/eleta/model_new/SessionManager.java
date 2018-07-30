@@ -58,12 +58,13 @@ public class SessionManager {
     }
 
     @DebugLog
-    public static void updateSession(Context context, AccessTokenResponse accessTokenResponse) {
+    public static void updateSession(Context context, AccessTokenResponse accessTokenResponse,
+                                     String email, String name) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ACCESS_TOKEN, accessTokenResponse.getAccess_token());
-        editor.putString(USER_EMAIL, /*response.getEmail()*/ "shamuel21@gmail.com");
-        editor.putString(USER_NAME, /*response.getName()*/ "shamuel");
+        editor.putString(USER_EMAIL, /*response.getEmail()*/ email);
+        editor.putString(USER_NAME, /*response.getName()*/ name);
         editor.commit();
     }
 }

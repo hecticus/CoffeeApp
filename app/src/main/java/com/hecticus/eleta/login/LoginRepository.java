@@ -6,6 +6,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.SessionManager;
@@ -167,12 +168,51 @@ public class LoginRepository implements LoginContract.Repository {
 
     }
 
+
+    public void getUser(final AccessTokenResponse accessTokenResponse) {
+
+            Call<ResponseBody> call = userApi.getUser(accessTokenResponse.getUser_id());
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    Log.d("DEBUG", "response: " + response.code());
+                    if (response.code() == 200) {
+                        try {
+                            JSONObject json = new JSONObject(response.body().string());
+                            Log.d("DEBUG user", "json " + json);
+                            JSONObject result = json.getJSONObject("result");
+                            String email = result.getJSONObject("authUser").getString("email");
+                            String name = result.getString("firstName");
+                            saveTokens(accessTokenResponse, email, name);
+                            mPresenter.onLoginSuccess();
+                        } catch (IOException | JSONException e) {
+                            //onLoginError(mPresenter.context.getString(R.string.error_something_went_wrong));
+                            e.printStackTrace();
+                        }
+                    } else  {
+                        onLoginError(mPresenter.context.getString(R.string.error_connection));
+                        //Utils.snackbarLong(SigninActivity.this, R.string.error_connection, contButtonSignIn);
+                        //Log.d("DEBUG", "Error en la conexion con el user " + user.getEmail());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    onLoginError(null);
+                    //Utils.snackbarLong(SigninActivity.this, R.string.error_connection, contButtonSignIn);
+                    Log.d("ERROR", t.toString());
+                    t.printStackTrace();
+                }
+            });
+    }
+
     @DebugLog
     @Override
     public void onLoginSuccess(AccessTokenResponse accessTokenResponse) {
-
-        saveTokens(accessTokenResponse);
-        mPresenter.onLoginSuccess();
+        getUser(accessTokenResponse);
+        //saveTokens(accessTokenResponse);
+        //mPresenter.onLoginSuccess();
     }
 
     @DebugLog
@@ -183,9 +223,9 @@ public class LoginRepository implements LoginContract.Repository {
 
     @DebugLog
     @Override
-    public void saveTokens(AccessTokenResponse accessTokenResponse) {
+    public void saveTokens(AccessTokenResponse accessTokenResponse, String email, String name) {
         Context context = mPresenter.context;
-        SessionManager.updateSession(context, accessTokenResponse);
+        SessionManager.updateSession(context, accessTokenResponse, email, name);
     }
 
 }
