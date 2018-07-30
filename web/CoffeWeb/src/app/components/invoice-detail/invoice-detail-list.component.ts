@@ -129,7 +129,7 @@ import { BaseService } from '../../core/base.service';
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 				<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
-				
+				<tr mat-footer-row *matFooterRowDef="columnsToDisplay"></tr>
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>

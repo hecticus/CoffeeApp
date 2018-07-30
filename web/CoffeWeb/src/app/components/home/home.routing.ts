@@ -6,6 +6,7 @@ import { HomeComponent } from './home.component';
 import { NgModule } from '@angular/core';
 import { invoiceRoutes } from '../invoice/invoice.routing';
 import { lotRoutes } from '../lot/lot.routing';
+import { InvoiceListComponent } from '../invoice/invoice-list.component';
 
 const homeRoutes: Routes = [
 	{
@@ -15,7 +16,7 @@ const homeRoutes: Routes = [
 			{
 				path: '',
 				pathMatch: 'full',
-				component: InvoiceComponent,
+				component: InvoiceListComponent,
 				data: {
 					breadcrumb: '',
 					icon: ''

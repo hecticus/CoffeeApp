@@ -56,25 +56,25 @@ import { Invoice } from '../../core/models/invoice';
 
 				<!-- Position Provider -->
 				<ng-container matColumnDef="provider.nameProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Provider</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Proveedor</th>
 					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.nameProvider}} </td>
 				</ng-container>
 
 				<!-- Position statusInvoice -->
 				<ng-container matColumnDef="statusInvoice.name">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status Invoice</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
 					<td mat-cell *matCellDef="let invoice"> {{invoice.statusInvoice.name}} </td>
 				</ng-container>
 
-				<!-- Position closeDateInvoice -->
-				<ng-container matColumnDef="closedDateInvoice">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name</span></th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.closedDateInvoice}} </td>
+				<!-- Position ProviderType -->
+				<ng-container matColumnDef="provider.providerType.nameProviderType">
+					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Tipo de Proveedor</span></th>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.providerType.nameProviderType}} </td>
 				</ng-container>
 
 				<!-- Position  openDateInvoice -->
 				<ng-container matColumnDef="createdAt">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Addreess</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Apertura</th>
 						<td mat-cell *matCellDef="let invoice"> {{invoice.createdAt}} </td>
 				</ng-container>
 
@@ -98,8 +98,8 @@ export class InvoiceListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'provider.nameProvider',
-	'statusInvoice.name', 'createdAt',	'closedDateInvoice', 'totalInvoice'];
+	columnsToDisplay = ['select', 'provider.nameProvider', 'provider.providerType.nameProviderType',
+	'statusInvoice.name', 'createdAt', 'totalInvoice'];
 
 	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs

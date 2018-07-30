@@ -17,3 +17,12 @@ th.mat-sort-header-sorted {
 .example-full-width {
     width: 100%;
 }
+
+.filter {
+    margin: auto;
+}
+
+.both-side {
+    margin: 3px;
+    padding: 2px;
+}
