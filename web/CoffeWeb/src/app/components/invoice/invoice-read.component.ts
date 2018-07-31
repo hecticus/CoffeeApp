@@ -34,7 +34,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Tipo de Proveedor</span>
-						<span class="output">{{ invoice.provider.providerType?.nameProviderType || '-'}}</span>
+						<span class="output">{{ invoice.provider?.providerType.nameProviderType || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">

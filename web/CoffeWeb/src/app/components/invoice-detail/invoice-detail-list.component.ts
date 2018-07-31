@@ -60,32 +60,32 @@ import { BaseService } from '../../core/base.service';
 
 				<!-- Position nameItemType -->
 				<ng-container matColumnDef="itemType.nameItemType">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Item Type</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Iten</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.itemType?.nameItemType || '-'}}</td>
 				</ng-container>
 
 				<!-- Position lot.nameLot -->
 				<ng-container matColumnDef="lot.nameLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Lot</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Lote</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.lot?.nameLot || '-'}} </td>
 					<td mat-footer-cell *matFooterCellDef> Total </td>
 				</ng-container>
 
 				<!-- Position store.nameStore -->
 				<ng-container matColumnDef="store.nameStore">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name Store</span></th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Nombre de la Tienda</span></th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.store?.nameStore|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  priceItemTypeByLot -->
 				<ng-container matColumnDef="priceItemTypeByLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
 						<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.priceItemTypeByLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position costItemType -->
 				<ng-container matColumnDef="costItemType">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Costo Item Type</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Costo</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.costItemType|| '-'}}</td>
 				</ng-container>
 
@@ -97,22 +97,20 @@ import { BaseService } from '../../core/base.service';
 
 				<!-- Position nameReceived -->
 				<ng-container matColumnDef="nameReceived">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Received</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Recibido</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameReceived|| '-'}}</td>
 				</ng-container>
 
 				<!-- Position nameReceived-->
 				<ng-container matColumnDef="nameDelivered">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Delivered</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Entregado</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered|| '-'}}</td>
-					<td mat-footer-cell *matFooterCellDef> Total </td>
 				</ng-container>
 
 				<!-- Position nameDelivered-->
 				<ng-container matColumnDef="totalInvoiceDetail">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total Detail</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.totalInvoiceDetail|| '-'}}</td>
-					<td mat-footer-cell *matFooterCellDef> jjj </td>
 				</ng-container>
 
 				<!-- Position nameDelivered
@@ -180,11 +178,14 @@ export class InvoiceDetailListComponent implements OnInit {
 			invoice: this.idInvoice,
 		});
 		console.log(this.total);
+
 		this.invoiceDetailService.getAll(hhtpParams).subscribe(
 			data => {
 				this.dataSource.data = data['result'];
+				console.log(' ------------------------------------------ ');
 				console.log(this.dataSource);
 		});
+
 		this.totall = this.total;
 	}
 
