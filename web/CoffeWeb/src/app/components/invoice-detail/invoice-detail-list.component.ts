@@ -105,12 +105,14 @@ import { BaseService } from '../../core/base.service';
 				<ng-container matColumnDef="nameDelivered">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Entregado</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef> Total </td>
 				</ng-container>
 
 				<!-- Position nameDelivered-->
 				<ng-container matColumnDef="totalInvoiceDetail">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.totalInvoiceDetail|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef> jjj </td>
 				</ng-container>
 
 				<!-- Position nameDelivered
@@ -127,7 +129,7 @@ import { BaseService } from '../../core/base.service';
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 				<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
-				<tr mat-footer-row *matFooterRowDef="columnsToDisplay"></tr>
+
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
@@ -151,7 +153,7 @@ export class InvoiceDetailListComponent implements OnInit {
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [5, 10, 20];
+	pageSizeOptions: number[] = [ 10, 20];
 
 	dataSource = new MatTableDataSource<InvoiceDetail>();
 
