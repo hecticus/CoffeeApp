@@ -173,6 +173,7 @@ DELETE  /lot/:id                                                                
 GET     /multimedias                                                            controllers.Multimedias.findAll()
 GET     /multimedias/:id                                                        controllers.Multimedias.findById(id: Long)
 DELETE  /multimedias/:id                                                        controllers.Multimedias.delete(id: Long)
+PUT     /multimedias/:id                                                        controllers.Multimedias.update(id : Long)
 POST    /multimedias/delete                                                     controllers.Multimedias.deletes()
 POST    /multimedias/deleteUselessObjectsToContainer                            controllers.Multimedias.deleteUselessObjectsToContainer()
 

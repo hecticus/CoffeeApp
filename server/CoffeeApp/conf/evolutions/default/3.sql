@@ -120,12 +120,12 @@ INSERT INTO `auth_client_credential` (id, client_id, name) VALUES
 (2,'android_app', 'android app');
 
 INSERT INTO `auth_user` ( id , username, email, password, deleted) VALUES
-(100,'sm21','shamuel21@gmail.com','123456', 0),
-(101,'marwin','marwin@gmail.com','1234', 0);
+(100,'fmadriz','rmadriz@grupoeleta.com','12345', 0),
+(101,'marwin','marwin.campos@hecticus.com','12345', 0);
 
 INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
-(100,100,'shamuel','manrrique','chara','0141412514', 0),
-(101,101,'marwin','campos','ccs','2515151', 0);
+(100,100,'Madriz','Eleta','Panama','1234567', 0),
+(101,101,'Marwin','Campos','Caracas','2515151', 0);
 
 INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id) VALUES
 (100,7),

@@ -67,7 +67,7 @@ public class Multimedias extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    //    @CoffeAppsecurity
     public Result createProviderProfile(Long id) {
         try {
 
@@ -103,6 +103,53 @@ public class Multimedias extends Controller {
             System.out.println(multimedia.getName() + multimedia.getId());
             provider.setMultimediaProfile(multimedia);
             provider.update();
+
+            return Response.createdEntity(Json.toJson(multimedia));
+        }catch(Exception e){
+            return NsExceptionsUtils.create(e);
+        }
+    }
+
+
+    //    @CoffeAppsecurity
+    public Result update(Long id) {
+        try {
+            Multimedia multimedia = Multimedia.findById(id);
+            JsonNode request = request().body().asJson();
+            if(request == null)
+                return Response.requiredJson();
+
+            JsonNode multimediaCDN = request.findValue("multimediaCDN");
+            Form<MultimediaCDN> formCDN = formFactory.form(MultimediaCDN.class).bind(multimediaCDN);
+            if (formCDN.hasErrors())
+                return Response.invalidParameter(formCDN.errorsAsJson());
+
+            MultimediaCDN multimediaCDN1 = formCDN.get();
+            multimediaCDN1.setId(multimedia.getMultimediaCDN().getId());
+            multimediaCDN1.update();
+
+//            JsonNode name = request.findValue("name");
+//            multimediaCDN1.setPath(DTYPE_PROVIDER_PROFILE.concat("/").concat(name.asText()));
+////            multimediaCDN1.save();
+//
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
+            node.set("multimediaCDN",  Json.toJson(multimediaCDN1));
+//            node.putPOJO("provider", provider);
+
+            Form<Multimedia> form = formFactory.form(Multimedia.class).bindFromRequest();
+            if (form.hasErrors())
+                return Response.invalidParameter(form.errorsAsJson());
+//
+            Multimedia multimediaUp = form.get();
+            multimediaUp.setId(id);
+            multimediaUp.update();
+////            multimedia.setProvider(provider);
+//            multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
+//            multimedia.save();
+//
+//            System.out.println(multimedia.getName() + multimedia.getId());
+//            provider.setMultimediaProfile(multimedia);
+//            provider.update();
 
             return Response.createdEntity(Json.toJson(multimedia));
         }catch(Exception e){
