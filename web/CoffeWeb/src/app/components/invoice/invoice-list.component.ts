@@ -28,11 +28,11 @@ import { Invoice } from '../../core/models/invoice';
 			</div>
 		</div>-->
 
-		<div class="filter row">
-			<!--<div class="field">
+		<!--<div class="filter row">
+			<div class="field">
 				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
 			</div>-->
-			<div class="wrap-fields">
+			<!-- <div class="wrap-fields">
 				<div class="field">
 				<mat-form-field >
 						<mat-select >
@@ -42,18 +42,18 @@ import { Invoice } from '../../core/models/invoice';
 						<mat-label>Tipo de Proveedor</mat-label>
 					</mat-form-field>
 				</div>
-			<!-- <div class="field">
+			<div class="field">
 					<mat-form-field>
 						<input matInput placeholder="Nombre del Proveedor" (change)="filterService.put('nameProvider', $event.target.value)">
 					</mat-form-field>
-				</div> -->
+				</div>
 			</div>
 			<div class="container-button-filter">
 				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
 					<i class="material-icons">search</i>
 				</button>
 			</div>
-		</div>
+		</div>-->
 
 
 		<div class="mat-elevation-z8" >
