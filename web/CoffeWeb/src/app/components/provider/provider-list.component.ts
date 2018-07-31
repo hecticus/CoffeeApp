@@ -13,7 +13,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 	selector: 'app-provider.list',
 	styleUrls: ['./provider.component.css'],
 	template: `
-		<h2 class="title">Providers</h2>
+		<h2 class="title">Proveedores</h2>
 		<div class="filter row">
 		<!--	<div class="field">
 				<mat-select placeholder="Provider Type" [(ngModel)]="seler" name="pt">
@@ -67,43 +67,43 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 				<!-- Position ProviderType -->
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Provider Type</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Proveedor</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.providerType?.nameProviderType || '-'}} </td>
 				</ng-container>
 
 				<!-- Position nitProvider -->
 				<ng-container matColumnDef="nitProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nit Provider</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>RUC</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.nitProvider || '-'}}</td>
 				</ng-container>
 
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Name</span></th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Nombre</span></th>
 					<td mat-cell *matCellDef="let provider"> {{provider.nameProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position Address -->
 				<ng-container matColumnDef="addressProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Addreess</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Dirección</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.addressProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position numberProvider -->
 				<ng-container matColumnDef="numberProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Number</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Número Telefónico</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.numberProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position emailProvider -->
 				<ng-container matColumnDef="emailProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Correo Electrónico</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.emailProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position contactNameProvider -->
 				<ng-container matColumnDef="contactNameProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Contac Name</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre de Contacto</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.contactNameProvider || '-'}} </td>
 				</ng-container>
 
@@ -127,7 +127,7 @@ export class ProviderListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'provider.providerType.nameProviderType', 'nitProvider', 'nameProvider',
+	columnsToDisplay = ['select', 'nameProvider', 'nitProvider', 'provider.providerType.nameProviderType',
 						'statusProvider', 'addressProvider', 'emailProvider',
 						'contactNameProvider', 'numberProvider'];
 	// MatPaginator Inputs

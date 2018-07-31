@@ -751,3 +751,10 @@ select:disabled {
     font-size: 12px;
     color: #fb5f5f;
 }
+
+
+/* Design  */
+
+.mat-elevation-z8 {
+    box-shadow: 0 0 0 0;
+}

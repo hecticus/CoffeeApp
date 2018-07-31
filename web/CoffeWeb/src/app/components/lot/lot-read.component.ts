@@ -11,7 +11,7 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
 	template: `
-		<h3 class="title">Lot Detail</h3>
+		<h3 class="title">Detalles del Lote</h3>
 		<div class="tool-bar both-side">
 			<div class="right row">
 				<button class="btn-icon" title="Update" type="button" (click)="update()">
@@ -25,35 +25,35 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 
 		<div class="answer">
 			<div class="fieldset">
-				<div class="legend">Lot Data</div>
+				<div class="legend">Datos del Lote</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Name</span>
+						<span class="label">Nombre</span>
 						<span class="output">{{lot.nameLot|| '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Farm</span>
+						<span class="label">Granja</span>
 						<span class="output">{{lot.farm?.nameFarm || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Area</span>
+						<span class="label">Área</span>
 						<span class="output">{{lot.areaLot || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Height</span>
+						<span class="label">Altura</span>
 						<span class="output">{{lot.heighLot || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Price Lot</span>
+						<span class="label">Precio</span>
 						<span class="output">{{lot.priceLot || '-'}}</span>
 					</div>
 				</div>
@@ -62,11 +62,11 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 
 		<ng-template #template>
 			<div class="modal-body text-center">
-				<div class="dialog-title">Confirmation</div>
-				<div class="dialog-message">Are you sure you want to delete this record?</div>
+				<div class="dialog-title">Confirmación </div>
+				<div class="dialog-message">¿Estas seguro que quieres eliminar este lote?</div>
 				<div class="dialog-options">
 					<button class="btn-text green" type="button" (click)="delete()">
-						<div class="text">Yes</div>
+						<div class="text">Si</div>
 					</button>
 					<button class="btn-text red" type="button" (click)="decline()" >
 						<div class="text">No</div>

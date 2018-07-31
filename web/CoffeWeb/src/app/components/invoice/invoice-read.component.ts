@@ -9,7 +9,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
-		<h3 class="title">Report Detail</h3>
+		<h3 class="title">Detalles del Reporte</h3>
 		<div class="tool-bar both-side">
 			<div class="right row">
 				<button class="btn-icon" title="Update" type="button" (click)="update()">
@@ -23,44 +23,43 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 
 		<div class="answer">
 			<div class="fieldset">
-				<div class="legend">Invoice Data</div>
+				<div class="legend">Datos de la Factura</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Name Provider</span>
+						<span class="label">Nombre del Proveedor</span>
 						<span class="output">{{ invoice.provider?.nameProvider || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Status Invoice</span>
+						<span class="label">Tipo de Proveedor</span>
+						<span class="output">{{ invoice.provider.providerType?.nameProviderType || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div>
+						<span class="label">Status de la Factura</span>
 						<span class="output">{{ invoice.statusInvoice?.name || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Creation Date</span>
+						<span class="label">Fecha de Creación</span>
 						<span class="output">{{ invoice.createdAt || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Closing Date</span>
-						<span class="output">{{ invoice.closedDateInvoice || '-'}}</span>
-					</div>
-				</div>
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Total Invoice</span>
+						<span class="label">Total de la Factura</span>
 						<span class="output">{{ invoice.totalInvoice || '-'}}</span>
 					</div>
 				</div>
 			</div>
 
 			<div class="fieldset">
-				<div class="legend">InvoiceDetail Data</div>
+				<div class="legend">Detalles de la Factura</div>
 				<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
-
 			</div>
 		</div>
 <!--

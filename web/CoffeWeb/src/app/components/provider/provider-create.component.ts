@@ -23,7 +23,7 @@ import { Status } from '../../core/models/status';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="nameProvider" placeholder="Name">
+							<input matInput formControlName="nameProvider" placeholder="Nombre">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nameProvider']"></app-validator>
 					</div>
@@ -31,7 +31,7 @@ import { Status } from '../../core/models/status';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="nitProvider" placeholder="Provider Code">
+							<input matInput formControlName="nitProvider" placeholder="RUC">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 					</div>
@@ -42,7 +42,7 @@ import { Status } from '../../core/models/status';
 							<mat-select required [formControl]="form.controls['providerType']">
 								<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
 							</mat-select>
-							<mat-label><b>Provider Type</b></mat-label>
+							<mat-label><b>Tipo de Proveedor</b></mat-label>
 						</mat-form-field>
 						<app-validator [control]="form.controls['providerType']"></app-validator>
 					</div>
@@ -61,11 +61,11 @@ import { Status } from '../../core/models/status';
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><span>Contact data</span></legend>
+				<legend><span>Datos de Contacto</span></legend>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field class="example-full-width">
-							<input matInput formControlName="contactNameProvider" placeholder="Contact Name">
+							<input matInput formControlName="contactNameProvider" placeholder="Nombre de Contacto">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
 					</div>
@@ -73,7 +73,7 @@ import { Status } from '../../core/models/status';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="addressProvider" placeholder="Address">
+							<input matInput formControlName="addressProvider" placeholder="Dirección">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['addressProvider']"></app-validator>
 					</div>
@@ -81,12 +81,12 @@ import { Status } from '../../core/models/status';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="numberProvider" placeholder="Telephono Number">
+							<input matInput formControlName="numberProvider" placeholder="Número de Telefono">
 						</mat-form-field>
 					</div>
 					<div class="field">
 						<mat-form-field class="example-full-width">
-							<input matInput formControlName="emailProvider" placeholder="Email">
+							<input matInput formControlName="emailProvider" placeholder="Correo Electrónico">
 						</mat-form-field>
 						<app-validator [control]="form.controls['emailProvider']"></app-validator>
 					</div>
@@ -94,7 +94,7 @@ import { Status } from '../../core/models/status';
 			</fieldset>
 
 			<div class="options row">
-				<button mat-raised-button class="btn-text" type="submit" [disabled]="!form.valid">Save</button>
+				<button mat-raised-button class="btn-text" type="submit" [disabled]="!form.valid">Guardar</button>
 			</div>
 		</form>
   `

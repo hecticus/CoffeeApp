@@ -10,7 +10,7 @@ import { LotService } from './lot.service';
 @Component({
 	styleUrls: ['./lot.component.css'],
 	template: `
-		<h2 class="title">Lots</h2>
+		<h2 class="title">Lotes</h2>
 		<div class="filter row">
 			<!--<div class="field">
 					<mat-select placeholder="Type Farm" [(ngModel)]="selectedValue" name="food">
@@ -21,7 +21,7 @@ import { LotService } from './lot.service';
 					</mat-select>
 				</div> -->
 			<div class="field">
-				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
 			</div>
 			<div class="container-button-filter">
 				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
@@ -64,13 +64,13 @@ import { LotService } from './lot.service';
 
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span (click)="test()">Name</span></th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef><span (click)="test()">Nombre</span></th>
 					<td mat-cell *matCellDef="let lot"> {{lot.nameLot}} </td>
 				</ng-container>
 
 				<!-- Position Farm -->
 				<ng-container matColumnDef="farm.nameFarm">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Farm</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Granja</th>
 					<td mat-cell *matCellDef="let lot"> {{lot.farm.nameFarm}} </td>
 				</ng-container>
 
@@ -82,19 +82,19 @@ import { LotService } from './lot.service';
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="areaLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Area</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Área</th>
 					<td mat-cell *matCellDef="let lot"> {{lot.areaLot}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="heighLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Height</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Altura</th>
 					<td mat-cell *matCellDef="let lot"> {{lot.heighLot}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="priceLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
 					<td mat-cell *matCellDef="let lot"> {{lot.priceLot}} </td>
 				</ng-container>
 

@@ -1,3 +1,7 @@
+import { filter } from 'rxjs/operators';
+import { FilterService } from './../../core/filter/filter.service';
+import { BaseService } from './../../core/base.service';
+import { ProviderTypeService } from './../provider-type/provider-type.service';
 import { InvoiceService } from './invoice.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -11,9 +15,38 @@ import { Invoice } from '../../core/models/invoice';
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h2 class="title">Reportes</h2>
+
+		<!--<div class="tool-bar both-side">
+			<div class="right row">
+				<button class="btn-icon" type="button" (click)="create()">
+					<i class="material-icons">add</i>
+				</button>
+				<button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
+					<i class="material-icons">delete</i>
+				</button>
+			</div>
+		</div>-->
+
 		<div class="filter row">
-			<div class="field">
+			<!--<div class="field">
 				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+			</div>-->
+			<div class="wrap-fields">
+				<div class="field">
+				<mat-form-field >
+						<mat-select >
+							<mat-option>-- None --</mat-option>
+							<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
+						</mat-select>
+						<mat-label>Tipo de Proveedor</mat-label>
+					</mat-form-field>
+				</div>
+			<!-- <div class="field">
+					<mat-form-field>
+						<input matInput placeholder="Nombre del Proveedor" (change)="filterService.put('nameProvider', $event.target.value)">
+					</mat-form-field>
+				</div> -->
 			</div>
 			<div class="container-button-filter">
 				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
@@ -22,17 +55,6 @@ import { Invoice } from '../../core/models/invoice';
 			</div>
 		</div>
 
-		<div class="tool-bar both-side">
-			<div class="right row">
-				<button class="btn-icon" type="button" (click)="create()">
-					<i class="material-icons">add</i>
-				</button>
-				<button class="btn-icon" type="button"> <!--
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">-->
-					<i class="material-icons">delete</i>
-				</button>
-			</div>
-		</div>
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
@@ -92,6 +114,7 @@ import { Invoice } from '../../core/models/invoice';
 
 	`
 })
+
 export class InvoiceListComponent implements OnInit {
 	form: FormGroup;
 	provType: ProviderType[];
@@ -122,6 +145,8 @@ export class InvoiceListComponent implements OnInit {
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private invoiceService: InvoiceService,
+		private providerTypeService: ProviderTypeService,
+		// public filterService: FilterService,
 	) { }
 
 	ngOnInit() {
@@ -135,6 +160,27 @@ export class InvoiceListComponent implements OnInit {
 				console.log(this.dataSource);
 		});
 
+		this.providerTypeService.getAll(
+			BaseService.jsonToHttpParams({sort: 'nameProviderType', collection: 'id, nameProviderType'})).subscribe(
+			data => {
+				this.provType = data['result'];
+			console.log(this.provType);
+		});
+		this.filter();
+	}
+
+
+	filter() {
+		let httpParams = BaseService.jsonToHttpParams({
+			// collection: 'id ',
+			typeProvider: '1',
+		});
+
+		this.invoiceService.getAll(httpParams).subscribe(
+			data => {
+				this.dataSource.data = data['result'];
+				console.log(this.dataSource);
+		});
 	}
 
 	create() {

@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-topbar',
-  templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.css']
+	selector: 'app-topbar',
+	templateUrl: './topbar.component.html',
+	styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent implements OnInit {
 
-  user: String = 'Holalalalal';
+	user: String = 'User';
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
-  public logout() {	}
-  public password() {	}
+	public logout() { }
+	public password() { }
 }

@@ -13,7 +13,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
 	template: `
-		<h3 class="title">Provider Detail</h3>
+		<h3 class="title">Detalles del Proveedor</h3>
 		<div class="tool-bar both-side">
 			<div class="right row">
 				<button class="btn-icon" title="Update" type="button" (click)="update()">
@@ -27,53 +27,53 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 		<div class="answer">
 			<div class="fieldset">
-				<div class="legend">Provider Data</div>
+				<div class="legend">Datos del Proveedor</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Provider Type</span>
+						<span class="label">Tipo del Proveedor</span>
 						<span class="output">{{provider.providerType?.nameProviderType || '-'}}</span>
 					</div>
 				</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Name</span>
+						<span class="label">Nombre</span>
 						<span class="output">{{provider.nameProvider || '-'}}</span>
 					</div>
 				</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Code Provider</span>
+						<span class="label">RUC</span>
 						<span class="output">{{provider.nitProvider || '-'}}</span>
 					</div>
 				</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Address</span>
+						<span class="label">Dirección</span>
 						<span class="output">{{provider.addressProvider || '-'}}</span>
 					</div>
 				</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Phone Number</span>
+						<span class="label">Número de Teléfono</span>
 						<span class="output">{{provider.numberProvider || '-'}}</span>
 					</div>
 				</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Email Provider</span>
+						<span class="label">Correo Electrónico</span>
 						<span class="output">{{provider.emailProvider || '-'}}</span>
 					</div>
 				</div>
 
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Contact Name</span>
+						<span class="label">Nombre de Contacto</span>
 						<span class="output">{{provider.contactNameProvider || '-'}}</span>
 					</div>
 				</div>

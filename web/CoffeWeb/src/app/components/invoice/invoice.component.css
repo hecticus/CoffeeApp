@@ -26,3 +26,7 @@ th.mat-sort-header-sorted {
     margin: 3px;
     padding: 2px;
 }
+
+.mat-elevation-z8 {
+    box-shadow: 0 0 0 0;
+}

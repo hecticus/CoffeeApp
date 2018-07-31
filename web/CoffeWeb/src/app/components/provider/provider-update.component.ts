@@ -13,14 +13,14 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 @Component({
 	styleUrls: ['./provider.component.css'],
 	template: `
-		<h2 class="title">Edit Provider</h2>
+		<h2 class="title">Editar Provider</h2>
 		<form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
-				<legend><span>Provider data</span></legend>
+				<legend><span>Datos del Proveedor</span></legend>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="nameProvider" placeholder="Provider Name">
+							<input matInput formControlName="nameProvider" placeholder="Nombre">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nameProvider']"></app-validator>
 					</div>
@@ -28,7 +28,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="nitProvider" placeholder="Provider Code">
+							<input matInput formControlName="nitProvider" placeholder="RUC">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 					</div>
@@ -39,7 +39,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 							<mat-select required [formControl]="form.controls['providerType']">
 								<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
 							</mat-select>
-							<mat-label><b>Provider Type</b></mat-label>
+							<mat-label><b>Tipo de Proveedor</b></mat-label>
 						</mat-form-field>
 						<app-validator [control]="form.controls['providerType']"></app-validator>
 					</div>
@@ -60,11 +60,11 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 			</fieldset>
 
 			<fieldset>
-				<legend><span>Contact data</span></legend>
+				<legend><span>Datos de Contacto</span></legend>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field class="example-full-width">
-							<input matInput formControlName="contactNameProvider" placeholder="Contact Name" class="example-right-align">
+							<input matInput formControlName="contactNameProvider" placeholder="Nombre de Contacto" class="example-right-align">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
 					</div>
@@ -72,13 +72,13 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field class="example-full-width">
-							<input matInput formControlName="numberProvider" placeholder="Telefono Number">
+							<input matInput formControlName="numberProvider" placeholder="Numero Telefónico">
 							<app-validator [control]="form.controls['numberProvider']"></app-validator>
 						</mat-form-field>
 					</div>
 					<div class="field">
 						<mat-form-field class="example-full-width">
-							<input matInput formControlName="emailProvider" placeholder="Email">
+							<input matInput formControlName="emailProvider" placeholder="Correo Electrónico">
 						</mat-form-field>
 						<app-validator [control]="form.controls['emailProvider']"></app-validator>
 					</div>
@@ -86,7 +86,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="addressProvider" placeholder="Address">
+							<input matInput formControlName="addressProvider" placeholder="Dirección">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['addressProvider']"></app-validator>
 					</div>
@@ -94,7 +94,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 			</fieldset>
 
 			<div class="options row">
-				<button mat-raised-button class="btn-text">Save</button>
+				<button mat-raised-button class="btn-text">Guardar</button>
 			</div>
 		</form>
 	`

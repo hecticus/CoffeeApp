@@ -11,20 +11,21 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
+	styleUrls: ['./lot.component.css'],
 	template: `
-		<h3 class="title">Lot Edit</h3>
+		<h3 class="title">Editar Lote</h3>
 		<form  *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
-			<legend><span>Lot data</span></legend>
+			<legend><span>Datos del Lote</span></legend>
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field required class="example-full-width">
-						<input matInput formControlName="nameLot" placeholder="Name Lot">
+						<input matInput formControlName="nameLot" placeholder="Nombre">
 					</mat-form-field>
 					<app-validator [control]="form.controls['nameLot']"></app-validator>
 				</div>
 			</div>
-			<div class="wrap-fields">
+			<!-- <div class="wrap-fields">
 				<div class="field">
 					<mat-form-field required class="example-full-width">
 						<input matInput formControlName="nameLot" placeholder="Name">
@@ -32,7 +33,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 					<app-validator  [control]="form.controls['nameLot']"></app-validator>
 				</div>
 			</div>
-			<!-- -->
+			-->
 			<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
@@ -51,7 +52,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 						<mat-select required [formControl]="form.controls['farm']">
 							<mat-option *ngFor="let f of farms" [value]="f.id">{{f.nameFarm}}</mat-option>
 						</mat-select>
-						<mat-label><b>Farm</b></mat-label>
+						<mat-label><b>Granja</b></mat-label>
 					</mat-form-field>
 					<app-validator [control]="form.controls['farm']"></app-validator>
 				</div>
@@ -59,13 +60,13 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field class="example-full-width">
-						<input matInput formControlName="areaLot" placeholder="Area">
+						<input matInput formControlName="areaLot" placeholder="Área">
 					  </mat-form-field>
 					  <app-validator [control]="form.controls['areaLot']"></app-validator>
 				</div>
 				<div class="field">
 					<mat-form-field class="example-full-width">
-						<input matInput formControlName="heighLot" placeholder="Heich">
+						<input matInput formControlName="heighLot" placeholder="Altura">
 					</mat-form-field>
 					<app-validator [control]="form.controls['heighLot']"></app-validator>
 				</div>
@@ -73,7 +74,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 			<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
-						<input matInput formControlName="priceLot" placeholder="Price" class="example-right-align">
+						<input matInput formControlName="priceLot" placeholder="Precio" class="example-right-align">
 					</mat-form-field>
 					<app-validator [control]="form.controls['priceLot']"></app-validator>
 				</div>
@@ -81,7 +82,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 			</fieldset>
 
 			<div class="options row">
-				<button mat-raised-button class="btn-text">Save</button>
+				<button mat-raised-button class="btn-text">Guardar</button>
 			</div>
 		</form>
 	`
