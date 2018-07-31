@@ -12,7 +12,7 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 @Component({
 	styleUrls: ['./lot.component.css'],
 	template: `
-		<h2 class="title">Create Lot</h2>
+		<h2 class="title">Crear Lote</h2>
 		<form *ngIf="form" [formGroup]="form" (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Datos del Lote</span></legend>

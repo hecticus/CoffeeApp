@@ -16,14 +16,30 @@ import { Status } from '../../core/models/status';
 @Component({
 	styleUrls: ['./provider.component.css'],
 	template: `
-		<h2 class="title">Create Provider</h2>
+		<h2 class="title">Crear Proveedor</h2>
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
 			<fieldset>
-				<legend><span>Provider data</span></legend>
+				<legend><span>Datos del Proveedor</span></legend>
+				<div class="wrap-fields">
+					<div class="field form-field">
+						<mat-form-field class="example-full-width">
+							<mat-select required [formControl]="form.controls['providerType']">
+								<mat-option *ngFor="let f of provType" >{{f.nameProviderType}}</mat-option>
+							</mat-select>
+							<mat-label><b>Tipo de Proveedor</b></mat-label>
+						</mat-form-field>
+						<app-validator [control]="form.controls['providerType']"></app-validator>
+					</div>
+				</div>
+			</fieldset>
+
+			<div *ngIf="true; then vendedor else cosechador">
+			</div><!---->
+			<ng-template #vendedor>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="nameProvider" placeholder="Nombre">
+							<input matInput formControlName="nameProvider" placeholder="Nombre del Vendedor">
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nameProvider']"></app-validator>
 					</div>
@@ -36,18 +52,60 @@ import { Status } from '../../core/models/status';
 						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 					</div>
 				</div>
+				<fieldset>
+					<legend><span>Datos de Contacto</span></legend>
+					<div class="wrap-fields">
+						<div class="field">
+							<mat-form-field class="example-full-width">
+								<input matInput formControlName="contactNameProvider" placeholder="Nombre de Contacto">
+							</mat-form-field>
+							<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
+						</div>
+					</div>
+					<div class="wrap-fields">
+						<div class="field">
+							<mat-form-field  required class="example-full-width">
+								<input matInput formControlName="addressProvider" placeholder="Dirección">
+							</mat-form-field>
+							<app-validator  [control]="form.controls['addressProvider']"></app-validator>
+						</div>
+					</div>
+					<div class="wrap-fields">
+						<div class="field">
+							<mat-form-field  required class="example-full-width">
+								<input matInput formControlName="numberProvider" placeholder="Número de Telefono">
+							</mat-form-field>
+						</div>
+						<div class="field">
+							<mat-form-field class="example-full-width">
+								<input matInput formControlName="emailProvider" placeholder="Correo Electrónico">
+							</mat-form-field>
+							<app-validator [control]="form.controls['emailProvider']"></app-validator>
+						</div>
+					</div>
+				</fieldset>
+			</ng-template>
+
+
+
+			<ng-template #cosechador>
 				<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControl]="form.controls['providerType']">
-								<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
-							</mat-select>
-							<mat-label><b>Tipo de Proveedor</b></mat-label>
+					<div class="field">
+						<mat-form-field  required class="example-full-width">
+							<input matInput formControlName="nameProvider" placeholder="Nombre del Cosechador">
 						</mat-form-field>
-						<app-validator [control]="form.controls['providerType']"></app-validator>
+						<app-validator  [control]="form.controls['nameProvider']"></app-validator>
 					</div>
 				</div>
-				<!-- -->
+				<div class="wrap-fields">
+					<div class="field">
+						<mat-form-field  required class="example-full-width">
+							<input matInput formControlName="nitProvider" placeholder="DNI">
+						</mat-form-field>
+						<app-validator  [control]="form.controls['nitProvider']"></app-validator>
+					</div>
+				</div>
+				<!--
 				<div class="wrap-fields">
 						<div class="field form-field">
 							<mat-form-field class="example-full-width">
@@ -58,44 +116,37 @@ import { Status } from '../../core/models/status';
 							</mat-form-field>
 							<app-validator [control]="form.controls['statusProvider']"></app-validator>
 						</div>
-				</div>
-			</fieldset>
-			<fieldset>
-				<legend><span>Datos de Contacto</span></legend>
-				<div class="wrap-fields">
-					<div class="field">
-						<mat-form-field class="example-full-width">
-							<input matInput formControlName="contactNameProvider" placeholder="Nombre de Contacto">
-						</mat-form-field>
-						<app-validator  [control]="form.controls['contactNameProvider']"></app-validator>
+				</div>-->
+				<fieldset>
+					<legend><span>Datos de Contacto</span></legend>
+					<div class="wrap-fields">
+						<div class="field">
+							<mat-form-field  required class="example-full-width">
+								<input matInput formControlName="addressProvider" placeholder="Dirección">
+							</mat-form-field>
+							<app-validator  [control]="form.controls['addressProvider']"></app-validator>
+						</div>
 					</div>
-				</div>
-				<div class="wrap-fields">
-					<div class="field">
-						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="addressProvider" placeholder="Dirección">
-						</mat-form-field>
-						<app-validator  [control]="form.controls['addressProvider']"></app-validator>
+					<div class="wrap-fields">
+						<div class="field">
+							<mat-form-field class="example-full-width">
+								<input matInput formControlName="numberProvider" placeholder="Número de Telefono">
+							</mat-form-field>
+						</div>
+						<div class="field">
+							<mat-form-field class="example-full-width">
+								<input matInput formControlName="emailProvider" placeholder="Correo Electrónico">
+							</mat-form-field>
+							<app-validator [control]="form.controls['emailProvider']"></app-validator>
+						</div>
 					</div>
-				</div>
-				<div class="wrap-fields">
-					<div class="field">
-						<mat-form-field  required class="example-full-width">
-							<input matInput formControlName="numberProvider" placeholder="Número de Telefono">
-						</mat-form-field>
-					</div>
-					<div class="field">
-						<mat-form-field class="example-full-width">
-							<input matInput formControlName="emailProvider" placeholder="Correo Electrónico">
-						</mat-form-field>
-						<app-validator [control]="form.controls['emailProvider']"></app-validator>
-					</div>
-				</div>
-			</fieldset>
+				</fieldset>
+			</ng-template>
 
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="!form.valid">Guardar</button>
 			</div>
+
 		</form>
   `
 })
