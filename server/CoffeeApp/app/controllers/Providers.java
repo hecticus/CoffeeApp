@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.responseUtils.ResponseCollection;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
@@ -137,7 +138,8 @@ public class Providers extends Controller {
                                                             phoneNumberProvider, emailProvider,  contactNameProvider,
                                                             status, deleted);
 
-            return Response.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager, pathProperties);
+//            return Response.foundEntity(listPager, pathProperties);
         }catch(Exception e){
             return  NsExceptionsUtils.find(e);
         }

@@ -192,6 +192,7 @@ public class Provider extends AbstractEntity{
                     .setIncludeSoftDeletes()
                     .findUnique();
         }
+        
         return finder.query().where()
                 .eq("providerType.id", idProviderType)
                 .eq("nitProvider", provider.getNitProvider())

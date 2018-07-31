@@ -85,7 +85,7 @@ public class ProviderType  extends AbstractEntity {
 
         ExpressionList expressionList = finder.query().where();
 
-        if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
+        if(pathProperties != null )
             expressionList.apply(pathProperties);
 
         if(name != null)
@@ -104,5 +104,28 @@ public class ProviderType  extends AbstractEntity {
                 expressionList.setFirstRow(index).setMaxRows(size).findCount(),
                 index,
                 size);
+    }
+
+    public static PagedList findAll2( Integer index, Integer size, PathProperties pathProperties,
+                                               String sort, String name, boolean delete){
+
+        ExpressionList expressionList = finder.query().where();
+
+        if(pathProperties != null )
+            expressionList.apply(pathProperties);
+
+        if(name != null)
+            expressionList.startsWith("nameProviderType", name);
+
+        if(sort != null)
+            expressionList.orderBy(sort( sort));
+
+        if( delete )
+            expressionList.setIncludeSoftDeletes();
+
+        if(index == null || size == null)
+            return expressionList.findPagedList();
+//            return expressionList.setFirstRow(0).setMaxRows(expressionList.findCount()).findPagedList();
+        return expressionList.setFirstRow(0).setMaxRows(expressionList.findCount()).findPagedList();
     }
 }

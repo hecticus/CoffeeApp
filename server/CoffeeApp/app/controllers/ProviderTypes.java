@@ -4,7 +4,9 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.*;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
+import controllers.utils.Response;
 import models.ProviderType;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.ResponseCollection;
@@ -126,7 +128,9 @@ public class ProviderTypes {
                 pathProperties = PathProperties.parse(collection);
 
             ListPagerCollection listPager = ProviderType.findAll(index, size, pathProperties, sort, name, deleted);
+//            PagedList pagedList = ProviderType.findAll2(index, size, pathProperties, sort, name, deleted);
             return ResponseCollection.foundEntity(listPager, pathProperties);
+//            return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }
