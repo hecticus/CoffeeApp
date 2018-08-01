@@ -199,14 +199,13 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
             intent.putExtra("canEdit", true);
             intent.putExtra("isHarvester", selectedProvider.isHarvester());
             Log.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
-            //intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
-            intent.putExtra("provider", selectedProvider.getIdProvider());
+            intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
+            //intent.putExtra("provider", selectedProvider.getIdProvider());
             startActivity(intent);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             showMessage(getString(R.string.error));
         }
-
     }
 
     @DebugLog

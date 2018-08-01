@@ -1,6 +1,7 @@
 package com.hecticus.eleta.provider.detail;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -38,6 +39,8 @@ import com.hecticus.eleta.util.PermissionUtil;
 import com.hecticus.eleta.util.Util;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +48,9 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 public class ProviderDetailsActivity extends BaseActivity implements ProviderDetailsContract.View {
+
+    private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 1;
+    private Integer id;
 
     @BindView(R.id.provider_detail_text_edit_address)
     CustomEditText addressEditText;
@@ -96,15 +102,20 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         boolean isHarvester = getIntent().getBooleanExtra("isHarvester", false);
         fromProvidersList = getIntent().getBooleanExtra("fromProvidersList", true);
 
-        if (getIntent().getIntExtra("provider",-1) != -1) {//(getIntent().getStringExtra("provider") != null) {
-            initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider",-1));//new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
+        if (getIntent().getStringExtra("provider") != null) {//(getIntent().getIntExtra("provider",-1) != -1) {//
+            //initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider",-1));//new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
+            //mPresenter.
+            initialProvider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
             Log.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
         }
 
         mPresenter = new ProviderDetailsPresenter(this, this, initialProvider, isForProviderCreation, canEdit, isHarvester);
         initViews();
         if (initialProvider != null)
-            loadProviderImage(initialProvider.getPhotoProvider());
+            //loadProviderImage(initialProvider.getPhotoProvider());todo img
+            try {
+                loadProviderImage(initialProvider.getMultimediaProfile().getMultimediaCDN().getUrl());
+            }catch (Exception e){}
         mPresenter.initFields();
     }
 
@@ -179,8 +190,17 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             updateFields(providerParam);
             hideWorkingIndicator();
             updateMenuOptions();
+            finish();
         }
     }
+
+
+
+    /*@Override
+    public void fin(){
+        hideWorkingIndicator();
+        finish();
+    }*/
 
     @Override
     public void showMessage(String message) {
@@ -240,6 +260,14 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     @DebugLog
     @Override
     public void updateFields(Provider provider) {
+        try {
+            loadProviderImage(provider.getMultimediaProfile().getMultimediaCDN().getUrl());
+            id = provider.getMultimediaProfile().getId();
+        }catch (Exception e){
+            Log.e("DEBUGERROR", "la url esta null");
+        }
+
+        Log.e("DEBUGERROR", "Policia 1");
         dniEditText.setText(provider.getIdentificationDocProvider());
         nameEditText.setText(provider.getFullNameProvider());
         addressEditText.setText(provider.getAddressProvider());
@@ -259,7 +287,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     public void onClickSaveChangesButtonClicked() {
 
         if (validFields()) {
-            mPresenter.saveProvider(getProviderFromFields(), takenOrPickedImagePath);
+            mPresenter.saveProvider(getProviderFromFields(), takenOrPickedImagePath, id);
         }
     }
 
@@ -316,7 +344,132 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     @OnClick(R.id.custom_header_w_des_image_button)
     @Override
     public void onClickSelectImage() {
-        CharSequence options[] = new CharSequence[]{getResources().getString(R.string.camera),
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> permissionsNeeded = new ArrayList<>();
+            final List<String> permissionsList = new ArrayList<>();
+
+
+                        /*if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            permissionsNeeded.add("Read storage");
+                            Log.d("DEBUG", "policia pide permisos1");
+                        }
+                        if (!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            permissionsNeeded.add("Write storage");
+                            Log.d("DEBUG", "policia pide permisos2");
+                        }
+                        if(!addPermission(permissionsList, Manifest.permission.CAMERA)) {
+                            permissionsNeeded.add("Camera");
+                            Log.d("DEBUG", "policia pide permisos3");
+                        }
+                        if (permissionsNeeded.size() > 0) {
+                            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+                                    REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+                        } else {
+                            openImageIntent();
+                        }
+                         */
+
+            Log.d("DEBUG", "policia pide permisos0");
+            if (addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                permissionsNeeded.add("Read storage");
+                Log.d("DEBUG", "policia pide permisos1");
+            } else {
+                if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    permissionsNeeded.add("Read storage");
+                    Log.d("DEBUG", "policia pide permisos1.1");
+                }
+            }
+            if (addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionsNeeded.add("Write storage");
+                Log.d("DEBUG", "policia pide permisos2");
+            } else {
+                if (!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    permissionsNeeded.add("Write storage");
+                    Log.d("DEBUG", "policia pide permisos2");
+                }
+            }
+            if(addPermission(permissionsList, Manifest.permission.CAMERA)) {
+                permissionsNeeded.add("Camera");
+                Log.d("DEBUG", "policia pide permisos3");
+            } else {
+                if(!addPermission(permissionsList, Manifest.permission.CAMERA)) {
+                    permissionsNeeded.add("Camera");
+                    Log.d("DEBUG", "policia pide permisos3");
+                }
+            }
+
+            if (permissionsNeeded.size() > 0) {
+                try {
+                    Log.d("DEBUG", "permissionsNeeded.size()" + permissionsNeeded.size());
+                    requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+                            REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+                }catch (Exception e){
+                    CharSequence options[] = new CharSequence[]{getResources().getString(R.string.camera),
+                            getResources().getString(R.string.gallery)};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getResources().getString(R.string.image_source));
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @DebugLog
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if (which == 0) {
+                                takePicture();
+                            } else if (which == 1) {
+
+                                pickGalleryImage();
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            } else {
+                CharSequence options[] = new CharSequence[]{getResources().getString(R.string.camera),
+                        getResources().getString(R.string.gallery)};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getResources().getString(R.string.image_source));
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @DebugLog
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (which == 0) {
+                            takePicture();
+                        } else if (which == 1) {
+
+                            pickGalleryImage();
+                        }
+                    }
+                });
+                builder.show();
+            }
+        } else {
+            CharSequence options[] = new CharSequence[]{getResources().getString(R.string.camera),
+                    getResources().getString(R.string.gallery)};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getResources().getString(R.string.image_source));
+            builder.setItems(options, new DialogInterface.OnClickListener() {
+                @DebugLog
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    if (which == 0) {
+                            takePicture();
+                    } else if (which == 1) {
+
+                            pickGalleryImage();
+                    }
+                }
+            });
+            builder.show();
+        }
+
+
+
+        /*CharSequence options[] = new CharSequence[]{getResources().getString(R.string.camera),
                 getResources().getString(R.string.gallery)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -325,6 +478,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             @DebugLog
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 if (which == 0) {
                     if (Build.VERSION.SDK_INT >= 23) {
                         if (PermissionUtil.isPermissionGranted(ProviderDetailsActivity.this, Manifest.permission.CAMERA) &&
@@ -349,7 +503,17 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
                 }
             }
         });
-        builder.show();
+        builder.show();*/
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean addPermission(List<String> permissionsList, String permission) {
+        if (ProviderDetailsActivity.this.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permission);
+            // Check for Rationale Option
+            if (!shouldShowRequestPermissionRationale(permission)) return false;
+        }
+        return true;
     }
 
     @DebugLog
@@ -432,7 +596,6 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
                 takenOrPickedImagePath = FileUtils.getLocalPathGivenUriAndContext(imgUri, this);
                 Log.d("PHOTO", "--->Image picked from gallery: " + takenOrPickedImagePath);
             }
-
             GlideApp
                     .with(this)
                     .load(takenOrPickedImagePath)

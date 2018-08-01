@@ -134,7 +134,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                 }
 
                 if (currentInvoice.getProvider() != null) {
-                    mView.initHeader(currentInvoice.getProvider().getFullNameProvider(), currentInvoice.getProvider().getPhotoProvider());
+                    mView.initHeader(currentInvoice.getProvider().getFullNameProvider(), currentInvoice.getProvider().getMultimediaProfile().getMultimediaCDN().getUrl());//getPhotoProvider());
                     mRepository.getHarvestsOrPurchasesOfInvoiceRequest(currentInvoice);
                 } else {
                     mView.finishWithErrorMessage(context.getString(R.string.provider_info_not_yet_loaded));

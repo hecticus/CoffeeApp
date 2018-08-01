@@ -127,6 +127,14 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+        if (page != null && page instanceof ProvidersListFragment) {
+            ((ProvidersListFragment) page).refreshList();
+        }
+    }
 
     @DebugLog
     public void goToLoginActivity() {

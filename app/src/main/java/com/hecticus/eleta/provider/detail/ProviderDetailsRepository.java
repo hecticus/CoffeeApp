@@ -4,12 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
-import com.hecticus.eleta.model_new.Media;
+import com.hecticus.eleta.model.response.AccessTokenResponse;
 import com.hecticus.eleta.model_new.MultimediaCDN;
+import com.hecticus.eleta.model_new.MultimediaProfile;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.ManagerServices;
@@ -30,6 +32,7 @@ import io.realm.Realm;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -130,9 +133,14 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 providerParam.setAddOffline(true);
                 providerParam.setUnixtime(System.currentTimeMillis() / 1000L);
 
-                if (imagePath != null)
-                    providerParam.setPhotoProvider(imagePath);
+                if (imagePath != null) {
+                    //providerParam.setPhotoProvider(imagePath);todo img
+                    try {
+                        providerParam.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",imagePath)));
+                    }catch (Exception e){}
 
+
+                }
                 Log.d("OFFLINE", "--->Saved offline provider: " + providerParam);
 
                 if (ManagerDB.saveNewProvider(providerParam)) {
@@ -178,7 +186,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                             JSONObject errorBody = new JSONObject(response.errorBody().string());
                             String errorMessage = errorBody.getString("message");
                             Log.d("DEBUG msj error:", errorMessage);
-                            if(errorMessage.equals("Duplicate entry '"+providerParam.getIdentificationDocProvider()+"' for key 'uq_providers_nit_provider'")){ //rut existe
+                            if(errorMessage.equals("Constrain violation: Duplicate entry '"+providerParam.getIdentificationDocProvider()+"' for key 'uq_providers_nit_provider'")){ //rut existe
                                 if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
                                     onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
                                 } else {// es cosechador
@@ -266,7 +274,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
     @DebugLog
     @Override
-    public void updateProviderRequest(final Provider providerParam) {
+    public void updateProviderRequest(final Provider providerParam, final boolean isImg) {
         if (providerParam.getIdProviderType() == -1) {
             Log.d("DETAILS", "--->Populating provider type: " + providerParam.getProviderType().getIdProviderType());
             providerParam.setIdProviderType(providerParam.getProviderType().getIdProviderType());
@@ -311,8 +319,11 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @DebugLog
                 @Override
                 public void onSuccess(Response<ProviderCreationResponse> response) {
-                    try {
-                        onProviderSaved(response.body().getProvider());
+                    try { Log.d("DEBUG isimg", String.valueOf(isImg));
+                        if(!isImg){
+                            onProviderSaved(response.body().getProvider());
+                        }
+                        //onProviderSaved(response.body().getProvider());
                         Log.d("DETAILS", "--->Success updateProviderRequest:" + response.body());
                     } catch (Exception e) {
                         onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
@@ -348,6 +359,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             });
         }
     }
+
+
 
     @DebugLog
     private boolean providerIdDocExistsInLocalStorageX(Provider providerParam) {
@@ -393,7 +406,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
     @DebugLog
     @Override
     public void onImageUpdateError(Provider provider, String previousImageString, String errorMessage) {
-        provider.setPhotoProvider(previousImageString);
+        //provider.setPhotoProvider(previousImageString);
         mPresenter.onUpdateError(Constants.ErrorType.ERROR_UPDATING_IMAGE, errorMessage);
     }
 
@@ -415,31 +428,43 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
         String base64Image = FileUtils.getOptimizedBase64FromImagePath(newImagePath);
 
-        final String previousProviderImageString = provider.getPhotoProvider();
+        //final String previousProviderImageString = provider.getPhotoProvider();
 
-        provider.setPhotoProvider(base64Image);
+        //provider.setPhotoProvider(base64Image);
+        provider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN(base64Image)));
 
+        /*Gson g = new Gson();
+        Log.d("DEBUG imege", g.toJson(provider));*/
+
+        MultimediaProfile media = new MultimediaProfile("image", new MultimediaCDN(base64Image));
         Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(provider));
+        Log.d("DEBUG imege", g.toJson(media));
 
-        Media media = new Media("image", new MultimediaCDN(base64Image));
-
-        Call<ProviderImageUpdateResponse> call = providerImageApi.updateProviderImage(provider.getIdProvider(), media);
-        call.enqueue(new Callback<ProviderImageUpdateResponse>() {
+        Call<ResponseBody> call = providerImageApi.updateProviderImage(provider.getIdProvider(), media);
+        call.enqueue(new Callback<ResponseBody>() {
             @DebugLog
             @Override
-            public void onResponse(@NonNull Call<ProviderImageUpdateResponse> call,
-                                   @NonNull Response<ProviderImageUpdateResponse> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
                         Log.d("DETAILS", "--->uploadImageRequest Success " + response.body());
+                        Log.d("DETAILS", "--->uploadImageRequest Success " + response.body());
+                        JSONObject json = new JSONObject(response.body().string());
+                        Log.d("DEBUG sign in", "json " + json);
+                        //try {
+                            String url = json.getJSONObject("result").getJSONObject("multimediaCDN").getString("url");
+                            //MultimediaProfile multimedia = new ObjectMapper().readValue(String.valueOf(json.getJSONObject("result")), MultimediaProfile.class);
+                            onImageUpdateSuccess(url);//response.body().getUploadedImageUrl());
+                        /*}catch (Exception e){
+                            mPresenter.cerrar();
+                        }*/
 
-                        onImageUpdateSuccess(response.body().getUploadedImageUrl());
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.d("DEBUG msj error", "5161");
-                        onImageUpdateError(provider, previousProviderImageString, null);
+                        onImageUpdateError(provider, /*previousProviderImageString*/null, null);
                     }
                 } else {
 
@@ -455,16 +480,84 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
 
                     Log.d("DEBUG msj error", "da" + errorMessage);
 
-                    onImageUpdateError(provider, previousProviderImageString, errorMessage);
+                    onImageUpdateError(provider, /*previousProviderImageString*/null, errorMessage);
+                }
+            }
+
+
+            @DebugLog
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.d("RETRO", "--->ERROR: " + t.getMessage());
+                onImageUpdateError(provider, /*previousProviderImageString*/null, null);
+            }
+        });
+    }
+
+    @Override
+    public void putImageRequest(String newImagePath, Integer id) {
+
+        String base64Image = FileUtils.getOptimizedBase64FromImagePath(newImagePath);
+
+        //final String previousProviderImageString = provider.getPhotoProvider();
+
+        //provider.setPhotoProvider(base64Image);
+
+        /*Gson g = new Gson();
+        Log.d("DEBUG imege", g.toJson(provider));*/
+
+        MultimediaProfile media = new MultimediaProfile(id, "image", new MultimediaCDN(base64Image));
+        Gson g = new Gson();
+        Log.d("DEBUG imege", g.toJson(media));
+
+        Call<ResponseBody> call = providerImageApi.putProviderImage(id, media);
+        call.enqueue(new Callback<ResponseBody>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        Log.d("DETAILS", "--->uploadImageRequest Success " + response.body());
+                        JSONObject json = new JSONObject(response.body().string());
+                        Log.d("DEBUG sign in", "json " + json);
+                        //try {
+                            String url = json.getJSONObject("result").getJSONObject("multimediaCDN").getString("url");
+                            //MultimediaProfile multimedia = new ObjectMapper().readValue(String.valueOf(json.getJSONObject("result")), MultimediaProfile.class);
+                            onImageUpdateSuccess(url);//response.body().getUploadedImageUrl());
+                            /*mPresenter.cerrar();
+                        }catch (Exception e){
+                            mPresenter.cerrar();
+                        }*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("DEBUG msj error", "5161");
+                        onImageUpdateError(/*provider*/null, /*previousProviderImageString*/null, null);
+                    }
+                } else {
+
+                    String errorMessage = null;
+
+                    try {
+                        errorMessage = new JSONObject(response.errorBody().string()) + "";
+                        Log.e("DETAILS", "--->uploadImageRequest Error " + errorMessage);
+                    } catch (JSONException | IOException e) {
+                        Log.e("DETAILS", "--->uploadImageRequest Error with error");
+                        e.printStackTrace();
+                    }
+
+                    Log.d("DEBUG msj error", "da" + errorMessage);
+                    onImageUpdateError(/*provider*/null, /*previousProviderImageString*/null, null);
                 }
             }
 
             @DebugLog
             @Override
-            public void onFailure(@NonNull Call<ProviderImageUpdateResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 Log.d("RETRO", "--->ERROR: " + t.getMessage());
-                onImageUpdateError(provider, previousProviderImageString, null);
+                onImageUpdateError(/*provider*/null, /*previousProviderImageString*/null, null);
             }
         });
     }

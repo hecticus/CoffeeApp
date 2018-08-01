@@ -9,6 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.StatusProvider;
+import com.hecticus.eleta.model_new.MultimediaProfile;
 import com.hecticus.eleta.util.Constants;
 
 import java.lang.reflect.Type;
@@ -50,9 +51,9 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     @Expose
     private String emailProvider;
 
-    @SerializedName("photoProvider")
+    /*@SerializedName("photoProvider")
     @Expose
-    private String photoProvider;
+    private String photoProvider;*/
 
     @Ignore
     @SerializedName("providerType")
@@ -64,6 +65,10 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     @SerializedName("statusProvider")
     @Expose
     private StatusProvider statusProvider;
+
+    @SerializedName("multimediaProfile")
+    @Expose
+    private MultimediaProfile multimediaProfile;
 
     private boolean addOffline;
     private boolean deleteOffline;
@@ -142,14 +147,14 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
         this.emailProvider = emailProvider;
     }
 
-    public String getPhotoProvider() {
+    /*public String getPhotoProvider() {
         return photoProvider;
     }
 
     @DebugLog
     public void setPhotoProvider(String photoProvider) {
         this.photoProvider = photoProvider;
-    }
+    }*/
 
     public ProviderType getProviderType() {
         return providerType;
@@ -173,6 +178,14 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
 
     public void setStatusProvider(StatusProvider statusProvider) {
         this.statusProvider = statusProvider;
+    }
+
+    public MultimediaProfile getMultimediaProfile() {
+        return multimediaProfile;
+    }
+
+    public void setMultimediaProfile(MultimediaProfile multimediaProfile) {
+        this.multimediaProfile = multimediaProfile;
     }
 
     @Override
@@ -240,7 +253,7 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
                 ", addressProvider='" + addressProvider + '\'' +
                 ", phoneNumberProvider='" + phoneNumberProvider + '\'' +
                 ", emailProvider='" + emailProvider + '\'' +
-                ", photoProvider='" + photoProvider + '\'' +
+                //", photoProvider='" + photoProvider + '\'' +
                 ", providerType=" + providerType +
                 ", contactNameProvider='" + contactNameProvider + '\'' +
                 ", statusProvider=" + statusProvider +
@@ -269,7 +282,7 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
         jsonObject.addProperty("addressProvider", src.getAddressProvider());
         jsonObject.addProperty("phoneNumberProvider", src.getPhoneNumberProvider());
         jsonObject.addProperty("emailProvider", src.getEmailProvider());
-        jsonObject.addProperty("photoProvider", src.getPhotoProvider());
+        //jsonObject.addProperty("photoProvider", src.getPhotoProvider());
         jsonObject.addProperty("contactNameProvider", src.getContactNameProvider());
         //jsonObject.addProperty("statusProvider", src.getStatusProvider());
         jsonObject.addProperty("addOffline", src.isAddOffline());

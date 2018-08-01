@@ -79,8 +79,12 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
         if (!isAdd) {
             if (currentProvider != null) {
-                mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getPhotoProvider());
-                if (currentDetailsList != null && currentDetailsList.size() > 0) {
+                try {
+
+                    mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider()); todo img
+
+                }catch (Exception e){
+                }if (currentDetailsList != null && currentDetailsList.size() > 0) {
                     InvoiceDetails details = currentDetailsList.get(0);
                     mView.loadFields(details.isFreight(), details.getAmount() + "", details.getPriceItem() + "", details.getDispatcherName(), details.getObservation());
                 }

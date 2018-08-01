@@ -5,13 +5,13 @@ import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
 import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
-import com.hecticus.eleta.model_new.Media;
+import com.hecticus.eleta.model_new.MultimediaProfile;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -58,13 +58,19 @@ PUT     /provider/:id                                                           
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
      */
     @POST("provider")
-    Call<ProviderCreationResponse> createProvider(/*@Header("Authorization") String token,*/ @Body Provider providerToCreate);
+    Call<ProviderCreationResponse> createProvider( @Body Provider providerToCreate);
 
     @PUT("provider/{id}")
     Call<ProviderCreationResponse> updateProviderData(@Path("id") int id, @Body Provider providerToUpdate);
 
     @POST("provider/{id}/mediaProfile")//("provider/uploadPhotoProvider")
-    Call<ProviderImageUpdateResponse> updateProviderImage(@Path("id") int id, @Body Media media);
+    Call<ResponseBody> updateProviderImage(@Path("id") int id, @Body MultimediaProfile media);
+
+    @PUT("multimedias/{id}")
+    Call<ResponseBody> putProviderImage(@Path("id") int id, @Body MultimediaProfile media);
+
+    @GET("provider/{id}")
+    Call<ResponseBody> getProviderById(@Path("id") int id);
 
     @GET("provider")
     Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("nameProvider") String name);

@@ -37,6 +37,7 @@ import io.realm.RealmResults;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -203,10 +204,15 @@ public class SyncManager {
                         if (oldLocalProviderId != null)
                             updateProviderIdInInvoices(oldLocalProviderId, newProviderId);
 
-                        if (currentProviderToSync.getPhotoProvider() != null)
-                            syncProviderPhoto(currentProviderToSync);
-                        else
+                        try {
+                            if (currentProviderToSync.getMultimediaProfile().getMultimediaCDN().getUrl() != null) //todo img
+                                syncProviderPhoto(currentProviderToSync);
+                            else
+                                syncNextPendingProvider();
+                        }catch (Exception e){
                             syncNextPendingProvider();
+                        }
+
 
                     }
                 } catch (Exception e) {
@@ -251,29 +257,38 @@ public class SyncManager {
 
     @DebugLog
     private void syncProviderPhoto(@NonNull final Provider provider) {
+        File imageToUploadFile=null;
+        try {
+            imageToUploadFile = new File(provider.getMultimediaProfile().getMultimediaCDN().getUrl()); //todo img
 
-        File imageToUploadFile = new File(provider.getPhotoProvider());
+        }catch (Exception e){
+        }
 
         if (!imageToUploadFile.exists()) {
-            Log.e("PHOTO", "--->Can't sync image: " + provider.getPhotoProvider());
+            //Log.e("PHOTO", "--->Can't sync image: " + provider.getMultimediaProfile().getMultimediaCDN().getUrl()); //todo img
             syncNextPendingProvider();
             return;
         }
+        String base64Image =null;
+        try {
+            base64Image = FileUtils.getOptimizedBase64FromImagePath(provider.getMultimediaProfile().getMultimediaCDN().getUrl());//todo img
 
-        String base64Image = FileUtils.getOptimizedBase64FromImagePath(provider.getPhotoProvider());
+        }catch (Exception e){
+        }
+
 
         //final String previousProviderImageString = provider.getPhotoProvider();
-        provider.setPhotoProvider(base64Image);
+        //provider.setPhotoProvider(base64Image);
 
-        Media media = new Media("image", new MultimediaCDN(base64Image));
+      MultimediaProfile media = new MultimediaProfile("image", new MultimediaCDN(base64Image));
 
-        Call<ProviderImageUpdateResponse> call = providersApi.updateProviderImage(provider.getIdProvider(), media);
+        Call<ResponseBody> call = providersApi.updateProviderImage(provider.getIdProvider(), media);
 
-        call.enqueue(new Callback<ProviderImageUpdateResponse>() {
+        call.enqueue(new Callback<ResponseBody>() {
             @DebugLog
             @Override
-            public void onResponse(@NonNull Call<ProviderImageUpdateResponse> call,
-                                   @NonNull Response<ProviderImageUpdateResponse> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
                         Log.d("PHOTO", "--->uploadImageRequest SYNC Success " + response.body());
@@ -283,7 +298,14 @@ public class SyncManager {
                         Realm realm = Realm.getDefaultInstance();
                         try {
                             realm.beginTransaction();
-                            provider.setPhotoProvider(response.body().getUploadedImageUrl());
+
+                            try {
+                                //todo img
+                                //provider.setPhotoProvider(response.body().getUploadedImageUrl());
+                                //provider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",response.body().getUploadedImageUrl())));//new MultimediaProfile("image", new MultimediaCDN(base64Image));
+                                //todo brayan img
+                            }catch (Exception e){
+                            }
                             realm.insertOrUpdate(provider);
                             realm.commitTransaction();
                             Log.d("PHOTO", "--->Success syncProviderPhoto, updated local: " + provider);
@@ -320,7 +342,7 @@ public class SyncManager {
 
             @DebugLog
             @Override
-            public void onFailure(@NonNull Call<ProviderImageUpdateResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 t.printStackTrace();
 
                 Log.d("RETRO", "--->ERROR: " + t.getMessage());

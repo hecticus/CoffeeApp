@@ -1,5 +1,6 @@
 package com.hecticus.eleta.harvest.detail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -289,6 +290,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     public void updateProvider(String provider) {
         harvesterEditText.setText(provider);
     }
+
+
 
     @Override
     public void loadHeader(String providerName, String imageUrl) {

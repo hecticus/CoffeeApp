@@ -39,6 +39,7 @@ public class ProviderDetailsContract {
 
         void invalidToken();
 
+        //void fin();
     }
 
     public interface Actions {
@@ -51,7 +52,7 @@ public class ProviderDetailsContract {
 
         boolean isHarvester();
 
-        void saveProvider(Provider provider, String imagePath);
+        void saveProvider(Provider provider, String imagePath, Integer id);
 
         HashMap<String, Object> getChanges(Provider provider);
 
@@ -78,7 +79,7 @@ public class ProviderDetailsContract {
 
         void createProviderRequest(Provider provider, String imagePath);
 
-        void updateProviderRequest(Provider provider);
+        void updateProviderRequest(Provider provider, boolean isImg);
 
         void onCreateError(String message);
 
@@ -91,6 +92,10 @@ public class ProviderDetailsContract {
         void onProviderSaved(Provider provider);
 
         void uploadImageRequest(Provider provider, String newImagePath);
+
+        void putImageRequest( String newImagePath, Integer id);
+
+
 
     }
 }

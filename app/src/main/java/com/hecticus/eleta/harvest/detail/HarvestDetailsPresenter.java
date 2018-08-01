@@ -70,7 +70,11 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             if (currentProvider != null) {
                 Log.d("BUG", "--->currentProvider initFields: " + currentProvider);
 
-                mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getPhotoProvider());
+                try {
+                    mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider());
+                    //todo img
+                }catch (Exception e){}
+
                 if (currentDetailsList != null && currentDetailsList.size() > 0) {
                     mView.loadObservation(currentDetailsList.get(0).getObservation());
                 }

@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model_new.MultimediaCDN;
+import com.hecticus.eleta.model_new.MultimediaProfile;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.util.Constants;
@@ -70,7 +72,7 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
 
     @DebugLog
     @Override
-    public void saveProvider(Provider providerParam, String imagePath) {
+    public void saveProvider(Provider providerParam, String imagePath, Integer id) {
         unsavedChangesCount = 0;
         if (providerParam != null) {
             if (isForProviderCreation) {
@@ -88,22 +90,46 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
                             currentProvider.getIdProvider() < 0 ||
                             ManagerDB.providerHasOfflineOperation(currentProvider)) {
                         if ((changes.size() > 0) || imagePath != null) {
-                            if (imagePath != null)
-                                providerParam.setPhotoProvider(imagePath);
+                            if (imagePath != null) {
+                                try {
+                                    //providerParam.setPhotoProvider(imagePath);todo img
+                                    currentProvider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",imagePath)));
+
+                                }catch (Exception e){}
+                                }
                             providerParam.setIdProvider(currentProvider.getIdProvider());
                             providerParam.setIdentificationDocProviderChange(currentProvider.getIdentificationDocProvider());
-                            mRepository.updateProviderRequest(providerParam);
+                            mRepository.updateProviderRequest(providerParam, false);
                         }
 
                     } else {
+
+                        Log.e("DEBUGERROR", "Policia 2");
+                        if(id!=null) {
+                            try {
+                                mView.showWorkingIndicator();
+                                mRepository.putImageRequest(imagePath, id);
+                            }catch (Exception e){
+                                Log.e("DEBUGERROR", e.getMessage());
+                            }
+                        } else {
+
+                            uploadImage(providerParam, imagePath);
+                        }
+
                         if (changes.size() > 0) {
                             unsavedChangesCount++;
                             mView.showWorkingIndicator();
                             providerParam.setIdProvider(currentProvider.getIdProvider());
                             providerParam.setIdentificationDocProviderChange(currentProvider.getIdentificationDocProvider());
-                            mRepository.updateProviderRequest(providerParam);
+                            if(imagePath==null){
+                                mRepository.updateProviderRequest(providerParam, false);
+                            }else{
+                                mRepository.updateProviderRequest(providerParam, true);
+                            }
+                            //mRepository.updateProviderRequest(providerParam);
                         }
-                        uploadImage(providerParam, imagePath);
+
                     }
                 }
             }
@@ -218,8 +244,12 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
 
             //Maybe an image was uploaded before this, so we keep the current image string
             if (currentProvider != null) {
-                providerParam.setPhotoProvider(currentProvider.getPhotoProvider());
-            }
+                try {
+                    //providerParam.setPhotoProvider(currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider());todo img
+                    providerParam.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl())));
+
+                }catch (Exception e){}
+                }
 
             currentProvider = providerParam;
 
@@ -241,7 +271,8 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         if (currentProvider == null) {
             currentProvider = new Provider();
         }
-        currentProvider.setPhotoProvider(newImageString);
+        //currentProvider.setPhotoProvider(newImageString);todo img
+        currentProvider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("", newImageString)));//todo brayan img
 
         unsavedChangesCount--;
         if (unsavedChangesCount == 0) {
@@ -250,6 +281,12 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
         } else
             Log.d("DETAILS", "--->Changes left: " + unsavedChangesCount);
     }
+
+    /*public void cerrar(){
+        mView.hideWorkingIndicator();
+        mView.showMessage(context.getString(R.string.provider_saved));
+        mView.fin();
+    }*/
 
     @DebugLog
     @Override
