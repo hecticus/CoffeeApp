@@ -555,7 +555,7 @@ public class SyncManager {
 
         somethingHasBeenSynced = true;
 
-        Call<Message> call = providersApi.deleteProvider(firstProvider.getIdProvider());
+        Call<Message> call = providersApi.deleteProvider1(firstProvider.getIdProvider());
 
         new ManagerServices<>(call, new ManagerServices.ServiceListener<Message>() {
             @DebugLog

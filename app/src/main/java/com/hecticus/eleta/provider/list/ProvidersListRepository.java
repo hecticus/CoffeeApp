@@ -15,6 +15,9 @@ import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ import hugo.weaving.DebugLog;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -188,7 +192,39 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                 onError(mPresenter.context.getString(R.string.error_deleting_provider));
             }
         } else {
-            Call<Message> call = providersApi.deleteProvider(provider.getIdProvider());
+            Call<ResponseBody> call = providersApi.deleteProvider(provider.getIdProvider());
+            //Utils.log(new Gson().toJson(authorizationRequest));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    Log.d("DEBUG", "response: " + response.code());
+                    // onLoginSuccess(/*response.body()*/);
+                    if (response.code() == 200) {
+                        try {
+                            mPresenter.onProviderDeleted();
+                        } catch (Exception e) {
+                            manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
+                        }
+                    } else {
+                        if (response.code() == 409){ //.equals("Constrain violation: Invoices Open")) {
+                            manageError(mPresenter.context.getString(R.string.cant_delete_provider_has_open_invoices), response);
+                        } else {
+                            manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    onError(mPresenter.context.getString(R.string.error_deleting_provider));
+                    //(mPresenter.context.getString(R.string.error_deleting_provider), );
+                    Log.d("ERROR", t.toString());
+                    t.printStackTrace();
+                }
+            });
+            /*Call<Message> call = providersApi.deleteProvider(provider.getIdProvider());
             new ManagerServices<>(call, new ManagerServices.ServiceListener<Message>() {
                 @DebugLog
                 @Override
@@ -203,10 +239,16 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                 @DebugLog
                 @Override
                 public void onError(boolean fail, int code, Response<Message> response, String errorMessage) {
-                    if (fail || code != 409) {
-                        manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
-                    } else {
+                    try {
+                        //response.errorBody().string();
+                        Log.e("DEBUGERROR", response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (response.errorBody().s.equals("Constrain violation: Invoices Open")) {
                         manageError(mPresenter.context.getString(R.string.cant_delete_provider_has_open_invoices), response);
+                    } else {
+                        manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
                     }
                 }
 
@@ -216,7 +258,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                     SessionManager.clearPreferences(mPresenter.context);
                     mPresenter.invalidToken();
                 }
-            });
+            });*/
         }
 
     }
