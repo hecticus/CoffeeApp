@@ -162,20 +162,15 @@ INSERT INTO `config` (id, config_key, config_value, description) VALUES
 INSERT INTO `status` ( id, dtype, name, description) VALUES
   (1,  'farm',          'Active',     'No deudor'),
   (2,  'farm',          'Inactive',   'No deudor'),
-  (3,  'farm',          'Edit',       'No deudor'),
   (11, 'invoice',       'Open',       'Deudor'),
   (12, 'invoice',       'Closed',     'Deudor'),
   (13, 'invoice',       'Canceled',   'Deudor'),
-  (14, 'invoice',       'Edit',       'Deudor'),
   (31, 'lot',           'Active',      NULL),
   (32, 'lot',           'Inactive',    NULL),
-  (33, 'lot',           'Edit',        NULL),
   (41, 'provider',      'Active',      NULL),
   (42, 'provider',      'Inactive',    NULL),
-  (43, 'provider',      'Consulted',   NULL),
   (50, 'store',         'Active',      NULL),
-  (51, 'store',         'Inactive',    NULL),
-  (52, 'store',         'Consulted',   NULL);
+  (51, 'store',         'Inactive',    NULL);
 
 
 INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES

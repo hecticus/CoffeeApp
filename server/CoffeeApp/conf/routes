@@ -25,6 +25,14 @@ POST    /oauth/token                                                            
 POST    /oauth/revokeToken                                                      security.authentication.oauth2.PasswordGrant.revokeToken()
 #POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
 
+
+###############################################################################
+#·······                UpdatePasswordManager                       ··········#
+###############################################################################
+#POST    /users/recoverPassword                                                  security.authentication.updatePassword.UpdatePasswordManager.recoverPassword()
+#POST    /users/resetPassword                                                    security.authentication.updatePassword.UpdatePasswordManager.resetPassword()
+#
+
 ###############################################################################
 #·······                     User                                   ··········#
 ###############################################################################
