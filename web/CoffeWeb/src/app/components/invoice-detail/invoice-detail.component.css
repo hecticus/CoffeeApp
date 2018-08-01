@@ -1,0 +1,26 @@
+table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.element-row {
+    position: relative;
+}
+
+.element-row:not(.expanded):hover {
+    background: #ece9e9;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+html,
+body {
+    min-height: 100% !important;
+    height: 100%;
+    color: #3f3f3f;
+}

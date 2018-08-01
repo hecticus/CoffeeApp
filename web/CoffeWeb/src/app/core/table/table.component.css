@@ -1,0 +1,203 @@
+/*
+	base style
+	reference: http://inlehmansterms.net/2014/10/11/responsive-tables-with-flexbox/
+*/
+
+.table {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1 1 auto;
+}
+
+.table-row {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    line-height: 22px;
+}
+
+.table-row-item {
+    min-width: 0px;
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+    flex-basis: 0;
+    word-break: break-word;
+    overflow: hidden;
+    /* reference: https:// stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text*/
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 22px;
+}
+
+.table-row-item.item-right {
+    justify-content: flex-end;
+}
+
+
+/*
+	custom style
+*/
+
+.table {
+    font-size: 14px;
+    color: #3f3f3f;
+}
+
+.table-header {
+    font-weight: bold;
+}
+
+.table-body {
+    line-height: 18px;
+    border-top: 1px solid #e0e0e0;
+    -webkit-transition: all .2s linear;
+    transition: all .2s linear;
+    cursor: pointer;
+}
+
+.table-body:last-child {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.table-body:hover {
+    background: #f2f2f2;
+}
+
+.table-body.selected {
+    background: #fdf5d7;
+}
+
+.table-header .table-row-item {
+    padding: 0 10px;
+}
+
+.table-body .table-row-item {
+    padding: 10px;
+}
+
+.table-row-item:hover {
+    white-space: normal;
+}
+
+
+/* checkbox */
+
+.table-row-item.container-checkbox {
+    flex-grow: 0;
+    flex-basis: auto;
+}
+
+.table-header .table-row-item.container-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+
+/* sort */
+
+.container-sort {
+    text-align: center;
+    display: inline-block;
+}
+
+.table-header .sort {
+    font-size: 8px;
+    color: #e0e0e0;
+    cursor: pointer;
+    -webkit-transition: all .2s linear;
+    transition: all .2s linear;
+}
+
+.table-header .table-row-item.selected,
+.table-header .table-row-item .sort.selected,
+.table-header .table-row-item .sort:hover {
+    color: #0099cc;
+}
+
+.table-header .sort.sort-up:after {
+    content: "\25B2";
+}
+
+.table-header .sort.sort-down:after {
+    content: "\25BC";
+}
+
+
+/* empty */
+
+.table-empty {
+    padding: 10px;
+    font-size: 14px;
+    background-color: #f8f9f9;
+    margin: 5px 0;
+    text-align: center;
+}
+
+
+/*
+	checkbox
+*/
+
+.checkbox {
+    float: left;
+    display: block;
+    width: 22px;
+    height: 22px;
+    position: relative;
+}
+
+.checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox span {
+    display: block;
+    border: 2px solid #8c8c8c;
+    border-radius: 1px;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    transition: width 0.1s, height 0.1s, margin 0.1s;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.checkbox :checked+span {
+    background: #0099cc;
+    border-color: #0099cc;
+    width: 22px;
+    height: 22px;
+}
+
+.checkbox :checked+span:after {
+    content: "";
+    background-color: transparent;
+    /* position the checkbox */
+    position: absolute;
+    left: 5px;
+    top: 0px;
+    /* setting the checkbox */
+    /* short arm */
+    width: 5px;
+    border-bottom: 3px solid #fff;
+    /* long arm */
+    height: 11px;
+    border-right: 3px solid #fff;
+    /* rotate the mirrored L to make it a checkbox */
+    transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.checkbox-header :checked+span {
+    background: #fb5f5f;
+    border-color: #fb5f5f;
+}

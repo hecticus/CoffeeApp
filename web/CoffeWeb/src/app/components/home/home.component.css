@@ -1,0 +1,72 @@
+:host .frao {
+    background: white;
+}
+
+.contWhite {
+    background: white;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.wrapper-header {
+    height: 64px;
+}
+
+header {
+    height: 64px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 250px;
+    z-index: 2;
+    background-color: black;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#breadcrumbs {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.grid-h {
+    display: flex;
+    min-height: 100%;
+}
+
+.grid-h .nav {
+    flex: 0 0 250px;
+}
+
+.grid-h .content {
+    flex: 1 1 auto;
+    background-color: white;
+}
+
+.grid-v {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.grid-v .header {
+    flex: 0 0 64px;
+}
+
+.grid-v .content {
+    flex: 1 1 auto;
+    padding: 30px;
+    position: relative;
+    background-color: white;
+}
+
+.grid-v .footer {
+    flex: 0 1 auto;
+}
+
+.active-link {
+    background: black;
+}

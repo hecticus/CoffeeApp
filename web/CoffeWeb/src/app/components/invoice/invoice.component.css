@@ -1,0 +1,32 @@
+table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.element-row {
+    position: relative;
+}
+
+.element-row:not(.expanded):hover {
+    background: #ece9e9;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.filter {
+    margin: auto;
+}
+
+.both-side {
+    margin: 3px;
+    padding: 2px;
+}
+
+.mat-elevation-z8 {
+    box-shadow: 0 0 0 0;
+}
