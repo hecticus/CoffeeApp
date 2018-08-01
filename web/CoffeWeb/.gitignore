@@ -3,7 +3,12 @@
 # compiled output
 /dist
 /tmp
+<<<<<<< HEAD
 /out-tsc
+=======
+
+/anterior
+>>>>>>> f875f5b88c585f1ba0a4640e21f222a57719b17d
 
 # dependencies
 /node_modules
@@ -15,7 +20,10 @@
 .c9/
 *.launch
 .settings/
+<<<<<<< HEAD
 *.sublime-workspace
+=======
+>>>>>>> f875f5b88c585f1ba0a4640e21f222a57719b17d
 
 # IDE - VSCode
 .vscode/*
@@ -27,15 +35,27 @@
 # misc
 /.sass-cache
 /connect.lock
+<<<<<<< HEAD
 /coverage
 /libpeerconnection.log
 npm-debug.log
 testem.log
+=======
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+>>>>>>> f875f5b88c585f1ba0a4640e21f222a57719b17d
 
 # e2e
 /e2e/*.js
 /e2e/*.map
 
+<<<<<<< HEAD
 # System Files
+=======
+#System Files
+>>>>>>> f875f5b88c585f1ba0a4640e21f222a57719b17d
 .DS_Store
 Thumbs.db
