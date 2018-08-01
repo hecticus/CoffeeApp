@@ -1,6 +1,6 @@
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { Status } from './../../core/models/status';
-import { StatusLotService } from './../status/status-lot.service';
+import { Status } from '../../core/models/status';
+import { StatusLotService } from '../status/status-lot.service';
 import { Farm } from '../../core/models/farm';
 import { FormGroup } from '@angular/forms';
 import { FarmService } from '../farm/farm.service';

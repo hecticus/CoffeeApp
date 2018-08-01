@@ -5,8 +5,8 @@ import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
-import { Status } from './../../core/models/status';
-import { StatusLotService } from './../status/status-lot.service';
+import { Status } from '../../core/models/status';
+import { StatusLotService } from '../status/status-lot.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({

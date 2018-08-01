@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { Status } from './../../core/models/status';
+import { Status } from '../../core/models/status';
 import { StatusProviderService } from '../status/status-provider.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';

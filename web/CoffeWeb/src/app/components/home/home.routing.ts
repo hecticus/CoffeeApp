@@ -1,5 +1,5 @@
-import { InvoiceComponent } from './../invoice/invoice.component';
-import { ProviderComponent } from './../provider/provider.component';
+import { InvoiceComponent } from '../invoice/invoice.component';
+import { ProviderComponent } from '../provider/provider.component';
 import { providerRoutes } from '../provider/provider.routing';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';

@@ -3,6 +3,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../core/utils/validator/custom-validator';
 import { Router, ActivatedRoute } from '@angular/router';
+import { UserService } from '../../user/user.service';
+import { AuthService } from '../auth.service';
+import { AuthorizationRequest } from '../../../core/models/authorizationRequest';
+
 
 @Component({
 	selector: 'app-login',
@@ -13,17 +17,52 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 export class LoginComponent implements OnInit {
 	form: FormGroup;
+	authorizationRequest: AuthorizationRequest;
 
 	constructor(
-		private router: Router,
+		// private authService: AuthService,
+		// private userService: UserService,
 		private activatedRoute: ActivatedRoute,
+		private router: Router,
 		private fb: FormBuilder
 	) {
 		this.form = this.getForm();
 	}
 
 	ngOnInit() {
+		this.authorizationRequest = new AuthorizationRequest();
+		this.authorizationRequest.grant_type = 'password';
+		this.authorizationRequest.client_id = 'web_site';
+		this.form = this.toFormGroup();
 	}
+
+	login(): void {
+		if (this.form.valid) {
+			this.authorizationRequest.username = this.form.value['email'];
+			this.authorizationRequest.password = this.form.value['password'];
+
+			// this.authService.login(this.authorizationRequest).subscribe(authorizationResponse => {
+			// 	sessionStorage.setItem('token', authorizationResponse.access_token);
+			// 	sessionStorage.setItem('refresh_token', authorizationResponse.refresh_token);
+
+			// 	this.userService.getByAuthUserId(authorizationResponse.user_id).subscribe(user => {
+			// 		sessionStorage.setItem('user', JSON.stringify(user));
+			// 		window.location.href = window.location.href + 'admin' ;
+			// 	}, (err) => this.notificationService.error());
+			// }, (err) => this.notificationService.error());
+		}
+	}
+
+
+
+
+	toFormGroup(): FormGroup {
+		return this.fb.group({
+			email: new FormControl('', [Validators.required, CustomValidators.emailRegex, Validators.maxLength(100)]),
+			password: new FormControl('', Validators.required)
+		});
+	}
+
 
 	main() {
 		console.log('estoy log');
@@ -37,14 +76,6 @@ export class LoginComponent implements OnInit {
 		});
 	}
 
-	login() {
-		console.log('jjjj');
-	}
-
-	showDialogo() {
-		console.log('jjjj');
-		this.router.navigate(['./admin'], {relativeTo: this.activatedRoute});
-	}
 	create() {
 		this.router.navigate(['./admin'], {relativeTo: this.activatedRoute});
 	}

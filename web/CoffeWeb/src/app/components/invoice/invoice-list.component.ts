@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
-import { FilterService } from './../../core/filter/filter.service';
-import { BaseService } from './../../core/base.service';
-import { ProviderTypeService } from './../provider-type/provider-type.service';
+import { FilterService } from '../../core/filter/filter.service';
+import { BaseService } from '../../core/base.service';
+import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { InvoiceService } from './invoice.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
