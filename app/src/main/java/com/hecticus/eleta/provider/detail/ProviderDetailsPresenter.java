@@ -279,6 +279,11 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
             Log.d("DETAILS", "--->No changes left");
             mView.onProviderSaved(currentProvider);
         } else
+            try{
+                mView.onProviderSaved(currentProvider);
+            }catch (Exception e){
+
+            }
             Log.d("DETAILS", "--->Changes left: " + unsavedChangesCount);
     }
 
