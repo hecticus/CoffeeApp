@@ -19,6 +19,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.authentication.updatePassword.UpdatePasswordManager;
 import security.authorization.CoffeAppsecurity;
 import security.models.AuthUser;
 
@@ -178,6 +179,31 @@ public class Users extends Controller {
     }
 
 
+
+    public Result changePassword() {
+        try {
+            Boolean change = true;
+            JsonNode request = request().body().asJson();
+            if (request == null)
+                return security.authentication.updatePassword.Response.requiredJson();
+
+            JsonNode email = request.get("email");
+            if (email ==  null)
+                return controllers.responseUtils.Response.requiredParameter("email");
+
+            JsonNode password = request.get("password");
+            if (email ==  null)
+                return controllers.responseUtils.Response.requiredParameter("email");
+
+            AuthUser authUser = AuthUser.findByEmail(email.asText());
+            authUser.setPassword(password.asText());
+            authUser.update();
+
+            return controllers.responseUtils.Response.foundEntity(Json.toJson(change));
+        } catch (Exception e) {
+            return ExceptionsUtils.update(e);
+        }
+    }
 
 
 

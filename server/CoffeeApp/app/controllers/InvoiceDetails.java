@@ -16,6 +16,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.reflect.internal.Trees;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
@@ -47,6 +48,20 @@ public class InvoiceDetails extends Controller {
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
+
+
+            if (invoiceDetail.getLot() != null ){
+                Lot lot = Lot.findById(invoiceDetail.getLot().getId());
+                invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
+            }
+
+            if (invoiceDetail.getStore() != null ){
+                JsonNode price = json.get("costItemType");
+                if (price == null)
+                    return Response.requiredParameter("costItemType");
+            }
+
+
             invoiceDetail.save();
             return  Response.createdEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
@@ -67,6 +82,11 @@ public class InvoiceDetails extends Controller {
             }
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
+            if (invoiceDetail.getLot() != null ){
+                Lot lot = Lot.findById(invoiceDetail.getLot().getId());
+                invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
+            }
+
             invoiceDetail.setId(id);
             invoiceDetail.update();
 
