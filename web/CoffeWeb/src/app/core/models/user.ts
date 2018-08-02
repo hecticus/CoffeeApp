@@ -1,8 +1,8 @@
 import { BaseModel } from './base-model';
 import { AuthUser } from './authUser';
 
-import { Multimedia } from './Multimedia';
 import { Contact } from './contact';
+import { Multimedia } from './multimedia';
 
 export class User extends BaseModel {
 	authUser: AuthUser;
