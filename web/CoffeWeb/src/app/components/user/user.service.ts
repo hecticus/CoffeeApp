@@ -5,10 +5,11 @@ import { BaseService } from '../../core/base.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { CustomValidators } from '../../core/utils/validator/custom-validator';
 import { User } from '../../core/models/user';
-
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class UserService {
-	private static readonly BASE_URL: string = BaseService.HOST + '/users';
+	private static readonly BASE_URL: string = BaseService.HOST + '/user';
 
 	constructor(
 		private http: HttpClient,

@@ -3,9 +3,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../core/utils/validator/custom-validator';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService } from '../../user/user.service';
 import { AuthService } from '../auth.service';
 import { AuthorizationRequest } from '../../../core/models/authorizationRequest';
+import { UserService } from '../../user/user.service';
 
 
 @Component({
@@ -20,8 +20,8 @@ export class LoginComponent implements OnInit {
 	authorizationRequest: AuthorizationRequest;
 
 	constructor(
-		// private authService: AuthService,
-		// private userService: UserService,
+		private authService: AuthService,
+		private userService: UserService,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private fb: FormBuilder
@@ -41,20 +41,17 @@ export class LoginComponent implements OnInit {
 			this.authorizationRequest.username = this.form.value['email'];
 			this.authorizationRequest.password = this.form.value['password'];
 
-			// this.authService.login(this.authorizationRequest).subscribe(authorizationResponse => {
-			// 	sessionStorage.setItem('token', authorizationResponse.access_token);
-			// 	sessionStorage.setItem('refresh_token', authorizationResponse.refresh_token);
+			this.authService.login(this.authorizationRequest).subscribe(authorizationResponse => {
+				sessionStorage.setItem('token', authorizationResponse.access_token);
+				sessionStorage.setItem('refresh_token', authorizationResponse.refresh_token);
 
-			// 	this.userService.getByAuthUserId(authorizationResponse.user_id).subscribe(user => {
-			// 		sessionStorage.setItem('user', JSON.stringify(user));
-			// 		window.location.href = window.location.href + 'admin' ;
-			// 	}, (err) => this.notificationService.error());
-			// }, (err) => this.notificationService.error());
+				this.userService.getByAuthUserId(authorizationResponse.user_id).subscribe(user => {
+					sessionStorage.setItem('user', JSON.stringify(user));
+					window.location.href = window.location.href + 'admin' ;
+				}); // , (err) => this.notificationService.error());
+			}); // , (err) => this.notificationService.error());
 		}
 	}
-
-
-
 
 	toFormGroup(): FormGroup {
 		return this.fb.group({
@@ -62,7 +59,6 @@ export class LoginComponent implements OnInit {
 			password: new FormControl('', Validators.required)
 		});
 	}
-
 
 	main() {
 		console.log('estoy log');

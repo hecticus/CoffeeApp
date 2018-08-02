@@ -1,8 +1,8 @@
-import { BaseModel } from "./base-model";
+import { BaseModel } from './base-model';
 
 
 export class MultimediaCDN extends BaseModel {
 	url: string;
-    mimeType: string;
-    nameCDN: string;
+	mimeType: string;
+	nameCDN: string;
 }

@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatInputModule, MatFormFieldModule } from '@angular/material';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @NgModule({
 	imports: [
@@ -27,9 +28,11 @@ import { MatInputModule, MatFormFieldModule } from '@angular/material';
 	],
 	declarations: [
 		LoginComponent,
+		ChangePasswordComponent,
 	],
 	exports: [
 		LoginComponent,
+		ChangePasswordComponent,
 	],
 })
 
