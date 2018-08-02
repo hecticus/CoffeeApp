@@ -41,6 +41,10 @@ GET     /user/:id                                                               
 POST    /user                                                                   controllers.Users.create()
 PUT     /user/:id                                                               controllers.Users.update(id : Long)
 DELETE  /user/:id                                                               controllers.Users.delete(id : Long)
+GET     /user/email/:email                                                      controllers.Users.findByEmail(email: String)
+GET     /user/authUser/:authUserId                                              controllers.Users.findByAuthUser(authUserId: java.lang.Long)
+#PUT     /user/:id/mediaProfile                                                  controllers.Users.createUserProfile(id: Long)
+PATCH   /user/:id/password                                                      controllers.Users.updatePassword(id: Long)
 
 ###############################################################################
 #·······                     Roles                                  ··········#

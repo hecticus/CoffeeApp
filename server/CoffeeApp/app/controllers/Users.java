@@ -40,6 +40,7 @@ public class Users extends Controller {
     }
 
     @Transactional
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -68,6 +69,7 @@ public class Users extends Controller {
         }
     }
 
+    @CoffeAppsecurity
     public Result update(Long idUser) {
         try {
             JsonNode request = request().body().asJson();
@@ -87,6 +89,52 @@ public class Users extends Controller {
         }
     }
 
+    @CoffeAppsecurity
+    public Result findByEmail(String email) {
+        try {
+            User user = User.findByEmail(email);
+
+            return Response.foundEntity(Json.toJson(user));
+        } catch (Exception e) {
+            return NsExceptionsUtils.find(e);
+        }
+    }
+
+
+
+    @CoffeAppsecurity
+    public Result findByAuthUser(Long authUserId) {
+        try {
+            User user = User.findByAuthUserId(authUserId);
+
+            return Response.foundEntity(Json.toJson(user));
+        } catch (Exception e) {
+            return NsExceptionsUtils.find(e);
+        }
+    }
+
+    @CoffeAppsecurity
+    public Result updatePassword(Long id) {
+        try {
+            JsonNode request = request().body().asJson();
+            if (request == null)
+                return Response.requiredJson();
+
+            AuthUser authUser = AuthUser.findById(id);
+            if(authUser == null)
+                return Response.notFoundEntity("id[" + id + "]");
+
+            JsonNode password = request.get("password");
+            authUser.setPassword(password == null ? null : password.textValue()); //TODO encriptar
+            authUser.update();
+
+            return Response.updatedEntity(Json.toJson(authUser));
+        }catch(Exception e){
+            return NsExceptionsUtils.update(e);
+        }
+    }
+
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try {
             Ebean.delete(User.findById(id).getAuthUser());
@@ -97,6 +145,7 @@ public class Users extends Controller {
         }
     }
 
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             User user = User.findById(id);
