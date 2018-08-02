@@ -139,10 +139,6 @@ INSERT INTO `invoicesdetails_purities` (`id`,`deleted`,`purity_id`,
 (40, 0, 2, 10,0,0,1262 ),
 (41, 0, 1, 25,0,0,1262 );
 
-
-
-
-
 # --- !Ups
 
 INSERT INTO `config` (id, config_key, config_value, description) VALUES
@@ -160,17 +156,17 @@ INSERT INTO `config` (id, config_key, config_value, description) VALUES
 
 
 INSERT INTO `status` ( id, dtype, name, description) VALUES
-  (1,  'farm',          'Active',     'No deudor'),
-  (2,  'farm',          'Inactive',   'No deudor'),
-  (11, 'invoice',       'Open',       'Deudor'),
-  (12, 'invoice',       'Closed',     'Deudor'),
-  (13, 'invoice',       'Canceled',   'Deudor'),
-  (31, 'lot',           'Active',      NULL),
-  (32, 'lot',           'Inactive',    NULL),
-  (41, 'provider',      'Active',      NULL),
-  (42, 'provider',      'Inactive',    NULL),
-  (50, 'store',         'Active',      NULL),
-  (51, 'store',         'Inactive',    NULL);
+  (1,  'farm',          'Activo',     'No deudor'),
+  (2,  'farm',          'Inactivo',   'No deudor'),
+  (11, 'invoice',       'Abierta',       'Deudor'),
+  (12, 'invoice',       'Cerrada',     'Deudor'),
+  (13, 'invoice',       'Cancelada',   'Deudor'),
+  (31, 'lot',           'Activo',      NULL),
+  (32, 'lot',           'Inactivo',    NULL),
+  (41, 'provider',      'Activo',      NULL),
+  (42, 'provider',      'Inactivo',    NULL),
+  (50, 'store',         'Activo',      NULL),
+  (51, 'store',         'Inactivo',    NULL);
 
 
 INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES
@@ -179,40 +175,40 @@ INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES
 (3, 1, 'prueba');
 
 INSERT INTO `providers` (id, nit_provider, name_provider, address_provider, number_provider,
-                         email_provider, provider_type_id, status_provider_id, contact_name_provider) VALUES
-(1130, '42424'	           ,  'Cosechador Tes'      ,   'wweq'	, 332432	  ,'DSDSD@com.com'	  ,	2,  41,	'Cosechador Test'),
-(1131, '12345-4-2424 DV 24',	'Proveedor Te'	      ,   'Here'	, 52454547	,'pt@test.com'	    ,	1,  41,	'None'),
-(1132, '42343-2-4234 DV 32',	'Proveedor altern'    ,   'dsfdsf', 3424	    ,'ddfd@sds.com'	    ,	1,  41,	'dfsdfsdf'),
-(1133, '67567-5-7567 DV 56',	'Proveedor '	        ,   'dfsdf'	, 432	      ,'32432@as.com'	    ,	1,  42,	'sdsd'),
-(1134, '12121-2-1212 DV 12',	'PROV'                ,   '342343', 234234	  ,'32423@ASA.COM'	  ,	1,  42,	'324'),
-(1135, '32432-4-2342 DV 42',	'Proveedor accidenta' ,   'sdfsdf', 324234	  ,'fdsfsdf@asas.com'	,	1,  42,  'dadsasd'),
-(1136, '324234234234'	     ,  'Cosechador novat'    ,   'wewe'	, 2323	    ,'sdsd@as.com'	    ,	2,  43,  'Cosechador novato'),
-(1137, '3324324234234'	   ,  'Cosechador novele'   ,   'sdasda', 123434	  ,'asdasd@asas.com'	,	2,  43,  'Cosechador novelero');
+                         email_provider, provider_type_id,  deleted, status_provider_id, contact_name_provider) VALUES
+(1130, '42424'	           ,  'Cosechador Tes'      ,   'wweq'	, 332432	  ,'DSDSD@com.com'	  ,	2,  0, 41,	'Cosechador Test'),
+(1131, '12345-4-2424 DV 24',	'Proveedor Te'	      ,   'Here'	, 52454547	,'pt@test.com'	    ,	1,  0, 41,	'None'),
+(1132, '42343-2-4234 DV 32',	'Proveedor altern'    ,   'dsfdsf', 3424	    ,'ddfd@sds.com'	    ,	1,  0, 41,	'dfsdfsdf'),
+(1133, '67567-5-7567 DV 56',	'Proveedor '	        ,   'dfsdf'	, 432	      ,'32432@as.com'	    ,	1,  0, 41,	'sdsd'),
+(1134, '12121-2-1212 DV 12',	'PROV'                ,   '342343', 234234	  ,'32423@ASA.COM'	  ,	1,  0, 41,	'324'),
+(1135, '32432-4-2342 DV 42',	'Proveedor accidenta' ,   'sdfsdf', 324234	  ,'fdsfsdf@asas.com'	,	1,  1, 42,  'dadsasd'),
+(1136, '324234234234'	     ,  'Cosechador novat'    ,   'wewe'	, 2323	    ,'sdsd@as.com'	    ,	2,  1, 42,  'Cosechador novato'),
+(1137, '3324324234234'	   ,  'Cosechador novele'   ,   'sdasda', 123434	  ,'asdasd@asas.com'	,	2,  1, 42,  'Cosechador novelero');
 
 INSERT INTO `farms` (id, deleted, status_farm_id, name_farm) VALUES
 (1, 0, 1, 'granja 1'),
-(2, 1, 1, 'granja 2'),
-(3, 0, 2, 'granja 3'),
-(4, 1, 3, 'Cafe Eleta');
+(2, 1, 2, 'granja 2'),
+(3, 0, 1, 'granja 3'),
+(4, 1, 2, 'Cafe Eleta');
 
 INSERT INTO `stores` (id, deleted, status_store_id, name_store )VALUES
  (1,  0, 50, 'store 1' ),
  (2,  1, 51, 'STORE 22'),
- (3,  1, 52, 'Beneficio');
+ (3,  1, 51, 'Beneficio');
 
 INSERT INTO `units` (id, name_unit) VALUES
   (1,'libra');
 
-INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot, deleted, farm_id, status_lot_id, price_lot) VALUES
-  (1,     'LOTE 1',     '89lk',   895,      0,  1, 31,  50.00),
-  (2,     'LOTE 2',     '256252', 1233252,  0,  2, 31,  60.00),
-  (3,     'LOTE 3',     '25625',  1233253,  0,  1, 31,  100.00),
-  (4,     'LOTE 4',     '89',     89,       0,  2, 31,  200.00),
-  (5,     'LOTE 2',     '111',    111,      0,  1, 31,  250.00),
-  (6,     'LOTE 6',     '548',    58,       0,  2, 31,  8.00),
-  (7,     'LOTE 7',     '258',    2758,     1,  2, 31,  258.00),
-  (8,     'LOTE 8',     '56',     56,       1,  1, 31,  56.00),
-  (9,     'lote 09',    '123258', 123258,   1,  1, 31,  123258.00);
+INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot,  farm_id, status_lot_id, deleted, price_lot) VALUES
+  (1,     'LOTE 1',     '89lk',   895,        1, 31, 0, 50.00),
+  (2,     'LOTE 2',     '256252', 1233252,    2, 31, 0, 60.00),
+  (3,     'LOTE 3',     '25625',  1233253,    1, 31, 0, 100.00),
+  (4,     'LOTE 4',     '89',     89,         2, 31, 0, 200.00),
+  (5,     'LOTE 2',     '111',    111,        1, 31, 0, 250.00),
+  (6,     'LOTE 6',     '548',    58,         2, 31, 0, 8.00),
+  (7,     'LOTE 7',     '258',    2758,       2, 32, 1, 258.00),
+  (8,     'LOTE 8',     '56',     56,         1, 32, 1, 56.00),
+  (9,     'lote 09',    '123258', 123258,     1, 32, 1, 123258.00);
 
 INSERT INTO `item_types` (`id`,`deleted`,`name_item_type`,`cost_item_type`,
                           `provider_type_id`,`unit_id`) VALUES
@@ -229,37 +225,34 @@ INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VAL
 (2, 0, '% Granos Bocados',     30),
 (3, 1, '% Granos Eliminados',  15);
 
-
-
-
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS = 0;
 
-TRUNCATE config;
+TRUNCATE `config`;
 
-TRUNCATE status;
+TRUNCATE `status`;
 
-TRUNCATE farms;
+TRUNCATE `farms`;
 
-TRUNCATE provider_type;
+TRUNCATE `provider_type`;
 
-TRUNCATE stores;
+TRUNCATE `stores`;
 
-TRUNCATE units;
+TRUNCATE `units`;
 
-TRUNCATE purities;
+TRUNCATE `purities`;
 
-TRUNCATE lots;
+TRUNCATE `lots`;
 
-TRUNCATE providers;
+TRUNCATE `providers`;
 
-TRUNCATE invoices;
+TRUNCATE `invoices`;
 
-TRUNCATE item_types;
+TRUNCATE `item_types`;
 
-TRUNCATE invoice_details;
+TRUNCATE `invoice_details`;
 
-TRUNCATE invoicesdetails_purities;
+TRUNCATE `invoicesdetails_purities`;
 
 SET FOREIGN_KEY_CHECKS = 1;
