@@ -130,7 +130,7 @@ import { Status } from '../../core/models/status';
 						</div>
 					</fieldset>
 				</ng-template>
-			
+
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="!form.valid">Guardar</button>
 			</div>
