@@ -4,38 +4,38 @@ import { AbstractControl } from '@angular/forms';
 @Component({
 	selector: 'app-validator',
 	template: `
-		<div *ngIf="control.hasError('noMatch')" class="errorMessage">No matches</div>
+		<div *ngIf="control.hasError('noMatch')" class="errorMessage">No Coincide</div>
 
-		<div *ngIf="control.hasError('required')" class="errorMessage">Required</div>
+		<div *ngIf="control.hasError('required')" class="errorMessage">Requerido</div>
 
 		<!--<div *ngIf="control.hasError('pattern')" class="errorMessage" i18n="@@validator-invalid">Invalid</div>-->
 
 		<div *ngIf="control.hasError('emailRegex')" class="errorMessage">
-			Email invalid. The format should be example@dot.com
+			Correo Invalido. El formato debe ser  example@dot.com
 		</div>
 
 		<div *ngIf="(control.dirty || control.touched) && control.hasError('integerRegex')" class="errorMessage">
-			Number invalid, only integer numbers
+			Numero invalido, Solo numeros enteros
 		</div>
 
 		<div *ngIf="(control.dirty || control.touched) && control.hasError('numberRegex')" class="errorMessage">
-			Number invalid (use '.' to float numbers)
+			Numbero invalidos (use '.' para numeros enteros)
 		</div>
 
 		<div *ngIf="control.hasError('minlength')" class="errorMessage">
-			Must have at least {{control.getError('maxlength').requiredLength}} characters
+			Debe tener al menos {{control.getError('maxlength').requiredLength}} caracteres
 		</div>
 
 		<div *ngIf="control.hasError('maxlength')" class="errorMessage">
-			Must have maximum {{control.getError('maxlength').requiredLength}} characters
+			Debe tener maximo {{control.getError('maxlength').requiredLength}} caracteres
 		</div>
 
 		<div *ngIf="control.hasError('min')" class="errorMessage">
-			Must not be less than {{control.getError('min')}}
+			No debe tener menos de {{control.getError('min')}}
 		</div>
 
 		<div *ngIf="control.hasError('max')" class="errorMessage">
-			Must not be greater than {{control.getError('max')}}
+			No debe tener mas de {{control.getError('max')}}
 		</div>
 	`
 })
