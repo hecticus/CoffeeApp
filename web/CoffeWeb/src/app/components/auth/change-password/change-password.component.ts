@@ -38,6 +38,7 @@ export class ChangePasswordComponent implements OnInit {
 			return;
 		}
 		this.email = JSON.parse(sessionStorage.getItem('user')).email;
+		console.log(sessionStorage.getItem('user'));
 	}
 
 	reset($event): void {
@@ -49,7 +50,9 @@ export class ChangePasswordComponent implements OnInit {
 				this.authService.changePassword(this.email, newPass, oldPass)
 					.subscribe(reset => {
 						// this.notificationService.sucessUpdate('password');
-						if (reset) { this.router.navigate(['/admin']); }
+						let re: Boolean = reset['result'];
+						console.log(re);
+						if (re) { this.router.navigate(['/admin']); }
 					}); // , (err) => this.notificationService.error());
 			}
 		}

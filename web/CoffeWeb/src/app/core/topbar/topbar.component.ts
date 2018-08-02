@@ -1,5 +1,5 @@
+import { User } from './../models/user';
 import { Component, OnInit } from '@angular/core';
-import { User } from '../models/user';
 import { AccessTokenRequest } from '../models/accessTokenResquest';
 import { Router } from '@angular/router';
 import { AuthService } from '../../components/auth/auth.service';
@@ -20,9 +20,7 @@ export class TopbarComponent implements OnInit {
 
 	ngOnInit() {
 		this.user = JSON.parse(sessionStorage.getItem('user'));
-		console.log('==========');
-		console.log(this.user.firstName);
-		console.log('========== ' + this.user);
+		console.log(sessionStorage.getItem('user'));
 	}
 
 	public logout() {
