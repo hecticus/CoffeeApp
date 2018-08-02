@@ -20,7 +20,11 @@ export class TopbarComponent implements OnInit {
 
 	ngOnInit() {
 		this.user = JSON.parse(sessionStorage.getItem('user'));
+		console.log('==========');
+		console.log(this.user.firstName);
+		console.log('========== ' + this.user);
 	}
+
 	public logout() {
 		let accessTokenRequest: AccessTokenRequest = new AccessTokenRequest();
 		accessTokenRequest.refresh_token = sessionStorage.getItem('refresh_token');

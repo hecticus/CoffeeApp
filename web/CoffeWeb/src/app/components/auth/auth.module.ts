@@ -10,6 +10,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatInputModule, MatFormFieldModule } from '@angular/material';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ToastrModule } from 'ng6-toastr-notifications';
 
 @NgModule({
 	imports: [
@@ -22,6 +23,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 		ReactiveFormsModule,
 		MatFormFieldModule,
 		MatInputModule,
+		ToastrModule.forRoot(),
 
 		UtilsModule,
 		AuthRoutingModule,
