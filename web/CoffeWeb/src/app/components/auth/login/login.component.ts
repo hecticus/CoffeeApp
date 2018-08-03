@@ -6,8 +6,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AuthorizationRequest } from '../../../core/models/authorizationRequest';
 import { UserService } from '../../user/user.service';
-import { NotificationService } from '../../../core/notification/notification.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
+import { NotificationService } from '../../../core/utils/notification/notification.service';
 
 @Component({
 	selector: 'app-login',
@@ -24,10 +24,10 @@ export class LoginComponent implements OnInit {
 		private authService: AuthService,
 		private userService: UserService,
 		private activatedRoute: ActivatedRoute,
-		private notificationService: NotificationService,
 		private router: Router,
 		private fb: FormBuilder,
-		public toastr: ToastrManager
+		public toastr: ToastrManager,
+		private notificationService: NotificationService,
 	) {
 		this.form = this.getForm();
 	}
@@ -51,12 +51,22 @@ export class LoginComponent implements OnInit {
 				this.userService.getByAuthUserId(authorizationResponse.user_id).subscribe(user => {
 					sessionStorage.setItem('user', JSON.stringify(user));
 					window.location.href = window.location.href + 'admin' ;
-					this.notificationService.nerror.content = 'hola';
-					this.notificationService.nerror.title = 'puto';
-				}, error => this.toastr.errorToastr('This is error toast.', error));
-				// }, err => this.toastr.errorToastr.showError());
+			// 	}, error => this.toastr.errorToastr('This is error toast.', error));
+			// 	// }, err => this.toastr.errorToastr.showError());
+			// // }); // , (err) => this.notificationService.error());
 			// }); // , (err) => this.notificationService.error());
-			}); // , (err) => this.notificationService.error());
+				}, error =>  {
+					let err = error.json();
+					console.log(error);
+				});
+				// this.notificationService.error());
+			}, // (err) => this.notificationService.error());
+			err =>  {
+				// let err = error.json();
+				console.log(err);
+				this.notificationService.error(err);
+				// this.toastr.errorToastr('This is error toast.', err);
+			});
 		}
 	}
 
