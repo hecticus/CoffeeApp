@@ -13,5 +13,6 @@ export class Provider extends BaseModel {
 	photoProvider: string;
 	contactNameProvider: string;
 	statusProvider: Status;
+	deleted: boolean;
 	// invoices: Invoice[];
 }

@@ -1,13 +1,16 @@
+import { HttpParams } from '@angular/common/http';
 
 import { Params, Router, ActivatedRoute } from '@angular/router';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { ProviderService } from './provider.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Provider, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
 import { FilterService } from '../../core/filter/filter.service';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Provider } from '../../core/models/provider';
+import { BaseService } from '../../core/base.service';
 
 @Component({
 	selector: 'app-provider.list',
@@ -125,6 +128,7 @@ export class ProviderListComponent implements OnInit {
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
+	provider: Provider;
 
 	// Order Columns Display
 	columnsToDisplay = ['select', 'nameProvider', 'nitProvider', 'provider.providerType.nameProviderType',
@@ -133,7 +137,7 @@ export class ProviderListComponent implements OnInit {
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [5, 10, 20];
+	pageSizeOptions: number[] = [ 10, 20, 40];
 
 	dataSource = new MatTableDataSource<Provider>();
 
@@ -161,16 +165,25 @@ export class ProviderListComponent implements OnInit {
 		this.providerTypeService.getAll().subscribe(
 			data => {
 				this.provType = data['result'];
-			console.log(this.provType);
 		});
 
-		this.providerService.getAll().subscribe(
+		let httpParams = BaseService.jsonToHttpParams({
+			// collection: 'id ',
+			deleted: '1',
+		});
+
+		this.providerService.getAll(httpParams).subscribe(
 			data => {
 				this.providers = data['result'];
 				this.dataSource.data = data['result'];
-			console.log(this.dataSource);
+			console.log(this.dataSource.data );
 		});
 
+		this.providerService.getById(1130).subscribe(
+			data => {
+				let provider: Provider = data['result'];
+			console.log(  provider.deleted );
+		});
 	}
 
 	create() {
@@ -201,6 +214,5 @@ export class ProviderListComponent implements OnInit {
 
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
-		console.log(id);
 	}
 }
