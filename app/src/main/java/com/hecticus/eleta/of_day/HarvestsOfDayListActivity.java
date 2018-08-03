@@ -25,7 +25,7 @@ import com.hecticus.eleta.base.item.TwoColumnsGenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomButtonWBorderAndImage;
 import com.hecticus.eleta.harvest.detail.HarvestDetailsActivity;
 import com.hecticus.eleta.home.HomeActivity;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
+//import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
@@ -179,7 +179,7 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     }
 
     @Override
-    public void updateHarvestsOrPurchasesList(List<HarvestOfDay> harvestsList) {
+    public void updateHarvestsOrPurchasesList(List<InvoiceDetails> harvestsList) {
         mAdapter.showNewDataSet(harvestsList);
     }
 

@@ -1,13 +1,7 @@
 package com.hecticus.eleta.model.response.invoice;
 
-import android.util.Log;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.hecticus.eleta.model.response.StatusInvoice;
-import com.hecticus.eleta.model.response.harvest.Harvest;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +21,11 @@ public class InvoiceDetailsResponse {
 
     private Boolean controlLocal = false;
 
-    private List<HarvestOfDay> harvests = new ArrayList<HarvestOfDay>();
+    //private List<HarvestOfDay> harvests = new ArrayList<HarvestOfDay>();
 
     public InvoiceDetailsResponse(){
         setListInvoiceDetails(new ArrayList<InvoiceDetails>());
-        setHarvests(new ArrayList<HarvestOfDay>());
+        //setHarvests(new ArrayList<HarvestOfDay>());
     }
 
     public InvoiceDetailsResponse(List<InvoiceDetails> listInvoiceDetails) {
@@ -54,22 +48,22 @@ public class InvoiceDetailsResponse {
         this.listInvoiceDetails = listInvoiceDetails;
     }
 
-    public List<HarvestOfDay> getHarvests(Boolean control) {
+    /*public List<HarvestOfDay> getHarvests(Boolean control) {
         //todo crash
         if(control) {
             if (!controlLocal) {
-                /*for (int i=0; i<listInvoiceDetails.size(); i++) {//(final InvoiceDetails invoiceDetail : listInvoiceDetails) {
-                    if (i == 0) {
-                        Log.d("DEBUG INVOICE D", "0");
-                        harvests.add(new HarvestOfDay(listInvoiceDetails.get(i).getStartDate(), listInvoiceDetails.get(i).getTotalInvoiceDetail(), listInvoiceDetails.get(i).getId()));
-                    } else {
+                //for (int i=0; i<listInvoiceDetails.size(); i++) {//(final InvoiceDetails invoiceDetail : listInvoiceDetails) {
+                    //if (i == 0) {
+                        //Log.d("DEBUG INVOICE D", "0");
+                       // harvests.add(new HarvestOfDay(listInvoiceDetails.get(i).getStartDate(), listInvoiceDetails.get(i).getTotalInvoiceDetail(), listInvoiceDetails.get(i).getId()));
+                   // } else {
                         //Log.d("DEBUG fecha 1", listInvoiceDetails.get());
-                        if(!listInvoiceDetails.get(i).getStartDate().equals(listInvoiceDetails.get(i-1).getStartDate())) {
-                            Log.d("DEBUG INVOICE D", String.valueOf(i));
-                            harvests.add(new HarvestOfDay(listInvoiceDetails.get(i).getStartDate(), listInvoiceDetails.get(i).getTotalInvoiceDetail(), listInvoiceDetails.get(i).getId()));
-                        }
-                    }
-                }*/
+                        //if(!listInvoiceDetails.get(i).getStartDate().equals(listInvoiceDetails.get(i-1).getStartDate())) {
+                         //   Log.d("DEBUG INVOICE D", String.valueOf(i));
+                         //   harvests.add(new HarvestOfDay(listInvoiceDetails.get(i).getStartDate(), listInvoiceDetails.get(i).getTotalInvoiceDetail(), listInvoiceDetails.get(i).getId()));
+                        //}
+                    //}
+                //}
                 for (final InvoiceDetails invoiceDetail : listInvoiceDetails) {
                     harvests.add(new HarvestOfDay(invoiceDetail.getStartDate(), invoiceDetail.getTotalInvoiceDetail(), invoiceDetail.getId()));
                 }
@@ -81,7 +75,7 @@ public class InvoiceDetailsResponse {
 
     public void setHarvests(List<HarvestOfDay> harvests) {
         this.harvests = harvests;
-    }
+    }*/
 
     /*
     for(final InvoiceDetails invoiceDetail : listInvoiceDetails){

@@ -10,7 +10,6 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
 import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
@@ -36,7 +35,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     private InvoicesOfDayListContract.Repository mRepository;
 
     private Invoice currentInvoice = null;
-    private List<HarvestOfDay> harvestsOrPurchasesOfDayList = null;
+    //private List<HarvestOfDay> harvestsOrPurchasesOfDayList = null;
     private List<InvoiceDetails> detailsList = null;
     private boolean needReloadMainList = false;
 
@@ -54,10 +53,11 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
         List<InvoiceDetails> detailsOfHarvest = new ArrayList<>();
 
-        HarvestOfDay harvestOfDay = (HarvestOfDay) model;
+        //HarvestOfDay harvestOfDay = (HarvestOfDay) model;
         //todo brayan
         for (InvoiceDetails detail : detailsList) {
-            if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
+            //if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
+            //if (detail.getStartDate().equals(detailsOfHarvest.getStartDate())) { //todo edit
                 Log.d("OFFLINE", "--->onClickEditButton adding detail (" + detail.getItemType() + ") to next view: " + detail);
 
                 //FIXME: We use a clone and remove these as they will be properly populated when creating the view
@@ -75,8 +75,9 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                     e.printStackTrace();
                 }
 
-            } else
+            /*} else
                 Log.d("OFFLINE", "--->onClickEditButton NOT adding detail (" + detail.getItemType() + ")to next view: " + detail);
+                */
         }
 
 
@@ -100,7 +101,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void deleteHarvestOrPurchase(BaseDetailModel model) {
         mView.showWorkingIndicator();
-        HarvestOfDay harvest = (HarvestOfDay) model;
+        InvoiceDetails harvest = (InvoiceDetails) model;
         mRepository.deleteHarvestOrPurchase(currentInvoice, harvest.getStartDate(), harvest);
     }
 
@@ -179,15 +180,19 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         //Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());//invoiceDetailsResponse.getListInvoiceDetails().size());
 
         detailsList = invoiceDetailsResponse.getListInvoiceDetails();
-        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
+        //harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
         mView.hideWorkingIndicator();
         /*if (currentPage == Constants.INITIAL_PAGE_IN_PAGER) {
             mView.updateHarvestsOrPurchasesList(harvestsList);
         } else {
             mView.addMoreHarvestsToTheList(harvestsList);
         }*/
-        if (harvestsOrPurchasesOfDayList != null) {
+        /*if (harvestsOrPurchasesOfDayList != null) {
             mView.updateHarvestsOrPurchasesList(harvestsOrPurchasesOfDayList);
+        }*/
+
+        if (detailsList != null) {
+            mView.updateHarvestsOrPurchasesList(detailsList);
         }
     }
 
@@ -195,13 +200,21 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control) {
         detailsList = invoiceDetailsResponse.getListInvoiceDetails();
-        harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
+        //harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
         mView.hideWorkingIndicator();
         mView.showMessage(context.getString(R.string.harvest_deleted_successful));
 
-        if (harvestsOrPurchasesOfDayList != null && harvestsOrPurchasesOfDayList.size() > 0) {
+        /*if (harvestsOrPurchasesOfDayList != null && harvestsOrPurchasesOfDayList.size() > 0) {
             if (harvestsOrPurchasesOfDayList != null) {
                 mView.updateHarvestsOrPurchasesList(harvestsOrPurchasesOfDayList);
+            }
+        } else {
+            needReloadMainList = true;
+            mView.doBack();
+        }*/
+        if (detailsList != null && detailsList.size() > 0) {
+            if (detailsList != null) {
+                mView.updateHarvestsOrPurchasesList(detailsList);
             }
         } else {
             needReloadMainList = true;

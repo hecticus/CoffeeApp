@@ -11,13 +11,11 @@ import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.ManagerServices;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.Message;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.CreateInvoiceResponse;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
-import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
@@ -61,7 +59,7 @@ public class SyncManager {
     private List<Provider> providersList;
     private List<InvoicePost> invoicePostList;
     private List<Invoice> invoiceList;
-    private List<HarvestOfDay> ofDayList;
+    //private List<HarvestOfDay> ofDayList;
 
     private boolean somethingHasBeenSynced = false;
 
@@ -460,7 +458,7 @@ public class SyncManager {
                                 .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                 .findFirst();
 
-                        HarvestOfDay harvestOfDay = null;
+                        /*HarvestOfDay harvestOfDay = null;
 
                         if (invoiceInRealm != null) {
                             int properInvoiceId = invoiceInRealm.getInvoiceId() == -1 ? invoiceInRealm.getLocalId() : invoiceInRealm.getInvoiceId();
@@ -490,7 +488,7 @@ public class SyncManager {
                         } finally {
                             realm.close();
                             saveNextInvoice();
-                        }
+                        }*/
                     } catch (Exception e) {
                     /*Gson g = new Gson();
                     Log.d("DEBUG details",g.toJson(response.body()));*/
@@ -688,7 +686,7 @@ public class SyncManager {
 
     @DebugLog
     public void syncDeletedOfDay() {
-        ofDayList = new ArrayList<>();
+        /*ofDayList = new ArrayList<>();
 
         List<HarvestOfDay> ofDays = Realm.getDefaultInstance()
                 .where(HarvestOfDay.class)
@@ -708,13 +706,13 @@ public class SyncManager {
             }
         } else {
             deleteNextOfDay();
-        }
+        }*/
     }
 
 
     @DebugLog
     public void deleteNextOfDay() {
-        if (ofDayList.size() <= 0) {
+        /*if (ofDayList.size() <= 0) {
             onSuccessfulSync();
             return;
         }
@@ -723,7 +721,7 @@ public class SyncManager {
         ofDayList.remove(firstOfDay);
         Log.d("DETAILS", "--->deleteNextOfDay firstInvoice" + firstOfDay);
 
-        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId() /* ,firstOfDay.getStartDate(), new ArrayList<Long>()*/);
+        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId() );
 
         new ManagerServices<>(call, new ManagerServices.ServiceListener<InvoiceDetailsResponse>() {
             @DebugLog
@@ -776,7 +774,7 @@ public class SyncManager {
                 Log.d("DETAILS", "--->Fail token");
                 HomeActivity.INSTANCE.syncFailed("deleteOfDaySync onInvalidToken");
             }
-        });
+        });*/
     }
 
     @DebugLog

@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.hecticus.eleta.base.BaseDetailListContract;
 import com.hecticus.eleta.base.BaseDetailModel;
-import com.hecticus.eleta.base.BaseModel;
-import com.hecticus.eleta.model.request.invoice.CloseInvoicePost;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
@@ -39,7 +36,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void goToHarvestOrPurchaseDetailsView(Provider provider, List<InvoiceDetails> detailsList, boolean invoiceHasOfflineOperation);
 
-        void updateHarvestsOrPurchasesList(List<HarvestOfDay> harvestsOrPurchasesList);
+        void updateHarvestsOrPurchasesList(List<InvoiceDetails> harvestsOrPurchasesList);
 
         void initHeader(String name, String imageUrl);
 
@@ -93,7 +90,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void getHarvestsOrPurchasesOfInvoiceRequest(Invoice invoice);
 
-        void deleteHarvestOrPurchase(Invoice invoice, String date, HarvestOfDay harvestOrPurchaseId);
+        void deleteHarvestOrPurchase(Invoice invoice, String date, InvoiceDetails harvestOrPurchaseId);
 
         void closeInvoiceRequest(com.hecticus.eleta.model_new.Invoice post);
 

@@ -3,13 +3,11 @@ package com.hecticus.eleta.of_day;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.Message;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
@@ -112,8 +110,8 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
             Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM OFFLINE");
 
-            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
-            Log.d("DEBUG harvestofday", String.valueOf(invoiceList.size()));
+            //List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
+            //Log.d("DEBUG harvestofday", String.valueOf(invoiceList.size()));
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                     invoice.getInvoiceId(),
                     invoice.getLocalId(),
@@ -124,8 +122,14 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 
-            if (invoiceList != null) {
+            /*if (invoiceList != null) {
                 localResponse.setHarvests(invoiceList);
+            } else {
+                onError(mPresenter.context.getString(R.string.error_getting_harvests));
+            }*/
+
+            if (detailsList != null) {
+                localResponse.setListInvoiceDetails(detailsList);
             } else {
                 onError(mPresenter.context.getString(R.string.error_getting_harvests));
             }
@@ -152,7 +156,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
                             Log.d("DEBUG", "paso3");
-                            ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests(true));
+                            //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests(true));
                             Log.d("DEBUG", "paso4");
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             Log.d("DEBUG", "paso5");
@@ -180,9 +184,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
     @DebugLog
     @Override
-    public void deleteHarvestOrPurchase(Invoice invoice, String date, HarvestOfDay harvestOrPurchase) {
+    public void deleteHarvestOrPurchase(Invoice invoice, String date, InvoiceDetails harvestOrPurchase) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoice)) {
-            if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
+            /*if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
                 List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
                 List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                         invoice.getInvoiceId(),
@@ -211,9 +215,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 mPresenter.onHarvestDeleted(response, false);
             } else {
                 onError(mPresenter.context.getString(R.string.error_deleting_harvest));
-            }
+            }*/
         } else {
-            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(harvestOrPurchase.getIdInvoiceDetail()/*, date, new ArrayList<Long>()*/);
+            Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(harvestOrPurchase.getId()/*, date, new ArrayList<Long>()*/);
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override

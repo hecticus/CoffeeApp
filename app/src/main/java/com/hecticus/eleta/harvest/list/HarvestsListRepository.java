@@ -8,7 +8,6 @@ import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.Message;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
@@ -199,7 +198,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
             Log.d("PRINT", "--->getReceiptDetails FROM OFFLINE");
 
-            List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getInvoiceId(), invoiceParam.getLocalId());
+            //List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getInvoiceId(), invoiceParam.getLocalId());
             List<InvoiceDetails> detailsList =
                     ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                             invoiceParam.getInvoiceId(),
@@ -208,8 +207,13 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 
-            if (invoiceList != null) {
+            /*if (invoiceList != null) {
                 localResponse.setHarvests(invoiceList);
+            } else {
+                onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+            }*/
+            if (detailsList != null) {
+                localResponse.setListInvoiceDetails(detailsList);
             } else {
                 onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
             }

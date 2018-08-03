@@ -264,7 +264,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
                 try {
                     if (response.isSuccessful() && response.body() != null) {
-                        ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
+                        //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                         onHarvestUpdated();
                     } else

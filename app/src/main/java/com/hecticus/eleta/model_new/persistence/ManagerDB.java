@@ -7,7 +7,6 @@ import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.request.invoice.PurityPost;
 import com.hecticus.eleta.model.response.farm.Farm;
-import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailPurity;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
@@ -16,7 +15,6 @@ import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
-import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.util.Constants;
 
 import java.util.ArrayList;
@@ -539,7 +537,7 @@ public class ManagerDB {
         return Realm.getDefaultInstance().where(Provider.class).equalTo("identificationDocProvider", identificationDoc).findFirst();
     }
 
-    @DebugLog
+    /*@DebugLog
     public static boolean saveNewHarvestsOrPurchasesOfDayById(final int invoiceId, List<HarvestOfDay> harvestOfDayList) { //aaa
         if (harvestOfDayList == null || harvestOfDayList.isEmpty()) return true;
 
@@ -562,9 +560,9 @@ public class ManagerDB {
         }
         realm.close();
         return true;
-    }
+    }*/
 
-    @DebugLog
+    /*@DebugLog
     public static List<HarvestOfDay> getAllHarvestsOrPurchasesOfDayByInvoice(int invoiceId, int invoiceLocalId) {
         final List<HarvestOfDay> completeList =
                 Realm.getDefaultInstance()
@@ -587,7 +585,7 @@ public class ManagerDB {
                     .equalTo("deleteOffline", false)
                     .findAllSorted("startDate");
         }
-    }
+    }*/
 
     @DebugLog
     public static boolean saveDetailsOfInvoice(List<InvoiceDetails> invoiceDetailsList) {
@@ -879,7 +877,7 @@ public class ManagerDB {
                     realm.insertOrUpdate(finalInvoiceToInsert);
 
 
-                    HarvestOfDay harvestOfDay = new HarvestOfDay();
+                    /*HarvestOfDay harvestOfDay = new HarvestOfDay();
                     //TODO CHECK ALL OF THIS
                     int properInvoiceId = finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId();
                     harvestOfDay.setInvoiceId(properInvoiceId);
@@ -889,11 +887,11 @@ public class ManagerDB {
                     //harvestOfDay.setInvoiceLocalId(finalInvoice.getLocalId());
                     harvestOfDay.setAddOffline(true);
                     harvestOfDay.setTotalAmount(total);
-                    realm.insertOrUpdate(harvestOfDay);
+                    realm.insertOrUpdate(harvestOfDay);*/
 
                     Log.d("OFFLINE", "--->Inserted* finalInvoice: " + finalInvoiceToInsert.toString());
                     Log.d("OFFLINE", "--->Inserted invoicePost: " + invoicePost.toString());
-                    Log.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
+                    //Log.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
 
                 }
             });
@@ -1105,16 +1103,16 @@ public class ManagerDB {
                         realm.insertOrUpdate(invoicePost);
                         Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated invoicePost: " + invoicePost);
 
-                        HarvestOfDay harvestOfDay = new HarvestOfDay();
+                        /*HarvestOfDay harvestOfDay = new HarvestOfDay();
                         harvestOfDay.setInvoiceId(invoicePost.getInvoiceId() == -1 ? invoicePost.getInvoicePostLocalId() : invoicePost.getInvoiceId());
                         String dateSuffix = invoicePost.getStartDate().endsWith(".0") ? "" : ".0";
                         harvestOfDay.setStartDate(invoicePost.getStartDate() + dateSuffix);
                         harvestOfDay.setId(invoicePost.getInvoiceId() + "-" + harvestOfDay.getStartDate());
                         harvestOfDay.setEditOffline(true);
                         harvestOfDay.setTotalAmount(newTotalAmount);
-                        realm.insertOrUpdate(harvestOfDay);
+                        realm.insertOrUpdate(harvestOfDay);*/
 
-                        Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated harvestOfDay: " + harvestOfDay);
+                        //Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated harvestOfDay: " + harvestOfDay);
 
                     }
                 });
@@ -1411,7 +1409,7 @@ public class ManagerDB {
                 public void execute(Realm realm) {
                     //TODO delete post tambien
 
-                    HarvestOfDay harvestOfDay =
+                    /*HarvestOfDay harvestOfDay =
                             realm.where(HarvestOfDay.class)
                                     .equalTo("id", harvestOfDayId)
                                     .findFirst();
@@ -1456,7 +1454,7 @@ public class ManagerDB {
                             } else
                                 Log.e("HODBUG", "--->Item to delete (is isAddOffline) has no invoicePost");
 
-                            harvestOfDay.deleteFromRealm();
+                            //harvestOfDay.deleteFromRealm();
 
                             for (InvoiceDetails detail : detailsList) {
                                 detail.deleteFromRealm();
@@ -1497,7 +1495,7 @@ public class ManagerDB {
                             }
                         }
                     } else
-                        Log.e("HODBUG", "--->Item to delete has NO Of day");
+                        Log.e("HODBUG", "--->Item to delete has NO Of day");*/
                 }
             });
         } catch (Exception e) {
@@ -1586,7 +1584,7 @@ public class ManagerDB {
     @DebugLog
     private static boolean deleteInvoiceItemsInTransaction(Realm realm, int invoiceId) {
 
-        boolean deletedAnyHarvestOfDay = realm
+        /*boolean deletedAnyHarvestOfDay = realm
                 .where(HarvestOfDay.class)
                 .equalTo("invoiceId", invoiceId).findAll().deleteAllFromRealm();
 
@@ -1598,7 +1596,8 @@ public class ManagerDB {
 
         Log.d("OFFLINE", "--->deletedAnyInvoiceDetails: " + deletedAnyInvoiceDetails);
 
-        return (deletedAnyHarvestOfDay || deletedAnyInvoiceDetails);
+        return (deletedAnyHarvestOfDay || deletedAnyInvoiceDetails);*/
+        return false; //borrar
     }
 
     @DebugLog

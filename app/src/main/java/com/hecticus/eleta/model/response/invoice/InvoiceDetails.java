@@ -6,6 +6,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.hecticus.eleta.base.BaseDetailModel;
 import com.hecticus.eleta.model.StatusInvoiceDetail;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
@@ -26,7 +27,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by roselyn545 on 26/9/17.
  */
 
-public class InvoiceDetails extends RealmObject implements JsonSerializer<InvoiceDetails>, Serializable, Cloneable {
+public class InvoiceDetails extends RealmObject implements JsonSerializer<InvoiceDetails>, Serializable, Cloneable, BaseDetailModel {
 
     @SerializedName("id")
     @Expose
@@ -117,6 +118,15 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     private boolean addOffline;
     private boolean editOffline;
     private boolean deleteOffline;
+
+    @Ignore
+    private String date = null;
+
+    @Ignore
+    private String time = null;
+
+    @Ignore
+    private String dateTime = null;
 
     public InvoiceDetails() {}
 
@@ -423,4 +433,75 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
                 ", deleteOffline=" + deleteOffline +
                 '}';
     }
+
+    @Override
+    public String getReadableHeader() {
+        if (date == null) {
+            initDateTime();
+        }
+        return date;
+    }
+
+    @Override
+    public String getReadableFirstInfo() {
+        if (time == null) {
+            initDateTime();
+        }
+        return time;
+    }
+
+    @Override
+    public String getReadableSecondInfo() {
+        return totalInvoiceDetail + "";
+    }
+
+    public void initDateTime() {
+        String[] dateTimeArray = startDate.split(" ");
+        if (dateTimeArray != null && dateTimeArray.length >= 2) {
+            date = dateTimeArray[0];
+            date = date.replace('-', '/');
+            String timeAux = dateTimeArray[1];
+            if (timeAux.contains(".")) {
+                time = timeAux.substring(0, timeAux.indexOf('.'));
+            } else {
+                time = dateTimeArray[1];
+            }
+            dateTime = dateTimeArray[0] + " " + time;
+        } else {
+            date = time = dateTime = "";
+        }
+    }
+
+    /*public void initDateTime() {
+        String[] dateTimeArray = startDate.split(" ");
+        if (dateTimeArray != null && dateTimeArray.length >= 2) {
+            date = dateTimeArray[0];
+            date = date.replace('-', '/');
+            String timeAux = dateTimeArray[1];
+            if (timeAux.contains(".")) {
+                time = timeAux.substring(0, timeAux.indexOf('.'));
+            } else {
+                time = dateTimeArray[1];
+            }
+            dateTime = dateTimeArray[0] + " " + time;
+        } else {
+            date = time = dateTime = "";
+        }
+    }
+
+    @Override
+    public String getReadableHeader() {
+        if (date == null) {
+            initDateTime();
+        }
+        return date;
+    }
+
+    @Override
+    public String getReadableFirstInfo() {
+        if (time == null) {
+            initDateTime();
+        }
+        return time;
+    }*/
 }
