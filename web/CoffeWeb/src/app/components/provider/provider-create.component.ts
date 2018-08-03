@@ -35,10 +35,13 @@ import { Status } from '../../core/models/status';
 				</div>
 			</fieldset>
 
-			<ng-container *ngIf="form.value['providerType'] == 1; then vendedor else cosechador">
-			</ng-container>
-				<!-- </div>*ngIf = "f.nameProviderType  == 'vendedor'; then proveedor; else cosechador" -->
-				<ng-template #vendedor>
+			<!-- <ng-container *ngIf="form.value['providerType'] == 1; then vendedor else cosechador">
+			</ng-container> <div
+					*ngIf = "f.nameProviderType  == 'vendedor'; then proveedor; else cosechador">
+				</div>-->
+			<div [ngSwitch] = "form.value['providerType']">
+
+				<ng-template [ngSwitchCase]="1">
 					<div class="wrap-fields">
 						<div class="field">
 							<mat-form-field  required class="example-full-width">
@@ -89,7 +92,7 @@ import { Status } from '../../core/models/status';
 					</fieldset>
 				</ng-template>
 
-				<ng-template #cosechador>
+				<ng-template [ngSwitchCase]="2">
 					<div class="wrap-fields">
 						<div class="field">
 							<mat-form-field  required class="example-full-width">
@@ -130,7 +133,7 @@ import { Status } from '../../core/models/status';
 						</div>
 					</fieldset>
 				</ng-template>
-
+			</div>
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="!form.valid">Guardar</button>
 			</div>
