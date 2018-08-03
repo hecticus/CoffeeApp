@@ -162,15 +162,26 @@ public class Provider extends AbstractEntity{
 
 
     public static Provider findById(Long id){
-        return finder.byId(id);
+        return finder.query().where().eq("id",id)
+                .eq("deleted", 1)
+                .findUnique();
     }
 
     public static Provider findId(Long id, PathProperties pathProperties){
 
-        if(pathProperties != null)
-            return finder.query().apply(pathProperties).setId(id).findUnique();
-        return finder.byId(id);
+        if(pathProperties != null){
+            return finder.query().apply(pathProperties).where()
+                    .eq("id",id)
+                    .setIncludeSoftDeletes()
+                    .findUnique();
+        }
+//            return finder.query().apply(pathProperties).setId(id).findUnique();
+        return finder.query().where().eq("id",id)
+                .setIncludeSoftDeletes()
+                .findUnique();
     }
+
+
     public static Provider findByNit(String nitProvider) {
         return finder.query().where()
                 .eq("nitProvider", nitProvider)

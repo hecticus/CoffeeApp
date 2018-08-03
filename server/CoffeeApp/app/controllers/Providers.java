@@ -72,7 +72,10 @@ public class Providers extends Controller {
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Provider provider = Json.fromJson(json, Provider.class);
+            if(provider.getStatusProvider().getId().intValue() == 41)
+                provider.setDeleted(false);
             provider.setId(id);
+            System.out.println(provider.getNameProvider());
             provider.update();
             return  Response.updatedEntity(Json.toJson(provider));
 
