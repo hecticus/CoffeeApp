@@ -37,6 +37,12 @@ public class Lot extends RealmObject implements ItemSpinnerInterface, Serializab
 
     private int farmId = -1;
 
+    public Lot() {
+    }
+
+    public Lot(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

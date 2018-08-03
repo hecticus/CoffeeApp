@@ -3,11 +3,13 @@ package com.hecticus.eleta.harvest.detail;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.farm.Farm;
 import com.hecticus.eleta.model.response.farm.FarmsListResponse;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.lot.LotsListResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 
 import java.util.List;
 
@@ -83,7 +85,7 @@ public class HarvestDetailsContract {
 
         void invalidToken();
 
-        void acceptSave(int idProvider);
+        void acceptSave(int idProvider, InvoiceDetails invoiceDetails);
 
     }
 
@@ -91,7 +93,7 @@ public class HarvestDetailsContract {
 
         void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd);
 
-        void editHarvestRequest(InvoicePost invoicePost);
+        void editHarvestRequest(InvoiceDetails invoiceDetails);
 
         void onError();
 

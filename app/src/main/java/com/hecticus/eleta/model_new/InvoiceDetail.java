@@ -36,6 +36,27 @@ public class InvoiceDetail {
     public InvoiceDetail() {
     }
 
+
+
+    public InvoiceDetail(InvoiceDetails invoiceDetails) {
+        this.id = (long) invoiceDetails.getId();
+        this.noteInvoiceDetail = invoiceDetails.getObservation();
+        this.price = invoiceDetails.getPriceByLot();
+        this.costItemType = invoiceDetails.getPriceItem();
+        this.nameReceived = invoiceDetails.getReceiverName();
+        this.nameDelivered = invoiceDetails.getDispatcherName();
+        this.itemType = new ItemType((long)invoiceDetails.getItemTypeId());
+        this.amountInvoiceDetail = invoiceDetails.getAmount();
+        if(invoiceDetails.getLotId()!=-1) {
+            this.lot = new Lot((long) invoiceDetails.getLot().getId());
+        }else {
+            this.store = new Store((long) invoiceDetails.getStore().getId());
+        }
+        this.invoice = new Invoice((long) invoiceDetails.getInvoiceId());
+        //this.purities = invoiceDetails.getDetailPurities();
+
+    }
+
     public InvoiceDetail(InvoiceDetails invoiceDetails, InvoicePost invoicePost) {
         this.id = (long) invoiceDetails.getId();
         this.noteInvoiceDetail = invoiceDetails.getObservation();

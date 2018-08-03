@@ -48,6 +48,13 @@ public class ItemType extends RealmObject implements ItemSpinnerInterface, Seria
     private String unitName = "";
     private int providerType = -1;
 
+    public ItemType() {
+    }
+
+    public ItemType(int id) {
+        this.id = id;
+    }
+
     public int getDeleteStatus() {
         return deleteStatus;
     }

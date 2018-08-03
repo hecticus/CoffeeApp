@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.hecticus.eleta.R;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
@@ -98,6 +99,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @DebugLog
     @Override
     public void onSaveChanges(Lot selectedLot, List<ItemType> items, String observations) {
+        Gson g = new Gson();
+        Log.d("DEBUG spiner lot2", g.toJson(selectedLot));
         mView.showWorkingIndicator();
 
         if (currentProvider == null) {
@@ -163,6 +166,9 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @DebugLog
     @Override
     public InvoicePost getChanges(Lot lotId, List<ItemType> itemsTypesList, String observations) {
+        Gson g = new Gson();
+        Log.d("DEBUG spiner lot1", g.toJson(lotId));
+        //todo no edita
         InvoicePost invoicePostWithChanges = null;
 
         if (currentDetailsList == null || currentDetailsList.size() <= 0)
@@ -196,6 +202,13 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 }
             }
         }
+
+        currentDetailsList.get(0).setLot(lotId);
+        Log.d("DEBUG llenando lot", lotId.getId()+"");
+        currentDetailsList.get(0).setAmount(Float.parseFloat(itemsTypesList.get(0).getWeightString().trim()));
+        currentDetailsList.get(0).setItemType(new ItemType(itemsTypesList.get(0).getId()));
+        currentDetailsList.get(0).setObservation(observations);
+
 
         if (postItems.size() > 0) {
             if (invoicePostWithChanges == null) {
@@ -391,7 +404,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     @DebugLog
     @Override
-    public void acceptSave(int idProvider) {
+    public void acceptSave(int idProvider, InvoiceDetails invoiceDetail) {
         Log.d("BUG", "--->currentProvider onSaveConfirmedInDialog: " + currentProvider);
         if(idProvider!=-1){
             invoicePost.setInvoiceId(idProvider);
@@ -413,7 +426,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
             mRepository.saveHarvestRequest(invoicePost, true);
         } else {
-            boolean createdOffline = false;
+
+            /*boolean createdOffline = false;
             if (currentDetailsList.get(0).getInvoice() == null) {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
                 createdOffline = true;
@@ -442,8 +456,14 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
             Gson g = new Gson();
             Log.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
-            //mRepository.saveHarvestRequest(invoicePost, false);
-            mRepository.editHarvestRequest(invoicePost);
+            //mRepository.saveHarvestRequest(invoicePost, false);*/
+
+
+
+
+
+
+            mRepository.editHarvestRequest(currentDetailsList.get(0));
         }
     }
 }

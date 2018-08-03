@@ -176,7 +176,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     }
 
     @Override
-    public void editPurchaseRequest(InvoicePost invoicePost) {
+    public void editPurchaseRequest(InvoicePost invoicePost, InvoiceDetails invoiceDetail) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost, false)) {
             Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
             if (ManagerDB.updateInvoiceDetails(invoicePost, mPresenter.getOriginalDetailsPuritiesList())) {
@@ -184,17 +184,17 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             } else
                 onError();
         } else {
-            List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
+            /*List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
             for(int i=0; i<invoiceDetailsList.size(); i++){
-                InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
+                InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);*/
                 endPoint(invoiceDetail);
-            }
+            //}
         }
     }
 
-    private void endPoint(InvoiceDetail invoiceDetail){
+    private void endPoint(InvoiceDetails invoiceDetail){
         Call<CreateInvoiceResponse> call;
-        call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId().intValue(), invoiceDetail);
+        call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog
             @Override

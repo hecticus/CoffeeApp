@@ -563,7 +563,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
             mRepository.savePurchaseRequest(invoicePost, true);
         } else {
-            if (currentDetailsList.get(0).getInvoice() == null) {
+            /*if (currentDetailsList.get(0).getInvoice() == null) {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());
             } else {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
@@ -585,8 +585,9 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             }
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
 
-            updateOriginalDetailsPuritiesListWithChanges();
-            mRepository.editPurchaseRequest(invoicePost);
+            updateOriginalDetailsPuritiesListWithChanges();*/
+            InvoiceDetails invoiceDetails = new InvoiceDetails();
+            mRepository.editPurchaseRequest(invoicePost, invoiceDetails);
         }
     }
 }

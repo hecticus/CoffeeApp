@@ -194,27 +194,39 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     }
 
     @Override
-    public void editHarvestRequest(InvoicePost invoicePost) {
-        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,false)) {
-                Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
+    public void editHarvestRequest(InvoiceDetails invoiceDetails) {
+        if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost,false)*/) {
+                /*Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
                 if (ManagerDB.updateInvoiceDetails(invoicePost, null))
                     onHarvestUpdated();
                 else
-                    onError();
+                    onError();*/
         } else {
-            List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
-            for(int i=0; i<invoiceDetailsList.size(); i++){
-                InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
-                endPoint(invoiceDetail);
-            }
+            //List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
+            //for(int i=0; i<invoiceDetailsList.size(); i++){
+                //InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
+                endPoint(invoiceDetails);
+            //}
         }
     }
 
-    private void endPoint(InvoiceDetail invoiceDetail){
-        Gson g = new Gson();
-        Log.d("DEBUG con lot", g.toJson(invoiceDetail));
+    private void endPoint(InvoiceDetails invoiceDetail){
+
         Call<CreateInvoiceResponse> call;
-        call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId().intValue(), invoiceDetail);
+
+        /*InvoiceDetails post = new InvoiceDetails();
+        post.setInvoice(new com.hecticus.eleta.model.response.invoice.Invoice(invoiceDetail.getInvoice().getInvoiceId()));
+        post.setItemType(new ItemType(invoiceDetail.getItemType().getId()));
+        post.setLot(new Lot(invoiceDetail.getLot().getId()));
+        post.setAmount(invoiceDetail.getAmount());
+        post.setReceiverName(invoiceDetail.getReceiverName());
+        post.setDispatcherName(invoiceDetail.getDispatcherName());*/
+
+
+
+        Gson g = new Gson();
+        Log.d("DEBUG con lot", g.toJson(new InvoiceDetail(invoiceDetail)));
+        call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog
             @Override

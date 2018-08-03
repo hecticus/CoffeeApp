@@ -172,7 +172,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
     @DebugLog
     @Override
-    public void goToHarvestOrPurchaseDetailsView(Provider provider, List<InvoiceDetails> detailsList, boolean invoiceHasOfflineOperation) {
+    public void goToHarvestOrPurchaseDetailsView(Provider provider, /*List<*/InvoiceDetails/*>*/ detailsList, boolean invoiceHasOfflineOperation) {
         try {
             Intent intent = new Intent(this, PurchaseDetailsActivity.class);
             intent.putExtra("details", Util.getGson().toJson(detailsList));

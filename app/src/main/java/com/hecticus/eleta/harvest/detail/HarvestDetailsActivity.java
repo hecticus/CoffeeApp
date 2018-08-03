@@ -114,12 +114,13 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         boolean isAdd = getIntent().getBooleanExtra("isAdd", false);
         boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
 
-        List<InvoiceDetails> details = null;
+        List<InvoiceDetails> details = new ArrayList<>();// = null;
         if (getIntent().getSerializableExtra("details") != null) {
-            Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
+            /*Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
             }.getType();
             Log.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
-            details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
+            details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);*/
+            details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
         }
 
         Provider provider = null;
@@ -378,6 +379,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @DebugLog
     @Override
     public void onAcceptConfirm() {
-        mPresenter.acceptSave(getIntent().getIntExtra("idProvider", -1));
+        InvoiceDetails invoiceDetails = new InvoiceDetails();
+        mPresenter.acceptSave(getIntent().getIntExtra("idProvider", -1), invoiceDetails);
     }
 }

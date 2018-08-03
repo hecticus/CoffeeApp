@@ -3,11 +3,13 @@ package com.hecticus.eleta.custom_views;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model_new.ItemSpinnerInterface;
 
@@ -83,6 +85,8 @@ public class CustomSpinner extends LinearLayout {
     }
 
     public ItemSpinnerInterface getSelectedItem(){
-        return (ItemSpinnerInterface)spinner.getSelectedItem();
+        Gson g = new Gson();
+        Log.d("DEBUG spiner lot", g.toJson(spinner.getSelectedItem()));
+        return (ItemSpinnerInterface) spinner.getSelectedItem();
     }
 }

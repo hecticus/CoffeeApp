@@ -2,6 +2,7 @@ package com.hecticus.eleta.purchases.detail;
 
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailPurity;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
@@ -91,7 +92,7 @@ public class PurchaseDetailsContract {
 
         void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd);
 
-        void editPurchaseRequest(InvoicePost invoicePost);
+        void editPurchaseRequest(InvoicePost invoicePost, InvoiceDetails invoiceDetail);
 
         void onError();
 

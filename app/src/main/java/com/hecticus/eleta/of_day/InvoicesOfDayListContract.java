@@ -34,7 +34,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void closedInvoice();
 
-        void goToHarvestOrPurchaseDetailsView(Provider provider, List<InvoiceDetails> detailsList, boolean invoiceHasOfflineOperation);
+        void goToHarvestOrPurchaseDetailsView(Provider provider, InvoiceDetails detailsList, boolean invoiceHasOfflineOperation);//(Provider provider, List<InvoiceDetails> detailsList, boolean invoiceHasOfflineOperation);
 
         void updateHarvestsOrPurchasesList(List<InvoiceDetails> harvestsOrPurchasesList);
 

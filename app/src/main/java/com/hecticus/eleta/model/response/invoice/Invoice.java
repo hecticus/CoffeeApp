@@ -74,6 +74,11 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     private boolean isClosed;
 
     public Invoice() {
+
+    }
+
+    public Invoice(int id) {
+        this.id= id;
     }
 
     public Invoice(InvoicePost invoicePost) {

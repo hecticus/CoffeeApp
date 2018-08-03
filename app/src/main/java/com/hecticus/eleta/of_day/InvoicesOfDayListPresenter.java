@@ -51,11 +51,11 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void onClickEditButton(BaseDetailModel model) {
 
-        List<InvoiceDetails> detailsOfHarvest = new ArrayList<>();
+        //List<InvoiceDetails> detailsOfHarvest = new ArrayList<>();
 
         //HarvestOfDay harvestOfDay = (HarvestOfDay) model;
         //todo brayan
-        for (InvoiceDetails detail : detailsList) {
+        /*for (InvoiceDetails detail : detailsList) {
             //if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
             //if (detail.getStartDate().equals(detailsOfHarvest.getStartDate())) { //todo edit
                 Log.d("OFFLINE", "--->onClickEditButton adding detail (" + detail.getItemType() + ") to next view: " + detail);
@@ -78,13 +78,13 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
             /*} else
                 Log.d("OFFLINE", "--->onClickEditButton NOT adding detail (" + detail.getItemType() + ")to next view: " + detail);
                 */
-        }
+        //}
 
 
         //detailsOfHarvest.add(ManagerDB.getInvoiceDetailById(harvestOfDay.getInvoiceId()));
 
 
-
+        InvoiceDetails detailsOfHarvest = (InvoiceDetails) model;
         mView.goToHarvestOrPurchaseDetailsView(currentInvoice.getProvider(), detailsOfHarvest, ManagerDB.invoiceHasOfflineOperation(currentInvoice));
     }
 
