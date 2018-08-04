@@ -8,9 +8,9 @@ import { ProviderService } from './provider.service';
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Editar Provider</h2>
-		<app-cosechador-update *ngIf= " selected == 'Vendedor'">
+		<app-cosechador-update *ngIf= " selected == 'Cosechador'">
 		</app-cosechador-update>
-		<app-vendedor-update *ngIf= " selected == 'Cosechador'">
+		<app-vendedor-update *ngIf= " selected == 'Vendedor'">
 		</app-vendedor-update>
 	`
 })

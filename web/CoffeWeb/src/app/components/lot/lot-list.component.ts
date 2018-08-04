@@ -35,10 +35,10 @@ import { LotService } from './lot.service';
 				<button class="btn-icon" type="button" (click)="create()">
 					<i class="material-icons">add</i>
 				</button>
-				<button class="btn-icon" type="button"> <!--
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">-->
+				<!--<button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
 					<i class="material-icons">delete</i>
-				</button>
+				</button>-->
 			</div>
 		</div>
 

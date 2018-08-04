@@ -79,7 +79,8 @@ import { NotificationService } from '../../core/utils/notification/notification.
 					<div class="wrap-fields">
 						<div>
 							<span class="label">Status</span>
-							<span class="output">{{provider.statusProvider?.name || '-'}}</span>
+							<span class="output" *ngIf="provider.deleted" >Inactivo</span>
+							<span class="output" *ngIf="!provider.deleted">Activo</span>
 						</div>
 					</div>
 				</ng-template>
@@ -129,7 +130,8 @@ import { NotificationService } from '../../core/utils/notification/notification.
 					<div class="wrap-fields">
 						<div>
 							<span class="label">Status</span>
-							<span class="output">{{provider.statusProvider?.name || '-'}}</span>
+							<span class="output" *ngIf="provider.deleted" >Inactivo</span>
+							<span class="output" *ngIf="!provider.deleted">Activo</span>
 						</div>
 					</div>
 				</ng-template>

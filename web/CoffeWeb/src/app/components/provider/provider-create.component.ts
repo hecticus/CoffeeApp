@@ -1,12 +1,7 @@
-import { FormGroup } from '@angular/forms';
-import { ToastrManager } from 'ng6-toastr-notifications';
+import { BaseService } from '../../core/base.service';
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { ProviderService } from './provider.service';
 import { ProviderType } from '../../core/models/provider-type';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
-import { NotificationService } from '../../core/utils/notification/notification.service';
-import { BaseService } from '../../core/base.service';
 
 @Component({
 	styleUrls: ['./provider.component.css'],

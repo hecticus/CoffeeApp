@@ -27,7 +27,7 @@ import { BaseService } from '../../core/base.service';
 				</mat-select>
 			</div>-->
 			<div class="field">
-				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
 			</div>
 			<div class="container-button-filter">
 				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
@@ -42,7 +42,7 @@ import { BaseService } from '../../core/base.service';
 					<i class="material-icons">add</i>
 				</button>
 				<!-- <button class="btn-icon" type="button">
-				<button class="btn-icon" title="Delete" type="button" 
+				<button class="btn-icon" title="Delete" type="button"
 				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
 					<i class="material-icons">delete</i>
 				</button> -->
@@ -113,8 +113,11 @@ import { BaseService } from '../../core/base.service';
 
 				<!-- Position statusProvider -->
 				<ng-container matColumnDef="statusProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider?.name || '-'}} </td>
+				<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Deleted</th>
+					<td mat-cell *matCellDef="let provider">
+						<div *ngIf="provider.deleted" >Inactivo</div>
+						<div *ngIf="!provider.deleted">Activo</div>
+					</td>
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

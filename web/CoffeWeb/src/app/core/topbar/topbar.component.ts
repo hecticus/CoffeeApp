@@ -20,6 +20,8 @@ export class TopbarComponent implements OnInit {
 
 	ngOnInit() {
 		this.user = JSON.parse(sessionStorage.getItem('user'));
+		// console.log(this.user.firstName);
+		// console.log(sessionStorage.getItem('user.firstName'));
 	}
 
 	public logout() {

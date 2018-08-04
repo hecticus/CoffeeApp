@@ -1,17 +1,9 @@
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BaseService } from '../../core/base.service';
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
-import { Lot } from '../../core/models/lot';
 import { NotificationService } from '../../core/utils/notification/notification.service';
 import { Provider } from '../../core/models/provider';
 import { ProviderService } from './provider.service';
-import { ProviderType } from '../../core/models/provider-type';
-import { ProviderTypeService } from '../provider-type/provider-type.service';
-import { Status } from '../../core/models/status';
-import { StatusProviderService } from '../status/status-provider.service';
-
 
 @Component({
 	selector: 'app-vendedor',
@@ -75,7 +67,7 @@ import { StatusProviderService } from '../status/status-provider.service';
 	`
 })
 
-export class VendedorComponent implements OnInit {
+export class VendedorCreateComponent implements OnInit {
 	form: FormGroup;
 
 	constructor(

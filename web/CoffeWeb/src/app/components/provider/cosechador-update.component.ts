@@ -1,4 +1,4 @@
-import { NotificationService } from './../../core/utils/notification/notification.service';
+import { NotificationService } from '../../core/utils/notification/notification.service';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';

@@ -59,7 +59,7 @@ import { ProviderService } from './provider.service';
 	</form>
 `
 })
-export class CosechadorComponent implements OnInit {
+export class CosechadorCreateComponent implements OnInit {
 	form: FormGroup;
 
 	constructor(
