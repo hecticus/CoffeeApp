@@ -26,71 +26,124 @@ import { NotificationService } from '../../core/utils/notification/notification.
 			<div class="fieldset">
 				<div class="legend">Datos del Proveedor</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Tipo del Proveedor</span>
-						<span class="output">{{provider.providerType?.nameProviderType || '-'}}</span>
+				<ng-template [ngIf]= " selected == 'Vendedor'">
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Tipo del Proveedor</span>
+							<span class="output">{{provider.providerType?.nameProviderType || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Nombre</span>
-						<span class="output">{{provider.nameProvider || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Nombre del Vendedor</span>
+							<span class="output">{{provider.nameProvider || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">RUC</span>
-						<span class="output">{{provider.nitProvider || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">RUC</span>
+							<span class="output">{{provider.nitProvider || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Dirección</span>
-						<span class="output">{{provider.addressProvider || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Dirección</span>
+							<span class="output">{{provider.addressProvider || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Número de Teléfono</span>
-						<span class="output">{{provider.numberProvider || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Número de Teléfono</span>
+							<span class="output">{{provider.numberProvider || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Correo Electrónico</span>
-						<span class="output">{{provider.emailProvider || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Correo Electrónico</span>
+							<span class="output">{{provider.emailProvider || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Nombre de Contacto</span>
-						<span class="output">{{provider.contactNameProvider || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Nombre de Contacto</span>
+							<span class="output">{{provider.contactNameProvider || '-'}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Status</span>
-						<span class="output">{{provider.statusProvider?.name || '-'}}</span>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Status</span>
+							<span class="output">{{provider.statusProvider?.name || '-'}}</span>
+						</div>
 					</div>
-				</div>
+				</ng-template>
+
+				<ng-template [ngIf]= " selected == 'Cosechador'">
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Tipo del Proveedor</span>
+							<span class="output">{{provider.providerType?.nameProviderType || '-'}}</span>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Nombre del Cosechador</span>
+							<span class="output">{{provider.nameProvider || '-'}}</span>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">DNI</span>
+							<span class="output">{{provider.nitProvider || '-'}}</span>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Dirección</span>
+							<span class="output">{{provider.addressProvider || '-'}}</span>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Número de Teléfono</span>
+							<span class="output">{{provider.numberProvider || '-'}}</span>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Correo Electrónico</span>
+							<span class="output">{{provider.emailProvider || '-'}}</span>
+						</div>
+					</div>
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Status</span>
+							<span class="output">{{provider.statusProvider?.name || '-'}}</span>
+						</div>
+					</div>
+				</ng-template>
+
 			</div>
 		</div>
 
 		<ng-template #template>
 			<div class="modal-body text-center">
-				<div class="dialog-title">Confirmation</div>
-				<div class="dialog-message">Are you sure you want to delete this record?</div>
+				<div class="dialog-title">Confirmación </div>
+				<div class="dialog-message">¿Estas seguro que quieres eliminar este lote?</div>
 				<div class="dialog-options">
 					<button class="btn-text green" type="button" (click)="delete()">
-						<div class="text">Yes</div>
+						<div class="text">Si</div>
 					</button>
 					<button class="btn-text red" type="button" (click)="decline()" >
 						<div class="text">No</div>
@@ -103,7 +156,7 @@ import { NotificationService } from '../../core/utils/notification/notification.
 export class ProviderReadComponent implements OnInit {
 	modalRef: BsModalRef;
 	provider = new Provider();
-	// providerType: ProviderType;
+	selected = '';
 
 	constructor(
 		private router: Router,
@@ -117,9 +170,12 @@ export class ProviderReadComponent implements OnInit {
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
 				this.providerService.getById(params['providerId']).subscribe(
-					data => { this.provider = data['result'];
+					data => {
+						this.provider = data['result'];
+						this.selected = this.provider.providerType.nameProviderType;
+						console.log(this.selected);
 				});
-			});
+		});
 	}
 
 	update() {

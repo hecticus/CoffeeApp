@@ -63,9 +63,9 @@ export class CosechadorComponent implements OnInit {
 	form: FormGroup;
 
 	constructor(
-		private notificationService: NotificationService,
 		private location: Location,
 		private providerService: ProviderService,
+		private notificationService: NotificationService,
 	) {}
 
 	ngOnInit () {
