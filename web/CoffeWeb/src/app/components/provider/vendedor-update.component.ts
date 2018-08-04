@@ -11,6 +11,7 @@ import { ProviderType } from '../../core/models/provider-type';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
 
 @Component({
+	selector: 'app-vendedor-update',
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Editar Provider</h2>
@@ -101,7 +102,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 })
 
 
-export class ProviderUpdateComponent implements OnInit  {
+export class VendedorUpdateComponent implements OnInit  {
 	form: FormGroup;
 	provType: ProviderType[];
 	options: FormGroup;

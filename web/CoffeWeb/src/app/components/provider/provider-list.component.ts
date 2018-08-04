@@ -41,10 +41,11 @@ import { BaseService } from '../../core/base.service';
 				<button class="btn-icon" type="button" (click)="create()">
 					<i class="material-icons">add</i>
 				</button>
-				<button class="btn-icon" type="button"> <!--
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">-->
+				<!-- <button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button" 
+				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
 					<i class="material-icons">delete</i>
-				</button>
+				</button> -->
 			</div>
 		</div>
 
@@ -134,6 +135,7 @@ export class ProviderListComponent implements OnInit {
 	columnsToDisplay = ['select', 'nameProvider', 'nitProvider', 'provider.providerType.nameProviderType',
 						'statusProvider', 'addressProvider', 'emailProvider',
 						'contactNameProvider', 'numberProvider'];
+
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
@@ -143,11 +145,7 @@ export class ProviderListComponent implements OnInit {
 
 	// Defione Selection
 	selection = new SelectionModel<Provider>(true, []);
-	// const initialSelection = [];
-	// const allowMultiSelect = true;
-	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
 
-	seler = 4;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	constructor(
@@ -158,11 +156,13 @@ export class ProviderListComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
-		this.providerTypeService.getAll().subscribe(
+		let paramStatus = BaseService.jsonToHttpParams(
+			{collection: 'id,nameProviderType'}
+		);
+		this.providerTypeService.getAll(paramStatus).subscribe(
 			data => {
 				this.provType = data['result'];
 		});
@@ -174,15 +174,7 @@ export class ProviderListComponent implements OnInit {
 
 		this.providerService.getAll(httpParams).subscribe(
 			data => {
-				this.providers = data['result'];
 				this.dataSource.data = data['result'];
-			console.log(this.dataSource.data );
-		});
-
-		this.providerService.getById(1130).subscribe(
-			data => {
-				let provider: Provider = data['result'];
-			console.log(  provider.deleted );
 		});
 	}
 

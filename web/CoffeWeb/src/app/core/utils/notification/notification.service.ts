@@ -41,7 +41,7 @@ export class NotificationService {
 	}
 
 	sucessDelete(name: string) {
-		this.toastr.successToastr('Exitoso', 'Actualización exitosa de ' + name);
+		this.toastr.successToastr('Exitoso', 'Eliminacion exitosa de ' + name);
 	}
 
 	errorDuplicated(name: string) {

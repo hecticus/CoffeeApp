@@ -1,4 +1,4 @@
-import { User } from './../models/user';
+import { User } from '../models/user';
 import { Component, OnInit } from '@angular/core';
 import { AccessTokenRequest } from '../models/accessTokenResquest';
 import { Router } from '@angular/router';
@@ -20,7 +20,6 @@ export class TopbarComponent implements OnInit {
 
 	ngOnInit() {
 		this.user = JSON.parse(sessionStorage.getItem('user'));
-		console.log(sessionStorage.getItem('user'));
 	}
 
 	public logout() {

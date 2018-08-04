@@ -1,15 +1,12 @@
-import { ToastrManager } from 'ng6-toastr-notifications';
+
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { ProviderType } from '../../core/models/provider-type';
-import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { ProviderService } from './provider.service';
 import { Location } from '@angular/common';
-import { Lot } from '../../core/models/lot';
 import { Component, OnInit, TemplateRef} from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { LotService } from '../lot/lot.service';
+import { Router, ActivatedRoute} from '@angular/router';
 import { Provider } from '../../core/models/provider';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { NotificationService } from '../../core/utils/notification/notification.service';
 
 @Component({
 	template: `
@@ -114,20 +111,15 @@ export class ProviderReadComponent implements OnInit {
 		private activatedRoute: ActivatedRoute,
 		private providerService: ProviderService,
 		private modalService: BsModalService,
-		private toastr: ToastrManager
+		private notificationService: NotificationService,
 	) { }
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
 				this.providerService.getById(params['providerId']).subscribe(
 					data => { this.provider = data['result'];
-				console.log(this.provider); }
-				);
+				});
 			});
-		// this.providerTypeService.getById(this.provider.providerType.id).subscribe(
-		// 	data => { this.providerType = data['result'];
-		// 	console.log(this.providerType);
-		// 	});
 	}
 
 	update() {
@@ -139,24 +131,16 @@ export class ProviderReadComponent implements OnInit {
 		this.modalRef.hide();
 	}
 
-	showSuccess() {
-		this.toastr.successToastr('This is success toast.', 'Success!');
-	}
-
-	showInfo() {
-		this.toastr.infoToastr('This is info toast.', 'Info');
-	}
-
 	openModal(template: TemplateRef<any>) {
 		this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
 	}
 
 	delete() {
 		this.providerService.delete(this.provider.id).subscribe( any => {
-			this.showSuccess();
+			this.notificationService.sucessDelete(this.provider.nameProvider);
 			let url = this.location.path();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
-			},  err => this.toastr.infoToastr('This is info toast.', err));
+			},  err => this.notificationService.error(err));
 		this.modalRef.hide();
 	}
 }

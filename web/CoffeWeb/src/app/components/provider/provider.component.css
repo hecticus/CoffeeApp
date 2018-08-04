@@ -17,3 +17,23 @@ th.mat-sort-header-sorted {
 .example-full-width {
     width: 100%;
 }
+
+.field {
+    width: 100%;
+}
+
+.wrap-fields {
+    width: 100%;
+}
+
+.mat-option-text {
+    width: 100%;
+}
+
+.mat-form-field-infix {
+    display: block;
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: 100%;
+}

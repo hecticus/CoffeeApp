@@ -1,3 +1,4 @@
+import { CosechadorComponent } from './cosechador.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProviderService } from './provider.service';
 import { NgModule } from '@angular/core';
@@ -13,6 +14,9 @@ import { ProviderListComponent } from './provider-list.component';
 import { ProviderCreateComponent } from './provider-create.component';
 import { ProviderReadComponent } from './provider-read.component';
 import { ProviderRoutingModule } from './provider.routing';
+import { VendedorComponent } from './vendedor.component';
+import { VendedorUpdateComponent } from './vendedor-update.component';
+import { CosechadorUpdateComponent } from './cosechador-update.component';
 
 @NgModule({
 	imports: [
@@ -37,6 +41,10 @@ import { ProviderRoutingModule } from './provider.routing';
 		ProviderCreateComponent,
 		ProviderReadComponent,
 		ProviderUpdateComponent,
+		CosechadorComponent,
+		VendedorComponent,
+		VendedorUpdateComponent,
+		CosechadorUpdateComponent,
 	],
 	exports: [
 		ProviderComponent,
@@ -44,6 +52,10 @@ import { ProviderRoutingModule } from './provider.routing';
 		ProviderCreateComponent,
 		ProviderReadComponent,
 		ProviderUpdateComponent,
+		CosechadorComponent,
+		VendedorComponent,
+		VendedorUpdateComponent,
+		CosechadorUpdateComponent,
 	],
 	providers: [
 		ProviderService,

@@ -11,6 +11,7 @@ import { ProviderType } from '../../core/models/provider-type';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
 
 @Component({
+	selector: 'app-cosechador-update',
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Editar Provider</h2>
@@ -101,7 +102,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 })
 
 
-export class ProviderUpdateComponent implements OnInit  {
+export class CosechadorUpdateComponent implements OnInit  {
 	form: FormGroup;
 	provType: ProviderType[];
 	options: FormGroup;
@@ -139,11 +140,8 @@ export class ProviderUpdateComponent implements OnInit  {
 	}
 
 	update() {
-		console.log(this.form.value);
-		this.form.controls['providerType'].patchValue({id: this.form.value['providerType']});
-		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
-		console.log(789);
-		console.log(this.form.value);
+		this.form.controls['providerType'].patchValue({id: 2 });
+		this.form.controls['statusProvider'].patchValue({id: 41 });
 
 		this.providerService.update(<Provider> this.form.value)
 			.subscribe(provider => {
