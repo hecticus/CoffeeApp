@@ -136,6 +136,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 if (imagePath != null) {
                     //providerParam.setPhotoProvider(imagePath);todo img
                     try {
+                        providerParam.setPhotoProvider(imagePath);
                         providerParam.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",imagePath)));
                     }catch (Exception e){}
 

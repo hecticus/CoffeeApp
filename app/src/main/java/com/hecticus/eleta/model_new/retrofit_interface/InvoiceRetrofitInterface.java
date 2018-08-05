@@ -83,20 +83,22 @@ DELETE  /invoiceDetail/:id                                                      
       */
 
 
-    //todo cambio
+    //todo listo
     @GET("invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
     Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
 
-    //todo cambio
+
     @GET("invoiceDetail")///findAllByIdInvoice/{invoiceId}")
     Call<InvoiceDetailsResponse> getInvoiceDetails(@Query("invoice") int invoiceId);
 
+    //todo listo
     @DELETE("invoice/{id}")
     Call<Message> deleteInvoice(@Path("id") int idInvoice);
 
     //@DELETE("invoiceDetail/deleteAllByIdInvoiceAndDate/{idInvoice}/{date}") todo cambio
     @DELETE("invoiceDetail/{id}")//pasarle el array de ids estoy pasando los un array vacio
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
+
 
     @POST("invoice2")//{idProvider}/{date}")
     Call<CreateInvoiceResponse> newInvoiceDetail(@Body Invoice post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post

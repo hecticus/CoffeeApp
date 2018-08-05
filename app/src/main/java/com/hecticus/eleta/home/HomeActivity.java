@@ -173,7 +173,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         /*if (syncErrorType == SyncManager.SyncErrorType.DELETING_PROVIDER_WITH_OPEN_INVOICES)
             Toast.makeText(this, "Sincronización incompleta. Se intento borrar un(os) proveedor(es) con facturas aun no cerradas", Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(this, "Error en sincronización. Quedaron elementos pendientes, intente nuevamente", Toast.LENGTH_LONG).show();*/
+            Toast.makeText(this, "Error en sincronización. Quedaron elementos pendientes, intente nuevamente", Toast.LENGTH_LONG).show();
+        */
     }
 
     @DebugLog

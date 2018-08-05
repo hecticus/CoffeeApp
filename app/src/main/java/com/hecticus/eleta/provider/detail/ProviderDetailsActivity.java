@@ -106,7 +106,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             //initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider",-1));//new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
             //mPresenter.
             initialProvider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
-            Log.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
+            //Log.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
         }
 
         mPresenter = new ProviderDetailsPresenter(this, this, initialProvider, isForProviderCreation, canEdit, isHarvester);

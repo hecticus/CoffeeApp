@@ -30,7 +30,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @SerializedName("statusInvo")
     @Expose
-    private String statusInvo = "Open";
+    private String statusInvo = "Abierta";
 
     @Ignore
     @SerializedName("provider")
@@ -41,7 +41,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Expose
     private StatusInvoice invoiceStatus;
 
-    @SerializedName("createdAt")
+    @SerializedName("startDateInvoice")//("createdAt")
     @Expose
     private String invoiceStartDate;
 
@@ -82,7 +82,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     }
 
     public Invoice(InvoicePost invoicePost) {
-        //invoiceStatus = new StatusInvoice(11, false, "Open", null);
+        invoiceStatus = new StatusInvoice(11, false, "Abierta", null);
         invoiceStartDate = invoicePost.getStartDate();
         invoiceClosedDate = invoicePost.getStartDate();
         invoiceTotal = invoicePost.getTotal();

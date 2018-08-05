@@ -553,12 +553,12 @@ public class SyncManager {
 
         somethingHasBeenSynced = true;
 
-        Call<Message> call = providersApi.deleteProvider1(firstProvider.getIdProvider());
+        Call<ResponseBody> call = providersApi.deleteProvider(firstProvider.getIdProvider());
 
-        new ManagerServices<>(call, new ManagerServices.ServiceListener<Message>() {
+        new ManagerServices<>(call, new ManagerServices.ServiceListener<ResponseBody>() {
             @DebugLog
             @Override
-            public void onSuccess(Response<Message> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try {
 
                     Log.d("DETAILS", "--->Success deleteProviderSync:" + response.body());
@@ -581,7 +581,7 @@ public class SyncManager {
 
             @DebugLog
             @Override
-            public void onError(boolean fail, int code, Response<Message> response, String errorMessage) {
+            public void onError(boolean fail, int code, Response<ResponseBody> response, String errorMessage) {
                 Log.d("DETAILS", "--->deleteProviderSync onError. Response:" + response);
                 if (response.code() == 409)
                     HomeActivity.INSTANCE.syncFailed("deleteProviderSync errorResponse (DELETING_PROVIDER_WITH_OPEN_INVOICES): " + response);
@@ -707,11 +707,13 @@ public class SyncManager {
         } else {
             deleteNextOfDay();
         }*/
+        onSuccessfulSync(); //todo borrar
     }
 
 
     @DebugLog
     public void deleteNextOfDay() {
+        onSuccessfulSync(); //todo borrar
         /*if (ofDayList.size() <= 0) {
             onSuccessfulSync();
             return;
@@ -780,7 +782,10 @@ public class SyncManager {
     @DebugLog
     private void onSuccessfulSync() {
         //todo nose
-        //FileUtils.clearTempImages();
+        try {
+            FileUtils.clearTempImages();
+        }catch (Exception e){
+        }
         HomeActivity.INSTANCE.syncSuccessful(failedImageUploads);
     }
 }
