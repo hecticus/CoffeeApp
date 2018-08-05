@@ -355,12 +355,15 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
         currentDetailsList.get(0).setAmount(Float.valueOf(amount));
         currentDetailsList.get(0).setFreight(freight);
         currentDetailsList.get(0).setPriceItem(Float.valueOf(price));
-        Log.d("DEBUG itemtype", itemId+"");
+        //Log.d("DEBUG itemtype", itemId+"");
         currentDetailsList.get(0).setItemType(new ItemType(itemId));
         List<InvoiceDetailPurity> listPurity = new ArrayList<>();
-        for(int  i=0; i<purities.size(); i++){
-            listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
-                                                    Float.valueOf(purities.get(i).getWeightString())));
+        for(int  i=0; i<purities.size(); i++) {
+            try {
+                listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
+                        Float.valueOf(purities.get(i).getWeightString())));
+            }catch (Exception e){
+            }
         }
         currentDetailsList.get(0).setDetailPurities(listPurity);
         currentDetailsList.get(0).setDispatcherName(dispatcher);

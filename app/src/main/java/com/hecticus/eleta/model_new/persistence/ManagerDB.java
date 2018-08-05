@@ -108,7 +108,7 @@ public class ManagerDB {
                         Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
                     } else
                         Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
-                    invoice.setStatusInvo("Closed");
+                    invoice.setStatusInvo("Cerrada");
                     realm.insertOrUpdate(invoice);
                 }
             });

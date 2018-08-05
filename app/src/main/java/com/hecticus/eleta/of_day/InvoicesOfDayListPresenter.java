@@ -167,9 +167,9 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         /*Gson g= new Gson();
         Log.d("DEBUGGGGGGGG", g.toJson(currentInvoice));*/
         try {
-            return currentInvoice.getStatusInvo().equals("Closed");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
+            return currentInvoice.getStatusInvo().equals("Cerrada");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
         }catch (Exception e){
-            return currentInvoice.getInvoiceStatus().getDescription().equals("Closed");
+            return currentInvoice.getInvoiceStatus().getDescription().equals("Cerrada");
         }
     }
 
@@ -232,7 +232,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         com.hecticus.eleta.model_new.Invoice invoice1
                 = new com.hecticus.eleta.model_new.Invoice(invoice,
                 invoice.getProvider(),
-                new StatusInvoice(12, false, "Closed", null));
+                new StatusInvoice(12, false, "Cerrada", null));
         mRepository.closeInvoiceRequest(invoice1);
     }
 

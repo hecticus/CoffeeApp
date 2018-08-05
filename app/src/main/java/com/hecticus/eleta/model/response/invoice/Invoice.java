@@ -112,7 +112,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Override
     public boolean canDelete() {
         //Log.d("DEBUGGGGGGGG", String.valueOf(!getInvoiceStatus().getDescription().equals("Closed")));
-        if(/*getInvoiceStatus().getDescription()*/getStatusInvo().equals("Closed")){
+        if(/*getInvoiceStatus().getDescription()*/getStatusInvo().equals("Cerrada")){
             return false;
         }else{
             return true; //invoiceStatus < 3; todo nose

@@ -249,7 +249,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
     @DebugLog
     @Override
+
     public void closeInvoiceRequest(com.hecticus.eleta.model_new.Invoice post) {
+        Log.d("DEBUG id close", post.getId()+"");
         Call<Message> call = invoiceApi.closeInvoice(post.getId().intValue(), post);
 
         call.enqueue(new Callback<Message>() {
