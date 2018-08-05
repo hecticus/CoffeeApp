@@ -7,7 +7,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { ToastrManager } from 'ng6-toastr-notifications';
+import { NotificationService } from '../../core/utils/notification/notification.service';
 
 @Component({
 	template: `
@@ -26,7 +26,13 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 		<div class="answer">
 			<div class="fieldset">
 				<div class="legend">Datos del Lote</div>
-
+				<!--<div class="wrap-fields">
+					<div>
+						<span class="label">Status</span>
+						<span class="output" *ngIf="lot.deleted" >Inactivo</span>
+						<span class="output" *ngIf="!lot.deleted">Activo</span>
+					</div>
+				</div>-->
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Nombre</span>
@@ -89,7 +95,7 @@ export class LotReadComponent implements OnInit {
 		private location: Location,
 		private statusLotService: StatusLotService,
 		private modalService: BsModalService,
-		private toastr: ToastrManager
+		private notificationService: NotificationService,
 
 	) { }
 
@@ -113,14 +119,6 @@ export class LotReadComponent implements OnInit {
 		this.modalRef.hide();
 	}
 
-	showSuccess() {
-		this.toastr.successToastr('This is success toast.', 'Success!');
-	}
-
-	showInfo() {
-		this.toastr.infoToastr('This is info toast.', 'Info');
-	}
-
 	update() {
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
 		console.log('estoy en update');
@@ -129,10 +127,14 @@ export class LotReadComponent implements OnInit {
 
 	delete() {
 		this.lotService.delete(this.lot.id).subscribe( any => {
-			this.showSuccess();
+			this.notificationService.sucessDelete('Lote');
 			let url = this.location.path();
+			this.modalRef.hide();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
-			},  err => this.toastr.infoToastr('This is info toast.', err));
-		this.modalRef.hide();
+		}, err =>  {
+			this.notificationService.error(err);
+			this.modalRef.hide();
+		});
 	}
 }
+

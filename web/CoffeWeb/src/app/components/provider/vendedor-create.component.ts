@@ -6,7 +6,7 @@ import { Provider } from '../../core/models/provider';
 import { ProviderService } from './provider.service';
 
 @Component({
-	selector: 'app-vendedor',
+	selector: 'app-vendedor-create',
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
@@ -86,7 +86,7 @@ export class VendedorCreateComponent implements OnInit {
 		this.form.controls['statusProvider'].patchValue({id: 41});
 		this.providerService.create(<Provider> this.form.value)
 			.subscribe(provider => {
-				this.notificationService.sucessInsert(this.form.value['nameProvider']);
+				this.notificationService.sucessInsert('Vendedor');
 				this.location.back();
 			}, err => this.notificationService.error(err));
 	}

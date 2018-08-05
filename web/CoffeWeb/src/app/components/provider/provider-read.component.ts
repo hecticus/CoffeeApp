@@ -27,6 +27,15 @@ import { NotificationService } from '../../core/utils/notification/notification.
 				<div class="legend">Datos del Proveedor</div>
 
 				<ng-template [ngIf]= " selected == 'Vendedor'">
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Status</span>
+							<span class="output" *ngIf="provider.deleted" >Inactivo</span>
+							<span class="output" *ngIf="!provider.deleted">Activo</span>
+						</div>
+					</div>
+
 					<div class="wrap-fields">
 						<div>
 							<span class="label">Tipo del Proveedor</span>
@@ -76,16 +85,17 @@ import { NotificationService } from '../../core/utils/notification/notification.
 						</div>
 					</div>
 
-					<div class="wrap-fields">
-						<div>
-							<span class="label">Status</span>
-							<span class="output" *ngIf="provider.deleted" >Inactivo</span>
-							<span class="output" *ngIf="!provider.deleted">Activo</span>
-						</div>
-					</div>
 				</ng-template>
 
 				<ng-template [ngIf]= " selected == 'Cosechador'">
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Status</span>
+							<span class="output" *ngIf="provider.deleted">Inactivo</span>
+							<span class="output" *ngIf="!provider.deleted">Activo</span>
+						</div>
+					</div>
+
 					<div class="wrap-fields">
 						<div>
 							<span class="label">Tipo del Proveedor</span>
@@ -125,13 +135,6 @@ import { NotificationService } from '../../core/utils/notification/notification.
 						<div>
 							<span class="label">Correo Electrónico</span>
 							<span class="output">{{provider.emailProvider || '-'}}</span>
-						</div>
-					</div>
-					<div class="wrap-fields">
-						<div>
-							<span class="label">Status</span>
-							<span class="output" *ngIf="provider.deleted" >Inactivo</span>
-							<span class="output" *ngIf="!provider.deleted">Activo</span>
 						</div>
 					</div>
 				</ng-template>
@@ -195,7 +198,7 @@ export class ProviderReadComponent implements OnInit {
 
 	delete() {
 		this.providerService.delete(this.provider.id).subscribe( any => {
-			this.notificationService.sucessDelete(this.provider.nameProvider);
+			this.notificationService.sucessDelete('Proveedor');
 			let url = this.location.path();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
 			},  err => this.notificationService.error(err));

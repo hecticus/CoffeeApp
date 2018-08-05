@@ -1,4 +1,3 @@
-import { ToastrManager } from 'ng6-toastr-notifications';
 import { Status } from '../../core/models/status';
 import { StatusLotService } from '../status/status-lot.service';
 import { Farm } from '../../core/models/farm';
@@ -9,6 +8,7 @@ import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { NotificationService } from '../../core/utils/notification/notification.service';
 
 @Component({
 	styleUrls: ['./lot.component.css'],
@@ -17,6 +17,17 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 		<form  *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
 			<legend><span>Datos del Lote</span></legend>
+			<!-- <div class="wrap-fields">
+				<div class="field form-field">
+					<mat-form-field class="example-full-width">
+						<mat-select required [formControl]="form.controls['deleted']">
+							<mat-option [value]="true">Inactivo</mat-option>
+							<mat-option [value]="false">Activo</mat-option>
+						</mat-select>
+						<mat-label><b>Status</b></mat-label>
+					</mat-form-field>
+				</div>
+			</div> -->
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field required class="example-full-width">
@@ -25,27 +36,16 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 					<app-validator [control]="form.controls['nameLot']"></app-validator>
 				</div>
 			</div>
-			<!-- <div class="wrap-fields">
+			<!--<div class="wrap-fields">
 				<div class="field">
-					<mat-form-field required class="example-full-width">
-						<input matInput formControlName="nameLot" placeholder="Name">
+					<mat-form-field  class="example-full-width">
+						<mat-radio-group required [formControl]="form.controls['deleted']">
+								<mat-radio-button value="true">Inactivo</mat-radio-button>
+								<mat-radio-button value="false">Activo</mat-radio-button>
+						</mat-radio-group>
 					</mat-form-field>
-					<app-validator  [control]="form.controls['nameLot']"></app-validator>
 				</div>
-			</div>
-			-->
-			<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControl]="form.controls['statusLot']">
-								<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
-								</mat-option>
-							</mat-select>
-							<mat-label><b>Status</b></mat-label>
-						</mat-form-field>
-						<app-validator [control]="form.controls['statusLot']"></app-validator>
-					</div>
-			</div>
+			</div>-->
 			<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
@@ -100,7 +100,7 @@ export class LotUpdateComponent implements OnInit {
 		private location: Location,
 		private farmService: FarmService,
 		private statusLotService: StatusLotService,
-		private toastr: ToastrManager
+		private notificationService: NotificationService,
 	) {	}
 
 	ngOnInit() {
@@ -131,10 +131,12 @@ export class LotUpdateComponent implements OnInit {
 
 		this.lotService.update(<Lot> this.form.value)
 			.subscribe(lot => {
-				this.toastr.successToastr('Success Update', lot.nameLot);
+				this.notificationService.sucessUpdate('Lote');
 				this.location.back();
 				console.log(this.form.value);
-			}, err => this.toastr.errorToastr('This is error', err));
+			}, err =>  {
+				this.notificationService.error(err);
+			});
 	}
 
 }

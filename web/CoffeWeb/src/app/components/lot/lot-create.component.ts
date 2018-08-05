@@ -7,7 +7,7 @@ import { Lot } from '../../core/models/lot';
 import { LotService } from './lot.service';
 import { Status } from '../../core/models/status';
 import { StatusLotService } from '../status/status-lot.service';
-import { ToastrManager } from 'ng6-toastr-notifications';
+import { NotificationService } from '../../core/utils/notification/notification.service';
 
 @Component({
 	styleUrls: ['./lot.component.css'],
@@ -31,7 +31,7 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nameLot']"></app-validator>
 					</div>
-				</div>-->
+				</div>
 				<div class="wrap-fields">
 						<div class="field form-field">
 							<mat-form-field class="example-full-width">
@@ -43,7 +43,7 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 							</mat-form-field>
 							<app-validator [control]="form.controls['statusLot']"></app-validator>
 						</div>
-				</div>
+				</div>-->
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
@@ -100,7 +100,7 @@ export class LotCreateComponent implements OnInit  {
 		private lotService: LotService,
 		private farService: FarmService,
 		private statusLotService: StatusLotService,
-		private toastr: ToastrManager,
+		private notificationService: NotificationService,
 	) {	}
 
 	ngOnInit () {
@@ -127,9 +127,11 @@ export class LotCreateComponent implements OnInit  {
 		console.log(this.form);
 		this.lotService.create(<Lot> this.form.value)
 		.subscribe(lot => {
-			this.toastr.successToastr('Success create', lot.nameLot);
+			this.notificationService.sucessInsert('Lote');
 			this.location.back();
-		}, err => this.toastr.errorToastr('This is error', err));
-
+		}, err =>  {
+			this.notificationService.error(err);
+		});
 	}
 }
+

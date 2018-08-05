@@ -6,6 +6,7 @@ import { ProviderType } from '../../core/models/provider-type';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LotService } from './lot.service';
+import { BaseService } from '../../core/base.service';
 
 @Component({
 	styleUrls: ['./lot.component.css'],
@@ -75,10 +76,13 @@ import { LotService } from './lot.service';
 				</ng-container>
 
 				<!-- Position  Status-->
-				<ng-container matColumnDef="statusLot.name">
+				<!-- <ng-container matColumnDef="deleted">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.statusLot.name}} </td>
-				</ng-container>
+					<td mat-cell *matCellDef="let lot">
+						<div *ngIf="lot.deleted" >Inactivo</div>
+						<div *ngIf="!lot.deleted">Activo</div>
+					</td>
+				</ng-container>-->
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="areaLot">
@@ -112,11 +116,11 @@ export class LotListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'nameLot', 'farm.nameFarm', 'statusLot.name', 'areaLot', 'heighLot', 'priceLot'];
+	columnsToDisplay = ['select', 'nameLot', 'farm.nameFarm', 'areaLot', 'heighLot', 'priceLot'];
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [5, 10, 20];
+	pageSizeOptions: number[] = [ 15, 30, 60];
 
 	dataSource = new MatTableDataSource<Provider>();
 
@@ -140,10 +144,15 @@ export class LotListComponent implements OnInit {
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
+		let httpParams = BaseService.jsonToHttpParams({
+			// collection: 'id ',
+			deleted: '1',
+		});
+
 		this.lotService.getAll().subscribe(
 			data => {
 				this.dataSource.data = data['result'];
-				console.log(this.dataSource);
+				console.log(this.dataSource.data);
 		});
 	}
 

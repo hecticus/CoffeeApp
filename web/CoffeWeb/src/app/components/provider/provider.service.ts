@@ -62,6 +62,7 @@ export class ProviderService {
 	getFormGroupProvider(provider: Provider): FormGroup {
 		return this.fb.group({
 			id: new FormControl(provider.id),
+			deleted:  new FormControl(provider.deleted),
 			providerType: new FormControl(provider.providerType, Validators.required),
 			statusProvider: new FormControl(provider.statusProvider),
 			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),
@@ -76,6 +77,7 @@ export class ProviderService {
 	getVendedor(provider: Provider): FormGroup {
 		return this.fb.group({
 			id: new FormControl(provider.id),
+			deleted:  new FormControl(provider.deleted),
 			providerType: new FormControl(provider.providerType),
 			statusProvider: new FormControl(provider.statusProvider),
 			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),
@@ -91,6 +93,7 @@ export class ProviderService {
 	getCosechador(provider: Provider): FormGroup {
 		return this.fb.group({
 			id: new FormControl(provider.id),
+			deleted:  new FormControl(provider.deleted),
 			providerType: new FormControl(provider.providerType),
 			statusProvider: new FormControl(provider.statusProvider),
 			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),

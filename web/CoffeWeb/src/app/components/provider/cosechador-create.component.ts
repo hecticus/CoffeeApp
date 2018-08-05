@@ -6,7 +6,7 @@ import { Provider } from '../../core/models/provider';
 import { ProviderService } from './provider.service';
 
 @Component({
-	selector: 'app-cosechador',
+	selector: 'app-cosechador-create',
 	styleUrls: ['./provider.component.css'],
 	template: `
 	<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
@@ -78,7 +78,7 @@ export class CosechadorCreateComponent implements OnInit {
 		this.form.controls['statusProvider'].patchValue({id: 41 });
 		this.providerService.create(<Provider> this.form.value)
 			.subscribe(provider => {
-				this.notificationService.sucessInsert(provider.nameProvider);
+				this.notificationService.sucessInsert('Cosechador');
 				this.location.back();
 			}, err =>  {
 				this.notificationService.error(err);

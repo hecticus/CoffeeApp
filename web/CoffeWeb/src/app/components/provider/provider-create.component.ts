@@ -22,8 +22,8 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 					</div>
 				</div>
 			</fieldset>
-			<app-cosechador *ngIf= "selected == 'Cosechador'"></app-cosechador>
-			<app-vendedor *ngIf= "selected == 'Vendedor'"></app-vendedor>
+			<app-cosechador-create *ngIf= "selected == 'Cosechador'"></app-cosechador-create>
+			<app-vendedor-create *ngIf= "selected == 'Vendedor'"></app-vendedor-create>
   `
 })
 

@@ -12,7 +12,18 @@ import { ProviderService } from './provider.service';
 	template: `
 	<form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 		<fieldset>
-			<legend><span>Datos del Proveedor</span></legend>
+			<legend><span>Datos del Cosechador</span></legend>
+			<div class="wrap-fields">
+				<div class="field form-field">
+					<mat-form-field class="example-full-width">
+						<mat-select required [formControl]="form.controls['deleted']">
+							<mat-option [value]="true">Inactivo</mat-option>
+							<mat-option [value]="false">Activo</mat-option>
+						</mat-select>
+						<mat-label><b>Status</b></mat-label>
+					</mat-form-field>
+				</div>
+			</div><!-- -->
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field  required class="example-full-width">
@@ -89,10 +100,10 @@ export class CosechadorUpdateComponent implements OnInit  {
 
 	update() {
 		this.form.controls['providerType'].patchValue({id: 2 });
-		this.form.controls['statusProvider'].patchValue({id: 41 });
+		// this.form.controls['statusProvider'].patchValue({id: 41 });
 		this.providerService.update(<Provider> this.form.value)
 			.subscribe(provider => {
-				this.notificationService.sucessUpdate(provider.nameProvider);
+				this.notificationService.sucessUpdate('Cosechador');
 				this.location.back();
 				console.log(this.form.value);
 			}, err => this.notificationService.error(err));
