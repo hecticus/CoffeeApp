@@ -138,8 +138,12 @@
     <string name="you_must_select_a_harvester">You must select a harvester</string>
     <string name="you_must_select_a_valid_lot">You must select a valid lot</string>
     <string name="you_must_enter_some_weight">You must enter some weight</string>
+    <string name="you_must_enter_some_weight_higher_zero">You must enter some weight higher than zero</string>
     <string name="you_must_enter_some_price">You must enter some priceByLot</string>
+    <string name="you_must_enter_some_price_higher_zero">You must enter some price higher than zero</string>
     <string name="you_must_enter_some_purity">You must enter some purity</string>
+    <string name="you_must_enter_some_purity_higher_zero">You must enter some purity higher than zero</string>
+    <string name="you_must_enter_some_purity_less_onehundred">You must enter some purity less than 100%</string>
     <string name="you_must_select_a_provider">You must select a provider</string>
     <string name="you_must_select_a_valid_store">You must select a valid store</string>
     <string name="you_must_select_a_valid_item">You must select a valid coffee</string>

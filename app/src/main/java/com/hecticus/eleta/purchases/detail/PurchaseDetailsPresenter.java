@@ -133,9 +133,21 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             return;
         }
 
+        if (Float.valueOf(amount) <= 0) {
+            mView.hideWorkingIndicator();
+            mView.showMessage(context.getString(R.string.you_must_enter_some_weight_higher_zero));
+            return;
+        }
+
         if (price.trim().isEmpty()) {
             mView.hideWorkingIndicator();
             mView.showMessage(context.getString(R.string.you_must_enter_some_price));
+            return;
+        }
+
+        if (Float.valueOf(price) <=0) {
+            mView.hideWorkingIndicator();
+            mView.showMessage(context.getString(R.string.you_must_enter_some_price_higher_zero));
             return;
         }
 
@@ -143,6 +155,21 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             mView.hideWorkingIndicator();
             mView.showMessage(context.getString(R.string.you_must_enter_some_purity));
             return;
+        }
+
+        for(int i=0; i<purities.size(); i++){
+            if(!purities.get(i).getWeightString().isEmpty()){
+                if(Float.valueOf(purities.get(i).getWeightString())<=0){
+                    mView.hideWorkingIndicator();
+                    mView.showMessage(context.getString(R.string.you_must_enter_some_purity_higher_zero));
+                    return;
+                }
+                if(Float.valueOf(purities.get(i).getWeightString())>=100){
+                    mView.hideWorkingIndicator();
+                    mView.showMessage(context.getString(R.string.you_must_enter_some_purity_less_onehundred));
+                    return;
+                }
+            }
         }
 
         if (dispatcher.trim().isEmpty()) {
