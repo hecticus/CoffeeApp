@@ -16,10 +16,23 @@ import { NotificationService } from '../../core/utils/notification/notification.
 		<form *ngIf="form" [formGroup]="form" (ngSubmit)="create()">
 			<fieldset>
 				<legend><span>Datos del Lote</span></legend>
+
+				<div class="wrap-fields">
+					<div class="field form-field">
+						<mat-form-field class="example-full-width">
+							<mat-select required [formControl]="form.controls['statusLot']">
+								<mat-option *ngFor="let s of status" [value]="{id: s.id}">{{s.name}}</mat-option>
+							</mat-select>
+							<mat-label><b>Estatus</b></mat-label>
+						</mat-form-field>
+						<app-validator [control]="form.controls['statusLot']"></app-validator>
+					</div>
+				</div>
+
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field required class="example-full-width">
-							<input matInput formControlName="nameLot" placeholder="Nombre">
+							<input matInput formControlName="nameLot" placeholder="Nombre del Lote">
 						</mat-form-field>
 						<app-validator [control]="form.controls['nameLot']"></app-validator>
 					</div>
@@ -31,24 +44,11 @@ import { NotificationService } from '../../core/utils/notification/notification.
 						</mat-form-field>
 						<app-validator  [control]="form.controls['nameLot']"></app-validator>
 					</div>
-				</div>
-				<div class="wrap-fields">
-						<div class="field form-field">
-							<mat-form-field class="example-full-width">
-								<mat-select required [formControl]="form.controls['statusLot']">
-								<mat-option>-- Ninguna --</mat-option>
-									<mat-option *ngFor="let s of status" [value]="{id: s.id}">{{s.name}}</mat-option>
-								</mat-select>
-								<mat-label><b>Status</b></mat-label>
-							</mat-form-field>
-							<app-validator [control]="form.controls['statusLot']"></app-validator>
-						</div>
 				</div>-->
 				<div class="wrap-fields">
 					<div class="field form-field">
 						<mat-form-field class="example-full-width">
 							<mat-select required [formControl]="form.controls['farm']">
-							<mat-option>-- Ninguna --</mat-option>
 								<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
 							</mat-select>
 							<mat-label><b>Granja</b></mat-label>

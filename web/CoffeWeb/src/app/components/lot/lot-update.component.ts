@@ -27,7 +27,19 @@ import { NotificationService } from '../../core/utils/notification/notification.
 						<mat-label><b>Status</b></mat-label>
 					</mat-form-field>
 				</div>
-			</div> -->
+			</div>-->
+			<div class="wrap-fields">
+					<div class="field form-field">
+						<mat-form-field class="example-full-width">
+							<mat-select required [formControl]="form.controls['statusLot']">
+								<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
+								</mat-option>
+							</mat-select>
+							<mat-label><b>Estatus</b></mat-label>
+						</mat-form-field>
+						<app-validator [control]="form.controls['statusLot']"></app-validator>
+					</div>
+			</div>
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field required class="example-full-width">
@@ -45,7 +57,8 @@ import { NotificationService } from '../../core/utils/notification/notification.
 						</mat-radio-group>
 					</mat-form-field>
 				</div>
-			</div>-->
+			</div>
+			-->
 			<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">

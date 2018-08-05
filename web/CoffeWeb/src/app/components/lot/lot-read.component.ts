@@ -35,6 +35,12 @@ import { NotificationService } from '../../core/utils/notification/notification.
 				</div>-->
 				<div class="wrap-fields">
 					<div>
+						<span class="label">Estatus</span>
+						<span class="output">{{lot.statusLot?.name|| '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div>
 						<span class="label">Nombre</span>
 						<span class="output">{{lot.nameLot|| '-'}}</span>
 					</div>

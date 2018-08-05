@@ -7,6 +7,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LotService } from './lot.service';
 import { BaseService } from '../../core/base.service';
+import { Lot } from '../../core/models/lot';
 
 @Component({
 	styleUrls: ['./lot.component.css'],
@@ -66,13 +67,13 @@ import { BaseService } from '../../core/base.service';
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef><span (click)="test()">Nombre</span></th>
-					<td mat-cell *matCellDef="let lot"> {{lot.nameLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.nameLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position Farm -->
 				<ng-container matColumnDef="farm.nameFarm">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Granja</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.farm.nameFarm}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.farm.nameFarm|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
@@ -85,21 +86,27 @@ import { BaseService } from '../../core/base.service';
 				</ng-container>-->
 
 				<!-- Position  Status-->
+				<ng-container matColumnDef="lot.statusLot">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Estatus</th>
+					<td mat-cell *matCellDef="let lot"> {{lot.statusLot?.name|| '-'}} </td>
+				</ng-container>
+
+				<!-- Position  Status-->
 				<ng-container matColumnDef="areaLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Área</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.areaLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.areaLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="heighLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Altura</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.heighLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.heighLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="priceLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.priceLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.priceLot|| '-'}} </td>
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
@@ -116,16 +123,16 @@ export class LotListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'nameLot', 'farm.nameFarm', 'areaLot', 'heighLot', 'priceLot'];
+	columnsToDisplay = ['select', 'nameLot', 'lot.statusLot', 'farm.nameFarm', 'areaLot', 'heighLot', 'priceLot'];
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
 	pageSizeOptions: number[] = [ 15, 30, 60];
 
-	dataSource = new MatTableDataSource<Provider>();
+	dataSource = new MatTableDataSource<Lot>();
 
 	// Defione Selection
-	selection = new SelectionModel<Provider>(true, []);
+	selection = new SelectionModel<Lot>(true, []);
 	// const initialSelection = [];
 	// const allowMultiSelect = true;
 	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
@@ -185,6 +192,7 @@ export class LotListComponent implements OnInit {
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
 	}
+
 	test() {
 		console.log(123456);
 	}
