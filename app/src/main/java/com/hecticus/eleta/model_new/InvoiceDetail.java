@@ -10,6 +10,7 @@ import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.request.invoice.PurityPost;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -45,7 +46,7 @@ public class InvoiceDetail {
         this.costItemType = invoiceDetails.getPriceItem();
         this.nameReceived = invoiceDetails.getReceiverName();
         this.nameDelivered = invoiceDetails.getDispatcherName();
-        this.itemType = new ItemType((long)invoiceDetails.getItemTypeId());
+        this.itemType = new ItemType((long)invoiceDetails.getItemType().getId());
         this.amountInvoiceDetail = invoiceDetails.getAmount();
         if(invoiceDetails.getLotId()!=-1) {
             this.lot = new Lot((long) invoiceDetails.getLot().getId());
@@ -53,7 +54,11 @@ public class InvoiceDetail {
             this.store = new Store((long) invoiceDetails.getStore().getId());
         }
         this.invoice = new Invoice((long) invoiceDetails.getInvoiceId());
-        //this.purities = invoiceDetails.getDetailPurities();
+        this.purities = new ArrayList<>();
+        for(int i=0; i<invoiceDetails.getDetailPurities().size(); i++) {
+            purities.add(new PurityPost(invoiceDetails.getDetailPurities().get(i).getId(),
+                                    invoiceDetails.getDetailPurities().get(i).getRateValue()));
+        }
 
     }
 

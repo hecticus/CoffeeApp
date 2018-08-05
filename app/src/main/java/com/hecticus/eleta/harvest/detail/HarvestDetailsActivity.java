@@ -284,6 +284,12 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         if (itemTypeList != null && itemTypeList.size() % 2 != 0)
             observationsEditText.setBackground();
 
+
+        for(int i=0; i<itemTypeList.size(); i++){
+            if(itemTypeList.get(i).getInputValue().equals("")){
+                itemTypeList.remove(i);
+            }
+        }
         mAdapter.showNewDataSet(itemTypeList);
     }
 

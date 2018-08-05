@@ -98,6 +98,14 @@ public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<I
         return purity != null && purity.getId() == itemTypeId;
     }
 
+    public InvoiceDetailPurity() {
+    }
+
+    public InvoiceDetailPurity(int id, float rateValue) {
+        this.id = id;
+        this.rateValue = rateValue;
+    }
+
     @DebugLog
     public static InvoiceDetailPurity findInvoiceDetailPurityInListGivenPurityId(final List<InvoiceDetailPurity> list, int id) {
 

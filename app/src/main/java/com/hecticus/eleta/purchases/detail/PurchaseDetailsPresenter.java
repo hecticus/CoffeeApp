@@ -3,6 +3,7 @@ package com.hecticus.eleta.purchases.detail;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -235,6 +236,8 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
     public InvoicePost getChanges(int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations) {
         InvoicePost invoice = null;
 
+
+
         if (currentDetailsList == null || currentDetailsList.size() <= 0)
             return invoice;
 
@@ -288,12 +291,16 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
             if (purityDetail != null) {
                 if (!purity.getWeightString().trim().equals(purityDetail.getRateValue() + "")) {
-                    postPurities.add(new PurityPost(purity.getId(), Float.parseFloat(purity.getWeightString().trim())));
+                    try{
+                        postPurities.add(new PurityPost(purity.getId(), Float.parseFloat(purity.getWeightString().trim())));
+                    }catch (Exception e){}
                 }
             } else {
-                if (!purity.getWeightString().trim().isEmpty()) {
-                    postPurities.add(new PurityPost(purity.getId(), Float.parseFloat(purity.getWeightString().trim())));
-                }
+                try {
+                    if (!purity.getWeightString().trim().isEmpty()) {
+                        postPurities.add(new PurityPost(purity.getId(), Float.parseFloat(purity.getWeightString().trim())));
+                    }
+                }catch (Exception e){}
             }
         }
 
@@ -315,6 +322,27 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
                 invoice.setItems(itemList);
             }
         }
+
+        //int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations)
+        currentDetailsList.get(0).setStore(new Store(storeId));
+        currentDetailsList.get(0).setAmount(Float.valueOf(amount));
+        currentDetailsList.get(0).setFreight(freight);
+        currentDetailsList.get(0).setPriceItem(Float.valueOf(price));
+        Log.d("DEBUG itemtype", itemId+"");
+        currentDetailsList.get(0).setItemType(new ItemType(itemId));
+        List<InvoiceDetailPurity> listPurity = new ArrayList<>();
+        for(int  i=0; i<purities.size(); i++){
+            listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
+                                                    Float.valueOf(purities.get(i).getWeightString())));
+        }
+        currentDetailsList.get(0).setDetailPurities(listPurity);
+        currentDetailsList.get(0).setDispatcherName(dispatcher);
+        currentDetailsList.get(0).setObservation(observations);
+        /*Gson g = new Gson();
+        Log.d("DEBUG listPurities", g.toJson(listPurity) );
+        Log.d("DEBUG purities", g.toJson(purities) );*/
+
+
 
         return invoice;
     }
@@ -586,8 +614,8 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
 
             updateOriginalDetailsPuritiesListWithChanges();*/
-            InvoiceDetails invoiceDetails = new InvoiceDetails();
-            mRepository.editPurchaseRequest(invoicePost, invoiceDetails);
+            //InvoiceDetails invoiceDetails = new InvoiceDetails();
+            mRepository.editPurchaseRequest(invoicePost, currentDetailsList.get(0));
         }
     }
 }

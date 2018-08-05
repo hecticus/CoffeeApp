@@ -12,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class PurityPost extends RealmObject {
 
-    @SerializedName("idPurity")
+    @SerializedName("idPurity")//("id")//
     @Expose
     private int purityId = -1;
 

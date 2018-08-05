@@ -124,13 +124,14 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
         boolean invoiceHasOfflineOperation = getIntent().getBooleanExtra("invoiceHasOfflineOperation", false);
 
-        List<InvoiceDetails> details = null;
-        if (getIntent().getSerializableExtra("details") != null) {
+        List<InvoiceDetails> details = new ArrayList<>(); //null;
+        /*if (getIntent().getSerializableExtra("details") != null) {
             Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
             }.getType();
             Log.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
             details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
-        }
+        }*/
+        details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
 
         Provider provider = null;
         if (getIntent().getStringExtra("provider") != null) {

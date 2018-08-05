@@ -33,6 +33,13 @@ public class Store extends RealmObject implements ItemSpinnerInterface, Serializ
     @Expose
     private StatusStore status;
 
+    public Store() {
+    }
+
+    public Store(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
