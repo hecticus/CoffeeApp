@@ -70,7 +70,7 @@ import { BaseService } from '../../core/base.service';
 				</ng-container>
 
 				<!-- Position ProviderType -->
-				<ng-container matColumnDef="provider.providerType.nameProviderType">
+				<ng-container matColumnDef="providerType.nameProviderType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Proveedor</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.providerType?.nameProviderType || '-'}} </td>
 				</ng-container>
@@ -111,14 +111,20 @@ import { BaseService } from '../../core/base.service';
 					<td mat-cell *matCellDef="let provider"> {{provider.contactNameProvider || '-'}} </td>
 				</ng-container>
 
-				<!-- Position statusProvider -->
-				<ng-container matColumnDef="statusProvider">
+				<!-- Position Status -->
+				<ng-container matColumnDef="statusProvider.name">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider?.name || '-'}} </td>
+				</ng-container>
+
+				<!-- Position statusProvider
+				<ng-container matColumnDef="deleted">
 				<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Deleted</th>
 					<td mat-cell *matCellDef="let provider">
 						<div *ngIf="provider.deleted" >Inactivo</div>
 						<div *ngIf="!provider.deleted">Activo</div>
 					</td>
-				</ng-container>
+				</ng-container>-->
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 	  			<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
@@ -135,8 +141,8 @@ export class ProviderListComponent implements OnInit {
 	provider: Provider;
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'nameProvider', 'nitProvider', 'provider.providerType.nameProviderType',
-						'statusProvider', 'addressProvider', 'emailProvider',
+	columnsToDisplay = ['select', 'nameProvider', 'nitProvider', 'providerType.nameProviderType',
+						'statusProvider.name', 'addressProvider', 'emailProvider',
 						'contactNameProvider', 'numberProvider'];
 
 	// MatPaginator Inputs

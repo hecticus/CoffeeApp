@@ -95,7 +95,7 @@ export class ProviderService {
 			id: new FormControl(provider.id),
 			deleted:  new FormControl(provider.deleted),
 			providerType: new FormControl(provider.providerType),
-			statusProvider: new FormControl(provider.statusProvider),
+			statusProvider: new FormControl(provider.statusProvider, Validators.required),
 			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),
 			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),

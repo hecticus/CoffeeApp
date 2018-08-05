@@ -30,9 +30,8 @@ import { NotificationService } from '../../core/utils/notification/notification.
 
 					<div class="wrap-fields">
 						<div>
-							<span class="label">Status</span>
-							<span class="output" *ngIf="provider.deleted" >Inactivo</span>
-							<span class="output" *ngIf="!provider.deleted">Activo</span>
+							<span class="label">Estatus</span>
+							<span class="output">{{provider.statusProvider?.name || '-'}}</span>
 						</div>
 					</div>
 
@@ -88,11 +87,18 @@ import { NotificationService } from '../../core/utils/notification/notification.
 				</ng-template>
 
 				<ng-template [ngIf]= " selected == 'Cosechador'">
-					<div class="wrap-fields">
+					<!--<div class="wrap-fields">
 						<div>
-							<span class="label">Status</span>
+							<span class="label">Estatus</span>
 							<span class="output" *ngIf="provider.deleted">Inactivo</span>
 							<span class="output" *ngIf="!provider.deleted">Activo</span>
+						</div>
+					</div>-->
+
+					<div class="wrap-fields">
+						<div>
+							<span class="label">Estatus</span>
+							<span class="output">{{provider.statusProvider?.name || '-'}}</span>
 						</div>
 					</div>
 

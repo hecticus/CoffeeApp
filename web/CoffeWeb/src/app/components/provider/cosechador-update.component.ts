@@ -1,3 +1,4 @@
+import { StatusProviderService } from './../status/status-provider.service';
 import { NotificationService } from '../../core/utils/notification/notification.service';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -5,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Provider } from '../../core/models/provider';
 import { ProviderService } from './provider.service';
+import { Status } from '../../core/models/status';
 
 @Component({
 	selector: 'app-cosechador-update',
@@ -13,7 +15,21 @@ import { ProviderService } from './provider.service';
 	<form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 		<fieldset>
 			<legend><span>Datos del Cosechador</span></legend>
+
 			<div class="wrap-fields">
+				<div class="field form-field">
+					<mat-form-field class="example-full-width">
+						<mat-select required [formControl]="form.controls['statusProvider']">
+							<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
+							</mat-option>
+						</mat-select>
+						<mat-label><b>Estatus</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['statusProvider']"></app-validator>
+				</div>
+			</div>
+
+			<!--<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
 						<mat-select required [formControl]="form.controls['deleted']">
@@ -23,13 +39,13 @@ import { ProviderService } from './provider.service';
 						<mat-label><b>Status</b></mat-label>
 					</mat-form-field>
 				</div>
-			</div><!-- -->
+			</div> -->
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field  required class="example-full-width">
-						<input matInput formControlName="nameProvider" placeholder="Nombre">
+						<input matInput formControlName="nameProvider" placeholder="Nombre del Cosechador">
 					</mat-form-field>
-					<app-validator  [control]="form.controls['nameProvider']"></app-validator>
+					<app-validator [control]="form.controls['nameProvider']"></app-validator>
 				</div>
 			</div>
 			<div class="wrap-fields">
@@ -79,12 +95,14 @@ import { ProviderService } from './provider.service';
 export class CosechadorUpdateComponent implements OnInit  {
 	form: FormGroup;
 	provider: Provider;
+	status: Status[];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private location: Location,
 		private providerService: ProviderService,
 		private notificationService: NotificationService,
+		private statusProviderService: StatusProviderService,
 	) {}
 
 	ngOnInit () {
@@ -97,6 +115,12 @@ export class CosechadorUpdateComponent implements OnInit  {
 					this.form = this.providerService.getCosechador(data['result']);
 				});
 		});
+
+		this.statusProviderService.getAll().subscribe(
+			data => {
+				this.status = data['result'];
+			}
+		);
 	}
 
 	update() {

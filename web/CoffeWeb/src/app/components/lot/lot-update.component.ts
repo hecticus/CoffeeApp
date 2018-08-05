@@ -29,16 +29,16 @@ import { NotificationService } from '../../core/utils/notification/notification.
 				</div>
 			</div>-->
 			<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControl]="form.controls['statusLot']">
-								<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
-								</mat-option>
-							</mat-select>
-							<mat-label><b>Estatus</b></mat-label>
-						</mat-form-field>
-						<app-validator [control]="form.controls['statusLot']"></app-validator>
-					</div>
+				<div class="field form-field">
+					<mat-form-field class="example-full-width">
+						<mat-select required [formControl]="form.controls['statusLot']">
+							<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
+							</mat-option>
+						</mat-select>
+						<mat-label><b>Estatus</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['statusLot']"></app-validator>
+				</div>
 			</div>
 			<div class="wrap-fields">
 				<div class="field">
@@ -105,7 +105,7 @@ export class LotUpdateComponent implements OnInit {
 	confirmDelete = true;
 	farms: Farm[];
 	lot = new Lot();
-	status: Status;
+	status: Status[];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
