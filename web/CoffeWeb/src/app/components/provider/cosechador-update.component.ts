@@ -92,7 +92,8 @@ export class CosechadorUpdateComponent implements OnInit  {
 			.params
 			.subscribe(param => {
 				this.providerService.getById(param['providerId']).subscribe(data => {
-					// this.form = this.providerService.getProvider(data['result']);
+					this.provider = data['result'];
+					console.log(this.provider);
 					this.form = this.providerService.getCosechador(data['result']);
 				});
 		});
@@ -100,7 +101,9 @@ export class CosechadorUpdateComponent implements OnInit  {
 
 	update() {
 		this.form.controls['providerType'].patchValue({id: 2 });
-		// this.form.controls['statusProvider'].patchValue({id: 41 });
+		this.form.controls['statusProvider'].patchValue({id: 41 });
+		console.log(this.form.value);
+		console.log('antes de update');
 		this.providerService.update(<Provider> this.form.value)
 			.subscribe(provider => {
 				this.notificationService.sucessUpdate('Cosechador');

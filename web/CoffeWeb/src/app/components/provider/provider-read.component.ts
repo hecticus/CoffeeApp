@@ -178,13 +178,11 @@ export class ProviderReadComponent implements OnInit {
 					data => {
 						this.provider = data['result'];
 						this.selected = this.provider.providerType.nameProviderType;
-						console.log(this.selected);
 				});
 		});
 	}
 
 	update() {
-		console.log(this.activatedRoute);
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
 	}
 

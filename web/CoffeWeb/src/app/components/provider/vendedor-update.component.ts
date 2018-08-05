@@ -110,7 +110,7 @@ export class VendedorUpdateComponent implements OnInit  {
 			.params
 			.subscribe(param => {
 				this.providerService.getById(param['providerId']).subscribe(data => {
-					this.form = this.providerService.getProvider(data['result']);
+					this.form = this.providerService.getVendedor(data['result']);
 				});
 		});
 
