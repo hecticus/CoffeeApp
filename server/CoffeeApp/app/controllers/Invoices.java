@@ -168,6 +168,12 @@ public class Invoices extends Controller {
         // Tengo el invoice recibido
         Invoice invoice = form.get();
 
+        Provider provStatus = Provider.findById(invoice.getProvider().getId());
+        if (provStatus.getStatusProvider().getId() != new Long(41) ){
+            return Response.requiredParameter("Proveedor Inactivo");
+        }
+
+
         List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
 
 //        Invoice invoices = invoiceList.get(0);

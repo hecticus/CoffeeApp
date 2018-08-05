@@ -48,7 +48,7 @@ public class Lot extends AbstractEntity{
 
     @ManyToOne
 //    @JsonBackReference
-    @Constraints.Required
+//    @Constraints.Required
     private StatusLot statusLot;
 
     @OneToMany(mappedBy = "lot", cascade= CascadeType.ALL)
@@ -131,6 +131,11 @@ public class Lot extends AbstractEntity{
         return finder.byId(id);
     }
 
+//    public static Lot findById(Long id){
+//        return finder.query().where().eq("id",id)
+//                .setIncludeSoftDeletes()
+//                .findUnique();
+//    }
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, PathProperties pathProperties,
                                                String sort, String name, Long idFarm, Long status, boolean delete){
 

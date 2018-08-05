@@ -11,6 +11,7 @@ import models.Invoice;
 import models.Provider;
 import models.ProviderType;
 
+import models.status.StatusProvider;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -19,6 +20,8 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+
+import static sun.security.krb5.Confounder.longValue;
 
 /**
  * Created by sm21 on 10/05/18.
@@ -40,7 +43,9 @@ public class Providers extends Controller {
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            Provider provider = Json.fromJson(json, Provider.class);
+//            Provider provider = Json.fromJson(json, Provider.class);
+            Provider provider= form.get();
+            provider.setStatusProvider(StatusProvider.findById(new Long(41)));
             Provider aux = Provider.findByProvider(provider);
             if (aux != null ) {
                 if (aux.isDeleted()){
@@ -53,6 +58,7 @@ public class Providers extends Controller {
                     return controllers.utils.Response.invalidParameter("There is  a provider active with name: " + provider.getNameProvider());
                 }
             }
+
             provider.save();
             return  Response.createdEntity(Json.toJson(provider));
         }catch(Exception e){
@@ -72,11 +78,16 @@ public class Providers extends Controller {
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Provider provider = Json.fromJson(json, Provider.class);
-            if(provider.getStatusProvider().getId().intValue() == 41)
-                provider.setDeleted(false);
+//            if(provider.getStatusProvider().getId().intValue() == 41)
+//                provider.setDeleted(false);
             provider.setId(id);
             System.out.println(provider.getNameProvider());
             provider.update();
+//            Provider proAux = Provider.findById(provider.getId())
+//            if(proAux.isDeleted()){
+//                System.out.println(proAux);
+//                provider = proAux;
+//            }
             return  Response.updatedEntity(Json.toJson(provider));
 
         }catch(Exception e){
@@ -90,7 +101,7 @@ public class Providers extends Controller {
             if (Invoice.invoicesByProviderId(id) != null){
                 return controllers.utils.Response.constraintViolation("Invoices Open");
             }
-            Ebean.delete(Provider.findId(id, null));
+            Ebean.delete(Provider.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
             return  NsExceptionsUtils.delete(e);
@@ -112,14 +123,11 @@ public class Providers extends Controller {
     }
 
     @CoffeAppsecurity
-    public Result findById(Long id, String collection) {
+    public Result findById(Long id) {
+//    public Result findById(Long id, String collection) {
         try {
-            PathProperties pathProperties = null;
-            if (collection != null)
-                pathProperties = PathProperties.parse(collection);
-
-//            return Response.foundEntity(Json.toJson(Provider.findById(id)));
-            return Response.foundEntity(Provider.findId(id, pathProperties), pathProperties);
+            return Response.foundEntity(Json.toJson(Provider.findById(id)));
+//            return Response.foundEntity(Provider.findId(id, pathProperties), pathProperties);
         }catch(Exception e){
             return NsExceptionsUtils.find(e);
         }
