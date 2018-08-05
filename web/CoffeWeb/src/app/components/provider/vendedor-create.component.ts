@@ -83,7 +83,7 @@ export class VendedorCreateComponent implements OnInit {
 	create() {
 		console.log('create');
 		this.form.controls['providerType'].patchValue({id: 1} );
-		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
+		this.form.controls['statusProvider'].patchValue({id: 41});
 		this.providerService.create(<Provider> this.form.value)
 			.subscribe(provider => {
 				this.notificationService.sucessInsert('Vendedor');

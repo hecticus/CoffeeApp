@@ -1,5 +1,4 @@
 import { FormGroup } from '@angular/forms';
-import { ToastrManager } from 'ng6-toastr-notifications';
 import { Status } from '../../core/models/status';
 import { StatusProviderService } from '../status/status-provider.service';
 import { ActivatedRoute} from '@angular/router';
@@ -18,7 +17,7 @@ import { NotificationService } from '../../core/utils/notification/notification.
 	<form *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 		<fieldset>
 			<legend><span>Datos del Vendedor</span></legend>
-			<div class="wrap-fields">
+			<!--<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
 						<mat-select required [formControl]="form.controls['deleted']">
@@ -28,7 +27,20 @@ import { NotificationService } from '../../core/utils/notification/notification.
 						<mat-label><b>Status</b></mat-label>
 					</mat-form-field>
 				</div>
-			</div><!-- -->
+			</div> -->
+			<div class="wrap-fields">
+				<div class="field form-field">
+					<mat-form-field class="example-full-width">
+						<mat-select required [formControl]="form.controls['statusProvider']">
+							<mat-option *ngFor="let s of status" [value]="s.id">{{s.name}}
+							</mat-option>
+						</mat-select>
+						<mat-label><b>Estatus</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['statusProvider']"></app-validator>
+				</div>
+			</div>
+
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field  required class="example-full-width">

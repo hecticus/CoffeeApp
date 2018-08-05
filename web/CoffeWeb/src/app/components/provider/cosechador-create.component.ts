@@ -75,7 +75,8 @@ export class CosechadorCreateComponent implements OnInit {
 	create() {
 		console.log('create');
 		this.form.controls['providerType'].patchValue({id: 2 });
-		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
+		this.form.controls['statusProvider'].patchValue({id: 41});
+		console.log(this.form);
 		this.providerService.create(<Provider> this.form.value)
 			.subscribe(provider => {
 				this.notificationService.sucessInsert('Cosechador');
