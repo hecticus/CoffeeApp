@@ -113,7 +113,7 @@ import { BaseService } from '../../core/base.service';
 
 				<!-- Position Status -->
 				<ng-container matColumnDef="statusProvider.name">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Estatus</th>
 					<td mat-cell *matCellDef="let provider"> {{provider.statusProvider?.name || '-'}} </td>
 				</ng-container>
 
@@ -148,7 +148,7 @@ export class ProviderListComponent implements OnInit {
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [ 10, 20, 40];
+	pageSizeOptions: number[] = [ 15, 30, 60];
 
 	dataSource = new MatTableDataSource<Provider>();
 
@@ -181,7 +181,7 @@ export class ProviderListComponent implements OnInit {
 			deleted: '1',
 		});
 
-		this.providerService.getAll(httpParams).subscribe(
+		this.providerService.getAll().subscribe(
 			data => {
 				this.dataSource.data = data['result'];
 		});

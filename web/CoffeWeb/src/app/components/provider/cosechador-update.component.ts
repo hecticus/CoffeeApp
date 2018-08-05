@@ -125,7 +125,7 @@ export class CosechadorUpdateComponent implements OnInit  {
 
 	update() {
 		this.form.controls['providerType'].patchValue({id: 2 });
-		this.form.controls['statusProvider'].patchValue({id: 41 });
+		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
 		console.log(this.form.value);
 		console.log('antes de update');
 		this.providerService.update(<Provider> this.form.value)

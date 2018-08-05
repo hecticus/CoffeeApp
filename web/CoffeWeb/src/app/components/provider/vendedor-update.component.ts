@@ -128,7 +128,8 @@ export class VendedorUpdateComponent implements OnInit  {
 
 	update() {
 		this.form.controls['providerType'].patchValue({id: 1 });
-		this.form.controls['statusProvider'].patchValue({id: 41 });
+		this.form.controls['statusProvider'].patchValue({id: this.form.value['statusProvider']});
+		// this.form.controls['statusProvider'].patchValue({id: 41 });
 		console.log(this.form.value);
 		console.log('antes de update');
 		this.providerService.update(<Provider> this.form.value)
