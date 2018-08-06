@@ -24,3 +24,7 @@ body {
     height: 100%;
     color: #3f3f3f;
 }
+
+.mat-table-sticky {
+    border-top: 2px solid #bebebe;
+}

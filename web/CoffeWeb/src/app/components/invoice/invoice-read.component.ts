@@ -57,10 +57,9 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 				</div>
 			</div>
 
-			<div class="fieldset">
-				<div class="legend">Detalles de la Factura</div>
-				<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
-			</div>
+			<div class="legend">Detalles de la Factura</div>
+			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
+
 		</div>
 <!--
 		<app-modal [(closed)]="confirmDelete">
