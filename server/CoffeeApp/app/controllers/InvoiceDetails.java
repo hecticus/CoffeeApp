@@ -20,6 +20,7 @@ import scala.reflect.internal.Trees;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
 /**
@@ -72,8 +73,6 @@ public class InvoiceDetails extends Controller {
     @CoffeAppsecurity
     public Result update(Long id) {
         try {
-            boolean auxCreate = false;
-
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
@@ -89,43 +88,38 @@ public class InvoiceDetails extends Controller {
                 invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
             }
 
-//            JsonNode purities = json.get("purities");
-//            if (purities == null)
-//                return Response.requiredParameter("purities");
-//
-//            for(JsonNode purity : purities) {
-//
-//                JsonNode idPurity = purity.get("idPurity");
-//                if (idPurity == null)
-//                    return Response.requiredParameter("idPurity");
-//
-//                JsonNode valueRateInvoiceDetailPurity = purity.get("valueRateInvoiceDetailPurity");
-//                if (valueRateInvoiceDetailPurity == null)
-//                    return Response.requiredParameter("valueRateInvoiceDetailPurity");
-//
-//                Purity puritys = Purity.findById(idPurity.asLong());
-//
-//                InvoiceDetailPurity invoiceDetailPurity = InvoiceDetailPurity.getByIdInvopiceDetailsByIdPurity(
-//                        invoiceDetail.getId(), idPurity.asLong());
-//
-//                if(invoiceDetailPurity == null) {
-//                    invoiceDetailPurity = new InvoiceDetailPurity();
-//                    auxCreate = true;
-//                }git commit "Add and comment new update for InvoiceDetail"
-//
-//                invoiceDetailPurity.setPurity(puritys);
-//                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
-//                invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
-//                invoiceDetailPurity.setInvoiceDetail(InvoiceDetail.findById(id));
-//                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
-//
-//                if(auxCreate) invoiceDetailPurity.save();
-//                else {
-//                    invoiceDetail.setId(idPurity.asLong());
-//                    invoiceDetailPurity.update();
-//                }
-//
-//            }
+            JsonNode purities = json.get("purities");
+            if (purities == null)
+                return Response.requiredParameter("purities");
+
+            List<Integer> detailPurities = InvoiceDetailPurity.getByIdInvopiceDetails(id);
+            if(!detailPurities.isEmpty() ){
+                Ebean.deleteAllPermanent(InvoiceDetailPurity.class, detailPurities );
+            }
+
+            for(JsonNode purity : purities) {
+
+                JsonNode idPurity = purity.get("idPurity");
+                if (idPurity == null)
+                    return Response.requiredParameter("idPurity");
+
+                JsonNode valueRateInvoiceDetailPurity = purity.get("valueRateInvoiceDetailPurity");
+                if (valueRateInvoiceDetailPurity == null)
+                    return Response.requiredParameter("valueRateInvoiceDetailPurity");
+
+                Purity puritys = Purity.findById(idPurity.asLong());
+
+                InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
+
+                invoiceDetailPurity.setPurity(puritys);
+                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
+                invoiceDetailPurity.setInvoiceDetail(InvoiceDetail.findById(id));
+                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
+
+                invoiceDetailPurity.save();
+
+            }
 
             invoiceDetail.setId(id);
             invoiceDetail.update();
