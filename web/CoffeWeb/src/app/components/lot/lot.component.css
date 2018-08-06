@@ -1,0 +1,29 @@
+table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.element-row {
+    position: relative;
+}
+
+.element-row:not(.expanded):hover {
+    background: #ece9e9;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+fieldset {
+    width: 100%;
+    border: 0;
+    margin-bottom: 30px;
+}
+
+.mat-radio-button~.mat-radio-button {
+    padding-right: 16px;
+}

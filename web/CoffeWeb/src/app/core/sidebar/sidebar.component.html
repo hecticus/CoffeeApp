@@ -1,0 +1,12 @@
+<div id="side-nav">
+    <header>
+        <img id="logo" src="./assets/images/logo.png" routerLink="/home" />
+    </header>
+
+    <nav class="item-list">
+        <div class="item" data-menu-item="providers" [ngClass]="{'selected': dataMenuItem == 'providers'}" (click)="select($event)" routerLink="./providers">Proveedores</div>
+        <div class="item" data-menu-item="lots" [ngClass]="{'selected': dataMenuItem == 'lots'}" (click)="select($event)" routerLink="./lots">Lotes</div>
+        <div class="item" data-menu-item="orders" [ngClass]="{'selected': dataMenuItem == 'orders'}" (click)="select($event)" routerLink="./invoices">Reportes</div>
+        <div class="item" data-menu-item="user" [ngClass]="{'selected': dataMenuItem == 'user'}" (click)="select($event)" routerLink="./lot">Usuarios</div>
+    </nav>
+</div>

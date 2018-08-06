@@ -1,3 +1,4 @@
+rutas_del_API.txt
 logs
 project/project
 project/target
@@ -16,6 +17,7 @@ dist
 test
 testThumbnails
 BD.png
+<<<<<<< HEAD
 server/rutas del API.txt
 rutas_del_API.txt
 api_coffee_dev.postman_collection.json
@@ -24,3 +26,29 @@ api_coffee_localhost.postman_collection.json
 
 
     
+=======
+/dev-web/CoffeWeb/node_modules
+/dev-server/CoffeeApp/.idea
+/dev-server/CoffeeApplogs
+/dev-server/CoffeeAppproject/project
+/dev-server/CoffeeAppproject/target
+/dev-server/CoffeeApptarget
+/dev-server/CoffeeApptmp
+/dev-server/CoffeeApp.history
+/dev-server/CoffeeAppdist
+/.idea
+/dev-server/CoffeeApp/*.iml
+/dev-server/CoffeeApp/out
+/dev-server/CoffeeApp/.idea_modules
+/dev-server/CoffeeApp/.classpath
+/dev-server/CoffeeApp/.project
+/dev-server/CoffeeApp/RUNNING_PID
+/dev-server/CoffeeApp/.settings
+/dev-server/CoffeeApp/test
+/dev-server/CoffeeApp/testThumbnails
+/dev-server/CoffeeApp/BD.png
+api_coffee_dev.postman_collection.json
+api_coffee_dev2.postman_collection.json
+api_coffee_localhost.postman_collection.json
+    
+>>>>>>> dev-web

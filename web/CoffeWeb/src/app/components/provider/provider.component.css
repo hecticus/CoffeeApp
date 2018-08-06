@@ -1,0 +1,46 @@
+table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.element-row {
+    position: relative;
+}
+
+.element-row:not(.expanded):hover {
+    background: #ece9e9;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.field {
+    width: 100%;
+}
+
+.wrap-fields {
+    width: 100%;
+}
+
+.mat-option-text {
+    width: 100%;
+}
+
+.mat-form-field-infix {
+    display: block;
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: 100%;
+}
+
+.filter {
+    position: relative;
+    margin: 0;
+    margin-left: 20px;
+    width: 180px;
+}
