@@ -111,7 +111,7 @@ public class InvoiceDetails extends Controller {
 //                if(invoiceDetailPurity == null) {
 //                    invoiceDetailPurity = new InvoiceDetailPurity();
 //                    auxCreate = true;
-//                }
+//                }git commit "Add and comment new update for InvoiceDetail"
 //
 //                invoiceDetailPurity.setPurity(puritys);
 //                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
