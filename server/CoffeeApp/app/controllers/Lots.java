@@ -70,6 +70,7 @@ public class Lots extends Controller {
         }
     }
 
+
     @CoffeAppsecurity
     public Result delete(Long id) {
         try{

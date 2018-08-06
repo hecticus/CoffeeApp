@@ -51,7 +51,7 @@ public class Provider extends AbstractEntity{
 
 //    @Constraints.Required
     @Constraints.MaxLength(50)
-    @Column(nullable = false, length = 50)
+    @Column( length = 50)
     private String contactNameProvider;
 
     @ManyToOne
@@ -160,17 +160,33 @@ public class Provider extends AbstractEntity{
         this.invoices = invoices;
     }
 
-
     public static Provider findById(Long id){
         return finder.byId(id);
     }
 
+
+    public static Provider findByIdAll(Long id){
+        return finder.query().where().eq("id",id)
+                .setIncludeSoftDeletes()
+                .findUnique();
+    }
+
+
     public static Provider findId(Long id, PathProperties pathProperties){
 
-        if(pathProperties != null)
-            return finder.query().apply(pathProperties).setId(id).findUnique();
-        return finder.byId(id);
+        if(pathProperties != null){
+            return finder.query().apply(pathProperties).where()
+                    .eq("id",id)
+                    .setIncludeSoftDeletes()
+                    .findUnique();
+        }
+//            return finder.query().apply(pathProperties).setId(id).findUnique();
+        return finder.query().where().eq("id",id)
+                .setIncludeSoftDeletes()
+                .findUnique();
     }
+
+
     public static Provider findByNit(String nitProvider) {
         return finder.query().where()
                 .eq("nitProvider", nitProvider)

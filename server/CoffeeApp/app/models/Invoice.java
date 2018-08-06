@@ -3,6 +3,10 @@ package models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.CreatedTimestamp;
@@ -46,17 +50,21 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    @Constraints.Required
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
     private ZonedDateTime startDateInvoice;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @UpdatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDateInvoice;
+
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);

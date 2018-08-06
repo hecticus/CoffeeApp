@@ -113,7 +113,17 @@ public class User extends AbstractEntity {
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+    public static User findByEmail(String email){
+        return finder.query().where()
+                .startsWith("authUser.email", email)
+                .findUnique();
+    }
+
+    public static User findByAuthUserId(Long authUserId){
+        return finder.query().where()
+                .eq("authUser.id", authUserId)
+                .findUnique();
+    }    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
                                               String sort, String name, String firstName, String lastName, boolean deleted) {
 
         ExpressionList expressionList = finder.query().where();

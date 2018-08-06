@@ -78,11 +78,11 @@ create table invoices (
   id                            bigint auto_increment not null,
   provider_id                   bigint not null,
   status_invoice_id             bigint,
+  start_date_invoice            datetime,
+  closed_date_invoice           datetime,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  start_date_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  closed_date_invoice           TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id)
 );
 
@@ -192,7 +192,7 @@ create table providers (
   address_provider              varchar(60) not null,
   number_provider               varchar(20),
   email_provider                varchar(255),
-  contact_name_provider         varchar(50) not null,
+  contact_name_provider         varchar(50),
   status_provider_id            bigint,
   multimedia_profile_id         bigint,
   deleted                       tinyint(1) default 0 not null,
