@@ -1,0 +1,7 @@
+.top-bar {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 13px;
+    color: white;
+}

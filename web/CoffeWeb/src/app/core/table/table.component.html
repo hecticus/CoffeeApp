@@ -1,0 +1,38 @@
+<div *ngIf="items?.length > 0 else empty" class="table">
+    <div class="table-row table-header">
+        <div class="table-row-item container-checkbox">
+            <label class="checkbox checkbox-header">
+                <input type="checkbox" [checked]="items?.length > 0 && items.length == tableService.getSelectedsLength()" (change)="tableService.selectAllToggle($event, items)">
+                <span></span>
+            </label>
+        </div>
+        <ng-container *ngFor="let column of columns">
+            <div class="table-row-item" [ngStyle]="{'flex-grow': column.grow}" [ngClass]="{'selected': tableService.sort==column.propertyKey || tableService.sort=='-'+column.propertyKey}">
+                <div class="container-sort">
+                    <div class="sort sort-up" [ngClass]="{'selected': tableService.sort === column.propertyKey}" (click)="sortAsc(column.propertyKey)"></div>
+                    <ng-template [ngTemplateOutlet]="column.template"></ng-template>
+                    <div class="sort sort-down" [ngClass]="{'selected': tableService.sort === '-'+column.propertyKey}" (click)="sortDesc(column.propertyKey)"></div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <div *ngFor="let item of items" class="table-row table-body" (click)="onRead(item)">
+        <div class="table-row-item container-checkbox" style="z-index: 100" (click)="$event.stopPropagation()">
+            <label class="checkbox">
+                <input type="checkbox" [checked]="tableService.selecteds[item.id]" (change)="tableService.selectToggle(item)">
+                <span></span>
+            </label>
+        </div>
+        <ng-container *ngFor="let column of columns">
+            <div class="table-row-item" [ngStyle]="{'flex-grow': column.grow}">
+                <span *ngIf="column.ngxTranslate else noTranslate" translate>{{this.tableService.getItemValue(item, column.propertyKey)}}</span>
+                <ng-template #noTranslate>{{this.tableService.getItemValue(item, column.propertyKey)}}</ng-template>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #empty>
+    <div class="table-empty" i18n="@@no-records">Records not found</div>
+</ng-template>

@@ -1,0 +1,83 @@
+:host .frao {
+    background-color: black;
+}
+
+.container {
+    max-width: 500px;
+}
+
+.image {
+    height: 64px;
+    position: relative;
+    right: 2 cm;
+}
+
+.container {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group>label {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.form-group>bt-text,
+.form-group>a {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.form-group>a:hover {
+    color: rgba(223, 223, 223, 0.664);
+    text-decoration: underline;
+}
+
+.help-block {
+    font-size: 12px;
+    color: #fb5f5f;
+    margin-top: 2px;
+}
+
+.container-images {
+    margin: 0ch;
+    padding: 10pc;
+}
+
+label {
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+back {
+    background: black;
+    width: 100%;
+    height: 100%;
+}
+
+:host body {
+    background: black;
+}
+
+a:not([href]):not([tabindex]) {
+    /* color: inherit; */
+    text-decoration: none;
+}
