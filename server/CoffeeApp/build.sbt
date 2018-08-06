@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
   "io.jsonwebtoken" % "jjwt" % "0.7.0",
   "org.apache.jclouds" % "jclouds-all" % "2.1.0",
   "org.apache.tika" % "tika-core" % "1.16",
+
   "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.9.4",
   filters
 )

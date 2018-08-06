@@ -169,7 +169,7 @@ public class Invoices extends Controller {
         Invoice invoice = form.get();
 
         Provider provStatus = Provider.findById(invoice.getProvider().getId());
-        if (provStatus.getStatusProvider().getId() != new Long(41) ){
+        if (provStatus.getStatusProvider().getId().intValue() == 42 ){
             return Response.requiredParameter("Proveedor Inactivo");
         }
 
