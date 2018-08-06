@@ -6,6 +6,8 @@ import { ProviderType } from '../../core/models/provider-type';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LotService } from './lot.service';
+import { BaseService } from '../../core/base.service';
+import { Lot } from '../../core/models/lot';
 
 @Component({
 	styleUrls: ['./lot.component.css'],
@@ -35,10 +37,10 @@ import { LotService } from './lot.service';
 				<button class="btn-icon" type="button" (click)="create()">
 					<i class="material-icons">add</i>
 				</button>
-				<button class="btn-icon" type="button"> <!--
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">-->
+				<!--<button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
 					<i class="material-icons">delete</i>
-				</button>
+				</button>-->
 			</div>
 		</div>
 
@@ -65,37 +67,46 @@ import { LotService } from './lot.service';
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef><span (click)="test()">Nombre</span></th>
-					<td mat-cell *matCellDef="let lot"> {{lot.nameLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.nameLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position Farm -->
 				<ng-container matColumnDef="farm.nameFarm">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Granja</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.farm.nameFarm}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.farm.nameFarm|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
-				<ng-container matColumnDef="statusLot.name">
+				<!-- <ng-container matColumnDef="deleted">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.statusLot.name}} </td>
+					<td mat-cell *matCellDef="let lot">
+						<div *ngIf="lot.deleted" >Inactivo</div>
+						<div *ngIf="!lot.deleted">Activo</div>
+					</td>
+				</ng-container>-->
+
+				<!-- Position  Status-->
+				<ng-container matColumnDef="lot.statusLot">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Estatus</th>
+					<td mat-cell *matCellDef="let lot"> {{lot.statusLot?.name|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="areaLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Área</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.areaLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.areaLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="heighLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Altura</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.heighLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.heighLot|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position  Status-->
 				<ng-container matColumnDef="priceLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
-					<td mat-cell *matCellDef="let lot"> {{lot.priceLot}} </td>
+					<td mat-cell *matCellDef="let lot"> {{lot.priceLot|| '-'}} </td>
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
@@ -112,16 +123,16 @@ export class LotListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'nameLot', 'farm.nameFarm', 'statusLot.name', 'areaLot', 'heighLot', 'priceLot'];
+	columnsToDisplay = ['select', 'nameLot', 'lot.statusLot', 'farm.nameFarm', 'areaLot', 'heighLot', 'priceLot'];
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [5, 10, 20];
+	pageSizeOptions: number[] = [ 15, 30, 60];
 
-	dataSource = new MatTableDataSource<Provider>();
+	dataSource = new MatTableDataSource<Lot>();
 
 	// Defione Selection
-	selection = new SelectionModel<Provider>(true, []);
+	selection = new SelectionModel<Lot>(true, []);
 	// const initialSelection = [];
 	// const allowMultiSelect = true;
 	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
@@ -140,10 +151,15 @@ export class LotListComponent implements OnInit {
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
+		let httpParams = BaseService.jsonToHttpParams({
+			// collection: 'id ',
+			deleted: '1',
+		});
+
 		this.lotService.getAll().subscribe(
 			data => {
 				this.dataSource.data = data['result'];
-				console.log(this.dataSource);
+				console.log(this.dataSource.data);
 		});
 	}
 
@@ -176,6 +192,7 @@ export class LotListComponent implements OnInit {
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
 	}
+
 	test() {
 		console.log(123456);
 	}

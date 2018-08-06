@@ -2,12 +2,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import {
-	ErrorStateMatcher,
 	MatFormFieldModule,
 	MatInputModule,
 	MatPaginatorModule,
 	MatSelectModule,
-	ShowOnDirtyErrorStateMatcher
+	MatRadioModule
 	} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LotComponent } from './lot.component';
@@ -33,9 +32,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 		MatCheckboxModule,
 		MatPaginatorModule,
 		MatSelectModule,
+		MatRadioModule,
 		MatFormFieldModule,
 		MatInputModule,
 		ModalModule.forRoot(),
+
 
 		UtilsModule,
 		LotRoutingModule,

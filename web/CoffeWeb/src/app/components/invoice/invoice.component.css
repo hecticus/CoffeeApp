@@ -30,3 +30,11 @@ th.mat-sort-header-sorted {
 .mat-elevation-z8 {
     box-shadow: 0 0 0 0;
 }
+
+.table-header .sort.sort-up:after {
+    content: "\25B2";
+}
+
+.table-header .sort.sort-down:after {
+    content: "\25BC";
+}

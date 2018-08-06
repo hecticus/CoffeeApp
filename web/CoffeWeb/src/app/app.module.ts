@@ -9,7 +9,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ItemTypeComponent } from './components/item-type/item-type.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgModule } from '@angular/core';
-import { NotificationComponent } from './core/notification/notification.component';
 import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
 import { RouterModule } from '@angular/router';
 import { StoreComponent } from './components/store/store.component';
@@ -27,7 +26,6 @@ declarations: [
 
 	TableComponent,
 	TableColumnDirective,
-	NotificationComponent,
 
 	ProviderTypeComponent,
 	ItemTypeComponent,

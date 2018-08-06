@@ -33,11 +33,24 @@ export class CustomValidators {
 		};
 	}
 
+
 	static emailRegex(control: FormControl) {
 		const EMAIL_REGEXP = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i;
 
 		return ( Validators.required(control) != null || EMAIL_REGEXP.test(control.value) ) ? null : {
 			emailRegex: {
+				valid: false
+			}
+		};
+	}
+
+	static rucRegex(control: FormControl) {
+		// const RUC_REGEXP = /[0-9]{5}+-+[0-9]+-+[0-9]{4}+\s+DV+\s+[0-9]{2}+$/i;
+		const RUC_REGEXP = /[0-9]{5}-+[0-9]+-+[0-9]{4}\s+DV+\s+[0-9]{2}/g;
+
+
+		return ( Validators.required(control) != null || RUC_REGEXP.test(control.value) ) ? null : {
+			rucRegex: {
 				valid: false
 			}
 		};

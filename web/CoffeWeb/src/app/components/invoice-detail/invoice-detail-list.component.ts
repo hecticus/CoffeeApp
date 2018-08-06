@@ -3,7 +3,7 @@ import { InvoiceDetailService } from './invoice-detail.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatFooterRowDef } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { BaseService } from '../../core/base.service';
@@ -40,7 +40,7 @@ import { BaseService } from '../../core/base.service';
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
-			<table class="table" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+			<table  mat-table [dataSource]="invoices" class="table mat-elevation-z8">
 
 				<!-- Checkbox Colum
 				<ng-container matColumnDef="select">
@@ -62,64 +62,64 @@ import { BaseService } from '../../core/base.service';
 				<ng-container matColumnDef="itemType.nameItemType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Iten</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.itemType?.nameItemType || '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef></td>
 				</ng-container>
 
 				<!-- Position lot.nameLot -->
 				<ng-container matColumnDef="lot.nameLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Lote</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.lot?.nameLot || '-'}} </td>
-					<td mat-footer-cell *matFooterCellDef> Total </td>
+					<td mat-footer-cell *matFooterCellDef><strong>Total </strong></td>
 				</ng-container>
 
 				<!-- Position store.nameStore -->
 				<ng-container matColumnDef="store.nameStore">
 					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Nombre de la Tienda</span></th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.store?.nameStore|| '-'}} </td>
+					<td mat-footer-cell *matFooterCellDef></td>
 				</ng-container>
 
 				<!-- Position  priceItemTypeByLot -->
 				<ng-container matColumnDef="priceItemTypeByLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
-						<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.priceItemTypeByLot|| '-'}} </td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.priceItemTypeByLot|| '-'}} </td>
+					<td mat-footer-cell *matFooterCellDef></td>
 				</ng-container>
 
 				<!-- Position costItemType -->
 				<ng-container matColumnDef="costItemType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Costo</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.costItemType|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef></td>
 				</ng-container>
 
 				<!-- Position amountInvoiceDetail -->
 				<ng-container matColumnDef="amountInvoiceDetail">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.amountInvoiceDetail|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef> {{ getTotalCantidad()|| '-'}} </td>
 				</ng-container>
 
 				<!-- Position nameReceived -->
 				<ng-container matColumnDef="nameReceived">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Recibido</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameReceived|| '-'}}</td>
+					<td mat-footer-cell *matFooterCellDef></td>
 				</ng-container>
 
 				<!-- Position nameReceived-->
 				<ng-container matColumnDef="nameDelivered">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Entregado</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.nameDelivered|| '-'}}</td>
-					<td mat-footer-cell *matFooterCellDef> Total </td>
+					<td mat-footer-cell *matFooterCellDef></td>
 				</ng-container>
 
 				<!-- Position nameDelivered-->
 				<ng-container matColumnDef="totalInvoiceDetail">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.totalInvoiceDetail|| '-'}}</td>
-					<td mat-footer-cell *matFooterCellDef> jjj </td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.totalInvoiceDetail|| '-' }}</td>
+					<td mat-footer-cell *matFooterCellDef> {{ total || '-' }}</td>
 				</ng-container>
-
-				<!-- Position nameDelivered
-				<ng-container matColumnDef="note">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Note</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.note}}</td>
-				</ng-container>-->
 
 				<!-- Position statusInvoiceDetail
 				<ng-container matColumnDef="statusInvoiceDetail">
@@ -129,9 +129,10 @@ import { BaseService } from '../../core/base.service';
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 				<tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="element-row"  (click)="read(row.id)"></tr>
+				<tr mat-footer-row *matFooterRowDef="columnsToDisplay; sticky: true"></tr>
 
 			</table>
-			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+			<!--<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>-->
 		</div>
 
 	`
@@ -155,7 +156,7 @@ export class InvoiceDetailListComponent implements OnInit {
 	pageSize = 10;
 	pageSizeOptions: number[] = [ 10, 20];
 
-	dataSource = new MatTableDataSource<InvoiceDetail>();
+	invoices = new MatTableDataSource<InvoiceDetail>();
 
 	// Defione Selection
 	selection = new SelectionModel<InvoiceDetail>(true, []);
@@ -173,8 +174,8 @@ export class InvoiceDetailListComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
+		this.invoices.sort = this.sort;
+		this.invoices.paginator = this.paginator;
 
 		let hhtpParams = BaseService.jsonToHttpParams({
 			invoice: this.idInvoice,
@@ -183,12 +184,16 @@ export class InvoiceDetailListComponent implements OnInit {
 
 		this.invoiceDetailService.getAll(hhtpParams).subscribe(
 			data => {
-				this.dataSource.data = data['result'];
+				this.invoices.data = data['result'];
 				console.log(' ------------------------------------------ ');
-				console.log(this.dataSource);
+				console.log(this.invoices);
 		});
 
 		this.totall = this.total;
+	}
+
+	getTotalCantidad() {
+		return this.invoices.data.map(t => t.amountInvoiceDetail).reduce((acc, value) => acc + value, 0);
 	}
 
 
@@ -203,7 +208,7 @@ export class InvoiceDetailListComponent implements OnInit {
 	/** Whether the number of selected elements matches the total number of rows. */
 	isAllSelected() {
 		const numSelected = this.selection.selected.length;
-		const numRows = this.dataSource.data.length;
+		const numRows = this.invoices.data.length;
 		return numSelected === numRows;
 		}
 
@@ -211,11 +216,11 @@ export class InvoiceDetailListComponent implements OnInit {
 	masterToggle() {
 	this.isAllSelected() ?
 		this.selection.clear() :
-		this.dataSource.data.forEach(row => this.selection.select(row));
+		this.invoices.data.forEach(row => this.selection.select(row));
 	}
 
 	applyFilter(filterValue: string) {
-		this.dataSource.filter = filterValue.trim().toLowerCase();
+		this.invoices.filter = filterValue.trim().toLowerCase();
 	}
 
 	read(id: number) {

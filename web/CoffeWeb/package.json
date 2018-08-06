@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "@types/angular": "^1.6.47",
+    "angular2-jwt": "^0.2.3",
+    "angular2-notifications": "^1.0.2",
     "bootstrap": "^4.1.2",
     "core-js": "^2.5.4",
     "ng2-completer": "^2.0.8",

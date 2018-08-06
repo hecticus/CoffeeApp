@@ -23,3 +23,7 @@ fieldset {
     border: 0;
     margin-bottom: 30px;
 }
+
+.mat-radio-button~.mat-radio-button {
+    padding-right: 16px;
+}

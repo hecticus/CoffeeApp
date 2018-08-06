@@ -1,4 +1,4 @@
-import { Invoice } from './../../core/models/invoice';
+import { Invoice } from '../../core/models/invoice';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from './invoice.service';
@@ -57,10 +57,9 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 				</div>
 			</div>
 
-			<div class="fieldset">
-				<div class="legend">Detalles de la Factura</div>
-				<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
-			</div>
+			<div class="legend">Detalles de la Factura</div>
+			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
+
 		</div>
 <!--
 		<app-modal [(closed)]="confirmDelete">

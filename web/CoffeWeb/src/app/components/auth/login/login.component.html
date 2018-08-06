@@ -13,10 +13,10 @@
                 <app-validator [control]="form.controls['password']"></app-validator>
             </div>
             <div class="form-group">
-                <button (click)="create()" class="btn-text" type="submit" [disabled]="!form.valid">
-                    <div (click)="showDialogo()" class="text">Login</div>
+                <button class="btn-text" type="submit" [disabled]="!form.valid">
+                    <div class="text">Login</div>
                 </button>
-                <a (click)="showDialogo()">Forgot password</a>
+                <!--<a (click)="showDialog()" i18n="@@forgot-password">Forgot password</a>-->
             </div>
         </form>
     </div>

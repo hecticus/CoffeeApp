@@ -50,6 +50,7 @@ export class LotService {
 	getLot(lot: Lot): FormGroup {
 		return this.fb.group({
 			id: new FormControl(lot.id),
+			deleted: new FormControl(lot.deleted,  [Validators.required]),
 			farm: new FormControl(lot.farm ? lot.farm.id : undefined , Validators.required),
 			statusLot: new FormControl(lot.statusLot ? lot.statusLot.id : undefined , Validators.maxLength(100)),
 			nameLot: new FormControl(lot.nameLot, [Validators.required, Validators.maxLength(50)]),
@@ -67,7 +68,7 @@ export class LotService {
 			areaLot:  new FormControl(lot.areaLot, [Validators.required, Validators.maxLength(100)]),
 			heighLot: new FormControl(lot.heighLot, [Validators.required, Validators.maxLength(100)]),
 			priceLot: new FormControl(lot.priceLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
-			statusLot: new FormControl(lot.statusLot, [Validators.required, Validators.maxLength(100)]),
+			statusLot: new FormControl(lot.statusLot, [ Validators.maxLength(100)]),
 		});
 	}
 }
