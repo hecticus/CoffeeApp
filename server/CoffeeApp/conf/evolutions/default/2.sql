@@ -249,4 +249,8 @@ TRUNCATE `invoice_details`;
 
 TRUNCATE `invoicesdetails_purities`;
 
+TRUNCATE `multimedia`;
+
+TRUNCATE `multimedia_cdn`;
+
 SET FOREIGN_KEY_CHECKS = 1;
