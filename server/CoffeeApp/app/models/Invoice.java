@@ -50,19 +50,31 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-    //    @Constraints.Required
-    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(columnDefinition = "datetime")
+//    //    @Constraints.Required
+//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+//    @JsonSerialize(using = CustomDateTimeSerializer.class)
+//    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+//    @Column(columnDefinition = "datetime")
+//    private ZonedDateTime startDateInvoice;
+//
+//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+//    @JsonSerialize(using = CustomDateTimeSerializer.class)
+//    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+//    @Column(columnDefinition = "datetime")
+//    private ZonedDateTime closedDateInvoice;
+
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private ZonedDateTime startDateInvoice;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(columnDefinition = "datetime")
+    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @UpdatedTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private ZonedDateTime closedDateInvoice;
 
     // GETTER AND SETTER
