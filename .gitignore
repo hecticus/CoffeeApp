@@ -19,6 +19,13 @@ conf/application.conf
 testThumbnails
 testThumbnails
 BD.png
+
+server/rutas del API.txt
+rutas_del_API.txt
+api_coffee_dev.postman_collection.json
+api_coffee_dev2.postman_collection.json
+api_coffee_localhost.postman_collection.json
+
 /dev-web/CoffeWeb/node_modules
 /dev-server/CoffeeApp/.idea
 /dev-server/CoffeeApplogs
