@@ -51,9 +51,9 @@ import { Status } from '../../core/models/status';
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field  required class="example-full-width">
-						<input matInput formControlName="nitProvider" placeholder="RUC">
+						<input matInput formControlName="nitProvider" placeholder="DNI">
 					</mat-form-field>
-					<app-validator  [control]="form.controls['nitProvider']"></app-validator>
+					<app-validator [control]="form.controls['nitProvider']"></app-validator>
 				</div>
 			</div>
 		</fieldset>

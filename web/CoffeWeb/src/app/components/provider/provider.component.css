@@ -37,3 +37,10 @@ th.mat-sort-header-sorted {
     min-width: 0;
     width: 100%;
 }
+
+.filter {
+    position: relative;
+    margin: 0;
+    margin-left: 20px;
+    width: 180px;
+}

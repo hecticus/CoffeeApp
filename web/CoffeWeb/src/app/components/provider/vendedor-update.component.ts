@@ -52,7 +52,7 @@ import { NotificationService } from '../../core/utils/notification/notification.
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field  required class="example-full-width">
-						<input matInput formControlName="nitProvider" placeholder="DNI">
+						<input matInput formControlName="nitProvider" placeholder="RUC">
 					</mat-form-field>
 					<app-validator  [control]="form.controls['nitProvider']"></app-validator>
 				</div>

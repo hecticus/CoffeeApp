@@ -14,6 +14,10 @@ import { AbstractControl } from '@angular/forms';
 			Correo Invalido. El formato debe ser  example@dot.com
 		</div>
 
+		<div *ngIf="control.hasError('rucRegex')" class="errorMessage">
+			RUC Invalido. El formato debe ser XXXXXX-X-XXXX DV XX donde el valor de X son numeros
+		</div>
+
 		<div *ngIf="(control.dirty || control.touched) && control.hasError('integerRegex')" class="errorMessage">
 			Numero invalido, Solo numeros enteros
 		</div>

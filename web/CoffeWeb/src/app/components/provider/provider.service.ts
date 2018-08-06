@@ -53,7 +53,7 @@ export class ProviderService {
 			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
 			numberProvider: new FormControl(provider.numberProvider, [CustomValidators.numberRegex, Validators.maxLength(20)]),
-			emailProvider: new FormControl(provider.emailProvider, [Validators.required, CustomValidators.emailRegex]),
+			emailProvider: new FormControl(provider.emailProvider, [CustomValidators.emailRegex]),
 			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.required, Validators.maxLength(50)]),
 			// invoices: new FormControl(provider.emailProvider, [Validators.required, Validators.maxLength(100)]),
 		});
@@ -69,7 +69,7 @@ export class ProviderService {
 			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
 			numberProvider: new FormControl(provider.numberProvider, [Validators.required, CustomValidators.numberRegex, Validators.maxLength(20)]),
-			emailProvider: new FormControl(provider.emailProvider, [Validators.required, CustomValidators.emailRegex]),
+			emailProvider: new FormControl(provider.emailProvider, [CustomValidators.emailRegex]),
 			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.required, Validators.maxLength(50)]),
 		});
 	}
@@ -80,12 +80,12 @@ export class ProviderService {
 			deleted:  new FormControl(provider.deleted),
 			providerType: new FormControl(provider.providerType),
 			statusProvider: new FormControl(provider.statusProvider),
-			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),
+			nitProvider: new FormControl(provider.nitProvider, [Validators.required,  CustomValidators.rucRegex]),
 			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
 			numberProvider: new FormControl(provider.numberProvider,
 				[Validators.required, CustomValidators.numberRegex, Validators.maxLength(20)]),
-			emailProvider: new FormControl(provider.emailProvider, [Validators.required, CustomValidators.emailRegex]),
+			emailProvider: new FormControl(provider.emailProvider, [CustomValidators.emailRegex]),
 			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.required, Validators.maxLength(50)]),
 		});
 	}
@@ -96,7 +96,7 @@ export class ProviderService {
 			deleted:  new FormControl(provider.deleted),
 			providerType: new FormControl(provider.providerType),
 			statusProvider: new FormControl(provider.statusProvider),
-			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(100)]),
+			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(50)]),
 			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
 			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
 			numberProvider: new FormControl(provider.numberProvider, [CustomValidators.numberRegex, Validators.maxLength(20)]),

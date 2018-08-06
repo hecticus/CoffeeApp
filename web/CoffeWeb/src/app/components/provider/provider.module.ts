@@ -9,7 +9,8 @@ import {
 	MatInputModule,
 	MatPaginatorModule,
 	MatSelectModule,
-	MatTableModule
+	MatTableModule,
+	MatSortModule
 	} from '@angular/material';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgModule } from '@angular/core';
@@ -35,6 +36,7 @@ import { VendedorUpdateComponent } from './vendedor-update.component';
 		MatSelectModule,
 		MatFormFieldModule,
 		MatInputModule,
+		MatSortModule,
 		ModalModule.forRoot(),
 
 		UtilsModule,

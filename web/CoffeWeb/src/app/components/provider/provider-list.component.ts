@@ -17,37 +17,36 @@ import { BaseService } from '../../core/base.service';
 	styleUrls: ['./provider.component.css'],
 	template: `
 		<h2 class="title">Proveedores</h2>
-		<div class="filter row">
-		<!--	<div class="field">
-				<mat-select placeholder="Provider Type" [(ngModel)]="seler" name="pt">
-					<mat-option>-- None --</mat-option>
-					<mat-option *ngFor="let pt of provType" [value]="pt.id" >
-			{{pt.nameProviderType}}
-					</mat-option>
-				</mat-select>
-			</div>-->
-			<div class="field">
-				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
+			<div class="filter row">
+				<div class="filter">
+					<mat-select placeholder="Provider Type" [(ngModel)]="selected">
+						<mat-option *ngFor="let pt of provType" [value]="pt.id" >
+				{{pt.nameProviderType}}
+						</mat-option>
+					</mat-select>
+				</div>
+				<div class="field">
+					<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
+				</div><!-- -->
+				<div class="container-button-filter">
+					<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
+						<i class="material-icons">search</i>
+					</button>
+				</div>
 			</div>
-			<div class="container-button-filter">
-				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
-					<i class="material-icons">search</i>
-				</button>
-			</div>
-		</div>
 
-		<div class="tool-bar both-side">
-			<div class="right row">
-				<button class="btn-icon" type="button" (click)="create()">
-					<i class="material-icons">add</i>
-				</button>
-				<!-- <button class="btn-icon" type="button">
-				<button class="btn-icon" title="Delete" type="button"
-				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
-					<i class="material-icons">delete</i>
-				</button> -->
+			<div class="tool-bar both-side">
+				<div class="right row">
+					<button class="btn-icon" type="button" (click)="create()">
+						<i class="material-icons">add</i>
+					</button>
+					<!-- <button class="btn-icon" type="button">
+					<button class="btn-icon" title="Delete" type="button"
+					(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
+						<i class="material-icons">delete</i>
+					</button> -->
+				</div>
 			</div>
-		</div>
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
@@ -83,7 +82,7 @@ import { BaseService } from '../../core/base.service';
 
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameProvider">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Nombre</span></th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header><span>Nombre</span></th>
 					<td mat-cell *matCellDef="let provider"> {{provider.nameProvider || '-'}} </td>
 				</ng-container>
 
@@ -139,6 +138,7 @@ export class ProviderListComponent implements OnInit {
 	provType: ProviderType[];
 	providers: Provider[];
 	provider: Provider;
+	selected: number;
 
 	// Order Columns Display
 	columnsToDisplay = ['select', 'nameProvider', 'nitProvider', 'providerType.nameProviderType',

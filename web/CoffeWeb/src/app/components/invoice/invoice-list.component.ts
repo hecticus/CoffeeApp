@@ -10,6 +10,7 @@ import { ProviderType } from '../../core/models/provider-type';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
+import { Pager } from '../../core/models/pager';
 
 @Component({
 	styleUrls: ['./invoice.component.css'],
@@ -121,6 +122,7 @@ export class InvoiceListComponent implements OnInit {
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
+	pager: Pager;
 
 	// Order Columns Display
 	columnsToDisplay = ['select', 'provider.nameProvider', 'provider.providerType.nameProviderType',
@@ -152,13 +154,14 @@ export class InvoiceListComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
 		this.invoiceService.getAll().subscribe(
 			data => {
 				this.dataSource.data = data['result'];
+				this.pager = data['pager'];
+				console.log(this.pager);
 		});
 
 		this.providerTypeService.getAll(
