@@ -78,7 +78,9 @@ import { Invoice } from '../../core/models/invoice';
 
 				<!-- Position Provider -->
 				<ng-container matColumnDef="provider.nameProvider">
+					<div class="sort sort-up"></div>
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Proveedor</th>
+					<div class="sort sort-down"></div>
 					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.nameProvider}} </td>
 				</ng-container>
 
@@ -90,13 +92,13 @@ import { Invoice } from '../../core/models/invoice';
 
 				<!-- Position ProviderType -->
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span>Tipo de Proveedor</span></th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef  mat-sort-header><span>Tipo de Proveedor</span></th>
 					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.providerType.nameProviderType}} </td>
 				</ng-container>
 
 				<!-- Position  openDateInvoice -->
 				<ng-container matColumnDef="createdAt">
-					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Apertura</th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef  mat-sort-header>Fecha de Apertura</th>
 						<td mat-cell *matCellDef="let invoice"> {{invoice.createdAt}} </td>
 				</ng-container>
 
@@ -128,7 +130,7 @@ export class InvoiceListComponent implements OnInit {
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [5, 10, 20];
+	pageSizeOptions: number[] = [15, 30, 60];
 
 	dataSource = new MatTableDataSource<Invoice>();
 
@@ -157,14 +159,12 @@ export class InvoiceListComponent implements OnInit {
 		this.invoiceService.getAll().subscribe(
 			data => {
 				this.dataSource.data = data['result'];
-				console.log(this.dataSource);
 		});
 
 		this.providerTypeService.getAll(
 			BaseService.jsonToHttpParams({sort: 'nameProviderType', collection: 'id, nameProviderType'})).subscribe(
 			data => {
 				this.provType = data['result'];
-			console.log(this.provType);
 		});
 		this.filter();
 	}
@@ -179,7 +179,6 @@ export class InvoiceListComponent implements OnInit {
 		this.invoiceService.getAll(httpParams).subscribe(
 			data => {
 				this.dataSource.data = data['result'];
-				console.log(this.dataSource);
 		});
 	}
 
