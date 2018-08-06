@@ -351,27 +351,26 @@ INSERT INTO `auth_role_auth_group` ( auth_role_id, auth_group_id) VALUES
 
 SET FOREIGN_KEY_CHECKS = 0;
 
-TRUNCATE auth_client_credential;
+TRUNCATE `auth_client_credential`;
 
-TRUNCATE auth_permission;
+TRUNCATE `auth_permission`;
 
-TRUNCATE auth_user;
+TRUNCATE `auth_user`;
 
-TRUNCATE user;
+TRUNCATE `user`;
 
-TRUNCATE auth_role;
+TRUNCATE `auth_role`;
 
-TRUNCATE auth_group;
+TRUNCATE `auth_group`;
 
-TRUNCATE auth_permission_auth_role;
+TRUNCATE `auth_permission_auth_role`;
 
-TRUNCATE auth_role_auth_group;
+TRUNCATE `auth_role_auth_group`;
 
-TRUNCATE auth_client_credential;
+TRUNCATE `auth_client_credential`;
 
-TRUNCATE auth_user_auth_group;
+TRUNCATE `auth_user_auth_group`;
 
-TRUNCATE auth_user_auth_role;
-
+TRUNCATE `auth_user_auth_role`;
 
 SET FOREIGN_KEY_CHECKS = 1;

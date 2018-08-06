@@ -1,6 +1,5 @@
 package controllers;
 
-import com.typesafe.config.Config;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.JsonUtils;
@@ -32,9 +31,6 @@ public class Invoices extends Controller {
 
     @Inject
     private FormFactory formFactory;
-
-    @Inject
-    Config config;
 
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
@@ -168,6 +164,12 @@ public class Invoices extends Controller {
         // Tengo el invoice recibido
         Invoice invoice = form.get();
 
+        Provider provStatus = Provider.findById(invoice.getProvider().getId());
+        if (provStatus.getStatusProvider().getId().intValue() == 42 ){
+            return Response.requiredParameter("Proveedor Inactivo");
+        }
+
+
         List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
 
 //        Invoice invoices = invoiceList.get(0);
@@ -281,13 +283,25 @@ public class Invoices extends Controller {
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();
-        response.put("nameCompany", config.getString("play.company.name"));
-        response.put("invoiceDescription", config.getString("play.harvest.invoice.description"));
-        response.put("invoiceType", config.getString("play.harvest.invoice.type"));
-        response.put("RUC", config.getString("play.purchase.ruc"));
-        response.put("telephonoCompany", config.getString("play.company.telephone"));
+        response.put("nameCompany",  Config.getString("nameCompany"));
+        response.put("invoiceDescription", Config.getString("invoiceDescription"));
+        response.put("invoiceType", Config.getString("invoiceType"));
+        response.put("RUC", Config.getString("RUC"));
+        response.put("telephonoCompany", Config.getString("telephonoCompany"));
         response.set("invoice", Json.toJson(invoice));
         return Response.createdEntity(response);
     }
+//    @CoffeAppsecurity
+//    public  Result createReceipt(Long idInvoice)  {
+//        Invoice invoice = Invoice.findById(idInvoice);
+//        ObjectNode response = Json.newObject();
+//        response.put("nameCompany", config.getString("play.company.name"));
+//        response.put("invoiceDescription", config.getString("play.harvest.invoice.description"));
+//        response.put("invoiceType", config.getString("play.harvest.invoice.type"));
+//        response.put("RUC", config.getString("play.purchase.ruc"));
+//        response.put("telephonoCompany", config.getString("play.company.telephone"));
+//        response.set("invoice", Json.toJson(invoice));
+//        return Response.createdEntity(response);
+//    }
 
 }

@@ -192,7 +192,7 @@ create table providers (
   address_provider              varchar(60) not null,
   number_provider               varchar(20),
   email_provider                varchar(255),
-  contact_name_provider         varchar(50) not null,
+  contact_name_provider         varchar(50),
   status_provider_id            bigint,
   multimedia_profile_id         bigint,
   deleted                       tinyint(1) default 0 not null,

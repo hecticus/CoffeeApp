@@ -67,11 +67,12 @@ public class Multimedias extends Controller {
         }
     }
 
-    //    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result createProviderProfile(Long id) {
         try {
 
             Provider provider = Provider.findById(id);
+
             JsonNode request = request().body().asJson();
             if(request == null)
                 return Response.requiredJson();
@@ -100,7 +101,7 @@ public class Multimedias extends Controller {
             multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
             multimedia.save();
 
-            System.out.println(multimedia.getName() + multimedia.getId());
+//            System.out.println(multimedia.getName() + multimedia.getId());
             provider.setMultimediaProfile(multimedia);
             provider.update();
 
@@ -111,7 +112,7 @@ public class Multimedias extends Controller {
     }
 
 
-    //    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             Multimedia multimedia = Multimedia.findById(id);
@@ -200,7 +201,7 @@ public class Multimedias extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findAll() {
         try {
             List<Multimedia> multimedias = Multimedia.findAll();
