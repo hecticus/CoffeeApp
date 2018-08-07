@@ -116,7 +116,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     public void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost, isAdd)) {
             if (isAdd) {
-                if (ManagerDB.saveNewInvoice(Constants.TYPE_SELLER, invoicePost)) {
+                if (ManagerDB.saveNewInvoice1(Constants.TYPE_SELLER, invoicePost)) {
                     onPurchaseUpdated();
                 } else {
                     onError();

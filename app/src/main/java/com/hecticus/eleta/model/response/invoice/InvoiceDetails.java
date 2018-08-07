@@ -14,6 +14,7 @@ import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.store.Store;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -152,6 +153,11 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         storeId = itemPost.getStoreId();
         freight = invoicePost.isFreigh();
         priceItem = itemPost.getPrice();
+        if(invoicePost.getBuyOption()) {
+            totalInvoiceDetail = amount * ManagerDB.getLotById(lotId).getPrice();
+        } else {
+            totalInvoiceDetail = amount * priceItem;
+        }
         addOffline = true;
     }
 

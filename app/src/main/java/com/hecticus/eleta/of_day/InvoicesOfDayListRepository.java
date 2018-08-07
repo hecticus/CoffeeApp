@@ -162,7 +162,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             Log.d("DEBUG", "paso5");
                             InvoiceDetailsResponse invoiceDetailsResponse = new InvoiceDetailsResponse();
-                            invoiceDetailsResponse.setListInvoiceDetails(ManagerDB.mixAndGetValidsInvoiceDetails(response.body().getListInvoiceDetails()));
+                            invoiceDetailsResponse.setListInvoiceDetails(ManagerDB.mixAndGetValidsInvoiceDetails(response.body().getListInvoiceDetails(), invoice.getInvoiceId()));
                             onGetHarvestsSuccess(/*response.body()*/ invoiceDetailsResponse, true);
                             Log.d("DEBUG", "paso6");
                         } else

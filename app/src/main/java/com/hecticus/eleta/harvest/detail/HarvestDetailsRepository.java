@@ -123,9 +123,9 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,isAdd)) {
             if (isAdd) {
-                /*if(ManagerDB.saveNewInvoice1()){
+                if(ManagerDB.saveNewInvoice1(Constants.TYPE_HARVESTER, invoicePost)){
                     onHarvestUpdated();
-                }*/
+                }
 
 
 
