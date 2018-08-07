@@ -139,7 +139,7 @@ INSERT INTO `invoicesdetails_purities` (`id`,`deleted`,`purity_id`,
 (40, 0, 2, 10,0,0,1262 ),
 (41, 0, 1, 25,0,0,1262 );
 
-# --- !Ups
+
 
 INSERT INTO `config` (id, config_key, config_value, description) VALUES
 (7,'nameCompany','Cafe de Eleta, S.A',NULL),
@@ -219,8 +219,6 @@ INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VAL
 (2, 0, '% Granos Bocados',     30),
 (3, 1, '% Granos Eliminados',  15);
 
-# --- !Downs
-
 SET FOREIGN_KEY_CHECKS = 0;
 
 TRUNCATE `config`;
@@ -254,3 +252,7 @@ TRUNCATE `multimedia`;
 TRUNCATE `multimedia_cdn`;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+# --- !Ups
+
+# --- !Downs
