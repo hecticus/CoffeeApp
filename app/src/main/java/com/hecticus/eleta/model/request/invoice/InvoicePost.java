@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.model.response.lot.Lot;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -34,7 +35,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
     @Expose
     private int invoiceId = -1;
 
-    private String statusInvo = "Open";
+    private String statusInvo = "Abierta";
 
     @SerializedName("idProvider")
     @Expose
@@ -157,6 +158,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
+
 
     public String getObservations() {
         return observations;
@@ -283,7 +285,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
         jsonObject.addProperty("freigh", src.isFreigh());
         jsonObject.addProperty("nameReceivedInvoiceDetail", src.getReceiverName());
         jsonObject.addProperty("nameDeliveredInvoiceDetail", src.getDispatcherName());
-        jsonObject.addProperty("startDateInvoiceDetail", src.getStartDate());
+        jsonObject.addProperty("startDateInvoiceDetail", src.getStartDate()); //todo fecha
         jsonObject.addProperty("note", src.getObservations());
         jsonObject.addProperty("buyOption", src.getBuyOption());
         //jsonObject.addProperty("itemtypes", src.getItems());

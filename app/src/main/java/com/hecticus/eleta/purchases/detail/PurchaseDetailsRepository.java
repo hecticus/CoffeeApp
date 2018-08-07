@@ -134,8 +134,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 Log.d("DEBUG1", "PASO");
                 Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
                 Log.d("DEBUG2", "PASO22");
-                Gson g = new Gson();
-                Log.d("DEBUF json", g.toJson(invoice));
+                /*Gson g = new Gson();
+                Log.d("DEBUF json", g.toJson(invoice));*/
                 call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
                 //Log.d("DEBUG1", g.toJson(invoicePost));
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
@@ -176,10 +176,10 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     }
 
     @Override
-    public void editPurchaseRequest(InvoicePost invoicePost, InvoiceDetails invoiceDetail) {
-        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost, false)) {
+    public void editPurchaseRequest(InvoicePost invoicePost, InvoiceDetails invoiceDetail) { //todo eliminar invoice post
+        if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost, false)*/) {
             Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
-            if (ManagerDB.updateInvoiceDetails(invoicePost, mPresenter.getOriginalDetailsPuritiesList())) {
+            if (ManagerDB.updateInvoiceDetails1(invoiceDetail)) {
                 onPurchaseUpdated();
             } else
                 onError();
@@ -194,8 +194,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
 
     private void endPoint(InvoiceDetails invoiceDetail){
         Call<CreateInvoiceResponse> call;
-        Gson g = new Gson();
-        Log.d("DEBUG invoiceDetails", g.toJson(new InvoiceDetail(invoiceDetail)));
+        /*Gson g = new Gson();
+        Log.d("DEBUG invoiceDetails", g.toJson(new InvoiceDetail(invoiceDetail)));*/
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog
@@ -323,6 +323,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
 
     @Override
     public void onItemTypesSuccess(ItemTypesListResponse response) {
+        //todo delete all
         ManagerDB.saveNewItemsType(Constants.TYPE_SELLER, response.getResult());
         mPresenter.loadItems(response.getResult());
     }
@@ -371,6 +372,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     @DebugLog
     @Override
     public void onStoresSuccess(StoresListResponse response) {
+        //todo delete all
         ManagerDB.saveNewStores(response.getResult());
         mPresenter.loadStores(response.getResult());
     }
@@ -419,6 +421,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     @DebugLog
     @Override
     public void onPuritiesSuccess(PurityListResponse response) {
+        //todo delete all
         ManagerDB.saveNewPurities(response.getResult());
         mPresenter.loadPurities(response.getResult());
     }

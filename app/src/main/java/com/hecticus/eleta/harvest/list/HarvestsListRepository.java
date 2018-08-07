@@ -192,9 +192,9 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
     @DebugLog
     @Override
-    public void getReceiptDetails(Invoice invoiceParam) {
+    public void getReceiptDetails(final Invoice invoiceParam) {
 
-        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoiceParam)) {
+        if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoiceParam)*/) {
 
             Log.d("PRINT", "--->getReceiptDetails FROM OFFLINE");
 
@@ -239,6 +239,13 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
+                            ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
+                            /*List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
+                                    invoiceParam.getInvoiceId(),
+                                    invoiceParam.getLocalId(),
+                                    true);
+                            InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
+                            localResponse.setListInvoiceDetails(detailsList);*/
                             onGetReceiptDetailsSuccess(response.body());
                         } else
                             manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response);

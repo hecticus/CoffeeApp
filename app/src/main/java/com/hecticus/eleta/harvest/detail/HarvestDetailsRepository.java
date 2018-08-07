@@ -138,8 +138,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                Gson g = new Gson();
-                Log.d("debug json444", "DDEC");
+                /*Gson g = new Gson();
+                Log.d("debug json444", "DDEC");*/
                 Invoice invoice;
                 //try{
                     invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
@@ -147,7 +147,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                     //invoice = new Invoice(invoicePost, ManagerDB.getProviderById());
 
                 }*/
-                Log.d("debug json555", g.toJson(invoice));
+                //Log.d("debug json555", g.toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog
@@ -196,17 +196,13 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     @Override
     public void editHarvestRequest(InvoiceDetails invoiceDetails) {
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost,false)*/) {
-                /*Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
-                if (ManagerDB.updateInvoiceDetails(invoicePost, null))
+                Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
+                if (ManagerDB.updateInvoiceDetails1(invoiceDetails))
                     onHarvestUpdated();
                 else
-                    onError();*/
+                    onError();
         } else {
-            //List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
-            //for(int i=0; i<invoiceDetailsList.size(); i++){
-                //InvoiceDetail invoiceDetail = new InvoiceDetail(invoiceDetailsList.get(i), invoicePost);
                 endPoint(invoiceDetails);
-            //}
         }
     }
 
@@ -224,8 +220,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
 
 
-        Gson g = new Gson();
-        Log.d("DEBUG con lot", g.toJson(new InvoiceDetail(invoiceDetail)));
+        /*Gson g = new Gson();
+        Log.d("DEBUG con lot", g.toJson(new InvoiceDetail(invoiceDetail)));*/
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog
@@ -412,6 +408,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     @DebugLog
     @Override
     public void onFarmsSuccess(FarmsListResponse response) {
+        //todo delete all
         ManagerDB.saveNewFarms(response.getResult());
         mPresenter.loadFarms(response.getResult());
     }
@@ -437,6 +434,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
+                            //todo delete all
                             ManagerDB.saveNewLots(response.body().getResult());
                             onLotsSuccess(response.body());
                         } else

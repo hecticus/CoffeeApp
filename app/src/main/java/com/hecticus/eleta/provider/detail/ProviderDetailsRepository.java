@@ -156,8 +156,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             //Log.d("DEBUg desde bd", ManagerDB.getProviderByIdentificationDoc(providerParam.getIdentificationDocProvider()).toString());
         } else {
             Log.d("DETAILS", "--->Sent provider: " + providerParam);
-            Gson g = new Gson();
-            Log.d("DEBUG DETAILS555",  g.toJson(providerParam));
+            /*Gson g = new Gson();
+            Log.d("DEBUG DETAILS555",  g.toJson(providerParam));*/
 
             Call<ProviderCreationResponse> call = providerDetailsDataApi.createProvider(providerParam);
 
@@ -438,8 +438,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         Log.d("DEBUG imege", g.toJson(provider));*/
 
         MultimediaProfile media = new MultimediaProfile("image", new MultimediaCDN(base64Image));
-        Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(media));
+        /*Gson g = new Gson();
+        Log.d("DEBUG imege", g.toJson(media));*/
 
         Call<ResponseBody> call = providerImageApi.updateProviderImage(provider.getIdProvider(), media);
         call.enqueue(new Callback<ResponseBody>() {
@@ -509,8 +509,8 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         Log.d("DEBUG imege", g.toJson(provider));*/
 
         MultimediaProfile media = new MultimediaProfile(id, "image", new MultimediaCDN(base64Image));
-        Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(media));
+        /*Gson g = new Gson();
+        Log.d("DEBUG imege", g.toJson(media));*/
 
         Call<ResponseBody> call = providerImageApi.putProviderImage(id, media);
         call.enqueue(new Callback<ResponseBody>() {

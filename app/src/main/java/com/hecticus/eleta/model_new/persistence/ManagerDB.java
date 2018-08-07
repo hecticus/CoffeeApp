@@ -15,6 +15,7 @@ import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
+import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.util.Constants;
 
 import java.util.ArrayList;
@@ -53,8 +54,8 @@ public class ManagerDB {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    Gson g = new Gson();
-                    Log.d("DEBUG", g.toJson(provider));
+                    /*Gson g = new Gson();
+                    Log.d("DEBUG", g.toJson(provider));*/
                     realm.insertOrUpdate(provider);
                     Log.d("BUG", "--->saveNewProvider " + provider);
                 }
@@ -109,6 +110,7 @@ public class ManagerDB {
                     } else
                         Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
                     invoice.setStatusInvo("Cerrada");
+                    invoice.setClosed(true);
                     realm.insertOrUpdate(invoice);
                 }
             });
@@ -235,6 +237,37 @@ public class ManagerDB {
         return finalProviderList;
     }
 
+    public static List<InvoiceDetails> mixAndGetValidsInvoiceDetails( List<InvoiceDetails> invoiceDetailsList) {
+        ArrayList<InvoiceDetails> finalInvoiceDetailsList = new ArrayList<>(invoiceDetailsList);
+
+        List<InvoiceDetails> deletedInvoiceDetailsList = Realm.getDefaultInstance().where(InvoiceDetails.class).equalTo("deleteOffline", true).findAllSorted("startDate");
+        Log.d("DEBUG", "control for delete"+ deletedInvoiceDetailsList.size());
+        for (InvoiceDetails invoiceDetails : deletedInvoiceDetailsList) {
+            Log.d("DEBUG", "control for delete"+ deletedInvoiceDetailsList.size());
+            if (invoiceDetails.getId() > -1) {
+                int ind = invoiceDetails.indexByIdIn(finalInvoiceDetailsList);
+                if (ind != -1) {
+                    finalInvoiceDetailsList.remove(ind);
+                }
+            }
+        }
+
+        List<InvoiceDetails> editInvoiceDetailsList = Realm.getDefaultInstance().where(InvoiceDetails.class).equalTo("deleteOffline", false).equalTo("editOffline", true).equalTo("addOffline", false).findAllSorted("startDate");
+        for (InvoiceDetails invoiceDetails : editInvoiceDetailsList) {
+            if (invoiceDetails.getId() > -1) {
+                int ind = invoiceDetails.indexByIdIn(finalInvoiceDetailsList);
+                if (ind != -1) {
+                    finalInvoiceDetailsList.set(ind, invoiceDetails);
+                }
+            }
+        }
+
+        List<InvoiceDetails> addedInvoiceDetailsList = Realm.getDefaultInstance().where(InvoiceDetails.class).equalTo("deleteOffline", false).equalTo("addOffline", true).findAllSorted("startDate");
+        finalInvoiceDetailsList.addAll(addedInvoiceDetailsList);
+
+        return finalInvoiceDetailsList;
+    }
+
     @DebugLog
     public static List<Provider> mixAndGetValids(int type, List<Provider> providerList) {
         ArrayList<Provider> finalProviderList = new ArrayList<>(providerList);
@@ -276,8 +309,9 @@ public class ManagerDB {
         try {
             for (final Provider provider : providerList) {
                 Provider saved = realm.where(Provider.class).equalTo("identificationDocProvider", provider.getIdentificationDocProvider()).findFirst();
-                if (saved != null && (saved.isDeleteOffline() || saved.isAddOffline() || saved.isEditOffline()))
+                if (saved != null && (saved.isDeleteOffline() || saved.isAddOffline() || saved.isEditOffline())){
                     continue;
+                }
 
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -501,8 +535,8 @@ public class ManagerDB {
                         invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
                         invoice.setId2(invoice.getInvoiceId() + "-" + invoice.getLocalId());
                         realm.insertOrUpdate(invoice);
-                        Gson g = new Gson();
-                        Log.d("DEBUG", g.toJson(invoice));
+                        /*Gson g = new Gson();
+                        Log.d("DEBUG", g.toJson(invoice));*/
                         Log.d("Repository", "--->Inserted " + invoice.toString());
                     }
                 });
@@ -593,11 +627,23 @@ public class ManagerDB {
 
         Realm realm = Realm.getDefaultInstance();
         try {
-            for (final InvoiceDetails invoiceDetails : invoiceDetailsList) {
-                InvoiceDetails saved = realm.where(InvoiceDetails.class).equalTo("wholeId", invoiceDetails.getWholeId()).findFirst();
-                if (saved != null && (saved.isDeleteOffline() || saved.isAddOffline() || saved.isEditOffline()))
-                    continue;
 
+            for (final InvoiceDetails invoiceDetails : invoiceDetailsList) {
+                InvoiceDetails saved;
+                if(invoiceDetails.getId() != -1){
+                    saved = realm.where(InvoiceDetails.class).equalTo("id", invoiceDetails.getId()).findFirst();//("wholeId", invoiceDetails.getWholeId()).findFirst();
+                } else {
+                    saved = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();//("wholeId", invoiceDetails.getWholeId()).findFirst();
+                }
+                //InvoiceDetails saved = realm.where(InvoiceDetails.class).equalTo("id", invoiceDetails.getId()).findFirst();//("wholeId", invoiceDetails.getWholeId()).findFirst();
+
+                Log.d("DEBUG", "wholeId" + String.valueOf(invoiceDetails.getWholeId()));
+                if (saved != null && (saved.isDeleteOffline() || saved.isAddOffline() || saved.isEditOffline())) {
+                    Log.d("DEBUG", "is delete true");
+                    continue;
+                }
+                Log.d("DEBUG", "is delete false");
+                //todo imprimir
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
                     @Override
@@ -606,7 +652,7 @@ public class ManagerDB {
                             return;
 
                         invoiceDetails.setWholeId(invoiceDetails.getId() + "-" + invoiceDetails.getLocalId());
-
+                        Log.d("DEBUG", "save invoiceDetails for");
                         invoiceDetails.setInvoiceId(invoiceDetails.getInvoice().getInvoiceId());
                         if (invoiceDetails.getStore() != null) {
                             invoiceDetails.setStoreId(invoiceDetails.getStore().getId());
@@ -690,6 +736,7 @@ public class ManagerDB {
                             // It's for a harvest, we filter out invoice details that have purchase-only
                             // attributes, like the store id, as there is a chance we get details
                             // from a different type of invoice:
+                            .equalTo("deleteOffline",false)
                             .equalTo("storeId", -1)
 
                             .findAllSorted("startDate");
@@ -704,6 +751,7 @@ public class ManagerDB {
                             // It's for a purchase, we filter out invoice details that have harvest-only
                             // attributes. like the lot id, as there is a chance we get details
                             // from a different type of invoice:
+                            .equalTo("deleteOffline",false)
                             .equalTo("lotId", -1)
 
                             .findAllSorted("startDate");
@@ -790,7 +838,7 @@ public class ManagerDB {
                 .equalTo("date", invoicePost.getDate())
                 .equalTo("isClosed", false)
                 .equalTo("deleteOffline", false)
-                .equalTo("statusInvo", "Open")
+                .equalTo("statusInvo", "Abierta")
                 .findFirst();
 
         if (existingInvoice == null) {
@@ -805,7 +853,7 @@ public class ManagerDB {
             existingInvoice.setLocalId(nextLocalInvoiceId);
             existingInvoice.setAddOffline(true);
             existingInvoice.setId2(existingInvoice.getInvoiceId() + "-" + existingInvoice.getLocalId());
-            existingInvoice.setStatusInvo("Open");
+            existingInvoice.setStatusInvo("Abierta");
         } else
             Log.d("BUG", "--->saveNewInvoice (It existed before):" + existingInvoice);
 
@@ -864,7 +912,7 @@ public class ManagerDB {
                     }
 
                     invoicePost.setTotal(total);
-                    invoicePost.setStatusInvo("Open");
+                    invoicePost.setStatusInvo("Abierta");
                     realm.insertOrUpdate(invoicePost);
 
                     if (finalInvoiceToInsert.getInvoiceStartDate().equals(invoicePost.getStartDate())) {
@@ -948,7 +996,7 @@ public class ManagerDB {
                     .equalTo("date", invoicePost.getDate())
                     .equalTo("isClosed", false)
                     .equalTo("deleteOffline", false)
-                    .equalTo("statusInvo", "Open") //todo no se
+                    .equalTo("statusInvo", "Abierta") //todo no se
                     .equalTo("addOffline", true)
                     .findFirst();
 
@@ -959,7 +1007,7 @@ public class ManagerDB {
                     .equalTo("providerId", invoicePost.getProviderId())
                     .equalTo("date", invoicePost.getDate())
                     .equalTo("isClosed", false)
-                    .equalTo("statusInvo", "Open") //todo no se
+                    .equalTo("statusInvo", "Abierta") //todo no se
                     .beginGroup()
                     .equalTo("addOffline", true).
                             or()
@@ -986,6 +1034,32 @@ public class ManagerDB {
         return (existingProvider != null && (existingProvider.isAddOffline() || existingProvider.isEditOffline() || existingProvider.isDeleteOffline()));
     }
 
+    @DebugLog
+    public static boolean updateInvoiceDetails1(final InvoiceDetails invoiceDetails/*, final List<InvoiceDetailPurity> detailsPuritiesListParam*/) {
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    InvoiceDetails existing = realm.where(InvoiceDetails.class).equalTo("id", invoiceDetails.getInvoiceId()).findFirst();
+                    if (existing != null && invoiceDetails.getInvoiceId()!=existing.getInvoiceId()) {
+                        existing.deleteFromRealm();
+                        Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
+                    } else
+                        Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
+                    invoiceDetails.setEditOffline(true);
+                    realm.insertOrUpdate(invoiceDetails);
+                }
+            });
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+        realm.close();
+        return true;
+    }
+
 
     @DebugLog
     public static boolean updateInvoiceDetails(final InvoicePost invoicePost, final List<InvoiceDetailPurity> detailsPuritiesListParam) {
@@ -997,7 +1071,7 @@ public class ManagerDB {
                 .equalTo("providerId", invoicePost.getProviderId())
                 .equalTo("date", invoicePost.getDate())
                 .equalTo("isClosed", false)
-                .equalTo("statusInvo", "Open")
+                .equalTo("statusInvo", "Abierta")
                 //.lessThan("invoiceStatus", 3)
                 .findFirst();
 
@@ -1510,6 +1584,52 @@ public class ManagerDB {
     }
 
     @DebugLog
+    public static boolean deleteInvoiceDetails(final int remoteInvoiceDetailId, final int localInvoiceDetailId) {
+
+        final boolean[] deleted = {false};
+
+        Realm realm = Realm.getDefaultInstance();
+
+        final InvoiceDetails invoiceInRealm;
+        InvoiceDetails invoiceInRealm1;
+
+        if (remoteInvoiceDetailId != -1) {
+            invoiceInRealm = realm
+                    .where(InvoiceDetails.class)
+                    .equalTo("id", remoteInvoiceDetailId)
+                    .equalTo("deleteOffline", false)
+                    .findFirst();
+            Log.d("DEBUG", "elimina invoiceD1"+ invoiceInRealm);
+
+        } else {
+            invoiceInRealm = realm
+                    .where(InvoiceDetails.class)
+                    .equalTo("localId", localInvoiceDetailId)
+                    .equalTo("deleteOffline", false)
+                    .findFirst();
+            Log.d("DEBUG", "elimina invoiceD2");
+        }
+        Log.d("DEBUG", "elimina invoiceD3" + invoiceInRealm);
+        if (invoiceInRealm != null) {
+
+            Log.d("DEBUG", "elimina invoiceD4");
+            realm.executeTransaction(new Realm.Transaction() {
+                @DebugLog
+                @Override
+                public void execute(Realm realm) {
+
+                    invoiceInRealm.setDeleteOffline(true);
+                    realm.insertOrUpdate(invoiceInRealm);
+                    Log.d("DEBUG", "elimina invoiceD5");
+                    deleted[0] = true;
+                }
+            });
+        }
+
+        return deleted[0];
+    }
+
+    @DebugLog
     public static boolean deleteHarvestOrPurchaseInvoice(final int remoteInvoiceId, final int localInvoiceId) {
 
         final boolean[] deleted = {false};
@@ -1584,8 +1704,8 @@ public class ManagerDB {
     @DebugLog
     private static boolean deleteInvoiceItemsInTransaction(Realm realm, int invoiceId) {
 
-        /*boolean deletedAnyHarvestOfDay = realm
-                .where(HarvestOfDay.class)
+        boolean deletedAnyHarvestOfDay = realm
+                .where(InvoiceDetails.class)
                 .equalTo("invoiceId", invoiceId).findAll().deleteAllFromRealm();
 
         Log.d("OFFLINE", "--->deletedAnyHarvestOfDay: " + deletedAnyHarvestOfDay);
@@ -1596,8 +1716,8 @@ public class ManagerDB {
 
         Log.d("OFFLINE", "--->deletedAnyInvoiceDetails: " + deletedAnyInvoiceDetails);
 
-        return (deletedAnyHarvestOfDay || deletedAnyInvoiceDetails);*/
-        return false; //borrar
+        return (deletedAnyHarvestOfDay || deletedAnyInvoiceDetails);
+        //return false; //borrar
     }
 
     @DebugLog

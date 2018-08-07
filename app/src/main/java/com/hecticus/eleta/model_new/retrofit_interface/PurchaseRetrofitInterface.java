@@ -41,13 +41,15 @@ public interface PurchaseRetrofitInterface {
     /*
 
      */
-
+    //listo
     @GET("store")
     Call<StoresListResponse> getStores(/*@Query("statusStore") Long statusStore*/);
 
+    //listo
     @GET("purity")
     Call<PurityListResponse> getPurities(/*@Query("statusStore") Long statusStore*/);
 
+    //listo
     @GET("itemType")//getByProviderTypeId/{providerTypeId}/0?sort=nameItemType")
     Call<ItemTypesListResponse> getItemsType(@Query("sort") String sort, @Query("providerType") int providerType);
 

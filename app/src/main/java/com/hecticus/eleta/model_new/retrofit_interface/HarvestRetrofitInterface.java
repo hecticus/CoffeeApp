@@ -47,12 +47,15 @@ public interface HarvestRetrofitInterface {
     @DELETE("provider/{id}")
     Call<Message> deleteHarvest(@Path("id") int idHarvest);
 
+    //listo
     @GET("farm?sort=nameFarm")//&collection=s")
     Call<FarmsListResponse> getFarms();
 
+    //listo
     @GET("lot")
     Call<LotsListResponse> getLotsByFarm(@Query("farm") int idFarm, @Query("sort") String name);
 
+    //listo
     @GET("itemType")//todo falta el status
     Call<ItemTypesListResponse> getItemsType(@Query("providerType") int providerTypeId);
 

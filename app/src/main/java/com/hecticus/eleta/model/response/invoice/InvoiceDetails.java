@@ -12,10 +12,14 @@ import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
+import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.store.Store;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -115,9 +119,9 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private StatusInvoiceDetail status;
 
-    private boolean addOffline;
-    private boolean editOffline;
-    private boolean deleteOffline;
+    private boolean addOffline = false;
+    private boolean editOffline = false;
+    private boolean deleteOffline = false;
 
     @Ignore
     private String date = null;
@@ -129,6 +133,11 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     private String dateTime = null;
 
     public InvoiceDetails() {}
+
+    public String parseDateToString(Date fecha, String format){
+        Format formatter = new SimpleDateFormat(format);
+        return formatter.format(fecha);
+    }
 
     public InvoiceDetails(ItemPost itemPost, InvoicePost invoicePost) {
         localId = itemPost.getItemPostLocalId();
@@ -382,9 +391,9 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Override
     public JsonElement serialize(InvoiceDetails src, Type typeOfSrc, JsonSerializationContext context) {
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("idInvoiceDetail", src.getId());
+        jsonObject.addProperty("id", src.getId());
         jsonObject.addProperty("localId", src.getLocalId());
-        jsonObject.addProperty("statusDelete", src.getDeleteStatus());
+        //jsonObject.addProperty("statusDelete", src.getDeleteStatus());
         jsonObject.addProperty("invoiceId", src.getInvoiceId());
         jsonObject.addProperty("itemTypeId", src.getItemTypeId());
         jsonObject.addProperty("lotId", src.getLotId());
@@ -392,12 +401,12 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         jsonObject.addProperty("storeId", src.getStoreId());
         jsonObject.addProperty("priceItemTypeByLot", src.getPriceByLot());
         jsonObject.addProperty("costItemType", src.getPriceItem());
-        jsonObject.addProperty("startDateInvoiceDetail", src.getStartDate());
+        jsonObject.addProperty("createdAt", src.getStartDate());
         jsonObject.addProperty("amountInvoiceDetail", src.getAmount());
         jsonObject.addProperty("freightInvoiceDetail", src.isFreight());
         jsonObject.addProperty("noteInvoiceDetail", src.getObservation());
-        jsonObject.addProperty("nameReceivedInvoiceDetail", src.getReceiverName());
-        jsonObject.addProperty("nameDeliveredInvoiceDetail", src.getDispatcherName());
+        jsonObject.addProperty("nameReceived", src.getReceiverName());
+        jsonObject.addProperty("nameDelivered", src.getDispatcherName());
         //jsonObject.addProperty("statusInvoiceDetail", src.getStatus());
 
         return jsonObject;
@@ -470,6 +479,16 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         } else {
             date = time = dateTime = "";
         }
+    }
+
+    public int indexByIdIn(final List<InvoiceDetails> list) {
+        for (int i = 0; i < list.size(); i++) {
+            InvoiceDetails invoiceDetails = list.get(i);
+            if (invoiceDetails != null && invoiceDetails.getId() == getId()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /*public void initDateTime() {

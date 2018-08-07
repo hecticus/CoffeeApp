@@ -65,7 +65,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         //void updatePager(Pager pager);
 
-        void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control);
+        void onHarvestDeleted(List<InvoiceDetails>invoiceDetailsResponse, Boolean control);
 
         void closeInvoice();
 
@@ -92,7 +92,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void deleteHarvestOrPurchase(Invoice invoice, String date, InvoiceDetails harvestOrPurchaseId);
 
-        void closeInvoiceRequest(com.hecticus.eleta.model_new.Invoice post);
+        void closeInvoiceRequest(Invoice post);
 
         void onGetHarvestsSuccess(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control);
 

@@ -432,8 +432,8 @@ public class SyncManager {
         if (firstInvoicePost.getInvoiceId() == -1) {
             Log.d("DETAILS", "---> firstInvoicePost is new: " + firstInvoicePost);
             com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
-            Gson g = new Gson();
-            Log.d("DEBUG new offline", g.toJson(invoice));
+            /*Gson g = new Gson();
+            Log.d("DEBUG new offline", g.toJson(invoice));*/
             call = invoiceApi.newInvoiceDetail(invoice/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
             new ManagerServices<>(call, new ManagerServices.ServiceListener<CreateInvoiceResponse>() {
                 @DebugLog

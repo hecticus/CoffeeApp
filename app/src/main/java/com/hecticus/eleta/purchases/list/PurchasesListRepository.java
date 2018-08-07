@@ -245,6 +245,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
+                            ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             onGetReceiptDetailsSuccess(response.body());
                         } else
                             manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response, "getReceiptDetails bad response: " + response);

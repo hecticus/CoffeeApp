@@ -198,8 +198,8 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @DebugLog
     @Override
-    public void onHarvestDeleted(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control) {
-        detailsList = invoiceDetailsResponse.getListInvoiceDetails();
+    public void onHarvestDeleted(List<InvoiceDetails> invoiceDetailsResponse, Boolean control) {
+        detailsList = invoiceDetailsResponse;//.getListInvoiceDetails();
         //harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);
         mView.hideWorkingIndicator();
         mView.showMessage(context.getString(R.string.harvest_deleted_successful));
@@ -233,7 +233,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                 = new com.hecticus.eleta.model_new.Invoice(invoice,
                 invoice.getProvider(),
                 new StatusInvoice(12, false, "Cerrada", null));
-        mRepository.closeInvoiceRequest(invoice1);
+        mRepository.closeInvoiceRequest(invoice);
     }
 
     @DebugLog

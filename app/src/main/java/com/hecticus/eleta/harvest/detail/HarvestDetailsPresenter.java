@@ -99,8 +99,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @DebugLog
     @Override
     public void onSaveChanges(Lot selectedLot, List<ItemType> items, String observations) {
-        Gson g = new Gson();
-        Log.d("DEBUG spiner lot2", g.toJson(selectedLot));
+        /*Gson g = new Gson();
+        /*Log.d("DEBUG spiner lot2", g.toJson(selectedLot));*/
         mView.showWorkingIndicator();
 
         if (currentProvider == null) {
@@ -166,8 +166,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @DebugLog
     @Override
     public InvoicePost getChanges(Lot lotId, List<ItemType> itemsTypesList, String observations) {
-        Gson g = new Gson();
-        Log.d("DEBUG spiner lot1", g.toJson(lotId));
+        /*Gson g = new Gson();
+        Log.d("DEBUG spiner lot1", g.toJson(lotId));*/
         //todo no edita
         InvoicePost invoicePostWithChanges = null;
 

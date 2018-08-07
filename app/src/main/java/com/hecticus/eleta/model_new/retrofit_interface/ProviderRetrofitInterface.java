@@ -57,20 +57,18 @@ POST    /provider/delete                                                        
 PUT     /provider/:id                                                                controllers.Providers.update(id : Long)
 DELETE  /provider/:id                                                           controllers.Providers.delete(id : Long)
      */
+
     @POST("provider")
     Call<ProviderCreationResponse> createProvider( @Body Provider providerToCreate);
 
     @PUT("provider/{id}")
     Call<ProviderCreationResponse> updateProviderData(@Path("id") int id, @Body Provider providerToUpdate);
 
-    @POST("provider/{id}/mediaProfile")//("provider/uploadPhotoProvider")
+    @POST("provider/{id}/mediaProfile")
     Call<ResponseBody> updateProviderImage(@Path("id") int id, @Body MultimediaProfile media);
 
     @PUT("multimedias/{id}")
     Call<ResponseBody> putProviderImage(@Path("id") int id, @Body MultimediaProfile media);
-
-    @GET("provider/{id}")
-    Call<ResponseBody> getProviderById(@Path("id") int id);
 
     @GET("provider")
     Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("nameProvider") String name);
@@ -78,8 +76,12 @@ DELETE  /provider/:id                                                           
     @GET("provider")
     Call<ProvidersListResponse> providersByType(@Query("providerType") int providerTypeId);
 
+    //elimina pero al recargar on line se muestran todos
     @DELETE("provider/{idProvider}")
     Call<ResponseBody> deleteProvider(@Path("idProvider") int idProvider);
+
+    @GET("provider/{id}")
+    Call<ResponseBody> getProviderById(@Path("id") int id);
 
     @DELETE("provider/{idProvider}")
     Call<Message> deleteProvider1(@Path("idProvider") int idProvider);

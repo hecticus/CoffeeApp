@@ -283,8 +283,8 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
     @Override
     public void updateItems(List<ItemType> itemTypeList, int selectedId) {
-        Gson g = new Gson();
-        Log.d("DEBUG listItems id:"+String.valueOf(selectedId), g.toJson(itemTypeList));
+        /*Gson g = new Gson();
+        Log.d("DEBUG listItems id:"+String.valueOf(selectedId), g.toJson(itemTypeList));*/
         itemsSpinner.setValuesAndSelect(itemTypeList, selectedId);
 
     }

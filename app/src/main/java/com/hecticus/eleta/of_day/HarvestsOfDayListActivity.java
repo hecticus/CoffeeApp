@@ -26,6 +26,7 @@ import com.hecticus.eleta.custom_views.CustomButtonWBorderAndImage;
 import com.hecticus.eleta.harvest.detail.HarvestDetailsActivity;
 import com.hecticus.eleta.home.HomeActivity;
 //import com.hecticus.eleta.model.response.harvest.HarvestOfDay;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
@@ -109,6 +110,7 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        Log.d("DEBUG 2", "policia 1");
         mPresenter.getInitialData();
     }
 
@@ -164,14 +166,21 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     public void goToHarvestOrPurchaseDetailsView(Provider provider, /*List<*/InvoiceDetails/*>*/ detailsList, boolean invoiceHasOfflineOperations) {
         try {
             Intent intent = new Intent(this, HarvestDetailsActivity.class);
-            Log.d("DEBUG details", Util.getGson().toJson(detailsList));
-            intent.putExtra("details", Util.getGson().toJson(detailsList));
+            Log.d("DEBUG details", "brayan 1");
             intent.putExtra("provider", Util.getGson().toJson(provider));
+            Log.d("DEBUG details", "brayan 2");
+            if(InternetManager.isConnected(this)){
+            //detailsList.set
+                intent.putExtra("details", Util.getGson().toJson(detailsList));
+            }else {
+                intent.putExtra("details", detailsList.getId());
+            }
+            Log.d("DEBUG details", "brayan 3");
             intent.putExtra("isAdd", false);
             intent.putExtra("canEdit", true);
             startActivityForResult(intent, 1);
 
-            Log.d("", "" + Util.getGson().toJson(detailsList));
+            //Log.d("", "" + Util.getGson().toJson(detailsList));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

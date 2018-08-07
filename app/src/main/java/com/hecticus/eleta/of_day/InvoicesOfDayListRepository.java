@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
+import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model.response.Message;
@@ -160,7 +161,9 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                             Log.d("DEBUG", "paso4");
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             Log.d("DEBUG", "paso5");
-                            onGetHarvestsSuccess(response.body(), true);
+                            InvoiceDetailsResponse invoiceDetailsResponse = new InvoiceDetailsResponse();
+                            invoiceDetailsResponse.setListInvoiceDetails(ManagerDB.mixAndGetValidsInvoiceDetails(response.body().getListInvoiceDetails()));
+                            onGetHarvestsSuccess(/*response.body()*/ invoiceDetailsResponse, true);
                             Log.d("DEBUG", "paso6");
                         } else
                             manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
@@ -184,8 +187,22 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
     @DebugLog
     @Override
-    public void deleteHarvestOrPurchase(Invoice invoice, String date, InvoiceDetails harvestOrPurchase) {
-        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoice)) {
+    public void deleteHarvestOrPurchase(Invoice invoice, String date, final InvoiceDetails harvestOrPurchase) {
+        Log.d("DEBUG", "policia 1");
+        if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoice)*/) {
+            Log.d("DEBUG", "policia 2");
+            Log.d("DEBUG", "policia id"+ harvestOrPurchase.getId());
+            Log.d("DEBUG", "policia id" + harvestOrPurchase.getLocalId());
+
+            if (ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId())) {
+                Log.d("DEBUG", "policia 3");
+                List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
+                        invoice.getInvoiceId(),
+                        invoice.getLocalId(),
+                        isForHarvest);
+                Log.d("DEBUG", "policia 4");
+                mPresenter.onHarvestDeleted(detailsList, true);
+            }
             /*if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
                 List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
                 List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
@@ -224,7 +241,15 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 public void onResponse(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Response<InvoiceDetailsResponse> response) {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-                            mPresenter.onHarvestDeleted(response.body(), true);
+                            //ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId()); todo no se
+                            ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId());
+                            //Log.d("DEBUG delete online", String.valueOf(variable));
+
+                            /*List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
+                                    harvestOrPurchase.getId(),
+                                    harvestOrPurchase.getLocalId(),
+                                    isForHarvest);*/
+                            mPresenter.onHarvestDeleted(response.body().getListInvoiceDetails(), true);
                         } else
                             Log.d("DEBUG", "ERROR BORRANDO1");
                             manageError(mPresenter.context.getString(R.string.error_deleting_harvest), response);
@@ -250,36 +275,44 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     @DebugLog
     @Override
 
-    public void closeInvoiceRequest(com.hecticus.eleta.model_new.Invoice post) {
-        Log.d("DEBUG id close", post.getId()+"");
-        Call<Message> call = invoiceApi.closeInvoice(post.getId().intValue(), post);
+    public void closeInvoiceRequest(Invoice post) {
+        if (!InternetManager.isConnected(mPresenter.context)) {
+            ManagerDB.updateStatusInvoice(post);
+        } else {
+            com.hecticus.eleta.model_new.Invoice invoice1
+                    = new com.hecticus.eleta.model_new.Invoice(post,
+                    post.getProvider(),
+                    new StatusInvoice(12, false, "Cerrada", null));
+            //Log.d("DEBUG id close", post.getId() + "");
+            Call<Message> call = invoiceApi.closeInvoice(invoice1.getId().intValue(), invoice1);
 
-        call.enqueue(new Callback<Message>() {
-            @DebugLog
-            @Override
-            public void onResponse(@NonNull Call<Message> call,
-                                   @NonNull Response<Message> response) {
+            call.enqueue(new Callback<Message>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<Message> call,
+                                       @NonNull Response<Message> response) {
 
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        mPresenter.onCloseInvoiceSuccessful();
-                    } else {
-                        manageError(mPresenter.context.getString(R.string.error_closing_purchase), response);
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            mPresenter.onCloseInvoiceSuccessful();
+                        } else {
+                            manageError(mPresenter.context.getString(R.string.error_closing_purchase), response);
 
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onError(mPresenter.context.getString(R.string.error_closing_purchase));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
+                    t.printStackTrace();
                     onError(mPresenter.context.getString(R.string.error_closing_purchase));
                 }
-            }
-
-            @DebugLog
-            @Override
-            public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                onError(mPresenter.context.getString(R.string.error_closing_purchase));
-            }
-        });
+            });
+        }
     }
 
     @DebugLog

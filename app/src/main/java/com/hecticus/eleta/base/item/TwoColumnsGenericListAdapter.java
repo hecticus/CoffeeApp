@@ -68,8 +68,6 @@ public class TwoColumnsGenericListAdapter extends RecyclerView.Adapter<TwoColumn
             genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Gson g = new Gson();
-                    Log.d("DEBUG delete", g.toJson(list.get(position)));
                     mPresenter.onClickDeleteButton(list.get(position));
                 }
             });

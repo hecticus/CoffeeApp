@@ -12,6 +12,7 @@ import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.providers.Provider;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 
 import hugo.weaving.DebugLog;
 import io.realm.RealmObject;
@@ -84,7 +85,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     public Invoice(InvoicePost invoicePost) {
         invoiceStatus = new StatusInvoice(11, false, "Abierta", null);
         invoiceStartDate = invoicePost.getStartDate();
-        invoiceClosedDate = invoicePost.getStartDate();
+        //invoiceClosedDate = invoicePost.getStartDate();
         invoiceTotal = invoicePost.getTotal();
         type = invoicePost.getType();
         providerName = invoicePost.getProviderName();

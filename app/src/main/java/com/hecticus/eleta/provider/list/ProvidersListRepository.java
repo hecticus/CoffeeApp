@@ -182,7 +182,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
 
     @DebugLog
     @Override
-    public void deleteProvider(Provider provider) {
+    public void deleteProvider(final Provider provider) {
         if (!InternetManager.isConnected(mPresenter.context) || provider.getIdProvider() <0 || ManagerDB.providerHasOfflineOperation(provider)) {
             //TODO check if has invoices
 
@@ -202,6 +202,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                     // onLoginSuccess(/*response.body()*/);
                     if (response.code() == 200) {
                         try {
+                            ManagerDB.deleteProvider(provider);
                             mPresenter.onProviderDeleted();
                         } catch (Exception e) {
                             manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
