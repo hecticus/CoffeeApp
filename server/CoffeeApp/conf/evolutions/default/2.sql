@@ -1,3 +1,5 @@
+
+
 INSERT INTO `invoices` (`id`,`deleted`,`provider_id`, `status_invoice_id`) VALUES
 (600, 0, 1131, 11 ),
 (601, 0, 1130, 11 ),
@@ -139,7 +141,7 @@ INSERT INTO `invoicesdetails_purities` (`id`,`deleted`,`purity_id`,
 (40, 0, 2, 10,0,0,1262 ),
 (41, 0, 1, 25,0,0,1262 );
 
-
+# --- !Ups
 
 INSERT INTO `config` (id, config_key, config_value, description) VALUES
 (7,'nameCompany','Cafe de Eleta, S.A',NULL),
@@ -201,8 +203,7 @@ INSERT INTO `lots`(id, name_lot, area_lot, heigh_lot,  farm_id, status_lot_id, d
   (5,     'LOTE 2',     '111',    111,        1, 31, 0, 250.00),
   (6,     'LOTE 6',     '548',    58,         2, 31, 0, 8.00),
   (7,     'LOTE 7',     '258',    2758,       2, 32, 1, 258.00),
-  (8,     'LOTE 8',     '56',     56,         1, 32, 1, 56.00),
-  (9,     'lote 09',    '123258', 123258,     1, 32, 1, 123258.00);
+  (8,     'LOTE 8',     '56',     56,         1, 32, 1, 56.00);
 
 INSERT INTO `item_types` (`id`,`deleted`,`name_item_type`,`cost_item_type`,
                           `provider_type_id`,`unit_id`) VALUES
@@ -219,6 +220,7 @@ INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VAL
 (2, 0, '% Granos Bocados',     30),
 (3, 1, '% Granos Eliminados',  15);
 
+# --- !Downs
 SET FOREIGN_KEY_CHECKS = 0;
 
 TRUNCATE `config`;
@@ -253,6 +255,3 @@ TRUNCATE `multimedia_cdn`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-# --- !Ups
-
-# --- !Downs
