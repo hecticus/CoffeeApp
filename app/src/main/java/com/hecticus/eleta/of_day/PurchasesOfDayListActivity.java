@@ -24,6 +24,7 @@ import com.hecticus.eleta.base.BaseDetailModel;
 import com.hecticus.eleta.base.item.TwoColumnsGenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomButtonWBorderAndImage;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
@@ -175,7 +176,13 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
     public void goToHarvestOrPurchaseDetailsView(Provider provider, /*List<*/InvoiceDetails/*>*/ detailsList, boolean invoiceHasOfflineOperation) {
         try {
             Intent intent = new Intent(this, PurchaseDetailsActivity.class);
-            intent.putExtra("details", Util.getGson().toJson(detailsList));
+            //intent.putExtra("details", Util.getGson().toJson(detailsList));
+            if(InternetManager.isConnected(this)){
+                //detailsList.set
+                intent.putExtra("details", Util.getGson().toJson(detailsList));
+            }else {
+                intent.putExtra("details", detailsList.getId());
+            }
             intent.putExtra("provider", Util.getGson().toJson(provider));
             intent.putExtra("isAdd", false);
             intent.putExtra("canEdit", true);

@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
+import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model_new.Invoice;
 import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.model_new.SessionManager;
@@ -122,12 +123,18 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,isAdd)) {
             if (isAdd) {
-                if (ManagerDB.saveNewInvoice(Constants.TYPE_HARVESTER, invoicePost)) {
+                /*if(ManagerDB.saveNewInvoice1()){
+                    onHarvestUpdated();
+                }*/
+
+
+
+                /*if (ManagerDB.saveNewInvoice(Constants.TYPE_HARVESTER, invoicePost)) {
                     onHarvestUpdated();
 
                 } else {
                     onError();
-                }
+                }*/
             } /*else {
                 Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
                 if (ManagerDB.updateInvoiceDetails(invoicePost, null))
@@ -138,8 +145,6 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                /*Gson g = new Gson();
-                Log.d("debug json444", "DDEC");*/
                 Invoice invoice;
                 //try{
                     invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));

@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 
 /**
  * Created by roselyn545 on 16/9/17.
@@ -165,7 +166,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     @DebugLog
     @Override
-    public InvoicePost getChanges(Lot lotId, List<ItemType> itemsTypesList, String observations) {
+    public InvoicePost getChanges(final Lot lotId, final List<ItemType> itemsTypesList, final String observations) {
         /*Gson g = new Gson();
         Log.d("DEBUG spiner lot1", g.toJson(lotId));*/
         //todo no edita
@@ -202,12 +203,30 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 }
             }
         }
+        try {
+            currentDetailsList.get(0).setLot(lotId);
+            currentDetailsList.get(0).setAmount(Float.parseFloat(itemsTypesList.get(0).getWeightString().trim()));
+            currentDetailsList.get(0).setItemType(new ItemType(itemsTypesList.get(0).getId()));
+            currentDetailsList.get(0).setObservation(observations);
+        }catch (Exception e){
+            try {
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        currentDetailsList.get(0).setLot(lotId);
+                        currentDetailsList.get(0).setLotId(lotId.getId());
+                        currentDetailsList.get(0).setAmount(Float.parseFloat(itemsTypesList.get(0).getWeightString().trim()));
+                        currentDetailsList.get(0).setTotalInvoiceDetail(Float.parseFloat(itemsTypesList.get(0).getWeightString().trim())*lotId.getPrice());
+                        currentDetailsList.get(0).setItemType(new ItemType(itemsTypesList.get(0).getId()));
+                        currentDetailsList.get(0).setItemTypeId(itemsTypesList.get(0).getId());
+                        currentDetailsList.get(0).setObservation(observations);
+                    }
+                });
+            }catch (Exception e1){
 
-        currentDetailsList.get(0).setLot(lotId);
-        Log.d("DEBUG llenando lot", lotId.getId()+"");
-        currentDetailsList.get(0).setAmount(Float.parseFloat(itemsTypesList.get(0).getWeightString().trim()));
-        currentDetailsList.get(0).setItemType(new ItemType(itemsTypesList.get(0).getId()));
-        currentDetailsList.get(0).setObservation(observations);
+            }
+        }
 
 
         if (postItems.size() > 0) {

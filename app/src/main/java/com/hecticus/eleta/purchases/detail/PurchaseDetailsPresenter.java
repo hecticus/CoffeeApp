@@ -260,7 +260,8 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
     @DebugLog
     @Override
-    public InvoicePost getChanges(int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations) {
+    public InvoicePost getChanges(final int storeId,final boolean freight,final int itemId,final String amount,
+                                  final String price, final List<Purity> purities, final String dispatcher, final String observations) {
         InvoicePost invoice = null;
 
 
@@ -351,26 +352,55 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
         }
 
         //int storeId, boolean freight, int itemId, String amount, String price, List<Purity> purities, String dispatcher, String observations)
-        currentDetailsList.get(0).setStore(new Store(storeId));
-        currentDetailsList.get(0).setAmount(Float.valueOf(amount));
-        currentDetailsList.get(0).setFreight(freight);
-        currentDetailsList.get(0).setPriceItem(Float.valueOf(price));
-        //Log.d("DEBUG itemtype", itemId+"");
-        currentDetailsList.get(0).setItemType(new ItemType(itemId));
-        List<InvoiceDetailPurity> listPurity = new ArrayList<>();
-        for(int  i=0; i<purities.size(); i++) {
-            try {
-                listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
-                        Float.valueOf(purities.get(i).getWeightString())));
-            }catch (Exception e){
+        try{
+            currentDetailsList.get(0).setStore(new Store(storeId));
+            currentDetailsList.get(0).setAmount(Float.valueOf(amount));
+            currentDetailsList.get(0).setFreight(freight);
+            currentDetailsList.get(0).setPriceItem(Float.valueOf(price));
+            currentDetailsList.get(0).setItemType(new ItemType(itemId));
+            List<InvoiceDetailPurity> listPurity = new ArrayList<>();
+            for(int  i=0; i<purities.size(); i++) {
+                try {
+                    listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
+                            Float.valueOf(purities.get(i).getWeightString())));
+                }catch (Exception e){
+                }
+            }
+            currentDetailsList.get(0).setDetailPurities(listPurity);
+            currentDetailsList.get(0).setDispatcherName(dispatcher);
+            currentDetailsList.get(0).setObservation(observations);
+        } catch (Exception e){
+            try{
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        currentDetailsList.get(0).setStore(new Store(storeId));
+                        currentDetailsList.get(0).setStoreId(storeId);
+                        currentDetailsList.get(0).setAmount(Float.valueOf(amount));
+                        currentDetailsList.get(0).setFreight(freight);
+                        currentDetailsList.get(0).setPriceItem(Float.valueOf(price));
+                        currentDetailsList.get(0).setItemType(new ItemType(itemId));
+                        currentDetailsList.get(0).setItemTypeId(itemId);
+                        currentDetailsList.get(0).setTotalInvoiceDetail(Float.valueOf(price)*Float.valueOf(amount));
+
+                        List<InvoiceDetailPurity> listPurity = new ArrayList<>();
+                        for(int  i=0; i<purities.size(); i++) {
+                            try {
+                                listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
+                                        Float.valueOf(purities.get(i).getWeightString())));
+                            }catch (Exception e){
+                            }
+                        }
+                        currentDetailsList.get(0).setDetailPurities(listPurity);
+                        currentDetailsList.get(0).setDispatcherName(dispatcher);
+                        currentDetailsList.get(0).setObservation(observations);
+                    }
+                });
+            }catch (Exception e1){
+
             }
         }
-        currentDetailsList.get(0).setDetailPurities(listPurity);
-        currentDetailsList.get(0).setDispatcherName(dispatcher);
-        currentDetailsList.get(0).setObservation(observations);
-        /*Gson g = new Gson();
-        Log.d("DEBUG listPurities", g.toJson(listPurity) );
-        Log.d("DEBUG purities", g.toJson(purities) );*/
 
 
 

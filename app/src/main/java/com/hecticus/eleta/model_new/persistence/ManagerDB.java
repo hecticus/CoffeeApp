@@ -825,6 +825,25 @@ public class ManagerDB {
         return invoiceDetailPurities;
     }
 
+
+
+
+    /*public static boolean saveNewInvoice1(final int type, final InvoicePost invoicePost) {
+        Realm realm = Realm.getDefaultInstance();
+        Invoice existingInvoice = realm.where(Invoice.class)
+                .equalTo("providerId", invoicePost.getProviderId())
+                .equalTo("date", invoicePost.getDate())
+                .equalTo("isClosed", false)
+                .equalTo("deleteOffline", false)
+                .equalTo("statusInvo", "Abierta")
+                .findFirst();
+
+
+
+
+
+    }*/
+
     @DebugLog
     public static boolean saveNewInvoice(final int type, final InvoicePost invoicePost) {
         Realm realm = Realm.getDefaultInstance();
@@ -1048,6 +1067,20 @@ public class ManagerDB {
                         Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
                     } else
                         Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
+
+                    /*InvoiceDetails invoiceDetailsInsert = invoiceDetails;
+
+                    invoiceDetailsInsert.setItemTypeId(invoiceDetails.getItemTypeId());
+                    if(invoiceDetails.getItemTypeId()==1){
+                        invoiceDetailsInsert.setStoreId(invoiceDetails.getStoreId());
+                        invoiceDetailsInsert.setDispatcherName(invoiceDetails.getDispatcherName());
+                        invoiceDetailsInsert.setTotalInvoiceDetail(invoiceDetails.getPriceItem()*invoiceDetails.getAmount());
+                    } else {
+                        invoiceDetailsInsert.setLotId(invoiceDetails.getLotId());
+                        Lot lot = getLotById(invoiceDetails.getLotId());
+                        invoiceDetailsInsert.setTotalInvoiceDetail(lot.getPrice()*invoiceDetails.getAmount());
+                    }*/
+
                     invoiceDetails.setEditOffline(true);
                     realm.insertOrUpdate(invoiceDetails);
                 }

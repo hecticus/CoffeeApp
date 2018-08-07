@@ -52,7 +52,7 @@ public interface InvoiceRetrofitInterface {
     @DELETE("invoiceDetail/{id}")
     Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
 
-    //probar creo q esta listo sin sincronizacion
+    //listo sin sincronizacion
     @PUT("invoiceDetail/{id}")
     Call<CreateInvoiceResponse> updateInvoiceDetailNewEndpoint(@Path("id") int invoiceId, @Body InvoiceDetail post);
 

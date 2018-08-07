@@ -26,6 +26,7 @@ import com.hecticus.eleta.confirm_purchase.ConfirmDialogFragment;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.custom_views.CustomSpinner;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.callback.AcceptConfirmInterface;
 import com.hecticus.eleta.model_new.callback.SelectedProviderInterface;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
@@ -33,6 +34,7 @@ import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
 import com.hecticus.eleta.search_dialog.SearchDialogFragment;
 import com.hecticus.eleta.util.Constants;
@@ -131,7 +133,22 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
             Log.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
             details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
         }*/
-        details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
+        //details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
+
+        if(InternetManager.isConnected(this)){
+            if (getIntent().getStringExtra("details") != null) {
+                details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
+            }
+        }else {
+            if (getIntent().getIntExtra("details", -1) != -1) {
+                details.add(ManagerDB.getInvoiceDetailById(getIntent().getIntExtra("details", -1)));
+                Log.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
+                details.get(0).setStore(ManagerDB.getStoreById(details.get(0).getStoreId()));
+                details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
+            } else {
+                //por local id
+            }
+        }
 
         Provider provider = null;
         if (getIntent().getStringExtra("provider") != null) {
