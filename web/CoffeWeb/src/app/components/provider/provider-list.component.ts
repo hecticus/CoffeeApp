@@ -1,3 +1,4 @@
+import { Status } from './../../core/models/status';
 import { HttpParams } from '@angular/common/http';
 
 import { Params, Router, ActivatedRoute } from '@angular/router';
@@ -11,6 +12,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Provider } from '../../core/models/provider';
 import { BaseService } from '../../core/base.service';
+import { StatusProviderService } from '../status/status-provider.service';
 
 @Component({
 	selector: 'app-provider.list',
@@ -24,8 +26,14 @@ import { BaseService } from '../../core/base.service';
 				</div>
 
 				<div class="field">
-					<mat-select placeholder="Provider Type" [(ngModel)]="selected">
+					<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="selected">
 						<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType}} </mat-option>
+					</mat-select>
+				</div>
+
+				<div class="field">
+					<mat-select placeholder="Estatus" [(ngModel)]="selectedStatus">
+						<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
 					</mat-select>
 				</div>
 
@@ -190,8 +198,9 @@ export class ProviderListComponent implements OnInit {
 	provType: ProviderType[];
 	providers: Provider[];
 	provider: Provider;
+	status: Status;
 	selected: number;
-
+	selectedStatus: number;
 	// Order Columns Display
 	columnsToDisplay = ['select', 'providerType.nameProviderType', 'statusProvider.name', 'nameProvider', 'nitProvider',
 						'addressProvider', 'emailProvider',
@@ -212,6 +221,7 @@ export class ProviderListComponent implements OnInit {
 	constructor(
 		private providerService: ProviderService,
 		private providerTypeService: ProviderTypeService,
+		private statusProviderService: StatusProviderService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 	) { }
@@ -223,14 +233,21 @@ export class ProviderListComponent implements OnInit {
 		let paramStatus = BaseService.jsonToHttpParams(
 			{collection: 'id,nameProviderType'}
 		);
-		this.providerTypeService.getAll(paramStatus).subscribe(
+
+		this.statusProviderService.getAll().subscribe(
 			data => {
-				this.provType = data['result'];
-		});
+				this.status = data['result'];
+				console.log(this.status);
+			}
+		);
 
 		let httpParams = BaseService.jsonToHttpParams({
-			// collection: 'id ',
-			deleted: '1',
+			collection: 'id,nameProviderType'
+		});
+
+		this.providerTypeService.getAll(httpParams).subscribe(
+			data => {
+				this.provType = data['result'];
 		});
 
 		this.providerService.getAll().subscribe(
