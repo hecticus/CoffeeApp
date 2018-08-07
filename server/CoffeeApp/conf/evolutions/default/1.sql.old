@@ -78,11 +78,11 @@ create table invoices (
   id                            bigint auto_increment not null,
   provider_id                   bigint not null,
   status_invoice_id             bigint,
-  start_date_invoice            datetime,
-  closed_date_invoice           datetime,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  start_date_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  closed_date_invoice           TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id)
 );
 

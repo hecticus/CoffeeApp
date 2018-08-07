@@ -1,3 +1,40 @@
+
+INSERT INTO `auth_user` ( id , username, email, password, deleted) VALUES
+(100,'fmadriz','rmadriz@grupoeleta.com','12345', 0),
+(101,'marwin','marwin.campos@hecticus.com','12345', 0),
+(102,'cubilla','lcubilla@cafedeeleta.com','prueba', 0),
+(103,'baldia','tdeobaldia@cafedeeleta.com','thania$2602', 0),
+(104,'cervantes','mcervantes@cafedeeleta.com','miguel$2602', 0),
+(105,'rmadriz','rmadriz@grupoeleta.com','bourbon', 0);
+
+INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
+(100,100,'Madriz','Eleta','Panama','1234567', 0),
+(101,101,'Marwin','Campos','Caracas','2515151', 0);
+(102,102,'Cubilla','Eleta','Caracas','2515151', 0);
+(103,103,'Marwin','Campos','Caracas','2515151', 0);
+(104,104,'Cervantes','Eleta','Caracas','2515151', 0);
+(105,105,'rmadriz','Eleta','Caracas','2515151', 0);
+
+INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id) VALUES
+(100,7),
+(100,8),
+(100,9),
+(101,7),
+(101,8),
+(101,9),
+(102,7),
+(102,8),
+(102,9),
+(103,7),
+(103,8),
+(103,9),
+(104,7),
+(104,8),
+(104,9),
+(105,7),
+(105,8),
+(105,9);
+
 # --- !Ups
 
 INSERT INTO `auth_permission` ( id, name) VALUES
@@ -120,17 +157,40 @@ INSERT INTO `auth_client_credential` (id, client_id, name) VALUES
 (2,'android_app', 'android app');
 
 INSERT INTO `auth_user` ( id , username, email, password, deleted) VALUES
-(100,'fmadriz','rmadriz@grupoeleta.com','12345', 0),
-(101,'marwin','marwin.campos@hecticus.com','12345', 0);
+(100,'fmadriz','fmadriz@grupoeleta.com','12345', 0),
+(101,'marwin','marwin.campos@hecticus.com','12345', 0),
+(102,'cubilla','lcubilla@cafedeeleta.com','prueba', 0),
+(103,'baldia','tdeobaldia@cafedeeleta.com','thania$2602', 0),
+(104,'cervantes','mcervantes@cafedeeleta.com','miguel$2602', 0),
+(105,'rmadriz','rmadriz@grupoeleta.com','bourbon', 0);
 
 INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
 (100,100,'Madriz','Eleta','Panama','1234567', 0),
-(101,101,'Marwin','Campos','Caracas','2515151', 0);
+(101,101,'Marwin','Campos','Caracas','2515151', 0),
+(102,102,'Cubilla','Eleta','Caracas','2515151', 0),
+(103,103,'baldia','Campos','Caracas','2515151', 0),
+(104,104,'Cervantes','Eleta','Caracas','2515151', 0),
+(105,105,'rmadriz','Eleta','Caracas','2515151', 0);
 
 INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id) VALUES
 (100,7),
 (100,8),
-(101,9);
+(100,9),
+(101,7),
+(101,8),
+(101,9),
+(102,7),
+(102,8),
+(102,9),
+(103,7),
+(103,8),
+(103,9),
+(104,7),
+(104,8),
+(104,9),
+(105,7),
+(105,8),
+(105,9);
 
 INSERT INTO `auth_permission_auth_role` (`auth_permission_id`,`auth_role_id`) VALUES
 (169,45),
@@ -310,7 +370,97 @@ INSERT INTO `auth_user_auth_role` ( auth_user_id, auth_role_id) VALUES
 (101, 62),
 (101, 63),
 (101, 64),
-(101, 65);
+(101, 65),
+(102, 45),
+(102, 46),
+(102, 47),
+(102, 48),
+(102, 49),
+(102, 50),
+(102, 51),
+(102, 52),
+(102, 53),
+(102, 54),
+(102, 55),
+(102, 56),
+(102, 57),
+(102, 58),
+(102, 59),
+(102, 60),
+(102, 61),
+(102, 62),
+(102, 63),
+(102, 64),
+(102, 65),
+(102, 66),
+(103, 45),
+(103, 46),
+(103, 47),
+(103, 48),
+(103, 49),
+(103, 50),
+(103, 51),
+(103, 52),
+(103, 53),
+(103, 54),
+(103, 55),
+(103, 56),
+(103, 57),
+(103, 58),
+(103, 59),
+(103, 60),
+(103, 61),
+(103, 62),
+(103, 63),
+(103, 64),
+(103, 65),
+(103, 66),
+(104, 45),
+(104, 46),
+(104, 47),
+(104, 48),
+(104, 49),
+(104, 50),
+(104, 51),
+(104, 52),
+(104, 53),
+(104, 54),
+(104, 55),
+(104, 56),
+(104, 57),
+(104, 58),
+(104, 59),
+(104, 60),
+(104, 61),
+(104, 62),
+(104, 63),
+(104, 64),
+(104, 65),
+(104, 66),
+(105, 45),
+(105, 46),
+(105, 47),
+(105, 48),
+(105, 49),
+(105, 50),
+(105, 51),
+(105, 52),
+(105, 53),
+(105, 54),
+(105, 55),
+(105, 56),
+(105, 57),
+(105, 58),
+(105, 59),
+(105, 60),
+(105, 61),
+(105, 62),
+(105, 63),
+(105, 64),
+(105, 65),
+(105, 66);
+
+
 
 INSERT INTO `auth_role_auth_group` ( auth_role_id, auth_group_id) VALUES
 (45,7),

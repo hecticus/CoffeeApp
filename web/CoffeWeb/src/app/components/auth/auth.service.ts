@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../../core/base.service';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
-import { JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthorizationRequest } from '../../core/models/authorizationRequest';
 import { Observable } from 'rxjs/internal/Observable';
 import { AccessTokenResponse } from '../../core/models/accessTokenResponce';
@@ -14,7 +14,7 @@ export class AuthService {
 
 	private static readonly BASE_URL: string = BaseService.HOST + '/oauth';
 	// private static readonly BASE_URL: string = BaseService.HOST + '/oauth/token';
-	private jwtHelper: JwtHelper = new JwtHelper();
+	private jwtHelper = new JwtHelperService();
 	private headers: HttpHeaders;
 
 	constructor(private http: HttpClient) {
