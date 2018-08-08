@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.hecticus.eleta.R;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
@@ -14,6 +15,7 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.item.ItemType;
 import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
 
@@ -57,6 +59,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
         canEdit = canEditParam;
         currentProvider = provider;
         Log.d("BUG", "--->currentProvider onCreate: " + currentProvider);
+        /*if(InternetManager.isConnected(context))
+            details.get(0).setItemType(ManagerDB.getItemTypeById(details.get(0).getItemTypeId()));*/
         currentDetailsList = details;
     }
 

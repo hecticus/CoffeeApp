@@ -179,7 +179,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     public void editPurchaseRequest(InvoicePost invoicePost, InvoiceDetails invoiceDetail) { //todo eliminar invoice post
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost, false)*/) {
             Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
-            if (ManagerDB.updateInvoiceDetails1(invoiceDetail)) {
+            if (ManagerDB.updateInvoiceDetails1(invoiceDetail,1)) {
                 onPurchaseUpdated();
             } else
                 onError();

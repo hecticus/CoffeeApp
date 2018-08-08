@@ -202,7 +202,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
     public void editHarvestRequest(InvoiceDetails invoiceDetails) {
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost,false)*/) {
                 Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
-                if (ManagerDB.updateInvoiceDetails1(invoiceDetails))
+                if (ManagerDB.updateInvoiceDetails1(invoiceDetails, 2))
                     onHarvestUpdated();
                 else
                     onError();

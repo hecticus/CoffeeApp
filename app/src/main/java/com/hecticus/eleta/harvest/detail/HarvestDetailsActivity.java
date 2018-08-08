@@ -118,22 +118,26 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
 
         List<InvoiceDetails> details = new ArrayList<>();// = null;
-        if(InternetManager.isConnected(this)){
-            if (getIntent().getStringExtra("details") != null) {
-                details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
-            }
-        }else {
-            if (getIntent().getIntExtra("details", -1) != -1) {
-                details.add(ManagerDB.getInvoiceDetailById(getIntent().getIntExtra("details", -1)));
-                Log.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
-                details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
-                details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
+        try {
+            if (InternetManager.isConnected(this) && !getIntent().getBooleanExtra("control", false)) {
+                if (getIntent().getStringExtra("details") != null) {
+                    details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
+                }
             } else {
-                details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("detailsLocal", -1)));
-                Log.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
-                details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
-                details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
+                if (getIntent().getIntExtra("details", -1) != -1) {
+                    details.add(ManagerDB.getInvoiceDetailById(getIntent().getIntExtra("details", -1)));
+                    Log.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
+                    details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
+                    details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
+                } else {
+                    details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("detailsLocal", -1)));
+                    Log.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
+                    details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
+                    details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
+                }
             }
+        }catch (Exception e){
+
         }
         //if (getIntent().getSerializableExtra("details") != null) {
             /*Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
