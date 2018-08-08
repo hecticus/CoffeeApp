@@ -173,7 +173,11 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
             //detailsList.set
                 intent.putExtra("details", Util.getGson().toJson(detailsList));
             }else {
-                intent.putExtra("details", detailsList.getId());
+                //Log.d("DEBUG INTENT", ""+ detailsList.getId());
+                if(detailsList.getId()!=-1)
+                    intent.putExtra("details", detailsList.getId());
+                else
+                    intent.putExtra("detailsLocal", detailsList.getLocalId());
             }
             Log.d("DEBUG details", "brayan 3");
             intent.putExtra("isAdd", false);

@@ -146,7 +146,10 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
                 details.get(0).setStore(ManagerDB.getStoreById(details.get(0).getStoreId()));
                 details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
             } else {
-                //por local id
+                details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("detailsLocal", -1)));
+                Log.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
+                details.get(0).setStore(ManagerDB.getStoreById(details.get(0).getStoreId()));
+                details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
             }
         }
 

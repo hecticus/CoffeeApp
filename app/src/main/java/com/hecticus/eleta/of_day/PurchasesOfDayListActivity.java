@@ -181,7 +181,10 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
                 //detailsList.set
                 intent.putExtra("details", Util.getGson().toJson(detailsList));
             }else {
-                intent.putExtra("details", detailsList.getId());
+                if(detailsList.getId()!=-1)
+                    intent.putExtra("details", detailsList.getId());
+                else
+                    intent.putExtra("detailsLocal", detailsList.getLocalId());
             }
             intent.putExtra("provider", Util.getGson().toJson(provider));
             intent.putExtra("isAdd", false);

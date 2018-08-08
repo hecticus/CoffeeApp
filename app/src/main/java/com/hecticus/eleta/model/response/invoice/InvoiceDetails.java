@@ -1,5 +1,7 @@
 package com.hecticus.eleta.model.response.invoice;
 
+import android.util.Log;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -144,6 +146,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         localId = itemPost.getItemPostLocalId();
         itemTypeId = itemPost.getItemTypeId();
         lotId = invoicePost.getLot();
+        Log.d("DEBUG lot cons", invoicePost.getLot()+"" );
         priceByLot = invoicePost.getPriceByLot();
         startDate = invoicePost.getStartDate();
         amount = itemPost.getAmount();

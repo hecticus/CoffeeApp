@@ -129,7 +129,10 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
                 details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
                 details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
             } else {
-                //por local id
+                details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("detailsLocal", -1)));
+                Log.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
+                details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
+                details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
             }
         }
         //if (getIntent().getSerializableExtra("details") != null) {

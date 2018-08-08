@@ -177,6 +177,13 @@ public class ManagerDB {
     }
 
     @DebugLog
+    public static InvoiceDetails getInvoiceDetailByIdLocal(int id) {
+        return Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("localId", id).findFirst();
+    }
+
+    @DebugLog
     public static List<InvoiceDetails> getInvoiceDetailsByInvoice(int invoice) {
         return Realm.getDefaultInstance()
                 .where(InvoiceDetails.class)
@@ -879,6 +886,7 @@ public class ManagerDB {
                             Number detailsId = realm.where(InvoiceDetails.class).max("localId");
                             int nextDetailsId = (detailsId == null) ? 1 : detailsId.intValue() + 1;
                             InvoiceDetails details = new InvoiceDetails(item, invoicePost);
+                            Log.d("DEBUG", "id del invoice q se le asigna al details"+finalInvoiceToInsert.getLocalId());
                             details.setInvoiceId(finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId());
                             details.setLocalId(nextDetailsId);
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
@@ -941,6 +949,7 @@ public class ManagerDB {
                     }
                 });
             } catch (Exception e) {
+                Log.d("DEBUG", "exploto creando invoice");
                 e.printStackTrace();
                 realm.close();
                 return false;
@@ -1286,6 +1295,30 @@ public class ManagerDB {
                         Lot lot = getLotById(invoiceDetails.getLotId());
                         invoiceDetailsInsert.setTotalInvoiceDetail(lot.getPrice()*invoiceDetails.getAmount());
                     }*/
+
+                    //todo lo mismo q new invoice
+                    /*
+                    if (type == Constants.TYPE_SELLER) {
+                                for (PurityPost purityPost : item.getPurities()) {
+                                    Number maxPurityPostId = realm.where(PurityPost.class).max("purityPostLocalId");
+                                    int nextPurityPostId = (maxPurityPostId == null) ? 1 : maxPurityPostId.intValue() + 1;
+                                    purityPost.setPurityPostLocalId(nextPurityPostId);
+                                    purityPost.setItemPostLocalId(item.getItemPostLocalId());
+                                    Log.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + purityPost);
+                                    realm.insertOrUpdate(purityPost);
+
+                                    InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
+                                    invoiceDetailPurity.setDetailId(details.getWholeId());
+                                    invoiceDetailPurity.setRateValue(purityPost.getRateValue());
+                                    invoiceDetailPurity.setLocalId(invoiceDetailPurity.getId() + "-" + invoiceDetailPurity.getDetailId());
+                                    invoiceDetailPurity.setPurityId(purityPost.getPurityId());
+                                    invoiceDetailPurity.setLocalId(details.getWholeId() + "-" + invoiceDetailPurity.getPurityId());
+
+                                    Log.d("PURITIES", "--->Saving InvoiceDetailPurity (saveNewInvoice): " + invoiceDetailPurity);
+                                    realm.insertOrUpdate(invoiceDetailPurity);
+                                }
+                            }
+                     */
 
                     invoiceDetails.setEditOffline(true);
                     realm.insertOrUpdate(invoiceDetails);
