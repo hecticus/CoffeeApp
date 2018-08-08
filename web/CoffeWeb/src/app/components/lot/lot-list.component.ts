@@ -1,13 +1,19 @@
-
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Provider, ViewChild } from '@angular/core';
-import { ProviderType } from '../../core/models/provider-type';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
-import { LotService } from './lot.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseService } from '../../core/base.service';
+import {
+	Component,
+	OnInit,
+	Provider,
+	ViewChild
+	} from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Lot } from '../../core/models/lot';
+import { LotService } from './lot.service';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { ProviderType } from '../../core/models/provider-type';
+import { SelectionModel } from '@angular/cdk/collections';
+import { FilterService } from '../../core/utils/filter/filter.service';
+
 
 @Component({
 	styleUrls: ['./lot.component.css'],
@@ -66,7 +72,7 @@ import { Lot } from '../../core/models/lot';
 
 				<!-- Position Namme -->
 				<ng-container matColumnDef="nameLot">
-					<th class="table-header" mat-header-cell *matHeaderCellDef><span (click)="test()">Nombre</span></th>
+					<th class="table-header" mat-header-cell *matHeaderCellDef><span (click)="test()">Nombre del Lote</span></th>
 					<td mat-cell *matCellDef="let lot"> {{lot.nameLot|| '-'}} </td>
 				</ng-container>
 
@@ -123,7 +129,7 @@ export class LotListComponent implements OnInit {
 	providers: Provider[];
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'nameLot', 'lot.statusLot', 'farm.nameFarm', 'areaLot', 'heighLot', 'priceLot'];
+	columnsToDisplay = ['select', 'farm.nameFarm', 'lot.statusLot', 'nameLot', 'areaLot', 'heighLot', 'priceLot'];
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
@@ -144,6 +150,7 @@ export class LotListComponent implements OnInit {
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private lotService: LotService,
+		public filterService: FilterService,
 	) { }
 
 	ngOnInit() {
@@ -161,6 +168,8 @@ export class LotListComponent implements OnInit {
 				this.dataSource.data = data['result'];
 				console.log(this.dataSource.data);
 		});
+
+		console.log(this.filterService);
 	}
 
 	create() {

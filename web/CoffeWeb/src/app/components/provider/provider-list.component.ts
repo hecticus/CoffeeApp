@@ -1,18 +1,18 @@
-import { Status } from './../../core/models/status';
-import { HttpParams } from '@angular/common/http';
-
-import { Params, Router, ActivatedRoute } from '@angular/router';
-import { ProviderTypeService } from '../provider-type/provider-type.service';
-import { ProviderService } from './provider.service';
-import { FormGroup } from '@angular/forms';
-import { Component, OnInit, ViewChild} from '@angular/core';
-import { ProviderType } from '../../core/models/provider-type';
-import { FilterService } from '../../core/filter/filter.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
-import { Provider } from '../../core/models/provider';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseService } from '../../core/base.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FilterService } from '../../core/utils/filter/filter.service';
+import { FormGroup } from '@angular/forms';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Provider } from '../../core/models/provider';
+import { ProviderService } from './provider.service';
+import { ProviderType } from '../../core/models/provider-type';
+import { ProviderTypeService } from '../provider-type/provider-type.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Status } from '../../core/models/status';
 import { StatusProviderService } from '../status/status-provider.service';
+
+
 
 @Component({
 	selector: 'app-provider.list',
@@ -26,87 +26,43 @@ import { StatusProviderService } from '../status/status-provider.service';
 				</div>
 
 				<div class="field">
-					<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="selected">
+				<!-- <mat-select placeholder="Estatus" [(ngModel)]="selected">-->
+					<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['providerType']"
+																(change)="filterService.put('providerType',
+																$event.target.value); changeProviderType($event.target.value)">
+						<mat-option>Ninguna</mat-option>
 						<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType}} </mat-option>
 					</mat-select>
 				</div>
 
 				<div class="field">
-					<mat-select placeholder="Estatus" [(ngModel)]="selectedStatus">
+					<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusProvider']"
+														(change)="filterService.put('statusProvider',
+														$event.target.value); changeStatus($event.target.value)">
+						<mat-option>Ninguna</mat-option>
 						<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
 					</mat-select>
 				</div>
 
 				<div class="container-button-filter">
-					<button class="btn-icon" title="Search" type="button">
+					<button class="btn-icon" title="Search" type="button" (click)="list(0)">
 						<i class="material-icons">search</i>
 					</button>
 				</div>
 		</div>
 
-			<!--
-			<div class="field">
-					<label i18n="@@id">Id</label>
-					<input type="text" placeholder="None" i18n-placeholder="None" (change)="filterService.put('id', $event.target.value)">
-				</div>
-			<div class="field">
-					<label i18n="@@store">Store</label>
-					<div class="custom-select">
-						<select [(ngModel)]="filterService.filter['storeId']" (change)="filterService.put('storeId', $event.target.value);
-						changeStore($event.target.value)">
-							<option value="undefined" i18n="@@select-none">None</option>
-							<option *ngFor="let opt of stores" [value]="opt.id">{{opt.name}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="field">
-					<label i18n="@@status">Status</label>
-					<div class="custom-select">
-						<select [(ngModel)]="filterService.filter['statusOrderRequestId']" (change)="filterService.put('statusOrderRequestId',
-						 $event.target.value)">
-							<option value="undefined" i18n="@@select-none">None</option>
-							<option *ngFor="let opt of statusOrderRequests" [value]="opt.id" translate>{{opt.name}}</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="container-button-filter">
-				<button class="btn-icon" i18n-title="@@option-search"  title="Search" type="button" (click)="list(0)">
-					<i class="material-icons">search</i>
+		<div class="tool-bar both-side">
+			<div class="right row">
+				<button class="btn-icon" type="button" (click)="create()">
+					<i class="material-icons">add</i>
 				</button>
-			</div> -->
-
-
-			<!-- <div class="filter row">
-				<div class="filter">
-					<mat-select placeholder="Provider Type" [(ngModel)]="selected">
-						<mat-option *ngFor="let pt of provType" [value]="pt.id" >
-				{{pt.nameProviderType}}
-						</mat-option>
-					</mat-select>
-				</div>
-				<div class="field">
-					<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
-				</div>
-				<div class="container-button-filter">
-					<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
-						<i class="material-icons">search</i>
-					</button>
-				</div>
-			</div> -->
-
-			<div class="tool-bar both-side">
-				<div class="right row">
-					<button class="btn-icon" type="button" (click)="create()">
-						<i class="material-icons">add</i>
-					</button>
-					<!-- <button class="btn-icon" type="button">
-					<button class="btn-icon" title="Delete" type="button"
-					(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
-						<i class="material-icons">delete</i>
-					</button> -->
-				</div>
+				<!-- <button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button"
+				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
+					<i class="material-icons">delete</i>
+				</button> -->
 			</div>
+		</div>
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
@@ -190,6 +146,9 @@ import { StatusProviderService } from '../status/status-provider.service';
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
+		<div class="field">
+			{{selected+ " " + filterService.filter['providerType']}}
+		</div>
 
 	`
 })
@@ -201,6 +160,7 @@ export class ProviderListComponent implements OnInit {
 	status: Status;
 	selected: number;
 	selectedStatus: number;
+
 	// Order Columns Display
 	columnsToDisplay = ['select', 'providerType.nameProviderType', 'statusProvider.name', 'nameProvider', 'nitProvider',
 						'addressProvider', 'emailProvider',
@@ -222,6 +182,7 @@ export class ProviderListComponent implements OnInit {
 		private providerService: ProviderService,
 		private providerTypeService: ProviderTypeService,
 		private statusProviderService: StatusProviderService,
+		public filterService: FilterService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 	) { }
@@ -230,16 +191,16 @@ export class ProviderListComponent implements OnInit {
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
 
-		let paramStatus = BaseService.jsonToHttpParams(
-			{collection: 'id,nameProviderType'}
-		);
+		this.filter();
+		this.list();
 
-		this.statusProviderService.getAll().subscribe(
-			data => {
-				this.status = data['result'];
-				console.log(this.status);
-			}
-		);
+	}
+
+	filter() {
+		// this.providerService.getAll().subscribe(
+		// 	data => {
+		// 		this.dataSource.data = data['result'];
+		// });
 
 		let httpParams = BaseService.jsonToHttpParams({
 			collection: 'id,nameProviderType'
@@ -250,10 +211,12 @@ export class ProviderListComponent implements OnInit {
 				this.provType = data['result'];
 		});
 
-		this.providerService.getAll().subscribe(
+		this.statusProviderService.getAll().subscribe(
 			data => {
-				this.dataSource.data = data['result'];
-		});
+				this.status = data['result'];
+				console.log(this.status);
+			}
+		);
 	}
 
 	create() {
@@ -284,5 +247,35 @@ export class ProviderListComponent implements OnInit {
 
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
+	}
+
+	list(page = 0) {
+		let httpParams = BaseService.jsonToHttpParams({
+			// sort: this.table.sort,
+			collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
+						'createdAt, providerType(id, nameProviderType), statusProvider(id, name))',
+			// 'pager.index': page,
+			// 'pager.size': this.table.pager.pageSize,
+			// ...this.filterService.filter
+			// 'providerType': this.selected,
+			// 'statusProvider': this.selectedStatus,
+			...this.filterService.filter
+		});
+		console.log('$event');
+		console.log(this.filterService.filter);
+
+		this.providerService.getAll(httpParams).subscribe(
+			data => {
+				this.dataSource.data = data['result'];
+				console.log(this.dataSource);
+		});
+	}
+
+	changeProviderType(idProviderType: any ) {
+		console.log(idProviderType);
+	}
+
+	changeStatus(idProviderType: any ) {
+		console.log(idProviderType);
 	}
 }

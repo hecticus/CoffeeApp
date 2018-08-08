@@ -23,6 +23,7 @@ import { ProviderService } from './provider.service';
 import { ProviderUpdateComponent } from './provider-update.component';
 import { UtilsModule } from '../../core/utils/utils.module';
 import { VendedorUpdateComponent } from './vendedor-update.component';
+import { FilterService } from '../../core/utils/filter/filter.service';
 
 @NgModule({
 	imports: [
@@ -66,6 +67,7 @@ import { VendedorUpdateComponent } from './vendedor-update.component';
 	],
 	providers: [
 		ProviderService,
+		FilterService,
 	]
 
 })
