@@ -306,7 +306,7 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     public int indexByIdIn(final List<Provider> list) {
         for (int i = 0; i < list.size(); i++) {
             Provider provider = list.get(i);
-            if (provider != null && provider.getIdProvider() == getIdProvider()) {
+            if (provider != null && provider.getIdProvider().equals(getIdProvider())) {
                 return i;
             }
         }

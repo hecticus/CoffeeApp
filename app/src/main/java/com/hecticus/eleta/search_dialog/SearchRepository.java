@@ -129,6 +129,7 @@ public class SearchRepository implements SearchContract.Repository {
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
+                            ManagerDB.updateProviders(response.body().getResult(), type);
                             //onGetProvidersSuccess(response.body());
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult(), name);
                             onGetProvidersSuccess(finalList);

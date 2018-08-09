@@ -160,6 +160,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
+                            ManagerDB.updateProviders(response.body().getResult(), type);
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult(), name);
                             onGetProvidersSuccess(finalList);
                         } else
@@ -202,7 +203,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                     // onLoginSuccess(/*response.body()*/);
                     if (response.code() == 200) {
                         try {
-                            ManagerDB.deleteProvider(provider);
+                            ManagerDB.deleteProviderOnline(provider);
                             mPresenter.onProviderDeleted();
                         } catch (Exception e) {
                             manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);

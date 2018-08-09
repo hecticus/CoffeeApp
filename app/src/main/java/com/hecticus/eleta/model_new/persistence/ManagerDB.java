@@ -123,6 +123,37 @@ public class ManagerDB {
     }
 
     @DebugLog
+    public static boolean deleteProviderOnline(final Provider provider) {
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    if (provider.getIdProvider() < 0) {
+                        Provider providerToDelete = realm.where(Provider.class).equalTo("unixtime", provider.getUnixtime()).findFirst();
+                        if (providerToDelete != null) {
+                            Log.d("TEST", "dni provider " + provider.getIdentificationDocProvider() + " dni saved" + providerToDelete.getIdentificationDocProvider());
+                            providerToDelete.deleteFromRealm();
+                            return;
+                        }
+                        providerToDelete = realm.where(Provider.class).equalTo("identificationDocProvider", provider.getIdentificationDocProvider()).findFirst();
+                        if (providerToDelete != null) {
+                            Log.d("TEST", "dni provider " + provider.getIdentificationDocProvider() + " dni saved" + providerToDelete.getIdentificationDocProvider());
+                            providerToDelete.deleteFromRealm();
+                            return;
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+        realm.close();
+        return true;
+    }
+
+    @DebugLog
     public static boolean deleteProvider(final Provider provider) {
         Realm realm = Realm.getDefaultInstance();
         try {
@@ -277,9 +308,11 @@ public class ManagerDB {
 
     @DebugLog
     public static List<Provider> mixAndGetValids(int type, List<Provider> providerList) {
+
         ArrayList<Provider> finalProviderList = new ArrayList<>(providerList);
 
         List<Provider> deletedProviderList = Realm.getDefaultInstance().where(Provider.class).equalTo("deleteOffline", true).equalTo("idProviderType", type).findAllSorted("fullNameProvider");
+        Log.d("DEBUG", "prividerDelete.size()="+ deletedProviderList.size());
         for (Provider provider : deletedProviderList) {
             if (provider.getIdProvider() > -1) {
                 int ind = provider.indexByIdIn(finalProviderList);
