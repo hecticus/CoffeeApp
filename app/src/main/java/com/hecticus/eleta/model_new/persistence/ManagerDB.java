@@ -2146,4 +2146,20 @@ public class ManagerDB {
         }
         return false;
     }
+
+
+    public static boolean isProviderOffline(Provider provider) {
+        //ManagerDB.getInvoiceById();
+        //ManagerDB.getInvoiceByIdLocal();
+        Provider provider1 = Realm.getDefaultInstance().where(Provider.class).equalTo("idProvider", provider.getIdProvider()).equalTo("addOffline", true).findFirst();
+        if(provider1 != null){
+            return true;
+        } else {
+            provider1 = Realm.getDefaultInstance().where(Provider.class).equalTo("identificationDocProvider", provider.getIdentificationDocProvider()).equalTo("addOffline", true).findFirst();
+            if(provider1 != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

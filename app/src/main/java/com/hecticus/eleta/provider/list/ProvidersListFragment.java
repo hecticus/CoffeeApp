@@ -25,7 +25,9 @@ import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.base.item.GenericListAdapter;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.provider.detail.ProviderDetailsActivity;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
@@ -198,8 +200,27 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
             intent.putExtra("isForProviderCreation", false);
             intent.putExtra("canEdit", true);
             intent.putExtra("isHarvester", selectedProvider.isHarvester());
-            Log.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
-            intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
+            /*Log.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
+            intent.putExtra("provider", Util.getGson().toJson(selectedProvider));*/
+
+
+
+            boolean control = ManagerDB.isProviderOffline(selectedProvider);
+            //Log.d("DEBUG details", "control" + control);
+            intent.putExtra("control", control);
+            if(InternetManager.isConnected(getActivity()) && !control){
+                intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
+            }else {
+                if(selectedProvider.getIdProvider()!=-1) {
+                    intent.putExtra("provider", selectedProvider.getIdProvider());
+                }
+                else {
+                    intent.putExtra("providerLocal", selectedProvider.getIdentificationDocProvider());
+                }
+            }
+
+
+
             //intent.putExtra("provider", selectedProvider.getIdProvider());
             startActivity(intent);
         } catch (ClassNotFoundException e) {

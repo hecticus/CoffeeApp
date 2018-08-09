@@ -28,6 +28,7 @@ import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.StatusProvider;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderType;
@@ -102,12 +103,43 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         boolean isHarvester = getIntent().getBooleanExtra("isHarvester", false);
         fromProvidersList = getIntent().getBooleanExtra("fromProvidersList", true);
 
-        if (getIntent().getStringExtra("provider") != null) {//(getIntent().getIntExtra("provider",-1) != -1) {//
+        /*if (getIntent().getStringExtra("provider") != null) {//(getIntent().getIntExtra("provider",-1) != -1) {//
             //initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider",-1));//new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
             //mPresenter.
             initialProvider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
             //Log.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
+        }*/
+
+
+        try {
+            if (InternetManager.isConnected(this) && !getIntent().getBooleanExtra("control", false)) {
+                if (getIntent().getStringExtra("provider") != null) {
+                    initialProvider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
+                }
+            } else {
+                if (getIntent().getIntExtra("provider", -1) != -1) {
+                    initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider", -1));
+
+                    /*details.add(ManagerDB.getInvoiceDetailById(getIntent().getIntExtra("details", -1)));
+                    Log.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
+                    details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
+                    details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));*/
+                } else {
+                    initialProvider = ManagerDB.getProviderByIdentificationDoc(getIntent().getStringExtra("providerLocal"));
+
+                    /*details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("providerLocal", -1)));
+                    Log.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
+                    details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
+                    details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));*/
+                }
+            }
+        }catch (Exception e){
+
         }
+
+
+
+
 
         mPresenter = new ProviderDetailsPresenter(this, this, initialProvider, isForProviderCreation, canEdit, isHarvester);
         initViews();

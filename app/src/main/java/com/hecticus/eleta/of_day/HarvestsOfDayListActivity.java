@@ -166,27 +166,19 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     public void goToHarvestOrPurchaseDetailsView(Provider provider, /*List<*/InvoiceDetails/*>*/ detailsList, boolean invoiceHasOfflineOperations) {
         try {
             Intent intent = new Intent(this, HarvestDetailsActivity.class);
-            Log.d("DEBUG details", "brayan 1");
             intent.putExtra("provider", Util.getGson().toJson(provider));
-            Log.d("DEBUG details", "brayan 2");
             boolean control = ManagerDB.isInvoiceDetailsOffline(detailsList.getInvoiceId(), detailsList.getInvoice());
-            Log.d("DEBUG details", "control" + control);
             intent.putExtra("control", control);
             if(InternetManager.isConnected(this) && !control){
-                Log.d("DEBUG details", "brayan 3");
                 intent.putExtra("details", Util.getGson().toJson(detailsList));
             }else {
-                Log.d("DEBUG details", "brayan 4");
                 if(detailsList.getId()!=-1) {
-                    Log.d("DEBUG details", "brayan 5");
                     intent.putExtra("details", detailsList.getId());
                 }
                 else {
-                    Log.d("DEBUG details", "brayan 6");
                     intent.putExtra("detailsLocal", detailsList.getLocalId());
                 }
             }
-            Log.d("DEBUG details", "brayan 7");
             intent.putExtra("isAdd", false);
             intent.putExtra("canEdit", true);
             startActivityForResult(intent, 1);

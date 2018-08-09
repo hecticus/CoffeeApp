@@ -53,7 +53,10 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
 
     @SerializedName("photoProvider")
     @Expose
-    private String photoProvider;
+    private String urlPhotoProvider;
+
+    @Expose
+    private String mediaBase64;
 
     @Ignore
     @SerializedName("providerType")
@@ -148,12 +151,20 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     }
 
     public String getPhotoProvider() {
-        return photoProvider;
+        return urlPhotoProvider;
     }
 
     @DebugLog
     public void setPhotoProvider(String photoProvider) {
-        this.photoProvider = photoProvider;
+        this.urlPhotoProvider = photoProvider;
+    }
+
+    public String getMediaBase64() {
+        return mediaBase64;
+    }
+
+    public void setMediaBase64(String mediaBase64) {
+        this.mediaBase64 = mediaBase64;
     }
 
     public ProviderType getProviderType() {
