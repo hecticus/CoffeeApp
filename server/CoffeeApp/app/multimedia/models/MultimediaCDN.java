@@ -96,6 +96,12 @@ public class MultimediaCDN extends BaseModel {
         return finder.byId(id);
     }
 
+    public static MultimediaCDN findId(Long id){
+
+        return finder.query().where().eq("id", id).setIncludeSoftDeletes().findUnique();
+    }
+
+
     public static List<MultimediaCDN> findByIds(List<Long> ids){
         return finder.query().where().idIn(ids).findList();
     }

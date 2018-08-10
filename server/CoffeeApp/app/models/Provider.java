@@ -63,7 +63,7 @@ public class Provider extends AbstractEntity{
 //    private Media mediaProfile;
 
 //    @JsonBackReference
-    @OneToOne()//, mappedBy = "provider", cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)//, mappedBy = "provider", cascade = CascadeType.REMOVE)
 //    @OneToOne( mappedBy = "provider", cascade = CascadeType.REMOVE)
 //    @JoinColumn( referencedColumnName = "id")
 //    @PrimaryKeyJoinColumn

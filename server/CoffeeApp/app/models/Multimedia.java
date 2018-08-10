@@ -28,7 +28,8 @@ public class Multimedia extends AbstractEntity {
     @Column(columnDefinition = "text")
     private String description;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     private MultimediaCDN multimediaCDN;
 
 //    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -66,6 +67,11 @@ public class Multimedia extends AbstractEntity {
 
     public static Multimedia findById(Long id){
         return finder.byId(id);
+    }
+
+    public static Multimedia findId(Long id){
+
+        return finder.query().where().eq("id", id).setIncludeSoftDeletes().findUnique();
     }
 
     public static List<Multimedia> findByIds(List<Long> ids){
