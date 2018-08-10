@@ -44,3 +44,8 @@ th.mat-sort-header-sorted {
     margin-left: 20px;
     width: 180px;
 }
+
+.material-icons {
+    font-size: 28px;
+    color: rgb(70, 70, 70);
+}

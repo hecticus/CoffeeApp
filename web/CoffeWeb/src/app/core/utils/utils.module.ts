@@ -21,6 +21,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 	exports: [
 		ValidatorComponent,
 	],
-	providers: []
+	providers: [
+	]
 })
 export class UtilsModule {}

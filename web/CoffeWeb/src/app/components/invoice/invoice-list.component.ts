@@ -1,5 +1,5 @@
-import { filter } from 'rxjs/operators';
-import { FilterService } from '../../core/filter/filter.service';
+import { ProviderService } from './../provider/provider.service';
+import { Status } from './../../core/models/status';
 import { BaseService } from '../../core/base.service';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { InvoiceService } from './invoice.service';
@@ -11,50 +11,81 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
+import { FilterService } from 'src/app/core/utils/filter/filter.service';
+import { StatusInvoiceService } from 'src/app/components/status/status-invoice.service';
 
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h2 class="title">Reportes</h2>
 
-		<!--<div class="tool-bar both-side">
-			<div class="right row">
-				<button class="btn-icon" type="button" (click)="create()">
-					<i class="material-icons">add</i>
-				</button>
-				<button class="btn-icon" type="button">
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
-					<i class="material-icons">delete</i>
-				</button>
+		<div class="row">
+			<!--<div class="field">
+				<mat-form-field>
+					<input matInput [matDatepicker]="picker" placeholder="fecha">
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-datepicker #picker></mat-datepicker>
+				</mat-form-field>
 			</div>
-		</div>-->
-
-		<!--<div class="filter row">
 			<div class="field">
-				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+				<mat-form-field>
+					<input matInput [matDatepicker]="picker2" placeholder="fecha">
+					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+					<mat-datepicker #picker></mat-datepicker>
+				</mat-form-field>
 			</div>-->
-			<!-- <div class="wrap-fields">
-				<div class="field">
-				<mat-form-field >
-						<mat-select >
-							<mat-option>-- None --</mat-option>
-							<mat-option *ngFor="let f of provType" [value]="f.id">{{f.nameProviderType}}</mat-option>
-						</mat-select>
-						<mat-label>Tipo de Proveedor</mat-label>
-					</mat-form-field>
-				</div>
-			<div class="field">
-					<mat-form-field>
-						<input matInput placeholder="Nombre del Proveedor" (change)="filterService.put('nameProvider', $event.target.value)">
-					</mat-form-field>
-				</div>
+
+			<div class="field filter">
+				<h4 class="title">Filtrar Por Fecha</h4>
 			</div>
+			<div class="field">
+				<mat-form-field  color="orange">
+				<mat-label>Fecha de Inicio</mat-label>
+				<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
+				<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+				<mat-datepicker #picker1></mat-datepicker>
+				</mat-form-field>
+
+				<mat-form-field  color="orange">
+					<mat-label>Fecha de cierre</mat-label>
+					<input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="picker2">
+					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+					<mat-datepicker #picker2 color="primary"></mat-datepicker>
+				</mat-form-field>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="field filter">
+				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
+			</div>
+
+			<div class="field">
+			<!-- <mat-select placeholder="Estatus" [(ngModel)]="selected">-->
+				<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['providerType']"
+															(change)="filterService.put('providerType',
+															$event.target.value)">
+					<mat-option>Ninguna</mat-option>
+					<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType}} </mat-option>
+				</mat-select>
+			</div>
+
+			<div class="field">
+				<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusProvider']"
+													(change)="filterService.put('statusProvider',
+													$event.target.value)">
+					<mat-option>Ninguna</mat-option>
+					<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
+				</mat-select>
+			</div>
+
 			<div class="container-button-filter">
-				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
+				<button class="btn-icon" title="Search" type="button" (click)="list(0)">
 					<i class="material-icons">search</i>
 				</button>
 			</div>
-		</div>-->
+		</div>
 
 
 		<div class="mat-elevation-z8" >
@@ -122,11 +153,23 @@ export class InvoiceListComponent implements OnInit {
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
+	status: Status;
 	pager: Pager;
+	provider: Provider;
+	// let currentTime = new Date();
+
+	// let month = currentTime.getMonth() + 1;
+	// let day = currentTime.getDate();
+	// let year = currentTime.getFullYear();
+	minDate1 = new Date(2018, 0, 1);
+	maxDate1 = new Date();
+
+	minDate2 = new Date(2000, 0, 1);
+	maxDate2 = new Date();
 
 	// Order Columns Display
-	columnsToDisplay = ['select', 'provider.nameProvider', 'provider.providerType.nameProviderType',
-	'statusInvoice.name', 'createdAt', 'totalInvoice'];
+	columnsToDisplay = ['select',  'provider.providerType.nameProviderType',
+	'statusInvoice.name', 'provider.nameProvider', 'createdAt', 'totalInvoice'];
 
 	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs
@@ -149,41 +192,80 @@ export class InvoiceListComponent implements OnInit {
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private invoiceService: InvoiceService,
+		private statusInvoiceService: StatusInvoiceService,
 		private providerTypeService: ProviderTypeService,
-		// public filterService: FilterService,
+		private providerService: ProviderService,
+		public filterService: FilterService,
 	) { }
 
 	ngOnInit() {
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
+		this.filter();
+		this.list();
+	}
 
+
+	filter() {
+		let httpParams = BaseService.jsonToHttpParams({
+			collection: 'id,nameProviderType'
+		});
+
+		this.providerTypeService.getAll(httpParams).subscribe(
+			data => {
+				this.provType = data['result'];
+		});
+
+		this.providerService.getAll(httpParams).subscribe(
+			data => {
+				this.provider = data['result'];
+		});
+
+		this.statusInvoiceService.getAll().subscribe(
+			data => {
+				this.status = data['result'];
+				console.log(this.status);
+			}
+		);
+
+	}
+
+	list(page = 0) {
+
+
+		// if (this.filterService.filter['statusProvider'] === undefined) {
+		// 	delete this.filterService.filter['statusProvider'];
+		// }
+
+		// if (this.filterService.filter['providerType'] === undefined) {
+		// 	delete this.filterService.filter['providerType'];
+		// }
+
+		// if (this.filterService.filter['providerType'] === undefined) {
+		// 	delete this.filterService.filter['providerType'];
+		// }
+
+		let httpParams = BaseService.jsonToHttpParams({
+			// sort: this.table.sort,
+			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
+			// 			'createdAt, providerType(id, nameProviderType), statusProvider(id, name))',
+			// 'pager.index': page,
+			// 'pager.size': this.table.pager.pageSize,
+			// ...this.filterService.filter
+			// 'providerType': this.selected,
+			// 'statusProvider': this.selectedStatus,
+			// ...this.filterService.filter
+		});
+		console.log('$event');
+		// console.log(this.filterService.filter);
 		this.invoiceService.getAll().subscribe(
 			data => {
 				this.dataSource.data = data['result'];
 				this.pager = data['pager'];
 				console.log(this.pager);
 		});
-
-		this.providerTypeService.getAll(
-			BaseService.jsonToHttpParams({sort: 'nameProviderType', collection: 'id, nameProviderType'})).subscribe(
-			data => {
-				this.provType = data['result'];
-		});
-		this.filter();
 	}
 
-
-	filter() {
-		let httpParams = BaseService.jsonToHttpParams({
-			// collection: 'id ',
-			typeProvider: '1',
-		});
-
-		this.invoiceService.getAll(httpParams).subscribe(
-			data => {
-				this.dataSource.data = data['result'];
-		});
-	}
 
 	create() {
 		this.router.navigate(['./create'], {relativeTo: this.activatedRoute});
@@ -215,4 +297,6 @@ export class InvoiceListComponent implements OnInit {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
 		console.log(id);
 	}
+
+
 }
