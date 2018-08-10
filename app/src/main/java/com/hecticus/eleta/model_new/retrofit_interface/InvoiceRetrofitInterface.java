@@ -13,6 +13,7 @@ import com.hecticus.eleta.model_new.InvoiceDetail;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -55,6 +56,9 @@ public interface InvoiceRetrofitInterface {
     //listo sin sincronizacion
     @PUT("invoiceDetail/{id}")
     Call<CreateInvoiceResponse> updateInvoiceDetailNewEndpoint(@Path("id") int invoiceId, @Body InvoiceDetail post);
+
+    @PUT("invoiceDetail/{id}")
+    Call<ResponseBody> updateInvoiceDetail(@Path("id") int invoiceId, @Body InvoiceDetail post);
 
     //listo creo no necesita sincronizacion
     @GET("invoice/createReceipt/{id}")

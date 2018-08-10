@@ -189,7 +189,6 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     @DebugLog
     @Override
     public void deleteHarvestOrPurchase(Invoice invoice, String date, final InvoiceDetails harvestOrPurchase) {
-        Log.d("DEBUG", "policia 1");
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoice)*/) {
             Log.d("DEBUG", "policia 2");
             Log.d("DEBUG", "policia id"+ harvestOrPurchase.getId());
@@ -201,7 +200,6 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         invoice.getInvoiceId(),
                         invoice.getLocalId(),
                         isForHarvest);
-                Log.d("DEBUG", "policia 4");
                 mPresenter.onHarvestDeleted(detailsList, true);
             }
             /*if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
@@ -279,6 +277,8 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     public void closeInvoiceRequest(Invoice post) {
         if (!InternetManager.isConnected(mPresenter.context)) {
             ManagerDB.updateStatusInvoice(post);
+            mPresenter.onCloseInvoiceSuccessful();
+
         } else {
             com.hecticus.eleta.model_new.Invoice invoice1
                     = new com.hecticus.eleta.model_new.Invoice(post,

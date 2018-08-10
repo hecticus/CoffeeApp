@@ -86,6 +86,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
             genericItemViewHolder.getDeleteImageButton().setVisibility(View.INVISIBLE);
         }
 
+
         genericItemViewHolder.getItemWholeLinearLayout().setOnClickListener(new View.OnClickListener() {
             @DebugLog
             @Override

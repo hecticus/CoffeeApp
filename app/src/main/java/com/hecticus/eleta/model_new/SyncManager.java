@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.model.response.StatusInvoice;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.ProviderType;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.ManagerServices;
@@ -59,6 +61,10 @@ public class SyncManager {
     private List<Provider> providersList;
     private List<InvoicePost> invoicePostList;
     private List<Invoice> invoiceList;
+    private List<Invoice> invoiceClosed;
+    private List<InvoiceDetails> invoiceDetailsDelete;
+    private List<InvoiceDetails> invoiceDetailsEdit;
+
 
     private boolean somethingHasBeenSynced = false;
 
@@ -531,7 +537,7 @@ public class SyncManager {
             providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providers));
         }
         if (providersList.size() <= 0) {
-            syncDeletedOfDay();
+            syncEditInvoiceDetail();
             return;
         }
         deleteNextProvider();
@@ -541,7 +547,7 @@ public class SyncManager {
     @DebugLog
     public void deleteNextProvider() {
         if (providersList.size() <= 0) {
-            syncDeletedOfDay();
+            syncEditInvoiceDetail();
             return;
         }
 
@@ -591,6 +597,7 @@ public class SyncManager {
             @Override
             public void onError(boolean fail, int code, Response<ResponseBody> response, String errorMessage) {
                 Log.d("DETAILS", "--->deleteProviderSync onError. Response:" + response);
+                deleteNextProvider();
                 if (response.code() == 409)
                     HomeActivity.INSTANCE.syncFailed("deleteProviderSync errorResponse (DELETING_PROVIDER_WITH_OPEN_INVOICES): " + response);
                 else
@@ -693,20 +700,103 @@ public class SyncManager {
     }
 
     @DebugLog
-    public void syncDeletedOfDay() {
-        /*ofDayList = new ArrayList<>();
+    public void syncEditInvoiceDetail() {
+        invoiceDetailsEdit = new ArrayList<>();
+        List<InvoiceDetails> invoiceDetailsList = Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("editOffline", true)
+                .findAllSorted("startDate");
+        if (invoiceDetailsList != null) {
+            invoiceDetailsEdit.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList));
+        }
+        if (invoiceDetailsEdit.size() <= 0) {
+            syncDeletedOfDay();
+            return;
+        }
+        editNextInvoiceDetails();
+    }
 
-        List<HarvestOfDay> ofDays = Realm.getDefaultInstance()
-                .where(HarvestOfDay.class)
+    @DebugLog
+    public void editNextInvoiceDetails() {
+        if (invoiceDetailsEdit.size() <= 0) {
+            syncDeletedOfDay();
+            return;
+        }
+
+        final InvoiceDetails firstInvoiceDetails = invoiceDetailsEdit.get(0);
+        invoiceDetailsEdit.remove(firstInvoiceDetails);
+
+        Log.d("DETAILS", "--->editNextInvoiceDetails invoiceDetails: " + firstInvoiceDetails);
+
+        somethingHasBeenSynced = true;
+
+        Call<ResponseBody> call = invoiceApi.updateInvoiceDetail(firstInvoiceDetails.getId(), new InvoiceDetail(firstInvoiceDetails));
+
+        new ManagerServices<>(call, new ManagerServices.ServiceListener<ResponseBody>() {
+            @DebugLog
+            @Override
+            public void onSuccess(Response<ResponseBody> response) {
+                try {
+
+                    Log.d("DETAILS", "--->Success editNextInvoiceDetailsSync:" + response.body());
+
+                    Realm realm = Realm.getDefaultInstance();
+                    try {
+
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                InvoiceDetails invoiceDetailsEdit = firstInvoiceDetails;
+                                invoiceDetailsEdit.deleteFromRealm();
+                            }
+                        });
+                        /*realm.beginTransaction();
+                        firstProvider.setDeleteOffline(true);
+                        realm.insertOrUpdate(firstProvider);
+                        realm.commitTransaction();*/
+
+                    } finally {
+                        realm.close();
+                        editNextInvoiceDetails();
+                    }
+                } catch (Exception e) {
+                    Log.d("DETAILS", "--->Fail editNextInvoiceDetails Exception: " + e + "  // Response:" + response);
+                    HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync exception: " + e.getMessage());
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onError(boolean fail, int code, Response<ResponseBody> response, String errorMessage) {
+                Log.d("DETAILS", "--->editNextInvoiceDetails Sync onError. Response:" + response);
+                if (response.code() == 409)
+                    HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync errorResponse : " + response);
+                else
+                    HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync errorResponse: " + response);
+            }
+
+            @DebugLog
+            @Override
+            public void onInvalidToken() {
+                Log.d("DETAILS", "--->Fail token");
+                HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync onInvalidToken");
+            }
+        });
+    }
+
+    @DebugLog
+    public void syncDeletedOfDay() {
+        invoiceDetailsDelete = new ArrayList<>();
+
+        List<InvoiceDetails> ofDays = Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
                 .equalTo("deleteOffline", true)
                 .findAllSorted("startDate");
 
         if (ofDays != null) {
-            ofDayList.addAll(Realm.getDefaultInstance().copyFromRealm(ofDays));
+            invoiceDetailsDelete.addAll(Realm.getDefaultInstance().copyFromRealm(ofDays));
         }
-
-        if (ofDayList.isEmpty()) {
-
+        /*if (invoiceDetailsDelete.isEmpty()) {
             if (somethingHasBeenSynced) {
                 onSuccessfulSync();
             } else {
@@ -715,23 +805,30 @@ public class SyncManager {
         } else {
             deleteNextOfDay();
         }*/
-        onSuccessfulSync(); //todo borrar
+        if (invoiceDetailsDelete.size() <= 0) {
+            syncCloseIncoice();
+            return;
+        }
+        deleteNextOfDay();
     }
-
 
     @DebugLog
     public void deleteNextOfDay() {
-        onSuccessfulSync(); //todo borrar
-        /*if (ofDayList.size() <= 0) {
-            onSuccessfulSync();
+        //onSuccessfulSync(); //todo borrar
+        if (invoiceDetailsDelete.size() <= 0) {
+            //onSuccessfulSync();
+            syncCloseIncoice();
             return;
         }
 
-        final HarvestOfDay firstOfDay = ofDayList.get(0);
-        ofDayList.remove(firstOfDay);
-        Log.d("DETAILS", "--->deleteNextOfDay firstInvoice" + firstOfDay);
 
-        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDay.getInvoiceId() );
+        somethingHasBeenSynced = true;
+
+        final InvoiceDetails firstOfDetails = invoiceDetailsDelete.get(0);
+        invoiceDetailsDelete.remove(firstOfDetails);
+        Log.d("DETAILS", "--->deleteNextOfDay firstInvoice" + firstOfDetails.getId());
+
+        Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDetails.getId());
 
         new ManagerServices<>(call, new ManagerServices.ServiceListener<InvoiceDetailsResponse>() {
             @DebugLog
@@ -744,15 +841,27 @@ public class SyncManager {
                         Log.d("DETAILS", "--->Success deleteOfDaySync (1/3):" + response.body());
 
 
-                        HarvestOfDay hodToDelete = realm.where(HarvestOfDay.class)
-                                .equalTo("id", firstOfDay.getId())
+                        InvoiceDetails invoiceDetail = realm.where(InvoiceDetails.class)
+                                .equalTo("id", firstOfDetails.getId())
                                 .findFirst();
+                        /*Gson g=new Gson();
+                        Log.d("DEBUG", "invoiceDetails en Syn"+ g.toJson(invoiceDetail));*/
 
 
-                        if (hodToDelete != null) {
-                            Log.d("DETAILS", "--->Success deleteOfDaySync. (2/3) Deleting hodToDelete:" + hodToDelete);
+                        if (invoiceDetail != null) {
+                            Log.d("DETAILS", "--->Success deleteOfDaySync. (2/3) Deleting hodToDelete:" + invoiceDetail);
                             realm.beginTransaction();
-                            hodToDelete.deleteFromRealm();
+                            /*RealmQuery<Message> rowQuery = realm.where(Message.class).equalTo(Message.USER_ID, userId);
+                                 realm.beginTransaction();
+                                 //TODO : here I want to remove all messages where userId is equal to "9789273498708475"
+                                 realm.commitTransaction();*/
+                            /*InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class).equalTo("id",firstOfDetails.getId()).findFirst();
+                            if(invoiceDetails!=null){
+                                invoiceDetails.deleteFromRealm();
+                            }*/
+                            //ManagerDB.deleteInvoiceDetails(invoiceDetail.getId(), invoiceDetail.getLocalId());
+
+                            firstOfDetails.deleteFromRealm();
                             realm.commitTransaction();
                             Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
                         } else {
@@ -784,7 +893,98 @@ public class SyncManager {
                 Log.d("DETAILS", "--->Fail token");
                 HomeActivity.INSTANCE.syncFailed("deleteOfDaySync onInvalidToken");
             }
-        });*/
+        });
+    }
+
+    @DebugLog
+    public void syncCloseIncoice() {
+        invoiceClosed = new ArrayList<>();
+
+        List<Invoice> invoiceForClosed = Realm.getDefaultInstance()
+                .where(Invoice.class)
+                .equalTo("isClosed", true)
+                .findAllSorted("invoiceStartDate");
+
+        if (invoiceForClosed != null) {
+            invoiceClosed.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceForClosed));
+        }
+
+        if (invoiceClosed.isEmpty()) {
+            if (somethingHasBeenSynced) {
+                onSuccessfulSync();
+            } else {
+                HomeActivity.INSTANCE.onNothingToSync();
+            }
+        } else {
+            deleteNextCloseInvoice();
+            //deleteNextOfDay();
+        }
+        //onSuccessfulSync(); //todo borrar
+    }
+
+    @DebugLog
+    public void deleteNextCloseInvoice() {
+        if (invoiceClosed.size() <= 0) {
+            onSuccessfulSync();
+            return;
+        }
+
+        final Invoice firstInvoiceClosed = invoiceClosed.get(0);
+        invoiceClosed.remove(firstInvoiceClosed);
+        Log.d("DETAILS", "--->deleteNextOfDay firstInvoice" + firstInvoiceClosed);
+
+        com.hecticus.eleta.model_new.Invoice invoice1
+                = new com.hecticus.eleta.model_new.Invoice(firstInvoiceClosed,
+                ManagerDB.getProviderById(firstInvoiceClosed.getProviderId()),
+                new StatusInvoice(12, false, "Cerrada", null));
+
+        Call<Message> call = invoiceApi.closeInvoice(firstInvoiceClosed.getInvoiceId(),invoice1);
+
+        new ManagerServices<>(call, new ManagerServices.ServiceListener<InvoiceDetailsResponse>() {
+            @DebugLog
+            @Override
+            public void onSuccess(Response<InvoiceDetailsResponse> response) {
+                try {
+
+                    Realm realm = Realm.getDefaultInstance();
+                    try {
+                        Log.d("DETAILS", "--->Success deleteOfDaySync (1/3):" + response.body());
+
+
+
+                            realm.beginTransaction();
+                            firstInvoiceClosed.setClosed(false);
+                            realm.insertOrUpdate(firstInvoiceClosed);
+                            realm.commitTransaction();
+                            Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
+
+
+                    } finally {
+                        realm.close();
+                        deleteNextCloseInvoice();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
+                    HomeActivity.INSTANCE.syncFailed("deleteOfDaySync exception: " + e.getMessage());
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onError(boolean fail, int code, Response<InvoiceDetailsResponse> response, String errorMessage) {
+                Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
+                HomeActivity.INSTANCE.syncFailed("deleteOfDaySync errorResponse: " + response);
+            }
+
+            @DebugLog
+            @Override
+            public void onInvalidToken() {
+                Log.d("DETAILS", "--->Fail token");
+                HomeActivity.INSTANCE.syncFailed("deleteOfDaySync onInvalidToken");
+            }
+        });
     }
 
     @DebugLog
@@ -796,5 +996,6 @@ public class SyncManager {
         }
         HomeActivity.INSTANCE.syncSuccessful(failedImageUploads);
     }
+
 }
 

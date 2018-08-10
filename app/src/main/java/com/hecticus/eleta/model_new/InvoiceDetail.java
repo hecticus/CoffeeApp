@@ -46,18 +46,35 @@ public class InvoiceDetail {
         this.costItemType = invoiceDetails.getPriceItem();
         this.nameReceived = invoiceDetails.getReceiverName();
         this.nameDelivered = invoiceDetails.getDispatcherName();
-        this.itemType = new ItemType((long)invoiceDetails.getItemType().getId());
+        try {
+            this.itemType = new ItemType((long) invoiceDetails.getItemType().getId());
+        }catch (Exception e){
+            this.itemType = new ItemType((long) invoiceDetails.getItemTypeId());
+        }
         this.amountInvoiceDetail = invoiceDetails.getAmount();
         if(invoiceDetails.getLotId()!=-1) {
-            this.lot = new Lot((long) invoiceDetails.getLot().getId());
+            try {
+                this.lot = new Lot((long) invoiceDetails.getLot().getId());
+            }catch (Exception e){
+                this.lot = new Lot((long) invoiceDetails.getLotId());
+            }
+            //this.lot = new Lot((long) invoiceDetails.getLot().getId());
         }else {
-            this.store = new Store((long) invoiceDetails.getStore().getId());
+            try {
+                this.store = new Store((long) invoiceDetails.getStore().getId());
+            }catch (Exception e){
+                this.store = new Store((long) invoiceDetails.getStoreId());
+            }
+            //this.store = new Store((long) invoiceDetails.getStore().getId());
         }
         this.invoice = new Invoice((long) invoiceDetails.getInvoiceId());
         this.purities = new ArrayList<>();
-        for(int i=0; i<invoiceDetails.getDetailPurities().size(); i++) {
-            purities.add(new PurityPost(invoiceDetails.getDetailPurities().get(i).getId(),
-                                    invoiceDetails.getDetailPurities().get(i).getRateValue()));
+        try {
+            for (int i = 0; i < invoiceDetails.getDetailPurities().size(); i++) {
+                purities.add(new PurityPost(invoiceDetails.getDetailPurities().get(i).getId(),
+                        invoiceDetails.getDetailPurities().get(i).getRateValue()));
+            }
+        }catch (Exception e){
         }
 
     }

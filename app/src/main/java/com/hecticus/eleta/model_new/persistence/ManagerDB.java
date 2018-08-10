@@ -1317,7 +1317,16 @@ public class ManagerDB {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    InvoiceDetails existing = realm.where(InvoiceDetails.class).equalTo("id", invoiceDetails.getInvoiceId()).findFirst();
+                    InvoiceDetails existing;
+                    Boolean isOnline;
+                    if(invoiceDetails.getId()==-1) {
+                        isOnline=true;
+                        existing = realm.where(InvoiceDetails.class).equalTo("id", invoiceDetails.getInvoiceId()).findFirst();
+                    } else {
+                        isOnline=false;
+                        existing = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getInvoiceId()).findFirst();
+                    }
+
                     if (existing != null && invoiceDetails.getInvoiceId()!=existing.getInvoiceId()) {
                         existing.deleteFromRealm();
                         Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
@@ -1373,10 +1382,17 @@ public class ManagerDB {
                                     realm.insertOrUpdate(invoiceDetailPurity);
                                 }
                             }
+                    if (existing != null) {
+                        if(isOnline){
+                            invoiceDetails.setEditOffline(true);
+                            realm.insertOrUpdate(invoiceDetails);
+                        }else{
+                            realm.insertOrUpdate(invoiceDetails);
+                        }
+                    }
 
-
-                    invoiceDetails.setEditOffline(true);
-                    realm.insertOrUpdate(invoiceDetails);
+                    //invoiceDetails.setEditOffline(true);
+                    //realm.insertOrUpdate(invoiceDetails);
                 }
             });
         } catch (Exception e) {
@@ -1916,41 +1932,53 @@ public class ManagerDB {
         final boolean[] deleted = {false};
 
         Realm realm = Realm.getDefaultInstance();
-
+        Boolean isOnline;
         final InvoiceDetails invoiceInRealm;
-        InvoiceDetails invoiceInRealm1;
+        //InvoiceDetails invoiceInRealm1;
 
         if (remoteInvoiceDetailId != -1) {
+            Log.d("DEBUG", "Policia1");
             invoiceInRealm = realm
                     .where(InvoiceDetails.class)
                     .equalTo("id", remoteInvoiceDetailId)
                     .equalTo("deleteOffline", false)
                     .findFirst();
-            Log.d("DEBUG", "elimina invoiceD1"+ invoiceInRealm);
+            isOnline = true;
 
         } else {
+            Log.d("DEBUG", "Policia2");
             invoiceInRealm = realm
                     .where(InvoiceDetails.class)
                     .equalTo("localId", localInvoiceDetailId)
                     .equalTo("deleteOffline", false)
                     .findFirst();
-            Log.d("DEBUG", "elimina invoiceD2");
+            isOnline = false;
         }
-        Log.d("DEBUG", "elimina invoiceD3" + invoiceInRealm);
         if (invoiceInRealm != null) {
+            if(isOnline){
+                Log.d("DEBUG", "Policia3");
+                realm.executeTransaction(new Realm.Transaction() {
+                    @DebugLog
+                    @Override
+                    public void execute(Realm realm) {
 
-            Log.d("DEBUG", "elimina invoiceD4");
-            realm.executeTransaction(new Realm.Transaction() {
-                @DebugLog
-                @Override
-                public void execute(Realm realm) {
+                        invoiceInRealm.setDeleteOffline(true);
+                        realm.insertOrUpdate(invoiceInRealm);
+                        deleted[0] = true;
+                    }
+                });
+            }else{
+                Log.d("DEBUG", "Policia4");
+                realm.executeTransaction(new Realm.Transaction() {
+                    @DebugLog
+                    @Override
+                    public void execute(Realm realm) {
 
-                    invoiceInRealm.setDeleteOffline(true);
-                    realm.insertOrUpdate(invoiceInRealm);
-                    Log.d("DEBUG", "elimina invoiceD5");
-                    deleted[0] = true;
-                }
-            });
+                        invoiceInRealm.deleteFromRealm();
+                        deleted[0] = true;
+                    }
+                });
+            }
         }
 
         return deleted[0];
