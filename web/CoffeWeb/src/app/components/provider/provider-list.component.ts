@@ -29,7 +29,7 @@ import { StatusProviderService } from '../status/status-provider.service';
 				<!-- <mat-select placeholder="Estatus" [(ngModel)]="selected">-->
 					<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['providerType']"
 																(change)="filterService.put('providerType',
-																$event.target.value); changeProviderType($event.target.value)">
+																$event.target.value)">
 						<mat-option>Ninguna</mat-option>
 						<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType}} </mat-option>
 					</mat-select>
@@ -38,7 +38,7 @@ import { StatusProviderService } from '../status/status-provider.service';
 				<div class="field">
 					<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusProvider']"
 														(change)="filterService.put('statusProvider',
-														$event.target.value); changeStatus($event.target.value)">
+														$event.target.value)">
 						<mat-option>Ninguna</mat-option>
 						<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
 					</mat-select>
@@ -75,13 +75,13 @@ import { StatusProviderService } from '../status/status-provider.service';
 								  [checked]="selection.hasValue() && isAllSelected()"
 								  [indeterminate]="selection.hasValue() && !isAllSelected()">
 					</mat-checkbox>
-				  </th>
-				  <td mat-cell *matCellDef="let row">
+					</th>
+					<td mat-cell *matCellDef="let row">
 					<mat-checkbox (click)="$event.stopPropagation()"
-								  (change)="$event ? selection.toggle(row) : null"
-								  [checked]="selection.isSelected(row)">
+									(change)="$event ? selection.toggle(row) : null"
+									[checked]="selection.isSelected(row)">
 					</mat-checkbox>
-				  </td>
+					</td>
 				</ng-container>
 
 				<!-- Position ProviderType -->
@@ -146,10 +146,6 @@ import { StatusProviderService } from '../status/status-provider.service';
 			</table>
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
-		<div class="field">
-			{{selected+ " " + filterService.filter['providerType']}}
-		</div>
-
 	`
 })
 export class ProviderListComponent implements OnInit {
@@ -250,6 +246,16 @@ export class ProviderListComponent implements OnInit {
 	}
 
 	list(page = 0) {
+
+
+		if (this.filterService.filter['statusProvider'] === undefined) {
+			delete this.filterService.filter['statusProvider'];
+		}
+
+		if (this.filterService.filter['providerType'] === undefined) {
+			delete this.filterService.filter['providerType'];
+		}
+
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -271,11 +277,4 @@ export class ProviderListComponent implements OnInit {
 		});
 	}
 
-	changeProviderType(idProviderType: any ) {
-		console.log(idProviderType);
-	}
-
-	changeStatus(idProviderType: any ) {
-		console.log(idProviderType);
-	}
 }
