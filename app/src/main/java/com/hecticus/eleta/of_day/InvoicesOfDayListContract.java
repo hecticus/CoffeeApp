@@ -38,7 +38,7 @@ public class InvoicesOfDayListContract extends BaseDetailListContract {
 
         void updateHarvestsOrPurchasesList(List<InvoiceDetails> harvestsOrPurchasesList);
 
-        void initHeader(String name, String imageUrl);
+        void initHeader(String base64, String name, String imageUrl);
 
         void doBack();
 

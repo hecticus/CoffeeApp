@@ -136,7 +136,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 if (imagePath != null) {
                     //providerParam.setPhotoProvider(imagePath);todo img
                     try {
-                        providerParam.setPhotoProvider(imagePath);
+                        providerParam.setMediaBase64(imagePath);
                         providerParam.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",imagePath)));
                     }catch (Exception e){}
 
@@ -301,8 +301,13 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
             } else {
                 Log.d("DETAILS", "--->Provider a actualizar: " + providerParam);
 
-                providerParam.setAddOffline(providerParam.getIdProvider() < 0);
-                providerParam.setEditOffline(true);
+                /*providerParam.setAddOffline(providerParam.getIdProvider() < 0);
+                providerParam.setEditOffline(true);*/
+                if(providerParam.getIdProvider() > 0){
+                    providerParam.setEditOffline(true);
+                } else {
+                    providerParam.setAddOffline(true);
+                }
                 if (providerParam.getUnixtime() == -1)
                     providerParam.setUnixtime(System.currentTimeMillis() / 1000L);
 

@@ -146,22 +146,26 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         if (initialProvider != null)
             //loadProviderImage(initialProvider.getPhotoProvider());todo img
             try {
-                loadProviderImage(initialProvider.getMultimediaProfile().getMultimediaCDN().getUrl());
+                loadProviderImage(initialProvider.getMultimediaProfile().getMultimediaCDN().getUrl(), initialProvider.getMediaBase64());
             }catch (Exception e){}
         mPresenter.initFields();
     }
 
     @DebugLog
-    private void loadProviderImage(String imageUrl) {
-        GlideApp
-                .with(this)
-                .load(imageUrl)
-                .error(R.mipmap.picture)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .centerCrop()
-                .circleCrop()
-                .into(selectImageButton);
+    private void loadProviderImage(String imageUrl, String base64) {
+        if(!InternetManager.isConnected(this)){
+            Util.loadImageFromBase64(base64, selectImageButton);
+        } else {
+            GlideApp
+                    .with(this)
+                    .load(imageUrl)
+                    .error(R.mipmap.picture)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .centerCrop()
+                    .circleCrop()
+                    .into(selectImageButton);
+        }
     }
 
     @DebugLog
@@ -293,7 +297,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     @Override
     public void updateFields(Provider provider) {
         try {
-            loadProviderImage(provider.getMultimediaProfile().getMultimediaCDN().getUrl());
+            loadProviderImage(provider.getMultimediaProfile().getMultimediaCDN().getUrl(), provider.getMediaBase64());
             id = provider.getMultimediaProfile().getId();
         }catch (Exception e){
             Log.e("DEBUGERROR", "la url esta null");
@@ -628,15 +632,19 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
                 takenOrPickedImagePath = FileUtils.getLocalPathGivenUriAndContext(imgUri, this);
                 Log.d("PHOTO", "--->Image picked from gallery: " + takenOrPickedImagePath);
             }
-            GlideApp
-                    .with(this)
-                    .load(takenOrPickedImagePath)
-                    .error(R.mipmap.picture)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .circleCrop()
-                    .into(selectImageButton);
+            if(!InternetManager.isConnected(this)){
+                Util.loadThumbnailsImageFromPath(takenOrPickedImagePath, selectImageButton);
+            } else {
+                GlideApp
+                        .with(this)
+                        .load(takenOrPickedImagePath)
+                        .error(R.mipmap.picture)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .centerCrop()
+                        .circleCrop()
+                        .into(selectImageButton);
+            }
 
         } else
             Log.w("PHOTO", "--->No photo activity result?");

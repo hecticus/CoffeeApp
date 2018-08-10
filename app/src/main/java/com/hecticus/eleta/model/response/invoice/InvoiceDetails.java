@@ -122,6 +122,8 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private StatusInvoiceDetail status;
 
+    private int itemPostLocalId = -1;
+
     private boolean addOffline = false;
     private boolean editOffline = false;
     private boolean deleteOffline = false;
@@ -142,11 +144,18 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         return formatter.format(fecha);
     }
 
+    public int getItemPostLocalId() {
+        return itemPostLocalId;
+    }
+
+    public void setItemPostLocalId(int itemPostLocalId) {
+        this.itemPostLocalId = itemPostLocalId;
+    }
+
     public InvoiceDetails(ItemPost itemPost, InvoicePost invoicePost) {
         localId = itemPost.getItemPostLocalId();
         itemTypeId = itemPost.getItemTypeId();
         lotId = invoicePost.getLot();
-        Log.d("DEBUG lot cons", invoicePost.getLot()+"" );
         priceByLot = invoicePost.getPriceByLot();
         startDate = invoicePost.getStartDate();
         amount = itemPost.getAmount();

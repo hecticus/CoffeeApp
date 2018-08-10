@@ -82,7 +82,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             if (currentProvider != null) {
                 try {
 
-                    mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider()); todo img
+                    mView.loadHeader(currentProvider.getMediaBase64(), currentProvider.getFullNameProvider(), currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider()); todo img
 
                 }catch (Exception e){
                 }if (currentDetailsList != null && currentDetailsList.size() > 0) {

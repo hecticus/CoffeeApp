@@ -43,7 +43,7 @@ public class PurchaseDetailsContract {
 
         void updateProvider(String provider);
 
-        void loadHeader(String providerName, String imageUrl);
+        void loadHeader(String base64, String providerName, String imageUrl);
 
         void loadFields(boolean freight, String amount, String price, String dispatcher, String observation);
 

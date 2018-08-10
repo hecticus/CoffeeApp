@@ -59,7 +59,6 @@ public class SyncManager {
     private List<Provider> providersList;
     private List<InvoicePost> invoicePostList;
     private List<Invoice> invoiceList;
-    //private List<HarvestOfDay> ofDayList;
 
     private boolean somethingHasBeenSynced = false;
 
@@ -151,7 +150,7 @@ public class SyncManager {
 
         final Integer oldLocalProviderId;
 
-        if (currentProviderToSync.getIdProvider() != null && currentProviderToSync.getIdProvider() < 0) {
+        if (currentProviderToSync.getIdProvider() != null && currentProviderToSync.getIdProvider() < 0) { //todo revisar
             oldLocalProviderId = currentProviderToSync.getIdProvider();
 
             Log.d("BUG", "--->Provider to sync (Local id " + oldLocalProviderId + " set to null): " + currentProviderToSync);
@@ -200,7 +199,7 @@ public class SyncManager {
                     } finally {
                         realm.close();
                         if (oldLocalProviderId != null)
-                            updateProviderIdInInvoices(oldLocalProviderId, newProviderId);
+                            updateProviderIdInInvoices(oldLocalProviderId, newProviderId); //todo revisar
 
                         try {
                             if (currentProviderToSync.getMultimediaProfile().getMultimediaCDN().getUrl() != null) //todo img
@@ -224,7 +223,7 @@ public class SyncManager {
             public void onError(boolean fail, int code, Response<ProviderCreationResponse> response, String errorMessage) {
                 Log.d("DETAILS", "--->Fail (" + code + ") " + operationName + ":" + response);
 
-                if (code == 409) {
+                if (code == 409) { //todo revisar
                     if (errorMessage != null && errorMessage.equals("registered [fullNameProvider]")) {
                         HomeActivity.INSTANCE.syncFailed("No se pudo " + (isAdding ? "crear" : "modificar") + " el "
                                 + (currentProviderToSync.isHarvester() ? "cosechador" : "proveedor") + " " + currentProviderToSync.getFullNameProvider()
@@ -278,7 +277,7 @@ public class SyncManager {
         //final String previousProviderImageString = provider.getPhotoProvider();
         //provider.setPhotoProvider(base64Image);
 
-      MultimediaProfile media = new MultimediaProfile("image", new MultimediaCDN(base64Image));
+        MultimediaProfile media = new MultimediaProfile("image", new MultimediaCDN(base64Image));
 
         Call<ResponseBody> call = providersApi.updateProviderImage(provider.getIdProvider(), media);
 
@@ -301,7 +300,7 @@ public class SyncManager {
                                 //todo img
                                 //provider.setPhotoProvider(response.body().getUploadedImageUrl());
                                 //provider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",response.body().getUploadedImageUrl())));//new MultimediaProfile("image", new MultimediaCDN(base64Image));
-                                //todo brayan img
+                                //todo revisar arriba comentado
                             }catch (Exception e){
                             }
                             realm.insertOrUpdate(provider);
@@ -469,13 +468,13 @@ public class SyncManager {
                                     .equalTo("id", properInvoiceId + "-" + firstInvoicePost.getStartDate() + dateSuffix)
                                     .findFirst();
 
-                        }
+                        }*/
                         try {
-                            if (harvestOfDay != null) {
+                            /*if (harvestOfDay != null) {
                                 realm.beginTransaction();
                                 harvestOfDay.deleteFromRealm();
                                 realm.commitTransaction();
-                            }
+                            }*/
 
                             if (invoiceInRealm != null) {
                                 realm.beginTransaction();
@@ -488,7 +487,7 @@ public class SyncManager {
                         } finally {
                             realm.close();
                             saveNextInvoice();
-                        }*/
+                        }
                     } catch (Exception e) {
                     /*Gson g = new Gson();
                     Log.d("DEBUG details",g.toJson(response.body()));*/
@@ -565,10 +564,19 @@ public class SyncManager {
 
                     Realm realm = Realm.getDefaultInstance();
                     try {
-                        realm.beginTransaction();
-                        firstProvider.setDeleteOffline(false);
+
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                Provider providerToDelete = firstProvider;
+                                providerToDelete.deleteFromRealm();
+                            }
+                        });
+                        /*realm.beginTransaction();
+                        firstProvider.setDeleteOffline(true);
                         realm.insertOrUpdate(firstProvider);
-                        realm.commitTransaction();
+                        realm.commitTransaction();*/
+
                     } finally {
                         realm.close();
                         deleteNextProvider();

@@ -207,17 +207,21 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
     @DebugLog
     @Override
-    public void initHeader(String name, String imageUrl) {
+    public void initHeader(String base64, String name, String imageUrl) {
         headerNameTextView.setText(name);
-        if (imageUrl != null) {
-            GlideApp
-                    .with(this)
-                    .load(imageUrl)
-                    .error(R.mipmap.placeholder_avatar)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .into(profileImageView);
+        if(!InternetManager.isConnected(this)){
+            Util.loadImageFromBase64(base64, profileImageView);
+        } else {
+            if (imageUrl != null) {
+                GlideApp
+                        .with(this)
+                        .load(imageUrl)
+                        .error(R.mipmap.placeholder_avatar)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .centerCrop()
+                        .into(profileImageView);
+            }
         }
     }
 

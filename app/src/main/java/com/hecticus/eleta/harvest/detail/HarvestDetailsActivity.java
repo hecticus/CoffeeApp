@@ -327,17 +327,21 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
 
     @Override
-    public void loadHeader(String providerName, String imageUrl) {
+    public void loadHeader(String base64, String providerName, String imageUrl) {
         fullNameTextViewInProfileHeader.setText(providerName);
-        if (imageUrl != null) {
-            GlideApp
-                    .with(this)
-                    .load(imageUrl)
-                    .error(R.mipmap.placeholder_avatar)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .into(avatarImageView);
+        if(!InternetManager.isConnected(this)){
+            Util.loadImageFromBase64(base64, avatarImageView);
+        } else {
+            if (imageUrl != null) {
+                GlideApp
+                        .with(this)
+                        .load(imageUrl)
+                        .error(R.mipmap.placeholder_avatar)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .centerCrop()
+                        .into(avatarImageView);
+            }
         }
     }
 

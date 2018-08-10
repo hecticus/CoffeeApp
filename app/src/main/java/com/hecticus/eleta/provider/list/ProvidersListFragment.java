@@ -38,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 
 public class ProvidersListFragment extends BaseFragment implements ProvidersListContract.View {
 
@@ -208,13 +209,18 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
             boolean control = ManagerDB.isProviderOffline(selectedProvider);
             //Log.d("DEBUG details", "control" + control);
             intent.putExtra("control", control);
+            Log.d("DEBUG", "policia control " + control );
             if(InternetManager.isConnected(getActivity()) && !control){
+                Log.d("DEBUG", "policia 1");
                 intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
             }else {
+                Log.d("DEBUG", "policia 2");
                 if(selectedProvider.getIdProvider()!=-1) {
+                    Log.d("DEBUG", "policia 3");
                     intent.putExtra("provider", selectedProvider.getIdProvider());
                 }
                 else {
+                    Log.d("DEBUG", "policia 4");
                     intent.putExtra("providerLocal", selectedProvider.getIdentificationDocProvider());
                 }
             }

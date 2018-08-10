@@ -36,7 +36,7 @@ public interface InvoiceRetrofitInterface {
     @DELETE("invoice/{id}")
     Call<Message> deleteInvoice(@Path("id") int idInvoice);
 
-    //listo
+    //listo sincroniza, pero si edite no sincroniza
     @POST("invoice2")//{idProvider}/{date}")
     Call<CreateInvoiceResponse> newInvoiceDetail(@Body Invoice post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post
 

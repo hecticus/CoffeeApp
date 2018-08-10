@@ -1,7 +1,11 @@
 package com.hecticus.eleta.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -57,6 +61,26 @@ public class Util {
                 .registerTypeAdapter(Class.forName("io.realm.InvoiceDetailsRealmProxy"), new InvoiceDetails())
                 .registerTypeAdapter(Class.forName("io.realm.InvoiceDetailPurityRealmProxy"), new InvoiceDetailPurity())
                 .create();
+    }
+
+    public static void loadImageFromBase64(String base64, ImageView imageView) {
+
+
+        byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        imageView.setImageBitmap(decodedByte);
+
+       /* BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 6;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        imageView.setImageBitmap(bitmap);*/
+    }
+
+    public static void loadThumbnailsImageFromPath(String path, ImageView imageView) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 6;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        imageView.setImageBitmap(bitmap);
     }
 
     @DebugLog

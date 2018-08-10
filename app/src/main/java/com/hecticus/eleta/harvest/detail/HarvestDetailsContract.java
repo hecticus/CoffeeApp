@@ -43,7 +43,7 @@ public class HarvestDetailsContract {
 
         void updateProvider(String provider);
 
-        void loadHeader(String providerName, String imageUrl);
+        void loadHeader(String base64, String providerName, String imageUrl);
 
         void loadObservation(String observation);
 

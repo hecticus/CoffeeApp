@@ -77,7 +77,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 Log.d("BUG", "--->currentProvider initFields: " + currentProvider);
 
                 try {
-                    mView.loadHeader(currentProvider.getFullNameProvider(), currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider());
+                    mView.loadHeader(currentProvider.getMediaBase64(), currentProvider.getFullNameProvider(), currentProvider.getMultimediaProfile().getMultimediaCDN().getUrl());//currentProvider.getPhotoProvider());
                     //todo img
                 }catch (Exception e){}
 

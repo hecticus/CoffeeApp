@@ -93,6 +93,7 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
                             if (imagePath != null) {
                                 try {
                                     //providerParam.setPhotoProvider(imagePath);todo img
+                                    providerParam.setMediaBase64(imagePath);
                                     currentProvider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN("",imagePath)));
 
                                 }catch (Exception e){}
@@ -109,11 +110,14 @@ public class ProviderDetailsPresenter implements ProviderDetailsContract.Actions
                             try {
                                 mView.showWorkingIndicator();
                                 mRepository.putImageRequest(imagePath, id);
+                                providerParam.setMediaBase64(imagePath);
+                                ManagerDB.updateExistingProvider(providerParam);
                             }catch (Exception e){
                                 Log.e("DEBUGERROR", e.getMessage());
                             }
                         } else {
-
+                            providerParam.setMediaBase64(imagePath);
+                            ManagerDB.updateExistingProvider(providerParam);
                             uploadImage(providerParam, imagePath);
                         }
 

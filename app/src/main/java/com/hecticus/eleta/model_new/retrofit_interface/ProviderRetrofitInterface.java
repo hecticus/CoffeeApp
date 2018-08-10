@@ -23,15 +23,19 @@ import retrofit2.http.Query;
 
 public interface ProviderRetrofitInterface {
 
+    //listo sincroniza
     @POST("provider")
     Call<ProviderCreationResponse> createProvider( @Body Provider providerToCreate);
 
+    //listo sincroniza
     @PUT("provider/{id}")
     Call<ProviderCreationResponse> updateProviderData(@Path("id") int id, @Body Provider providerToUpdate);
 
+    //nada
     @POST("provider/{id}/mediaProfile")
     Call<ResponseBody> updateProviderImage(@Path("id") int id, @Body MultimediaProfile media);
 
+    //nada
     @PUT("multimedias/{id}")
     Call<ResponseBody> putProviderImage(@Path("id") int id, @Body MultimediaProfile media);
 
@@ -43,7 +47,7 @@ public interface ProviderRetrofitInterface {
     @GET("provider")
     Call<ProvidersListResponse> providersByType(@Query("providerType") int providerTypeId);
 
-    //listo
+    //listo, sincroniza tengo un error fantasma
     @DELETE("provider/{idProvider}")
     Call<ResponseBody> deleteProvider(@Path("idProvider") int idProvider);
 
