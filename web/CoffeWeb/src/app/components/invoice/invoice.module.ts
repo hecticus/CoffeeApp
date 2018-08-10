@@ -18,6 +18,8 @@ import {
 	MatInputModule,
 	MatPaginatorModule,
 	MatSelectModule,
+	MatDatepickerModule,
+	MatNativeDateModule,
 	} from '@angular/material';
 
 
@@ -33,6 +35,8 @@ import {
 		MatSelectModule,
 		MatFormFieldModule,
 		MatInputModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
 
 		UtilsModule,
 		InvoiceRoutingModule,
