@@ -8,10 +8,12 @@ import controllers.utils.Response;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.Invoice;
+import models.Multimedia;
 import models.Provider;
 import models.ProviderType;
 
 import models.status.StatusProvider;
+import multimedia.models.MultimediaCDN;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -78,16 +80,20 @@ public class Providers extends Controller {
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Provider provider = Json.fromJson(json, Provider.class);
-//            if(provider.getStatusProvider().getId().intValue() == 41)
-//                provider.setDeleted(false);
             provider.setId(id);
             System.out.println(provider.getNameProvider());
+
+            if(provider.getMultimediaProfile() != null){
+                Multimedia multimedia =  Multimedia.findId(provider.getMultimediaProfile().getId());
+                MultimediaCDN multimediaCDN = MultimediaCDN.findId(multimedia.getMultimediaCDN().getId());
+                multimediaCDN.setDeleted(false);
+                multimediaCDN.update();
+                multimedia.setDeleted(false);
+                multimedia.update();
+
+            }
+
             provider.update();
-//            Provider proAux = Provider.findById(provider.getId())
-//            if(proAux.isDeleted()){
-//                System.out.println(proAux);
-//                provider = proAux;
-//            }
             return  Response.updatedEntity(Json.toJson(provider));
 
         }catch(Exception e){
@@ -101,7 +107,14 @@ public class Providers extends Controller {
             if (Invoice.invoicesByProviderId(id) != null){
                 return controllers.utils.Response.constraintViolation("Invoices Open");
             }
-            Ebean.delete(Provider.findById(id));
+
+            Provider provider = Provider.findById(id);
+            Multimedia multimedia = provider.getMultimediaProfile();
+            if ( multimedia != null){
+//                Ebean.delete(multimedia.getMultimediaCDN());
+                Ebean.delete(multimedia);
+            }
+            Ebean.delete(Provider.class, id);
             return Response.deletedEntity();
         } catch (Exception e) {
             return  NsExceptionsUtils.delete(e);
