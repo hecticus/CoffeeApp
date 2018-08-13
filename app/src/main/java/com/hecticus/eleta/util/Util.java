@@ -111,7 +111,7 @@ public class Util {
 
     ///PRINTER
     @DebugLog
-    public static String formatTextForPreview(Context context, ReceiptResponse receiptResponse, InvoiceDetailsResponse detailsResponse) {
+    public static String formatTextForPreview(Context context, ReceiptResponse receiptResponse, InvoiceDetailsResponse detailsResponse, float totalInvoice) {
         if (detailsResponse.getListInvoiceDetails() == null || detailsResponse.getListInvoiceDetails().size() <= 0) {
             return "";
         }
@@ -227,7 +227,7 @@ public class Util {
                 }
             }
 
-            text.append("\nTotal: ").append(df.format(receiptResponse.getInvoice().getInvoiceTotal())).append("\n\n");
+            text.append("\nTotal: ").append(df.format(/*receiptResponse.getInvoice().getInvoiceTotal()*/totalInvoice)).append("\n\n");
 
             text.append("___________________" + "\n");
             text.append(" Por Cafe de Eleta");
@@ -314,7 +314,7 @@ public class Util {
 
             }
 
-            text.append("\nTotal: ").append(df.format(receiptResponse.getInvoice().getInvoiceTotal())).append("\n\n");
+            text.append("\nTotal: ").append(df.format(/*receiptResponse.getInvoice().getInvoiceTotal()*/totalInvoice)).append("\n\n");
 
             text.append("_________________ | _________________" + "\n");
             text.append("Por Cafe de Eleta |   Entregado por   ");

@@ -64,6 +64,7 @@ public class SyncManager {
     private List<Invoice> invoiceClosed;
     private List<InvoiceDetails> invoiceDetailsDelete;
     private List<InvoiceDetails> invoiceDetailsEdit;
+    private List<InvoiceDetails> invoiceDetailsAdd;
 
 
     private boolean somethingHasBeenSynced = false;
@@ -105,7 +106,9 @@ public class SyncManager {
 
     @DebugLog
     public void startSync() {
-        syncDeletedInvoice();
+        //syncDeletedInvoice();
+        syncProviders();
+
     }
 
     @DebugLog
@@ -528,20 +531,6 @@ public class SyncManager {
 
     @DebugLog
     public void syncDeletedProvider() {
-        try{
-            Realm realm = Realm.getDefaultInstance();
-            List<InvoiceDetails> invoiceDetailsList = realm.where(InvoiceDetails.class)
-                    .equalTo("addOffline", true).findAll();
-            if(invoiceDetailsList != null){
-                realm.beginTransaction();
-                for(int i=0; i<invoiceDetailsList.size(); i++){
-                    invoiceDetailsList.get(i).deleteFromRealm();
-                }
-                realm.commitTransaction();
-            }
-        }catch (Exception e){
-
-        }
         providersList = new ArrayList<>();
         List<Provider> providers = Realm.getDefaultInstance()
                 .where(Provider.class)
@@ -551,7 +540,8 @@ public class SyncManager {
             providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providers));
         }
         if (providersList.size() <= 0) {
-            syncEditInvoiceDetail();
+            syncAddInvoiceDetails();
+            //syncEditInvoiceDetail();
             return;
         }
         deleteNextProvider();
@@ -561,7 +551,8 @@ public class SyncManager {
     @DebugLog
     public void deleteNextProvider() {
         if (providersList.size() <= 0) {
-            syncEditInvoiceDetail();
+            syncAddInvoiceDetails();
+            //syncEditInvoiceDetail();
             return;
         }
 
@@ -634,6 +625,105 @@ public class SyncManager {
     }
 
     @DebugLog
+    public void syncAddInvoiceDetails() {
+        invoiceDetailsAdd = new ArrayList<>();
+        List<InvoiceDetails> invoiceDetailsList = Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("addOffline", true)
+                .findAllSorted("startDate");
+
+        if (invoiceDetailsList != null) {
+            invoiceDetailsAdd.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList));
+        }
+        if (invoiceDetailsAdd.size() <= 0) {
+            syncEditInvoiceDetail();//syncProviders();//todo proximo sync
+            return;
+        }
+
+        addNextInvoiceDetails();
+    }
+
+    @DebugLog
+    private void addNextInvoiceDetails() {
+        if (invoiceDetailsAdd.size() <= 0) {
+            Log.d("DETAILS", "--->deleteNextInvoice ended. No more in queue.");
+            syncEditInvoiceDetail();//syncProviders();//todo proximo sync
+            return;
+        }
+
+        final InvoiceDetails firstInvoiceDetails = invoiceDetailsAdd.get(0);
+        invoiceDetailsAdd.remove(firstInvoiceDetails);
+
+        /*if (firstInvoiceDetails.isAddOffline()) {
+            Log.d("DETAILS", "--->deleteNextInvoice firstInvoice IGNORED (Created offline): " + firstInvoice);
+            //onInvoiceDeleteSyncSuccess(firstInvoiceDetails, null);
+        } else {*/
+
+            Log.d("DETAILS", "--->deleteNextInvoice firstInvoice (Not created offline): " + firstInvoiceDetails);
+
+            somethingHasBeenSynced = true;
+            InvoiceDetail invoiceDetail = new InvoiceDetail(firstInvoiceDetails);
+            invoiceDetail.setId(null);
+
+            Call<ResponseBody> call = invoiceApi.newInvoiceDetailAdd(invoiceDetail);
+
+            new ManagerServices<>(call, new ManagerServices.ServiceListener<ResponseBody>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<ResponseBody> response) {
+                    //onInvoiceDeleteSyncSuccess(firstInvoice, response);
+                    try {
+                        Realm realm = Realm.getDefaultInstance();
+
+                        try {
+                            InvoiceDetails invoice = realm.where(InvoiceDetails.class)
+                                    .equalTo("localId", firstInvoiceDetails.getLocalId())
+                                    .findFirst();
+                            if (invoice != null) {
+                                realm.beginTransaction();
+                                Log.d("DETAILS", "--->Success deleteproviderSync. (2/3) Deleting hodToDelete:" + invoice);
+                                try {
+                                    invoice.setAddOffline(false);
+                                    realm.insertOrUpdate(invoice);
+                                } catch (Exception e) {
+                                }
+                                realm.commitTransaction();
+                                Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
+                            } else {
+                                Log.e("DETAILS", "--->Success deleteOfDaySync. (2/2/3) Can't delete NULL hodToDelete");
+                            }
+                        } finally {
+                            realm.close();
+                            addNextInvoiceDetails();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("DETAILS", "--->Fail deleteInvoiceSync after success:" + response);
+                        HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync exception: " + e.getMessage());
+                    }
+
+
+
+                }
+
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<ResponseBody> response, String errorMessage) {
+                    Log.d("DETAILS", "--->Fail deleteInvoiceSync:" + response);
+                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync errorResponse: " + response);
+                }
+
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                    Log.d("DETAILS", "--->Fail token");
+                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync onInvalidToken");
+                }
+            });
+        //}
+    }
+
+    @DebugLog
     public void syncDeletedInvoice() {
         invoiceList = new ArrayList<>();
         List<Invoice> invoices = Realm.getDefaultInstance().where(Invoice.class).equalTo("deleteOffline", true).findAllSorted("invoiceStartDate");
@@ -641,7 +731,8 @@ public class SyncManager {
             invoiceList.addAll(Realm.getDefaultInstance().copyFromRealm(invoices));
         }
         if (invoiceList.size() <= 0) {
-            syncProviders();
+            syncCloseIncoice();
+            //syncProviders();
             return;
         }
 
@@ -652,7 +743,8 @@ public class SyncManager {
     private void deleteNextInvoice() {
         if (invoiceList.size() <= 0) {
             Log.d("DETAILS", "--->deleteNextInvoice ended. No more in queue.");
-            syncProviders();
+            syncCloseIncoice();
+            //syncProviders();
             return;
         }
 
@@ -860,7 +952,8 @@ public class SyncManager {
             deleteNextOfDay();
         }*/
         if (invoiceDetailsDelete.size() <= 0) {
-            syncCloseIncoice();
+            syncDeletedInvoice();
+            //syncCloseIncoice();
             return;
         }
         deleteNextOfDay();
@@ -869,7 +962,8 @@ public class SyncManager {
     @DebugLog
     public void deleteNextOfDay() {
         if (invoiceDetailsDelete.size() <= 0) {
-            syncCloseIncoice();
+            syncDeletedInvoice();
+            //syncCloseIncoice();
             return;
         }
 
@@ -964,6 +1058,20 @@ public class SyncManager {
             deleteNextCloseInvoice();
             //deleteNextOfDay();
         }
+        /*try{
+            Realm realm = Realm.getDefaultInstance();
+            List<InvoiceDetails> invoiceDetailsList = realm.where(InvoiceDetails.class)
+                    .equalTo("addOffline", true).findAll();
+            if(invoiceDetailsList != null){
+                realm.beginTransaction();
+                for(int i=0; i<invoiceDetailsList.size(); i++){
+                    invoiceDetailsList.get(i).deleteFromRealm();
+                }
+                realm.commitTransaction();
+            }
+        }catch (Exception e){
+
+        }*/
         //onSuccessfulSync(); //todo borrar
     }
 

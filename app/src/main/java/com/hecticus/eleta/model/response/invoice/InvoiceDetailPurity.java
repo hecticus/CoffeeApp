@@ -40,6 +40,8 @@ public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<I
 
     private int purityId = -1;
 
+    private int purityPostLocalId = -1;
+
     @Ignore
     @SerializedName("purity")
     @Expose
@@ -96,6 +98,14 @@ public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<I
 
     public boolean isSameType(int itemTypeId) {
         return purity != null && purity.getId() == itemTypeId;
+    }
+
+    public int getPurityPostLocalId() {
+        return purityPostLocalId;
+    }
+
+    public void setPurityPostLocalId(int purityPostLocalId) {
+        this.purityPostLocalId = purityPostLocalId;
     }
 
     public InvoiceDetailPurity() {

@@ -135,22 +135,8 @@ public class ManagerDB {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    Provider providerToDelete = provider;
-                    providerToDelete.deleteFromRealm();
-                    /*if (provider.getIdProvider() < 0) {
-                        Provider providerToDelete = realm.where(Provider.class).equalTo("unixtime", provider.getUnixtime()).findFirst();
-                        if (providerToDelete != null) {
-                            Log.d("TEST", "dni provider " + provider.getIdentificationDocProvider() + " dni saved" + providerToDelete.getIdentificationDocProvider());
-                            providerToDelete.deleteFromRealm();
-                            return;
-                        }
-                        providerToDelete = realm.where(Provider.class).equalTo("identificationDocProvider", provider.getIdentificationDocProvider()).findFirst();
-                        if (providerToDelete != null) {
-                            Log.d("TEST", "dni provider " + provider.getIdentificationDocProvider() + " dni saved" + providerToDelete.getIdentificationDocProvider());
-                            providerToDelete.deleteFromRealm();
-                            return;
-                        }
-                    }*/
+                    Provider providerDelete = realm.where(Provider.class).equalTo("idProvider", provider.getIdProvider()).findFirst();
+                    providerDelete.deleteFromRealm();
                 }
             });
         } catch (Exception e) {
@@ -811,7 +797,7 @@ public class ManagerDB {
             Log.d("PRINT", "--->currentDetailsItem: " + currentDetailsItem);
 
             // These two are for harvests
-            if (currentDetailsItem.getStore() == null)
+            if (currentDetailsItem.getLot() == null)
                 currentDetailsItem.setLot(getLotById(currentDetailsItem.getLotId()));
             if (currentDetailsItem.getItemType() == null)
                 currentDetailsItem.setItemType(getItemTypeById(currentDetailsItem.getItemTypeId()));
@@ -884,10 +870,10 @@ public class ManagerDB {
                 .equalTo("deleteOffline", false)
                 .equalTo("statusInvo", "Abierta")
                 .findFirst();
-
+        Log.e("DEBUG", "BRAYAN POLICIA 1");
         if (existingInvoice == null) {
             Log.d("BUG", "--->saveNewInvoice (Not existing before)");
-
+            Log.e("DEBUG", "BRAYAN POLICIA 2");
             existingInvoice = new Invoice(invoicePost);
             Number id = realm.where(Invoice.class).max("localId");
             int nextLocalInvoiceId = (id == null) ? 1 : id.intValue() + 1;
@@ -900,6 +886,7 @@ public class ManagerDB {
             existingInvoice.setStatusInvo("Abierta");
 
             try {
+                Log.e("DEBUG", "BRAYAN POLICIA 3");
                 final Invoice finalInvoiceToInsert = existingInvoice;
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
@@ -911,12 +898,14 @@ public class ManagerDB {
                         invoicePost.setInvoicePostLocalId(nextExistingInvoicePostId);
                         invoicePost.setType(type);
                         float total = 0;
+                        Log.e("DEBUG", "BRAYAN POLICIA 4");
                         Log.d("OFFLINE", "--->saveNewInvoice execute total=0");
                         for (ItemPost item : invoicePost.getItems()) {
                             item.setInvoicePostLocalId(nextExistingInvoicePostId);
                             Number itemId = realm.where(ItemPost.class).max("itemPostLocalId");
                             int nextItemId = (itemId == null) ? 1 : itemId.intValue() + 1;
                             item.setItemPostLocalId(nextItemId);
+                            Log.e("DEBUG", "BRAYAN POLICIA 5");
 
                             Log.d("OFFLINE", "--->saveNewInvoice execute total=" + total + " + "
                                     + item.getAmount() + " = " + (total + item.getAmount()));
@@ -932,7 +921,7 @@ public class ManagerDB {
                             Log.e("DEBUG", "ID del item post al crearlo" + item.getItemPostLocalId());
                             details.setLocalId(nextDetailsId);
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
-                            details.setAddOffline(true);
+                            //details.setAddOffline(true);
                             realm.insertOrUpdate(details);
 
                             if (type == Constants.TYPE_SELLER) {
@@ -949,6 +938,7 @@ public class ManagerDB {
                                     invoiceDetailPurity.setRateValue(purityPost.getRateValue());
                                     invoiceDetailPurity.setLocalId(invoiceDetailPurity.getId() + "-" + invoiceDetailPurity.getDetailId());
                                     invoiceDetailPurity.setPurityId(purityPost.getPurityId());
+                                    invoiceDetailPurity.setPurityPostLocalId(nextPurityPostId);
                                     invoiceDetailPurity.setLocalId(details.getWholeId() + "-" + invoiceDetailPurity.getPurityId());
 
                                     Log.d("PURITIES", "--->Saving InvoiceDetailPurity (saveNewInvoice): " + invoiceDetailPurity);
@@ -1032,6 +1022,7 @@ public class ManagerDB {
                             Log.e("DEBUG", "ID del item post al crearlo" + item.getItemPostLocalId());
                             details.setItemPostLocalId(item.getItemPostLocalId());
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
+                            details.setAddOffline(true);
                             realm.insertOrUpdate(details);
 
                             if (type == Constants.TYPE_SELLER) {
@@ -1048,6 +1039,7 @@ public class ManagerDB {
                                     invoiceDetailPurity.setRateValue(purityPost.getRateValue());
                                     invoiceDetailPurity.setLocalId(invoiceDetailPurity.getId() + "-" + invoiceDetailPurity.getDetailId());
                                     invoiceDetailPurity.setPurityId(purityPost.getPurityId());
+                                    invoiceDetailPurity.setPurityPostLocalId(nextPurityPostId);
                                     invoiceDetailPurity.setLocalId(details.getWholeId() + "-" + invoiceDetailPurity.getPurityId());
 
                                     Log.d("PURITIES", "--->Saving InvoiceDetailPurity (saveNewInvoice): " + invoiceDetailPurity);
@@ -1364,16 +1356,26 @@ public class ManagerDB {
                     //todo terminar de editar el invoice details
 
                     //todo lo mismo q new invoice
-                    /*Log.d("PURITIES", "antes de");
+                    Log.e("DEBUG", "antes de");
                     if (type == Constants.TYPE_SELLER) {
-                        Log.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + "luego del if");
+                        Log.e("DEBUG", "--->Saving purityPost (saveNewInvoice): " + "luego del if");
                         for (InvoiceDetailPurity invoiceDetailPurity : invoiceDetails.getDetailPurities()) {
-
-                            Log.d("PURITIES", "--->Saving InvoiceDetailPurity (saveNewInvoice): " + invoiceDetailPurity);
+                            Log.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailPurity);
+                            //InvoiceDetails invoiceDetailsLocal = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();
+                            InvoiceDetailPurity invoiceDetailsPurityLocal = realm.where(InvoiceDetailPurity.class).equalTo("id", invoiceDetailPurity.getId()).findFirst();
+                            PurityPost purityPostLocal = realm.where(PurityPost.class).equalTo("purityPostLocalId", invoiceDetails.getItemPostLocalId()).findFirst();
+                            Log.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailsPurityLocal);
+                            if(purityPostLocal != null){
+                                Log.e("DEBUG", "purities entro if");
+                                Log.e("DEBUG", "purities entro if"+invoiceDetailPurity.getRateValue());
+                                purityPostLocal.setRateValue(invoiceDetailPurity.getRateValue());
+                                realm.insertOrUpdate(purityPostLocal);
+                            }
+                            invoiceDetailsPurityLocal.setRateValue(invoiceDetailPurity.getRateValue());
                             //invoiceDetailPurity.deleteFromRealm();
-                            realm.insertOrUpdate(invoiceDetailPurity);
+                            realm.insertOrUpdate(invoiceDetailsPurityLocal);
                         }
-                    }*/
+                    }
                     /*Log.e("BRAYANNNN", "1");
                     if (invoiceDetails != null) {
                         Log.e("BRAYANNNN", "2");*/
@@ -2053,6 +2055,63 @@ public class ManagerDB {
                     public void execute(Realm realm) {
 
                         invoiceInRealm.setDeleteOffline(true);
+                        realm.insertOrUpdate(invoiceInRealm);
+                        deleted[0] = true;
+                    }
+                });
+            }else{
+                Log.d("DEBUG", "Policia4");
+                realm.executeTransaction(new Realm.Transaction() {
+                    @DebugLog
+                    @Override
+                    public void execute(Realm realm) {
+
+                        invoiceInRealm.deleteFromRealm();
+                        deleted[0] = true;
+                    }
+                });
+            }
+        }
+
+        return deleted[0];
+    }
+
+    @DebugLog
+    public static boolean deleteInvoiceDetailsOnline(final int remoteInvoiceDetailId, final int localInvoiceDetailId) {
+
+        final boolean[] deleted = {false};
+
+        Realm realm = Realm.getDefaultInstance();
+        Boolean isOnline;
+        final InvoiceDetails invoiceInRealm;
+        //InvoiceDetails invoiceInRealm1;
+
+        if (remoteInvoiceDetailId != -1) {
+            Log.d("DEBUG", "Policia1");
+            invoiceInRealm = realm
+                    .where(InvoiceDetails.class)
+                    .equalTo("id", remoteInvoiceDetailId)
+                    .equalTo("deleteOffline", false)
+                    .findFirst();
+            isOnline = true;
+
+        } else {
+            Log.d("DEBUG", "Policia2");
+            invoiceInRealm = realm
+                    .where(InvoiceDetails.class)
+                    .equalTo("localId", localInvoiceDetailId)
+                    .equalTo("deleteOffline", false)
+                    .findFirst();
+            isOnline = false;
+        }
+        if (invoiceInRealm != null) {
+            if(isOnline){
+                Log.d("DEBUG", "Policia3");
+                realm.executeTransaction(new Realm.Transaction() {
+                    @DebugLog
+                    @Override
+                    public void execute(Realm realm) {
+
                         realm.insertOrUpdate(invoiceInRealm);
                         deleted[0] = true;
                     }

@@ -241,7 +241,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             //ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId()); todo no se
-                            ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId());
+                            ManagerDB.deleteInvoiceDetailsOnline(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId());
                             //Log.d("DEBUG delete online", String.valueOf(variable));
 
                             /*List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(

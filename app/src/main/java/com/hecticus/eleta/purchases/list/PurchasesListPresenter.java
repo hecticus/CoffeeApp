@@ -196,13 +196,13 @@ public class PurchasesListPresenter implements PurchasesListContract.Actions {
         if (receiptResponse.getInvoice().isManaged()) // It's managed by realm
         {
             Invoice invoiceCopy = Realm.getDefaultInstance().copyFromRealm(receiptResponse.getInvoice());
-            invoiceCopy.setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
+            //invoiceCopy.setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
             receiptResponse.setInvoice(invoiceCopy);
         } else {
             receiptResponse.getInvoice().setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
         }
 
-        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse);
+        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse, totalOfInvoiceIncludingLocalOperations);
 
         String textToPrint = Util.formatTextForPrinting(textToShow);
 

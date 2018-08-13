@@ -305,10 +305,12 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
             else
                 totalOfInvoiceIncludingLocalOperations += (currentDetail.getPriceItem() * currentDetail.getAmount());
         }
+        /*Invoice invoiceAux = receiptResponse.getInvoice();
+        ReceiptResponse receiptResponseAux = receiptResponse;
+        receiptResponse.setInvoice(invoiceAux);*/ //todo error al imprimir
+        //receiptResponse.getInvoice().setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
 
-        receiptResponse.getInvoice().setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
-
-        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse);
+        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse, totalOfInvoiceIncludingLocalOperations);
 
         String textToPrint = Util.formatTextForPrinting(textToShow);
 

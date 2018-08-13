@@ -227,7 +227,7 @@ public class HarvestsListPresenter implements HarvestsListContract.Actions {
             receiptResponse.getInvoice().setInvoiceTotal(totalOfInvoiceIncludingLocalOperations);
         }
 
-        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse);
+        String textToShow = Util.formatTextForPreview(context, receiptResponse, invoiceDetailsResponse, totalOfInvoiceIncludingLocalOperations);
         String textToPrint = Util.formatTextForPrinting(textToShow);
         mView.showHarvestPrintPreview(textToPrint, textToShow);
     }

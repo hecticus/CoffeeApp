@@ -278,7 +278,6 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoiceParam)) {
 
             ReceiptResponse fakeReceiptResponse = new ReceiptResponse();
-
             fakeReceiptResponse.setInvoice(invoiceParam);
 
             fakeReceiptResponse.setCompanyName(Constants.PrintingHeaderFallback.COMPANY_NAME);
