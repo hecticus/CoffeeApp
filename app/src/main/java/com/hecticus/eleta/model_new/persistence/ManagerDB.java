@@ -928,9 +928,11 @@ public class ManagerDB {
                             InvoiceDetails details = new InvoiceDetails(item, invoicePost);
                             Log.d("DEBUG", "id del invoice q se le asigna al details"+finalInvoiceToInsert.getLocalId());
                             details.setInvoiceId(finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId());
-                            details.setItemPostLocalId(nextItemId);
+                            details.setItemPostLocalId(item.getItemPostLocalId());
+                            Log.e("DEBUG", "ID del item post al crearlo" + item.getItemPostLocalId());
                             details.setLocalId(nextDetailsId);
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
+                            details.setAddOffline(true);
                             realm.insertOrUpdate(details);
 
                             if (type == Constants.TYPE_SELLER) {
@@ -990,7 +992,7 @@ public class ManagerDB {
                     }
                 });
             } catch (Exception e) {
-                Log.d("DEBUG", "exploto creando invoice");
+                Log.e("DEBUG", "exploto creando invoice");
                 e.printStackTrace();
                 realm.close();
                 return false;
@@ -1027,6 +1029,8 @@ public class ManagerDB {
                             InvoiceDetails details = new InvoiceDetails(item, invoicePost);
                             details.setInvoiceId(finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId());
                             details.setLocalId(nextDetailsId);
+                            Log.e("DEBUG", "ID del item post al crearlo" + item.getItemPostLocalId());
+                            details.setItemPostLocalId(item.getItemPostLocalId());
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
                             realm.insertOrUpdate(details);
 
@@ -1309,8 +1313,94 @@ public class ManagerDB {
         return (existingProvider != null && (existingProvider.isAddOffline() || existingProvider.isEditOffline() || existingProvider.isDeleteOffline()));
     }
 
+
     @DebugLog
     public static boolean updateInvoiceDetails1(final InvoiceDetails invoiceDetails, final int type/*, final List<InvoiceDetailPurity> detailsPuritiesListParam*/) {
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    InvoiceDetails existing;
+                    Boolean isOnline;
+                    if(invoiceDetails.getId()!=-1) {
+                        isOnline=true;
+                        existing = realm.where(InvoiceDetails.class).equalTo("id", invoiceDetails.getId()).findFirst();
+                        Log.e("DEBUG", "existe online" + String.valueOf(existing != null));
+                    } else {
+                        isOnline=false;
+                        existing = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();
+                        Log.e("DEBUG", "Existe offline" + String.valueOf(existing != null));
+                    }
+                    //Log.d("DEBUG", "ID del item post al crearlo" + existing.getItemPostLocalId());
+                    InvoiceDetails invoiceDetailsAux = existing;
+                    if (existing != null && invoiceDetails.getInvoiceId()!=existing.getInvoiceId()) {
+                        existing.deleteFromRealm();
+                        Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
+                    } else
+                        Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
+
+
+                    Log.d("DEBUG", "ID del item post al crearlo" + invoiceDetailsAux.getItemPostLocalId());
+                    ItemPost item = realm.where(ItemPost.class).equalTo("itemPostLocalId", invoiceDetailsAux.getItemPostLocalId()).findFirst();
+
+                    if(item != null){
+                        Log.d("DEBUG", "Edit" + "entro en edit");
+                        item.setAmount(invoiceDetails.getAmount());
+                        try{
+                            item.setItemTypeId(invoiceDetails.getItemType().getId());
+                        } catch (Exception e){
+                            item.setItemTypeId(invoiceDetails.getItemTypeId());
+                        }
+                        item.setPrice(invoiceDetails.getPriceItem());
+                        realm.insertOrUpdate(item);
+                    } else {
+                        Log.d("DEBUG", "Edit" + "no entro en edit");
+                    }
+
+
+
+                    //todo terminar de editar el invoice details
+
+                    //todo lo mismo q new invoice
+                    /*Log.d("PURITIES", "antes de");
+                    if (type == Constants.TYPE_SELLER) {
+                        Log.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + "luego del if");
+                        for (InvoiceDetailPurity invoiceDetailPurity : invoiceDetails.getDetailPurities()) {
+
+                            Log.d("PURITIES", "--->Saving InvoiceDetailPurity (saveNewInvoice): " + invoiceDetailPurity);
+                            //invoiceDetailPurity.deleteFromRealm();
+                            realm.insertOrUpdate(invoiceDetailPurity);
+                        }
+                    }*/
+                    /*Log.e("BRAYANNNN", "1");
+                    if (invoiceDetails != null) {
+                        Log.e("BRAYANNNN", "2");*/
+                        if(isOnline){
+                            invoiceDetails.setEditOffline(true);
+                            realm.insertOrUpdate(invoiceDetails);
+                        }else{
+                            realm.insertOrUpdate(invoiceDetails);
+                        }
+                    //}
+
+                    //invoiceDetails.setEditOffline(true);
+                    //realm.insertOrUpdate(invoiceDetails);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("DEBUG", "error editando:" + e.toString());
+            realm.close();
+            return false;
+        }
+        realm.close();
+        return true;
+    }
+
+
+    @DebugLog
+    public static boolean updateInvoiceDetails1222(final InvoiceDetails invoiceDetails, final int type/*, final List<InvoiceDetailPurity> detailsPuritiesListParam*/) {
 
         Realm realm = Realm.getDefaultInstance();
         try {

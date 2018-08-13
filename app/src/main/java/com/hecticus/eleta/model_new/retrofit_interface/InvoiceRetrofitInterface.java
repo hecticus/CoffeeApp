@@ -51,7 +51,7 @@ public interface InvoiceRetrofitInterface {
 
     //listo sin sincronizacion
     @DELETE("invoiceDetail/{id}")
-    Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice/*,@Path("date") String date, @Body ArrayList<Long> ids*/);
+    Call<InvoiceDetailsResponse> deleteInvoiceDetail(@Path("id") int idInvoice);
 
     //listo sin sincronizacion
     @PUT("invoiceDetail/{id}")

@@ -528,6 +528,20 @@ public class SyncManager {
 
     @DebugLog
     public void syncDeletedProvider() {
+        try{
+            Realm realm = Realm.getDefaultInstance();
+            List<InvoiceDetails> invoiceDetailsList = realm.where(InvoiceDetails.class)
+                    .equalTo("addOffline", true).findAll();
+            if(invoiceDetailsList != null){
+                realm.beginTransaction();
+                for(int i=0; i<invoiceDetailsList.size(); i++){
+                    invoiceDetailsList.get(i).deleteFromRealm();
+                }
+                realm.commitTransaction();
+            }
+        }catch (Exception e){
+
+        }
         providersList = new ArrayList<>();
         List<Provider> providers = Realm.getDefaultInstance()
                 .where(Provider.class)
@@ -571,17 +585,23 @@ public class SyncManager {
                     Realm realm = Realm.getDefaultInstance();
                     try {
 
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                Provider providerToDelete = firstProvider;
-                                providerToDelete.deleteFromRealm();
-                            }
-                        });
-                        /*realm.beginTransaction();
-                        firstProvider.setDeleteOffline(true);
-                        realm.insertOrUpdate(firstProvider);
-                        realm.commitTransaction();*/
+                                Provider provider = realm.where(Provider.class)
+                                        .equalTo("idProvider", firstProvider.getIdProvider())
+                                        .findFirst();
+
+
+                                if (provider != null) {
+                                    realm.beginTransaction();
+                                    Log.d("DETAILS", "--->Success deleteproviderSync. (2/3) Deleting hodToDelete:" + provider);
+                                    try{
+                                        provider.deleteFromRealm();
+                                    }catch (Exception e){
+                                    }
+                                    realm.commitTransaction();
+                                    Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
+                                } else {
+                                    Log.e("DETAILS", "--->Success deleteOfDaySync. (2/2/3) Can't delete NULL hodToDelete");
+                                }
 
                     } finally {
                         realm.close();
@@ -654,7 +674,38 @@ public class SyncManager {
                 @DebugLog
                 @Override
                 public void onSuccess(Response<Message> response) {
-                    onInvoiceDeleteSyncSuccess(firstInvoice, response);
+                    //onInvoiceDeleteSyncSuccess(firstInvoice, response);
+                    try {
+                        Realm realm = Realm.getDefaultInstance();
+
+                        try {
+                            Invoice invoice = realm.where(Invoice.class)
+                                    .equalTo("id", firstInvoice.getInvoiceId())
+                                    .findFirst();
+                            if (invoice != null) {
+                                realm.beginTransaction();
+                                Log.d("DETAILS", "--->Success deleteproviderSync. (2/3) Deleting hodToDelete:" + invoice);
+                                try {
+                                    invoice.deleteFromRealm();
+                                } catch (Exception e) {
+                                }
+                                realm.commitTransaction();
+                                Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
+                            } else {
+                                Log.e("DETAILS", "--->Success deleteOfDaySync. (2/2/3) Can't delete NULL hodToDelete");
+                            }
+                        } finally {
+                            realm.close();
+                            deleteNextInvoice();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("DETAILS", "--->Fail deleteInvoiceSync after success:" + response);
+                        HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync exception: " + e.getMessage());
+                    }
+
+
+
                 }
 
                 @DebugLog
@@ -706,6 +757,12 @@ public class SyncManager {
                 .where(InvoiceDetails.class)
                 .equalTo("editOffline", true)
                 .findAllSorted("startDate");
+        try {
+            Log.e("DEBUG55555", String.valueOf(invoiceDetailsList.size()));
+        }catch (Exception e){
+
+        }
+
         if (invoiceDetailsList != null) {
             invoiceDetailsEdit.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList));
         }
@@ -747,13 +804,10 @@ public class SyncManager {
                             @Override
                             public void execute(Realm realm) {
                                 InvoiceDetails invoiceDetailsEdit = firstInvoiceDetails;
-                                invoiceDetailsEdit.deleteFromRealm();
+                                invoiceDetailsEdit.setEditOffline(false);
+                                realm.insertOrUpdate(invoiceDetailsEdit);
                             }
                         });
-                        /*realm.beginTransaction();
-                        firstProvider.setDeleteOffline(true);
-                        realm.insertOrUpdate(firstProvider);
-                        realm.commitTransaction();*/
 
                     } finally {
                         realm.close();
@@ -814,9 +868,7 @@ public class SyncManager {
 
     @DebugLog
     public void deleteNextOfDay() {
-        //onSuccessfulSync(); //todo borrar
         if (invoiceDetailsDelete.size() <= 0) {
-            //onSuccessfulSync();
             syncCloseIncoice();
             return;
         }
@@ -851,17 +903,10 @@ public class SyncManager {
                         if (invoiceDetail != null) {
                             Log.d("DETAILS", "--->Success deleteOfDaySync. (2/3) Deleting hodToDelete:" + invoiceDetail);
                             realm.beginTransaction();
-                            /*RealmQuery<Message> rowQuery = realm.where(Message.class).equalTo(Message.USER_ID, userId);
-                                 realm.beginTransaction();
-                                 //TODO : here I want to remove all messages where userId is equal to "9789273498708475"
-                                 realm.commitTransaction();*/
-                            /*InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class).equalTo("id",firstOfDetails.getId()).findFirst();
-                            if(invoiceDetails!=null){
-                                invoiceDetails.deleteFromRealm();
-                            }*/
-                            //ManagerDB.deleteInvoiceDetails(invoiceDetail.getId(), invoiceDetail.getLocalId());
-
-                            firstOfDetails.deleteFromRealm();
+                            try{
+                                invoiceDetail.deleteFromRealm();
+                            }catch (Exception e){
+                            }
                             realm.commitTransaction();
                             Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
                         } else {
