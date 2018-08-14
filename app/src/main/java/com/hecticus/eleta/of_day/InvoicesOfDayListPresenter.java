@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseDetailModel;
 import com.hecticus.eleta.model.response.StatusInvoice;
@@ -190,6 +191,8 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         /*if (harvestsOrPurchasesOfDayList != null) {
             mView.updateHarvestsOrPurchasesList(harvestsOrPurchasesOfDayList);
         }*/
+
+
 
         if (detailsList != null) {
             mView.updateHarvestsOrPurchasesList(detailsList);

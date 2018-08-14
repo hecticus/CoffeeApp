@@ -8,6 +8,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.hecticus.eleta.base.BaseEditableModel;
 import com.hecticus.eleta.model.response.purity.Purity;
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by roselyn545 on 29/9/17.
  */
 
-public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<InvoiceDetailPurity>, Serializable {
+public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<InvoiceDetailPurity>, Serializable , BaseEditableModel {
 
     @SerializedName("idInvoiceDetailPurity")
     @Expose
@@ -100,6 +101,8 @@ public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<I
         return purity != null && purity.getId() == itemTypeId;
     }
 
+
+
     public int getPurityPostLocalId() {
         return purityPostLocalId;
     }
@@ -111,9 +114,10 @@ public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<I
     public InvoiceDetailPurity() {
     }
 
-    public InvoiceDetailPurity(int id, float rateValue) {
+    public InvoiceDetailPurity(int id, float rateValue, int purityPostLocalId) {
         this.id = id;
         this.rateValue = rateValue;
+        this.purityPostLocalId = purityPostLocalId;
     }
 
     @DebugLog
@@ -149,7 +153,23 @@ public class InvoiceDetailPurity extends RealmObject implements JsonSerializer<I
                 ", localId='" + localId + '\'' +
                 ", detailId='" + detailId + '\'' +
                 ", purityId=" + purityId +
+                ", purityPostLocalId=" + purityPostLocalId +
                 ", purity=" + purity +
                 '}';
+    }
+
+    @Override
+    public String getReadableDescription() {
+        return  "";
+    }
+
+    @Override
+    public String getInputValue() {
+        return String.valueOf(rateValue);
+    }
+
+    @Override
+    public void setInputValue(String value) {
+        rateValue = Float.valueOf(value);
     }
 }

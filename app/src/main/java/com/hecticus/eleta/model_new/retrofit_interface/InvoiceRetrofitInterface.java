@@ -44,7 +44,6 @@ public interface InvoiceRetrofitInterface {
     @POST("invoiceDetail")//{idProvider}/{date}")
     Call<ResponseBody> newInvoiceDetailAdd(@Body InvoiceDetail post/*, @Path("idProvider") int idProvider, @Path("date") String date*/); //supongo q lleva invoice y no invoice post
 
-
     //listo sin sincronizacion
     @PUT("invoice/{id}")
     Call<Message> closeInvoice(@Path("id") int invoiceId, @Body Invoice post);
@@ -67,7 +66,5 @@ public interface InvoiceRetrofitInterface {
     //listo creo no necesita sincronizacion
     @GET("invoice/createReceipt/{id}")
     Call<ReceiptResponse> getReceipt(@Path("id") int invoiceId);
-
-
 
 }

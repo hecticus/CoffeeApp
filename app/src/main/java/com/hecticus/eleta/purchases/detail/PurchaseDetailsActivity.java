@@ -286,6 +286,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
                 dispatcherEditText.getText(),
                 observationsEditText.getText()
         );
+        Log.d("DEBUG", "Saving InvoiceDetailPurity11111" + puritiesAdapter.getPuritiesValues().get(0));
     }
 
     @DebugLog

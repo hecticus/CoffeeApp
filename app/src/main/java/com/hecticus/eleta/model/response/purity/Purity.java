@@ -37,12 +37,22 @@ public class Purity extends RealmObject implements Serializable, BaseEditableMod
 
     private String weightString = "";
 
+    private int purityPostLocalId;
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getPurityPostLocalId() {
+        return purityPostLocalId;
+    }
+
+    public void setPurityPostLocalId(int purityPostLocalId) {
+        this.purityPostLocalId = purityPostLocalId;
     }
 
     public float getRateValue() {
@@ -127,6 +137,7 @@ public class Purity extends RealmObject implements Serializable, BaseEditableMod
                 "id=" + id +
                 ", rateValue=" + rateValue +
                 ", name='" + name + '\'' +
+                ", purityPostLocalId=" + purityPostLocalId +
                 ", discountRate=" + discountRate +
                 ", weightString='" + weightString + '\'' +
                 '}';

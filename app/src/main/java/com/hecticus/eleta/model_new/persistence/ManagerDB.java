@@ -759,8 +759,7 @@ public class ManagerDB {
             serverOrLocalIdForQuery = localIdParam;
         }
 
-        if (isForHarvest)
-        {
+        if (isForHarvest) {
             immutableInvoiceDetailsListFromRealm =
                     Realm.getDefaultInstance()
                             .where(InvoiceDetails.class)
@@ -773,9 +772,7 @@ public class ManagerDB {
                             .equalTo("storeId", -1)
 
                             .findAllSorted("startDate");
-        }
-        else
-        {
+        } else {
             immutableInvoiceDetailsListFromRealm =
                     Realm.getDefaultInstance()
                             .where(InvoiceDetails.class)
@@ -1356,24 +1353,47 @@ public class ManagerDB {
                     //todo terminar de editar el invoice details
 
                     //todo lo mismo q new invoice
-                    Log.e("DEBUG", "antes de");
                     if (type == Constants.TYPE_SELLER) {
-                        Log.e("DEBUG", "--->Saving purityPost (saveNewInvoice): " + "luego del if");
+                        int i = 0;
                         for (InvoiceDetailPurity invoiceDetailPurity : invoiceDetails.getDetailPurities()) {
-                            Log.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailPurity);
+                            i++;
+                            //Log.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailPurity);
                             //InvoiceDetails invoiceDetailsLocal = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();
-                            InvoiceDetailPurity invoiceDetailsPurityLocal = realm.where(InvoiceDetailPurity.class).equalTo("id", invoiceDetailPurity.getId()).findFirst();
-                            PurityPost purityPostLocal = realm.where(PurityPost.class).equalTo("purityPostLocalId", invoiceDetails.getItemPostLocalId()).findFirst();
-                            Log.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailsPurityLocal);
-                            if(purityPostLocal != null){
-                                Log.e("DEBUG", "purities entro if");
-                                Log.e("DEBUG", "purities entro if"+invoiceDetailPurity.getRateValue());
-                                purityPostLocal.setRateValue(invoiceDetailPurity.getRateValue());
-                                realm.insertOrUpdate(purityPostLocal);
+                            try {
+                                InvoiceDetailPurity invoiceDetailsPurityLocal = realm.where(InvoiceDetailPurity.class).equalTo("purityPostLocalId", invoiceDetailPurity.getPurityPostLocalId()).findFirst();
+                                PurityPost purityPostLocal = realm.where(PurityPost.class).equalTo("purityPostLocalId", invoiceDetailPurity.getPurityPostLocalId()).findFirst();
+                                Log.d("DEBUG brayan", "InvoiceDetailPurity: " + invoiceDetailsPurityLocal);
+                                if (purityPostLocal != null) {
+                                    Log.e("DEBUG brayan", " purities entro if");
+                                    //Log.e("DEBUG brayan", "Saving InvoiceDetailPurity (saveNewInvoice) purities entro if"+invoiceDetailPurity.getRateValue());
+                                    purityPostLocal.setRateValue(invoiceDetailPurity.getRateValue());
+                                    Log.e("DEBUG brayan", "puritiesPostlocal" + purityPostLocal);
+                                    realm.insertOrUpdate(purityPostLocal);
+                                }
+                                invoiceDetailsPurityLocal.setRateValue(invoiceDetailPurity.getRateValue());
+                                //invoiceDetailPur ity.deleteFromRealm();
+                                realm.insertOrUpdate(invoiceDetailsPurityLocal);
+                            }catch (Exception e){
+                                //todo crear sino existe
+                                /*PurityPost purityPost =
+                                Number maxPurityPostId = realm.where(PurityPost.class).max("purityPostLocalId");
+                                int nextPurityPostId = (maxPurityPostId == null) ? 1 : maxPurityPostId.intValue() + 1;
+                                purityPost.setPurityPostLocalId(nextPurityPostId);
+                                purityPost.setItemPostLocalId(item.getItemPostLocalId());
+                                Log.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + purityPost);
+                                realm.insertOrUpdate(purityPost);
+
+                                InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
+                                invoiceDetailPurity.setDetailId(details.getWholeId());
+                                invoiceDetailPurity.setRateValue(purityPost.getRateValue());
+                                invoiceDetailPurity.setLocalId(invoiceDetailPurity.getId() + "-" + invoiceDetailPurity.getDetailId());
+                                invoiceDetailPurity.setPurityId(purityPost.getPurityId());
+                                invoiceDetailPurity.setPurityPostLocalId(nextPurityPostId);
+                                invoiceDetailPurity.setLocalId(details.getWholeId() + "-" + invoiceDetailPurity.getPurityId());
+
+                                Log.d("PURITIES", "--->Saving InvoiceDetailPurity (saveNewInvoice): " + invoiceDetailPurity);
+                                realm.insertOrUpdate(invoiceDetailPurity);*/
                             }
-                            invoiceDetailsPurityLocal.setRateValue(invoiceDetailPurity.getRateValue());
-                            //invoiceDetailPurity.deleteFromRealm();
-                            realm.insertOrUpdate(invoiceDetailsPurityLocal);
                         }
                     }
                     /*Log.e("BRAYANNNN", "1");
@@ -1392,7 +1412,7 @@ public class ManagerDB {
                 }
             });
         } catch (Exception e) {
-            Log.e("DEBUG", "error editando:" + e.toString());
+            Log.e("DEBUG brayan", "error editando:" + e.toString());
             realm.close();
             return false;
         }

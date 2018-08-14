@@ -40,7 +40,6 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
     private boolean invoiceHasOfflineOperation = false;
     private Provider currentProvider = null;
     private List<InvoiceDetails> currentDetailsList = null;
-
     private boolean initializedStore = false;
     private boolean initializedItems = false;
     private boolean initializedPurities = false;
@@ -314,6 +313,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
         List<InvoiceDetailPurity> detailPurities = details.getDetailPurities();
 
         for (Purity purity : purities) {
+            Log.d("DEBUG", "Saving InvoiceDetailPurity" + purity);
             InvoiceDetailPurity purityDetail =
                     InvoiceDetailPurity.findInvoiceDetailPurityInListGivenPurityId(detailPurities, purity.getId());
 
@@ -362,7 +362,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             for(int  i=0; i<purities.size(); i++) {
                 try {
                     listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
-                            Float.valueOf(purities.get(i).getWeightString())));
+                            Float.valueOf(purities.get(i).getWeightString()), purities.get(i).getPurityPostLocalId()));
                 }catch (Exception e){
                 }
             }
@@ -388,7 +388,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
                         for(int  i=0; i<purities.size(); i++) {
                             try {
                                 listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
-                                        Float.valueOf(purities.get(i).getWeightString())));
+                                        Float.valueOf(purities.get(i).getWeightString()), purities.get(i).getPurityPostLocalId()));
                             }catch (Exception e){
                             }
                         }
@@ -564,7 +564,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
             Log.d("PURITIES", "--->loadPurities. Handling currentDetailsList->" + currentDetailsList);
 
-            for (Purity currentPurity : purityList) {
+            for (Purity currentPurity : purityList) { //todo clave edit purity
                 InvoiceDetailPurity purityInInvoiceDetail = InvoiceDetailPurity.findInvoiceDetailPurityInListGivenPurityId(detailPurities, currentPurity.getId());
                 if (purityInInvoiceDetail != null) {
                     Log.d("PURITIES", "--->setWeightString ("
@@ -572,6 +572,8 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
                             "): " + purityInInvoiceDetail.getRateValue());
 
                     currentPurity.setRateValueAndWeightString(purityInInvoiceDetail.getRateValue());
+                    currentPurity.setPurityPostLocalId(purityInInvoiceDetail.getPurityPostLocalId());
+                    Log.d("DEBUG", "Saving InvoiceDetailPurity2222" + purityInInvoiceDetail);
 
                 } else {
                     Log.d("PURITIES", "--->setWeightString CANT for " + currentPurity.getName());
@@ -612,6 +614,9 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
                 InvoiceDetailPurity purity = InvoiceDetailPurity.findInvoiceDetailPurityInListGivenPurityId(originalDetailsPuritiesList, item.getId());
                 if (purity != null) {
                     item.setRateValueAndWeightString(purity.getRateValue());
+                    item.setPurityPostLocalId(purity.getPurityPostLocalId());
+                    Log.d("DEBUG", "Saving InvoiceDetailPurity2222" + purity);
+
                 }
             }
         }

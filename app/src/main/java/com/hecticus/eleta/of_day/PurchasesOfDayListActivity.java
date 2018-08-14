@@ -173,15 +173,12 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
     @DebugLog
     @Override
-    public void goToHarvestOrPurchaseDetailsView(Provider provider, /*List<*/InvoiceDetails/*>*/ detailsList, boolean invoiceHasOfflineOperation) {
+    public void goToHarvestOrPurchaseDetailsView(Provider provider, InvoiceDetails detailsList, boolean invoiceHasOfflineOperation) {
         try {
             Intent intent = new Intent(this, PurchaseDetailsActivity.class);
-            //intent.putExtra("details", Util.getGson().toJson(detailsList));
             boolean control = ManagerDB.isInvoiceDetailsOffline(detailsList.getInvoiceId(), detailsList.getInvoice());
-            Log.d("DEBUG details", "control" + control);
             intent.putExtra("control", control);
             if(InternetManager.isConnected(this) && !control){
-                //detailsList.set
                 intent.putExtra("details", Util.getGson().toJson(detailsList));
             }else {
                 if(detailsList.getId()!=-1)

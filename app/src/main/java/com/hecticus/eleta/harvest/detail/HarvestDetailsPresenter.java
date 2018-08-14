@@ -481,11 +481,6 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             Log.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
             //mRepository.saveHarvestRequest(invoicePost, false);*/
 
-
-
-
-
-
             mRepository.editHarvestRequest(currentDetailsList.get(0));
         }
     }
