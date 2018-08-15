@@ -362,7 +362,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             for(int  i=0; i<purities.size(); i++) {
                 try {
                     listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
-                            Float.valueOf(purities.get(i).getWeightString()), purities.get(i).getPurityPostLocalId()));
+                            purities.get(i).getWeightString(), purities.get(i).getPurityPostLocalId()));
                 }catch (Exception e){
                 }
             }
@@ -387,11 +387,16 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
                         List<InvoiceDetailPurity> listPurity = new ArrayList<>();
                         for(int  i=0; i<purities.size(); i++) {
                             try {
-                                listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
-                                        Float.valueOf(purities.get(i).getWeightString()), purities.get(i).getPurityPostLocalId()));
+                                //Log.e("DARIO", "."+purities.get(i).getWeightString()+".");
+                                if(!purities.get(i).getWeightString().equals("")) {
+                                    listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
+                                            purities.get(i).getWeightString(), purities.get(i).getPurityPostLocalId()));
+                                }
                             }catch (Exception e){
+                                Log.e("DARIO", "exploto catch"+ e.toString());
                             }
                         }
+                        //Log.e("DARIO", "listPurity"+ listPurity.get(0).getRateValue());
                         currentDetailsList.get(0).setDetailPurities(listPurity);
                         currentDetailsList.get(0).setDispatcherName(dispatcher);
                         currentDetailsList.get(0).setObservation(observations);

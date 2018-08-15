@@ -442,6 +442,9 @@ public class SyncManager {
             com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
             /*Gson g = new Gson();
             Log.d("DEBUG new offline", g.toJson(invoice));*/
+            Gson g = new Gson();
+
+            Log.e("BRAYAN", g.toJson(invoice));
             call = invoiceApi.newInvoiceDetail(invoice/*, firstInvoicePost.getProviderId(), firstInvoicePost.getStartDate()*/);
             new ManagerServices<>(call, new ManagerServices.ServiceListener<CreateInvoiceResponse>() {
                 @DebugLog
@@ -645,6 +648,7 @@ public class SyncManager {
 
     @DebugLog
     private void addNextInvoiceDetails() {
+        Log.d("DEBUG", "brayan " + invoiceDetailsAdd.size());
         if (invoiceDetailsAdd.size() <= 0) {
             Log.d("DETAILS", "--->deleteNextInvoice ended. No more in queue.");
             syncEditInvoiceDetail();//syncProviders();//todo proximo sync
@@ -709,8 +713,8 @@ public class SyncManager {
                 @DebugLog
                 @Override
                 public void onError(boolean fail, int code, Response<ResponseBody> response, String errorMessage) {
-                    Log.d("DETAILS", "--->Fail deleteInvoiceSync:" + response);
-                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync errorResponse: " + response);
+                    Log.d("DETAILS", "--->Fail deleteInvoiceSync:111" + response);
+                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync111 errorResponse: " + response);
                 }
 
                 @DebugLog
@@ -803,8 +807,8 @@ public class SyncManager {
                 @DebugLog
                 @Override
                 public void onError(boolean fail, int code, Response<Message> response, String errorMessage) {
-                    Log.d("DETAILS", "--->Fail deleteInvoiceSync:" + response);
-                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync errorResponse: " + response);
+                    Log.d("DETAILS", "--->Fail deleteInvoiceSync:222" + response);
+                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync222 errorResponse: " + response);
                 }
 
                 @DebugLog

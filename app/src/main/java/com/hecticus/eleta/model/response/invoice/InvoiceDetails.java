@@ -171,7 +171,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
         } else {
             totalInvoiceDetail = amount * priceItem;
         }
-        addOffline = true;
+        //addOffline = true;
     }
 
     public int getLocalId() {

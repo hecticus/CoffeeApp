@@ -148,7 +148,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
         final int remoteInvoiceId = harvestInvoice.getInvoiceId();
         final int localInvoiceId = harvestInvoice.getLocalId();
 
-        if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(harvestInvoice)) {
+        if (!InternetManager.isConnected(mPresenter.context) || /*ManagerDB.invoiceHasOfflineOperation(harvestInvoice)*/ remoteInvoiceId==-1) {
             if (ManagerDB.deleteHarvestOrPurchaseInvoice(remoteInvoiceId, localInvoiceId))
                 mPresenter.onHarvestDeleted();
             else
@@ -162,7 +162,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                     try {
                         if (response.isSuccessful()) {
                             // In case the harvest was created locally and it's not synced
-                            ManagerDB.deleteHarvestOrPurchaseInvoice(remoteInvoiceId, localInvoiceId);
+                            ManagerDB.deleteHarvestOrPurchaseInvoiceOnline(remoteInvoiceId);
                             mPresenter.onHarvestDeleted();
                         } else
                             manageError(mPresenter.context.getString(R.string.error_deleting_harvest), response);

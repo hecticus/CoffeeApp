@@ -151,7 +151,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             if (ManagerDB.deleteHarvestInvoice(remoteInvoiceId, localInvoiceId))
 */
     public void deletePurchase(final int remoteInvoiceId, final int localInvoiceId) {
-        if (!InternetManager.isConnected(mPresenter.context)) {
+        if (!InternetManager.isConnected(mPresenter.context) || remoteInvoiceId==-1) {
             if (ManagerDB.deleteHarvestOrPurchaseInvoice(remoteInvoiceId, localInvoiceId))
                 mPresenter.onPurchaseDeleted();
             else
@@ -166,7 +166,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                     try {
                         if (response.isSuccessful()) {
                             // In case the purchase was created locally and it's not synced
-                            ManagerDB.deleteHarvestOrPurchaseInvoice(remoteInvoiceId, localInvoiceId);
+                            ManagerDB.deleteHarvestOrPurchaseInvoiceOnline(remoteInvoiceId);
 
                             mPresenter.onPurchaseDeleted();
                         } else
