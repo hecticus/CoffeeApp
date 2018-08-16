@@ -21,6 +21,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { UtilsModule } from '../../core/utils/utils.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { FilterService } from '../../core/utils/filter/filter.service';
 
 @NgModule({
 	imports: [
@@ -58,6 +59,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 	],
 	providers: [
 		LotService,
+		FilterService,
 	]
 })
 export class LotModule { }

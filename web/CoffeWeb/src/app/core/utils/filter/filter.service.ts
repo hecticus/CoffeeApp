@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class FilterService {
 	filter = {};
 
 	put(key: string, value: any) {
-		if (value && value !== 'undefined') {
+		if (value && value != 'undefined') {
 			this.filter[key] = value;
 		} else {
 			delete this.filter[key];
@@ -15,4 +17,5 @@ export class FilterService {
 	reset() {
 		this.filter = {};
 	}
+
 }
