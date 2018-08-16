@@ -13,6 +13,7 @@ import models.Provider;
 import models.ProviderType;
 
 import models.status.StatusProvider;
+import multimedia.MultimediaUtils;
 import multimedia.models.MultimediaCDN;
 import play.data.Form;
 import play.data.FormFactory;
@@ -32,7 +33,6 @@ public class Providers extends Controller {
 
     @Inject
     private FormFactory formFactory;
-
 
     @CoffeAppsecurity
     public Result create() {
