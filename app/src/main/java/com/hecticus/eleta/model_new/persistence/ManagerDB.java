@@ -916,7 +916,6 @@ public class ManagerDB {
                             details.setInvoiceId(finalInvoiceToInsert.getInvoiceId() == -1 ? finalInvoiceToInsert.getLocalId() : finalInvoiceToInsert.getInvoiceId());
                             details.setItemPostLocalId(item.getItemPostLocalId());
                             Log.e("DEBUG", "ID del item post al crearlo" + item.getItemPostLocalId());
-                            //details.setAddOffline(false);
                             details.setLocalId(nextDetailsId);
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
                             //details.setAddOffline(true);
@@ -2121,7 +2120,7 @@ public class ManagerDB {
                 });
             }
         }
-
+        Log.d("DEBUG", "Policia5" + deleted[0]);
         return deleted[0];
     }
 
@@ -2136,7 +2135,6 @@ public class ManagerDB {
         //InvoiceDetails invoiceInRealm1;
 
         if (remoteInvoiceDetailId != -1) {
-            Log.d("DEBUG", "Policia1");
             invoiceInRealm = realm
                     .where(InvoiceDetails.class)
                     .equalTo("id", remoteInvoiceDetailId)
@@ -2145,7 +2143,6 @@ public class ManagerDB {
             isOnline = true;
 
         } else {
-            Log.d("DEBUG", "Policia2");
             invoiceInRealm = realm
                     .where(InvoiceDetails.class)
                     .equalTo("localId", localInvoiceDetailId)
@@ -2155,18 +2152,17 @@ public class ManagerDB {
         }
         if (invoiceInRealm != null) {
             if(isOnline){
-                Log.d("DEBUG", "Policia3");
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
                     @Override
                     public void execute(Realm realm) {
 
-                        realm.insertOrUpdate(invoiceInRealm);
+                        invoiceInRealm.deleteFromRealm();
+                        //realm.insertOrUpdate(invoiceInRealm);
                         deleted[0] = true;
                     }
                 });
             }else{
-                Log.d("DEBUG", "Policia4");
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
                     @Override

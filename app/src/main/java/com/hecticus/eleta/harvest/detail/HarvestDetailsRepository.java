@@ -236,8 +236,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                     Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
                     Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     e.printStackTrace();
                 }
 
