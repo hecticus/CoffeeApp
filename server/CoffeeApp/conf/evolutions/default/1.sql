@@ -165,6 +165,7 @@ create table multimedia_cdn (
   url                           text not null,
   mime_type                     varchar(200) not null,
   name_cdn                      varchar(200) not null,
+  deleted                       tinyint(1) default 0 not null,
   constraint pk_multimedia_cdn primary key (id)
 );
 
@@ -234,6 +235,7 @@ create table multimedia_rescale_cdn (
   url                           text not null,
   name_cdn                      varchar(200) not null,
   multimedia_id                 bigint not null,
+  deleted                       tinyint(1) default 0 not null,
   constraint pk_multimedia_rescale_cdn primary key (id)
 );
 

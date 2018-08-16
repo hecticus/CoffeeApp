@@ -5,6 +5,7 @@ import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.ebean.Model;
+import io.ebean.annotation.SoftDelete;
 import play.data.format.Formats;
 
 import javax.persistence.Column;
@@ -30,12 +31,23 @@ public abstract class BaseModel extends Model {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
 
+    @SoftDelete
+    private boolean deleted;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public ZonedDateTime getCreatedAt() {
