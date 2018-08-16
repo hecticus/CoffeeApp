@@ -22,6 +22,8 @@ import java.util.List;
 @Table(name = "multimedia_cdn")
 public class MultimediaCDN extends BaseModel {
 
+    private static final String FOLDER_PROFILE_PICTURE_PROVIDER = "FotoPerfil";
+
     @Transient
     private String path;
 
@@ -54,7 +56,8 @@ public class MultimediaCDN extends BaseModel {
                 String validPath = MultimediaUtils.transformToValidPath(this.path);
                 String uniqueValidPath = MultimediaUtils.transformToUniquePath(validPath);
                 String extension = MultimediaUtils.guessExtensionFromMimeType(this.mimeType);
-                this.nameCdn = uniqueValidPath.concat(".").concat(extension);
+                this.nameCdn = MultimediaUtils.transformToPath(FOLDER_PROFILE_PICTURE_PROVIDER,
+                        uniqueValidPath.concat(".").concat(extension));
 
                 this.url = RackspaceCloudFiles.uploadObjectsToContainer(bytes, this.nameCdn);
 
