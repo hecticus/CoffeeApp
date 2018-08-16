@@ -51,6 +51,9 @@ public interface HarvestRetrofitInterface {
     @GET("farm?sort=nameFarm")//&collection=s")
     Call<FarmsListResponse> getFarms();
 
+    @GET("lot")
+    Call<LotsListResponse> getLot();
+
     //listo
     @GET("lot")
     Call<LotsListResponse> getLotsByFarm(@Query("farm") int idFarm, @Query("sort") String name);

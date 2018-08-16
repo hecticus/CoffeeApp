@@ -4,11 +4,15 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hecticus.eleta.model.response.farm.FarmsListResponse;
+import com.hecticus.eleta.model.response.lot.LotsListResponse;
+import com.hecticus.eleta.model.response.store.StoresListResponse;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.ManagerServices;
 import com.hecticus.eleta.model.response.item.ItemTypesListResponse;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 import com.hecticus.eleta.model.response.purity.PurityListResponse;
+import com.hecticus.eleta.model_new.retrofit_interface.HarvestRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.PurchaseRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
@@ -32,6 +36,7 @@ public class GlobalRequests {
 
     private final PurchaseRetrofitInterface purchasesApi;
     private final ProviderRetrofitInterface providersApi;
+    private final HarvestRetrofitInterface harvestsApi;
 
     @DebugLog
     public GlobalRequests(final Context context) {
@@ -60,10 +65,14 @@ public class GlobalRequests {
 
         purchasesApi = retrofit.create(PurchaseRetrofitInterface.class);
         providersApi = retrofit.create(ProviderRetrofitInterface.class);
+        harvestsApi = retrofit.create(HarvestRetrofitInterface.class);
 
         getHarvesterItems();
+        getFarms();
         getSellerItems();
         getPurities();
+        getLot();
+        getStore();
         getSellers(); //Harvesters already cached when opening app (Providers tab)
     }
 
@@ -84,6 +93,84 @@ public class GlobalRequests {
             @DebugLog
             @Override
             public void onError(boolean fail, int code, Response<ItemTypesListResponse> response, String errorMessage) {
+            }
+
+            @DebugLog
+            @Override
+            public void onInvalidToken() {
+            }
+        });
+    }
+
+    @DebugLog
+    private void getFarms() {
+        Call<FarmsListResponse> harvesterItemsCall = harvestsApi.getFarms();
+        new ManagerServices<>(harvesterItemsCall, new ManagerServices.ServiceListener<FarmsListResponse>() {
+            @DebugLog
+            @Override
+            public void onSuccess(Response<FarmsListResponse> response) {
+                try {
+                    ManagerDB.saveNewFarms( response.body().getResult());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onError(boolean fail, int code, Response<FarmsListResponse> response, String errorMessage) {
+            }
+
+            @DebugLog
+            @Override
+            public void onInvalidToken() {
+            }
+        });
+    }
+
+    @DebugLog
+    private void getLot() {
+        Call<LotsListResponse> harvesterItemsCall = harvestsApi.getLot();
+        new ManagerServices<>(harvesterItemsCall, new ManagerServices.ServiceListener<LotsListResponse>() {
+            @DebugLog
+            @Override
+            public void onSuccess(Response<LotsListResponse> response) {
+                try {
+                    ManagerDB.saveNewLots( response.body().getResult());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onError(boolean fail, int code, Response<LotsListResponse> response, String errorMessage) {
+            }
+
+            @DebugLog
+            @Override
+            public void onInvalidToken() {
+            }
+        });
+    }
+
+    @DebugLog
+    private void getStore() {
+        Call<StoresListResponse> harvesterItemsCall = purchasesApi.getStores();
+        new ManagerServices<>(harvesterItemsCall, new ManagerServices.ServiceListener<StoresListResponse>() {
+            @DebugLog
+            @Override
+            public void onSuccess(Response<StoresListResponse> response) {
+                try {
+                    ManagerDB.saveNewStores(response.body().getResult());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onError(boolean fail, int code, Response<StoresListResponse> response, String errorMessage) {
             }
 
             @DebugLog
