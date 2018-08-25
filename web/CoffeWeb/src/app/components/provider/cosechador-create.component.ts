@@ -69,7 +69,7 @@ export class CosechadorCreateComponent implements OnInit {
 	) {}
 
 	ngOnInit () {
-		this.form = this.providerService.getCosechador(new Provider());
+		this.form = this.providerService.getCosechadorCreate(new Provider());
 	}
 
 	create() {

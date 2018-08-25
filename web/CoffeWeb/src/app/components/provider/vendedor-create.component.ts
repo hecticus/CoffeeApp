@@ -77,7 +77,7 @@ export class VendedorCreateComponent implements OnInit {
 	) {}
 
 	ngOnInit () {
-		this.form = this.providerService.getVendedor(new Provider());
+		this.form = this.providerService.getVendedorCreate(new Provider());
 	}
 
 	create() {
