@@ -104,4 +104,35 @@ export class ProviderService {
 			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.maxLength(50)]),
 		});
 	}
+
+	getVendedorCreate(provider: Provider): FormGroup {
+		return this.fb.group({
+			id: new FormControl(provider.id),
+			deleted:  new FormControl(provider.deleted),
+			providerType: new FormControl(provider.providerType),
+			statusProvider: new FormControl(provider.statusProvider ? provider.statusProvider.id : undefined),
+			nitProvider: new FormControl(provider.nitProvider, [Validators.required,  CustomValidators.rucRegex]),
+			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
+			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
+			numberProvider: new FormControl(provider.numberProvider,
+				[Validators.required, CustomValidators.numberRegex, Validators.maxLength(20)]),
+			emailProvider: new FormControl(provider.emailProvider, [CustomValidators.emailRegex]),
+			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.required, Validators.maxLength(50)]),
+		});
+	}
+
+	getCosechadorCreate(provider: Provider): FormGroup {
+		return this.fb.group({
+			id: new FormControl(provider.id),
+			deleted:  new FormControl(provider.deleted),
+			providerType: new FormControl(provider.providerType),
+			statusProvider: new FormControl(provider.statusProvider ? provider.statusProvider.id : undefined),
+			nitProvider: new FormControl(provider.nitProvider, [Validators.required, Validators.maxLength(50)]),
+			nameProvider:  new FormControl(provider.nameProvider, [Validators.required, Validators.maxLength(60)]),
+			addressProvider: new FormControl(provider.addressProvider, [Validators.required, Validators.maxLength(60)]),
+			numberProvider: new FormControl(provider.numberProvider, [CustomValidators.numberRegex, Validators.maxLength(20)]),
+			emailProvider: new FormControl(provider.emailProvider, [CustomValidators.emailRegex]),
+			contactNameProvider: new FormControl(provider.contactNameProvider, [Validators.maxLength(50)]),
+		});
+	}
 }
