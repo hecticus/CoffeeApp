@@ -187,4 +187,6 @@
 
     <string name="provider_info_not_yet_loaded">Provider info not yet loaded!</string>
 
+    <string name="user">Usuario</string>
+
 </resources>
