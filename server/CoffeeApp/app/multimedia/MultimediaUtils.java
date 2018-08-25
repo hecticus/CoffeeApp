@@ -18,6 +18,16 @@ import java.util.UUID;
  */
 public class  MultimediaUtils {
 
+    public static String transformToPath(String directory, String name) throws MimeTypeException {
+        StringBuilder path = new StringBuilder();
+        if(directory != null && !directory.isEmpty()) {
+            path.append(directory);
+            path.append("/");
+        }
+        path.append(name);
+        return path.toString();
+    }
+
     public static String transformToValidPath(String path) throws MimeTypeException {
         if(path != null && !path.isEmpty()) {
             return path.replaceAll(" ", "_").replaceAll("\\W[^/]", "").toLowerCase(); //TODO revisar "[^/]"
