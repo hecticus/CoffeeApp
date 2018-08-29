@@ -1020,7 +1020,7 @@ public class ManagerDB {
                             details.setItemPostLocalId(item.getItemPostLocalId());
                             details.setWholeId(details.getId() + "-" + details.getLocalId());
                             Log.e("DEBUG555555", "brayan" + invoicePost.getInvoiceId());
-                            if(invoicePost.getInvoiceId() != -1) {
+                            if(finalInvoiceToInsert.getInvoiceId() != -1) {
                                 Log.e("DEBUG555555", "brayan if addoffline true");
                                 details.setAddOffline(true);
                             }

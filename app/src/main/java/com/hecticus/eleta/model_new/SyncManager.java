@@ -642,15 +642,16 @@ public class SyncManager {
             syncEditInvoiceDetail();//syncProviders();//todo proximo sync
             return;
         }
+        Log.d("DETAILS brayan " , ""+ invoiceDetailsAdd.size());
 
         addNextInvoiceDetails();
     }
 
     @DebugLog
     private void addNextInvoiceDetails() {
-        Log.d("DEBUG", "brayan " + invoiceDetailsAdd.size());
+        Log.d("DETAILS brayan " , ""+ invoiceDetailsAdd.size());
         if (invoiceDetailsAdd.size() <= 0) {
-            Log.d("DETAILS", "--->deleteNextInvoice ended. No more in queue.");
+            Log.d("DETAILS brayan ", "--->deleteNextInvoice ended. No more in queue.");
             syncEditInvoiceDetail();//syncProviders();//todo proximo sync
             return;
         }
@@ -663,7 +664,7 @@ public class SyncManager {
             //onInvoiceDeleteSyncSuccess(firstInvoiceDetails, null);
         } else {*/
 
-            Log.d("DETAILS", "--->deleteNextInvoice firstInvoice (Not created offline): " + firstInvoiceDetails);
+            Log.d("DETAILS brayan", "--->Success invoiceDetails. invoiceDetails=" + firstInvoiceDetails);
 
             somethingHasBeenSynced = true;
             InvoiceDetail invoiceDetail = new InvoiceDetail(firstInvoiceDetails);
@@ -685,16 +686,16 @@ public class SyncManager {
                                     .findFirst();
                             if (invoice != null) {
                                 realm.beginTransaction();
-                                Log.d("DETAILS", "--->Success deleteproviderSync. (2/3) Deleting hodToDelete:" + invoice);
+                                Log.d("DETAILS brayan", "--->Success invoiceDetails. invoiceDetails=" + invoice);
                                 try {
                                     invoice.setAddOffline(false);
                                     realm.insertOrUpdate(invoice);
                                 } catch (Exception e) {
                                 }
                                 realm.commitTransaction();
-                                Log.d("DETAILS", "--->Success deleteOfDaySync. (3/3) Deleted hodToDelete OK");
+                                Log.d("DETAILS brayan", "--->Success invoiceDetails. OK");
                             } else {
-                                Log.e("DETAILS", "--->Success deleteOfDaySync. (2/2/3) Can't delete NULL hodToDelete");
+                                Log.e("DETAILS brayan", "--->invoiceDetails==null");
                             }
                         } finally {
                             realm.close();
@@ -702,7 +703,7 @@ public class SyncManager {
                         }
                     }catch (Exception e) {
                         e.printStackTrace();
-                        Log.d("DETAILS", "--->Fail deleteInvoiceSync after success:" + response);
+                        Log.d("DETAILS brayan", "--->Fail invoiceDetails after success:" + response);
                         HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync exception: " + e.getMessage());
                     }
 
