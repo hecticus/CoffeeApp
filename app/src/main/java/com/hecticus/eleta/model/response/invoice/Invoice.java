@@ -1,5 +1,7 @@
 package com.hecticus.eleta.model.response.invoice;
 
+import android.util.Log;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -12,7 +14,9 @@ import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.providers.Provider;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import hugo.weaving.DebugLog;
 import io.realm.RealmObject;
@@ -146,6 +150,10 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     }
 
     public String getInvoiceStartDate() {
+
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        Log.d("TIMEZONE", tz.toString());
+        Log.d("TIMEZONE1", tz.getDisplayName());
         return invoiceStartDate;
     }
 
