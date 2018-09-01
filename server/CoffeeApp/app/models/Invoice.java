@@ -1,12 +1,7 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.CreatedTimestamp;
@@ -45,6 +40,7 @@ public class Invoice extends AbstractEntity{
 //    private BigDecimal totalInvoice;
     @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
             "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
+    @Column(precision = 12, scale = 2, nullable = false)
     private BigDecimal totalInvoice;
 
     @OneToMany(mappedBy = "invoice")
@@ -135,7 +131,7 @@ public class Invoice extends AbstractEntity{
 
     //METODOS DEFINIDOS
 
-    public static List<Invoice> getOpenByProviderId(Long id_provider, String fecha){
+    public static List<Invoice> getOpenseByProviderId(Long id_provider, String fecha){
        return finder.query().where()
                .eq("provider.id", id_provider)
                .startsWith("createdAt", fecha)

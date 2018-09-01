@@ -42,17 +42,17 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     @Constraints.Min(0)
     @Constraints.Required
-    @Column(nullable = false)
+    @Column(precision = 12, scale = 2)
     private BigDecimal priceItemTypeByLot; //esta en lote desconozco la relacion Toma de Cosecha
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(nullable = false)
+    @Column(precision = 12, scale = 2)
     private BigDecimal costItemType;//esta en Item Type desconozco la relacion Toma del app para venderf
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(nullable = false)
+    @Column(precision = 12, scale = 2, nullable = false)
     private BigDecimal amountInvoiceDetail; // cantidad por la que multiplica   era amount
 
     @Constraints.Required
@@ -82,6 +82,7 @@ public class  InvoiceDetail  extends AbstractEntity{
                 "FROM invoice_details i " +
                 "WHERE i.deleted = 0 AND i.id = ${ta}.id" +
             ")")
+    @Column(precision = 12, scale = 2)
     private BigDecimal totalInvoiceDetail;
 
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)

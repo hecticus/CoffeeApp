@@ -229,7 +229,7 @@ public class Invoices extends Controller {
 
             }
 
-            // Buscos la lista de invoicesDetail asociado a esa Invoice
+            // Buscos la lista de invoicesDetail asociado a ese Invoice
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
 
             invoiceDetails.add(invoiceDetail);
@@ -264,10 +264,10 @@ public class Invoices extends Controller {
                         auxCreate = true;
                     }
                     invoiceDetailPurity.setPurity(puritys);
-                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.decimalValue());
                     invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-                    invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
+                    invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity().multiply( valueRateInvoiceDetailPurity.decimalValue()));
                     if(auxCreate) invoiceDetailPurity.save();
                     else invoiceDetailPurity.update();
 

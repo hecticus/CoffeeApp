@@ -112,10 +112,10 @@ public class InvoiceDetails extends Controller {
                 InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
 
                 invoiceDetailPurity.setPurity(puritys);
-                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.decimalValue());
                 invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
                 invoiceDetailPurity.setInvoiceDetail(InvoiceDetail.findById(id));
-                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
+                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity().multiply(valueRateInvoiceDetailPurity.decimalValue()));
 
                 invoiceDetailPurity.save();
 
