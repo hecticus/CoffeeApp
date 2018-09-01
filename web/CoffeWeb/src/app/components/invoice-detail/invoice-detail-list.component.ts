@@ -124,7 +124,7 @@ import { BaseService } from '../../core/base.service';
 				<!-- Position statusInvoiceDetail
 				<ng-container matColumnDef="statusInvoiceDetail">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Name Delivered</th>
-					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.statusInvoiceDetail}}</td>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.statusInvoiceDetail || '-'}}</td>
 				</ng-container>-->
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

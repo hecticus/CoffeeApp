@@ -10,7 +10,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h3 class="title">Detalles del Reporte</h3>
-		<div class="tool-bar both-side">
+		<!--<div class="tool-bar both-side">
 			<div class="right row">
 				<button class="btn-icon" title="Update" type="button" (click)="update()">
 					<i class="material-icons">edit</i>
@@ -19,7 +19,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
-		</div>
+		</div>-->
 
 		<div class="answer">
 			<div class="fieldset">
@@ -34,7 +34,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Tipo de Proveedor</span>
-						<span class="output">{{ invoice.provider?.providerType.nameProviderType || '-'}}</span>
+						<span class="output">{{ invoice.provider?.providerType?.nameProviderType || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">

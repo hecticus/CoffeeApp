@@ -11,8 +11,8 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
-import { FilterService } from 'src/app/core/utils/filter/filter.service';
 import { StatusInvoiceService } from 'src/app/components/status/status-invoice.service';
+import { FilterService } from 'src/app/core/utils/filter/filter.service';
 
 @Component({
 	styleUrls: ['./invoice.component.css'],
@@ -62,18 +62,17 @@ import { StatusInvoiceService } from 'src/app/components/status/status-invoice.s
 			</div>
 
 			<div class="field">
-			<!-- <mat-select placeholder="Estatus" [(ngModel)]="selected">-->
-				<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['providerType']"
-															(change)="filterService.put('providerType',
+				<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['typeProvider']"
+															(change)="filterService.put('typeProvider',
 															$event.target.value)">
 					<mat-option>Ninguna</mat-option>
-					<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType}} </mat-option>
+					<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType }} </mat-option>
 				</mat-select>
 			</div>
 
 			<div class="field">
-				<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusProvider']"
-													(change)="filterService.put('statusProvider',
+				<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusInvoice']"
+													(change)="filterService.put('statusInvoice',
 													$event.target.value)">
 					<mat-option>Ninguna</mat-option>
 					<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
@@ -85,8 +84,7 @@ import { StatusInvoiceService } from 'src/app/components/status/status-invoice.s
 					<i class="material-icons">search</i>
 				</button>
 			</div>
-		</div>
-
+		</div> <!-- -->
 
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
@@ -113,31 +111,31 @@ import { StatusInvoiceService } from 'src/app/components/status/status-invoice.s
 					<div class="sort sort-up"></div>
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Proveedor</th>
 					<div class="sort sort-down"></div>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.nameProvider}} </td>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.provider?.nameProvider || '-'}} </td>
 				</ng-container>
 
 				<!-- Position statusInvoice -->
 				<ng-container matColumnDef="statusInvoice.name">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.statusInvoice.name}} </td>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.statusInvoice?.name || '-'}} </td>
 				</ng-container>
 
 				<!-- Position ProviderType -->
 				<ng-container matColumnDef="provider.providerType.nameProviderType">
 					<th class="table-header" mat-header-cell *matHeaderCellDef  mat-sort-header><span>Tipo de Proveedor</span></th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.providerType.nameProviderType}} </td>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.provider.providerType?.nameProviderType || '-'}} </td>
 				</ng-container>
 
 				<!-- Position  openDateInvoice -->
 				<ng-container matColumnDef="createdAt">
 					<th class="table-header" mat-header-cell *matHeaderCellDef  mat-sort-header>Fecha de Apertura</th>
-						<td mat-cell *matCellDef="let invoice"> {{invoice.createdAt}} </td>
+						<td mat-cell *matCellDef="let invoice"> {{invoice.createdAt || '-'}} </td>
 				</ng-container>
 
 				<!-- Position totalInvoice -->
 				<ng-container matColumnDef="totalInvoice">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Total Invoice</th>
-					<td mat-cell *matCellDef="let invoice"> {{invoice.totalInvoice}}</td>
+					<td mat-cell *matCellDef="let invoice"> {{invoice.totalInvoice || '-' }}</td>
 				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
@@ -233,17 +231,13 @@ export class InvoiceListComponent implements OnInit {
 	list(page = 0) {
 
 
-		// if (this.filterService.filter['statusProvider'] === undefined) {
-		// 	delete this.filterService.filter['statusProvider'];
-		// }
+		if (this.filterService.filter['statusInvoice'] === undefined) {
+			delete this.filterService.filter['statusInvoice'];
+		}
 
-		// if (this.filterService.filter['providerType'] === undefined) {
-		// 	delete this.filterService.filter['providerType'];
-		// }
-
-		// if (this.filterService.filter['providerType'] === undefined) {
-		// 	delete this.filterService.filter['providerType'];
-		// }
+		if (this.filterService.filter['typeProvider'] === undefined) {
+			delete this.filterService.filter['typeProvider'];
+		}
 
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
@@ -254,11 +248,11 @@ export class InvoiceListComponent implements OnInit {
 			// ...this.filterService.filter
 			// 'providerType': this.selected,
 			// 'statusProvider': this.selectedStatus,
-			// ...this.filterService.filter
+			...this.filterService.filter
 		});
 		console.log('$event');
-		// console.log(this.filterService.filter);
-		this.invoiceService.getAll().subscribe(
+		console.log(this.filterService.filter);
+		this.invoiceService.getAll(httpParams).subscribe(
 			data => {
 				this.dataSource.data = data['result'];
 				this.pager = data['pager'];

@@ -15,8 +15,9 @@ const homeRoutes: Routes = [
 		children: [
 			{
 				path: '',
+				redirectTo: '/admin/invoices',
 				pathMatch: 'full',
-				component: InvoiceListComponent,
+				// component: InvoiceListComponent,
 				data: {
 					breadcrumb: '',
 					icon: ''
