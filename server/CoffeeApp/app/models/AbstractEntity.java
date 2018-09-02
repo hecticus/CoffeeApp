@@ -27,6 +27,8 @@ public abstract class AbstractEntity extends Model {
     @SoftDelete
     private boolean deleted;
 
+//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp

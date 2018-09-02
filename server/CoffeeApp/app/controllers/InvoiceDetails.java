@@ -21,6 +21,7 @@ import scala.reflect.internal.Trees;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 
@@ -177,7 +178,7 @@ public class InvoiceDetails extends Controller {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
                                                                 invoice, itemType, lot,store, nameReceived, nameDelivered,
-                                                                startDate., status, deleted);
+                                                                startDate.from, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

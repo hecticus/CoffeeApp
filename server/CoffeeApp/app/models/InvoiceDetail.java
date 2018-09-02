@@ -1,14 +1,21 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.Formula;
 import io.ebean.text.PathProperties;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +92,22 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(precision = 12, scale = 2)
     private BigDecimal totalInvoiceDetail;
 
+
+    //    @Constraints.Required
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime startDate;
+
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime closedDate;
+
     @OneToMany(mappedBy = "invoiceDetail", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurity;
 
@@ -95,6 +118,22 @@ public class  InvoiceDetail  extends AbstractEntity{
         priceItemTypeByLot = BigDecimal.ZERO;
         invoiceDetailPurity = new ArrayList<>();
         freight = false;
+    }
+
+    public ZonedDateTime getStartDateInvoice() {
+        return startDate;
+    }
+
+    public void setStartDateInvoice(ZonedDateTime startDateInvoice) {
+        this.startDate = startDateInvoice;
+    }
+
+    public ZonedDateTime getClosedDateInvoice() {
+        return closedDate;
+    }
+
+    public void setClosedDateInvoice(ZonedDateTime closedDateInvoice) {
+        this.closedDate = closedDateInvoice;
     }
 
     public Invoice getInvoice() {
@@ -223,7 +262,7 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
                                               Long invoice, Long itemType, Long lot, Long store, String nameReceived,
-                                              String nameDelivered, String startDate, Long status, boolean delete){
+                                              String nameDelivered, ZonedDateTime startDate, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -249,7 +288,7 @@ public class  InvoiceDetail  extends AbstractEntity{
             expressionList.startsWith("nameDelivered", nameDelivered);
 
         if(startDate != null)
-            expressionList.startsWith("createdAt", startDate );
+            expressionList.ge("createdAt", startDate );
 
         if(delete)
             expressionList.setIncludeSoftDeletes();

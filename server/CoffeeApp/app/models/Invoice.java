@@ -2,6 +2,10 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.CreatedTimestamp;
@@ -46,22 +50,22 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-//    //    @Constraints.Required
-//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonSerialize(using = CustomDateTimeSerializer.class)
-//    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-//    @Column(columnDefinition = "datetime")
-//    private ZonedDateTime startDateInvoice;
-//
-//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonSerialize(using = CustomDateTimeSerializer.class)
-//    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-//    @Column(columnDefinition = "datetime")
-//    private ZonedDateTime closedDateInvoice;
+    //    @Constraints.Required
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime startDate;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime closedDate;
+
+/*    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreatedTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
@@ -71,7 +75,7 @@ public class Invoice extends AbstractEntity{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private ZonedDateTime closedDateInvoice;
+    private ZonedDateTime closedDateInvoice;*/
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
@@ -96,12 +100,20 @@ public class Invoice extends AbstractEntity{
         this.statusInvoice = statusInvoice;
     }
 
-    public ZonedDateTime getClosedDateInvoice() {
-        return closedDateInvoice;
+    public ZonedDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setClosedDateInvoice(ZonedDateTime closedDateInvoice) {
-        this.closedDateInvoice = closedDateInvoice;
+    public void setStartDate(ZonedDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public ZonedDateTime getClosedDate() {
+        return closedDate;
+    }
+
+    public void setClosedDate(ZonedDateTime closedDate) {
+        this.closedDate = closedDate;
     }
 
     @JsonIgnore
@@ -117,13 +129,6 @@ public class Invoice extends AbstractEntity{
         return totalInvoice;
     }
 
-    public ZonedDateTime getStartDateInvoice() {
-        return startDateInvoice;
-    }
-
-    public void setStartDateInvoice(ZonedDateTime openDateInvoice) {
-        this.startDateInvoice = openDateInvoice;
-    }
 
     public void setTotalInvoice(BigDecimal totalInvoice) {
         this.totalInvoice = totalInvoice;
@@ -172,8 +177,8 @@ public class Invoice extends AbstractEntity{
 
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
-                                         String sort, Long id_provider, Long providerType, String startDate,
-                                         String endDate, Long status ,boolean delete){
+                                         String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
+                                         ZonedDateTime endDate, Long status ,boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -187,10 +192,23 @@ public class Invoice extends AbstractEntity{
             expressionList.eq("provider.providerType.id", providerType);
 
         if(startDate != null)
-            expressionList.startsWith("createdAt", startDate);
+            expressionList.ge("startDate", startDate);
 
-        if(endDate!= null)
-            expressionList.startsWith("closedDateInvoice", endDate);
+        /*if(endDate!= null)
+            expressionList.startsWith("closedDate", endDate);
+
+        if(startDateTime != null && finishDateTime != null) {
+            expressionList.between("orderRequests.orderTasks.startDateTime", startDateTime, finishDateTime);
+            expressionList.filterMany("orderRequests").between("orderTasks.startDateTime", startDateTime, finishDateTime);
+        } else if(startDateTime != null) {
+            expressionList.ge("orderRequests.orderTasks.startDateTime", startDateTime);
+            expressionList.filterMany("orderRequests").ge("orderTasks.startDateTime", startDateTime);
+        } else if(finishDateTime != null) {
+            expressionList.le("orderRequests.orderTasks.startDateTime", finishDateTime);
+            expressionList.filterMany("orderRequests").le("orderTasks.startDateTime", finishDateTime);
+        }
+
+            */
 
         if(sort != null)
             expressionList.orderBy(sort( sort));

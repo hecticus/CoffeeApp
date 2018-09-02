@@ -181,7 +181,7 @@ public class Invoices extends Controller {
 
         Invoice newInvoice = null;
 
-        if(invoiceList.isEmpty()){
+        if(invoiceList == null){  // .isEmpty()
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
