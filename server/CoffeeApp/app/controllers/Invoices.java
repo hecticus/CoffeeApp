@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
@@ -22,6 +23,8 @@ import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -119,12 +122,13 @@ public class Invoices extends Controller {
 
     @CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
-                                    String sort, Long id_provider, Long id_providertype, String startDate,
-                                    String endDate, Long status ,boolean deleted){
+                                    String sort, Long id_provider, Long id_providertype,  DateTimeRange startDate,
+                                    // DateTimeRange endDate, Long status ,boolean deleted){
+                                    DateTimeRange endDate, Long status ,boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
-                                                                        id_providertype, startDate, endDate, status, deleted);
+                                                                        id_providertype, startDate.from, endDate.to, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -151,10 +155,10 @@ public class Invoices extends Controller {
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
 
-        JsonNode startDate =  json.get("startDate");;
+/*        JsonNode startDate =  json.get("startDates");
         if (startDate ==  null)
             return Response.requiredParameter("startDateInvoiceDetail");
-        String fecha = startDate.asText().split(" ")[0];
+        String fecha = startDate.asText().split("T")[0];*/
 
         Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
         if (form.hasErrors())
@@ -170,7 +174,7 @@ public class Invoices extends Controller {
         }
 
 
-        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
+        List<Invoice> invoiceList = null; // Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
 
 //        Invoice invoices = invoiceList.get(0);
 //        Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);

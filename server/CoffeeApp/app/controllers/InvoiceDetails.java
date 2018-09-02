@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
@@ -171,12 +172,12 @@ public class InvoiceDetails extends Controller {
     @CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long invoice, Long itemType, Long lot, Long store, String nameReceived,
-                          String nameDelivered, String startDateInvoiceDetail, Long status, boolean deleted){
+                          String nameDelivered, DateTimeRange startDate, Long status, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
                                                                 invoice, itemType, lot,store, nameReceived, nameDelivered,
-                                                                startDateInvoiceDetail, status, deleted);
+                                                                startDate., status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
