@@ -132,12 +132,11 @@ public class Invoice extends AbstractEntity{
                .findList();
     }
 
-    public static Invoice invoicesByProviderId(Long id_provider){
+    public static List<Invoice> invoicesByProviderId(Long id_provider){
         return finder.query().where()
                 .eq("provider.id", id_provider)
-                .eq("statusInvoice.id", 11 )
                 .eq("deleted",false )
-                .findUnique();
+                .findList();
     }
 
     public static Invoice invoicesByProvider(Provider provider, String fecha){

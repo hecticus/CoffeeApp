@@ -104,14 +104,13 @@ public class Providers extends Controller {
     @CoffeAppsecurity
     public Result delete(Long id) {
         try{
-            if (Invoice.invoicesByProviderId(id) != null){
-                return controllers.utils.Response.constraintViolation("Invoices Open");
+            if (!Invoice.invoicesByProviderId(id).isEmpty()){
+                return controllers.utils.Response.constraintViolation("El Proveedor tiene facturas");
             }
 
             Provider provider = Provider.findById(id);
             Multimedia multimedia = provider.getMultimediaProfile();
             if ( multimedia != null){
-//                Ebean.delete(multimedia.getMultimediaCDN());
                 Ebean.delete(multimedia);
             }
             Ebean.delete(Provider.class, id);
