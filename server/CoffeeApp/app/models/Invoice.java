@@ -8,9 +8,7 @@ import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeseriali
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
-import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
-import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
 import models.status.StatusInvoice;
 import play.data.format.Formats;

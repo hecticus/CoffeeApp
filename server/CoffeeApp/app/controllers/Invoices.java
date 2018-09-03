@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
@@ -51,12 +52,32 @@ public class Invoices extends Controller {
             if(json == null)
                 return Response.requiredJson();
 
+            String tim = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX").format(ZonedDateTime.now());
+            System.out.println(tim );
+
+/*            Invoice invo = Invoice.findById(new Long(2));
+            invo.setStartDate( ZonedDateTime.parse (tim,
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX") ));
+
+            invo.update();
+
+            ZonedDateTime date = ZonedDateTime.parse(json.findValue("startDat").asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+
+            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
+            node.putPOJO("startDae", date );*/
+
             Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Invoice invoice = Json.fromJson(json, Invoice.class);
+            invoice.setStartDate(ZonedDateTime.parse (tim,
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")));
             invoice.save();
+
+
+
             return  Response.createdEntity(Json.toJson(invoice));
 
         }catch(Exception e){
