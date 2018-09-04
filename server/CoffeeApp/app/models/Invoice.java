@@ -124,10 +124,10 @@ public class Invoice extends AbstractEntity{
 
     //METODOS DEFINIDOS
 
-    public static List<Invoice> getOpenseByProviderId(Long id_provider, String fecha){
+    public static List<Invoice> getOpenseByProviderId(Long id_provider, String dateStart){
        return finder.query().where()
                .eq("provider.id", id_provider)
-               .startsWith("createdAt", fecha)
+               .startsWith("startDate", dateStart)
                .findList();
     }
 
@@ -141,15 +141,15 @@ public class Invoice extends AbstractEntity{
     public static Invoice invoicesByProvider(Provider provider, ZonedDateTime dateStart){
         return finder.query().where()
                 .eq("provider.id", provider.getId())
-                .le("createdAt", dateStart)
+                .le("startDate", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findUnique();
     }
 
-    public static List<Invoice> invoicesListByProvider(Provider provider, ZonedDateTime dateStart){
+    public static List<Invoice> invoicesListByProvider(Long provider, ZonedDateTime dateStart){
         return finder.query().where()
-                .eq("provider.id", provider.getId())
-                .le("createdAt", dateStart)
+                .eq("provider.id", provider)
+                .le("startDate", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findList();
     }
@@ -195,7 +195,7 @@ public class Invoice extends AbstractEntity{
             expressionList.filterMany("orderRequests").le("orderTasks.startDateTime", finishDateTime);
         }
 
-            */
+        */
 
         if(sort != null)
             expressionList.orderBy(sort( sort));

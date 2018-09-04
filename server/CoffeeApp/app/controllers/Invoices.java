@@ -136,6 +136,10 @@ public class Invoices extends Controller {
                                     // DateTimeRange endDate, Long status ,boolean deleted){
                                     DateTimeRange endDate, Long status ,boolean deleted){
         try {
+
+            /*ZonedDateTime fecha =  ZonedDateTime.parse (date.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));*/
+
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
                                                                         id_providertype, startDate.from, endDate.to, status, deleted);
@@ -190,8 +194,7 @@ public class Invoices extends Controller {
             return Response.requiredParameter("Proveedor Inactivo");
         }
 
-
-        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
+        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider().getId(), fecha);
 
         // Invoice invoices = invoiceList.get(0);
         // Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
@@ -219,6 +222,13 @@ public class Invoices extends Controller {
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
             if (formDetail.hasErrors())
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
+
+            JsonNode dateStart = item.findValue("start");
+            if(dateStart == null)
+                return Response.requiredParameter("Requiere fecha de inicio de Detalle");
+
+            ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
 
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
 
@@ -254,12 +264,13 @@ public class Invoices extends Controller {
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
 
             invoiceDetails.add(invoiceDetail);
+
             newInvoice.setInvoiceDetails(invoiceDetails);
             newInvoice.setStartDate(fecha);
-
             newInvoice.save();
+
             invoiceDetail.setInvoice(newInvoice);
-            invoiceDetail.setStartDate(fecha);
+            invoiceDetail.setStartDate(startTime);
             invoiceDetail.save();
 
             if(!option)  {
