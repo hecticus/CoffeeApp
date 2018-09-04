@@ -132,17 +132,26 @@ public class Invoices extends Controller {
 
     @CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
-                                    String sort, Long id_provider, Long id_providertype,  DateTimeRange startDate,
-                                    // DateTimeRange endDate, Long status ,boolean deleted){
-                                    DateTimeRange endDate, Long status ,boolean deleted){
+                                    String sort, Long id_provider, Long id_providertype,  String startDate,
+                                    String endDate, Long status ,boolean deleted){
         try {
 
-            /*ZonedDateTime fecha =  ZonedDateTime.parse (date.asText(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));*/
+            ZonedDateTime startTime_to = null;
+            ZonedDateTime startTime_from = null;
+
+            if (startDate != null){
+                startTime_to =  ZonedDateTime.parse (startDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
+
+            if (endDate != null){
+                 startTime_from =  ZonedDateTime.parse (endDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
 
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
-                                                                        id_providertype, startDate.from, endDate.to, status, deleted);
+                                                                        id_providertype, startTime_to, startTime_from, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

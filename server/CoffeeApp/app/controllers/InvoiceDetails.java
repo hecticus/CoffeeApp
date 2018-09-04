@@ -181,12 +181,20 @@ public class InvoiceDetails extends Controller {
     @CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long invoice, Long itemType, Long lot, Long store, String nameReceived,
-                          String nameDelivered, DateTimeRange startDate, Long status, boolean deleted){
+                          String nameDelivered, String startDate, Long status, boolean deleted){
         try {
+
+            ZonedDateTime startTime = null;
+
+            if (startDate != null){
+                startTime =  ZonedDateTime.parse (startDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
+
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
                                                                 invoice, itemType, lot,store, nameReceived, nameDelivered,
-                                                                startDate.from, status, deleted);
+                                                                startTime, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

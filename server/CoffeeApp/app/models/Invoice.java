@@ -165,7 +165,7 @@ public class Invoice extends AbstractEntity{
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
-                                         ZonedDateTime endDate, Long status ,boolean delete){
+                                         ZonedDateTime closeDate, Long status ,boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -181,9 +181,9 @@ public class Invoice extends AbstractEntity{
         if(startDate != null)
             expressionList.ge("startDate", startDate);
 
-        /*if(endDate!= null)
-            expressionList.startsWith("closedDate", endDate);
-
+        if(closeDate!= null)
+            expressionList.ge("closedDate", closeDate);
+/*
         if(startDateTime != null && finishDateTime != null) {
             expressionList.between("orderRequests.orderTasks.startDateTime", startDateTime, finishDateTime);
             expressionList.filterMany("orderRequests").between("orderTasks.startDateTime", startDateTime, finishDateTime);

@@ -77,7 +77,7 @@ DELETE  /farm/:id                                                               
 ################################################################################
 ##·······                      Invoice                               ··········#
 ################################################################################
-GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: controllers.parsers.queryStringBindable.DateTimeRange, endDate: controllers.parsers.queryStringBindable.DateTimeRange, statusInvoice: Long ?= 0L, deleted: Boolean ?= false)
+GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, statusInvoice: Long ?= 0L, deleted: Boolean ?= false)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
 POST    /invoice2                                                               controllers.Invoices.buyHarvestsAndCoffe()
@@ -90,7 +90,7 @@ DELETE  /invoice/:id                                                            
 ################################################################################
 ##·······                       InvoiceDetail                        ··········#
 ################################################################################
-GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,  sort: String ?= null, invoice: Long ?= 0L, itemType: Long ?= 0L, lot: Long ?= 0L, store: Long ?= 0L,  nameDelivered: String ?= null, nameReceived: String ?= null, startDate: controllers.parsers.queryStringBindable.DateTimeRange,  statusInvoiceDetail: Long ?= 0L, deleted: Boolean ?= false)
+GET     /invoiceDetail                                                          controllers.InvoiceDetails.findAll(pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null,  sort: String ?= null, invoice: Long ?= 0L, itemType: Long ?= 0L, lot: Long ?= 0L, store: Long ?= 0L,  nameDelivered: String ?= null, nameReceived: String ?= null, startDate: String ?= null,  statusInvoiceDetail: Long ?= 0L, deleted: Boolean ?= false)
 GET     /invoiceDetail/:id                                                      controllers.InvoiceDetails.findById(id : Long)
 POST    /invoiceDetail                                                          controllers.InvoiceDetails.create()
 POST    /invoiceDetail/delete                                                   controllers.InvoiceDetails.deletes()
