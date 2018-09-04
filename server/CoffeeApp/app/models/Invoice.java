@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.CustomDeserializer.TimeDeserializer;
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -51,12 +52,12 @@ public class Invoice extends AbstractEntity{
     //    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    // @JsonSerialize(using = TimeDeserializer.class)
+    @JsonDeserialize(using = TimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime startDate;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    // @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
@@ -137,18 +138,18 @@ public class Invoice extends AbstractEntity{
                 .findList();
     }
 
-    public static Invoice invoicesByProvider(Provider provider, String fecha){
+    public static Invoice invoicesByProvider(Provider provider, ZonedDateTime dateStart){
         return finder.query().where()
                 .eq("provider.id", provider.getId())
-                .startsWith("createdAt", fecha)
+                .le("createdAt", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findUnique();
     }
 
-    public static List<Invoice> invoicesListByProvider(Provider provider, String fecha){
+    public static List<Invoice> invoicesListByProvider(Provider provider, ZonedDateTime dateStart){
         return finder.query().where()
                 .eq("provider.id", provider.getId())
-                .startsWith("createdAt", fecha)
+                .le("createdAt", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findList();
     }

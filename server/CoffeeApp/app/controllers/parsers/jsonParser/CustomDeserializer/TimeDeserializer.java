@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class CustomDateTimeDeserializer extends JsonDeserializer<ZonedDateTime> {
+public class TimeDeserializer extends JsonDeserializer<ZonedDateTime> {
+
     @Override
-    public ZonedDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        return ZonedDateTime.parse(p.getText(),  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+    public ZonedDateTime deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException {
+        return  ZonedDateTime.parse(jsonparser.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
     }
 }

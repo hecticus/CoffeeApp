@@ -55,29 +55,18 @@ public class Invoices extends Controller {
             String tim = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX").format(ZonedDateTime.now());
             System.out.println(tim );
 
-/*            Invoice invo = Invoice.findById(new Long(2));
-            invo.setStartDate( ZonedDateTime.parse (tim,
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX") ));
-
-            invo.update();
-
-            ZonedDateTime date = ZonedDateTime.parse(json.findValue("startDat").asText(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
-
-            ObjectNode node = (ObjectNode) new ObjectMapper().readTree(json.toString());
-            node.putPOJO("startDae", date );*/
-
             Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Invoice invoice = Json.fromJson(json, Invoice.class);
-            invoice.setStartDate(ZonedDateTime.parse (tim,
+
+            JsonNode date = json.findValue("start");
+            if(date == null)
+                return Response.requiredParameter("Requiere fecha de inicio de factura");
+            invoice.setStartDate(ZonedDateTime.parse (date.asText(),
                     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")));
             invoice.save();
-
-
-
             return  Response.createdEntity(Json.toJson(invoice));
 
         }catch(Exception e){
@@ -181,11 +170,18 @@ public class Invoices extends Controller {
             return Response.requiredParameter("startDateInvoiceDetail");
         String fecha = startDate.asText().split("T")[0];*/
 
+        JsonNode date = json.findValue("start");
+        if(date == null)
+            return Response.requiredParameter("Requiere fecha de inicio de factura");
+
+        ZonedDateTime fecha =  ZonedDateTime.parse (date.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+
         Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
         if (form.hasErrors())
             return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-        Invoice invoice2 = Json.fromJson(json, Invoice.class);
+        // Invoice invoice2 = Json.fromJson(json, Invoice.class);
         // Tengo el invoice recibido
         Invoice invoice = form.get();
 
@@ -195,14 +191,14 @@ public class Invoices extends Controller {
         }
 
 
-        List<Invoice> invoiceList = null; // Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
+        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
 
-//        Invoice invoices = invoiceList.get(0);
-//        Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
+        // Invoice invoices = invoiceList.get(0);
+        // Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
 
         Invoice newInvoice = null;
 
-        if(invoiceList == null){  // .isEmpty()
+        if(invoiceList.isEmpty()){  //
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
@@ -259,9 +255,11 @@ public class Invoices extends Controller {
 
             invoiceDetails.add(invoiceDetail);
             newInvoice.setInvoiceDetails(invoiceDetails);
+            newInvoice.setStartDate(fecha);
 
             newInvoice.save();
             invoiceDetail.setInvoice(newInvoice);
+            invoiceDetail.setStartDate(fecha);
             invoiceDetail.save();
 
             if(!option)  {
@@ -316,17 +314,5 @@ public class Invoices extends Controller {
         response.set("invoice", Json.toJson(invoice));
         return Response.createdEntity(response);
     }
-//    @CoffeAppsecurity
-//    public  Result createReceipt(Long idInvoice)  {
-//        Invoice invoice = Invoice.findById(idInvoice);
-//        ObjectNode response = Json.newObject();
-//        response.put("nameCompany", config.getString("play.company.name"));
-//        response.put("invoiceDescription", config.getString("play.harvest.invoice.description"));
-//        response.put("invoiceType", config.getString("play.harvest.invoice.type"));
-//        response.put("RUC", config.getString("play.purchase.ruc"));
-//        response.put("telephonoCompany", config.getString("play.company.telephone"));
-//        response.set("invoice", Json.toJson(invoice));
-//        return Response.createdEntity(response);
-//    }
 
 }

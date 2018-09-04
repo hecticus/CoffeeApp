@@ -120,20 +120,20 @@ public class  InvoiceDetail  extends AbstractEntity{
         freight = false;
     }
 
-    public ZonedDateTime getStartDateInvoice() {
+    public ZonedDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDateInvoice(ZonedDateTime startDateInvoice) {
-        this.startDate = startDateInvoice;
+    public void setStartDate(ZonedDateTime startDate) {
+        this.startDate = startDate;
     }
 
-    public ZonedDateTime getClosedDateInvoice() {
+    public ZonedDateTime getClosedDate() {
         return closedDate;
     }
 
-    public void setClosedDateInvoice(ZonedDateTime closedDateInvoice) {
-        this.closedDate = closedDateInvoice;
+    public void setClosedDate(ZonedDateTime closedDate) {
+        this.closedDate = closedDate;
     }
 
     public Invoice getInvoice() {
