@@ -30,6 +30,8 @@ import com.hecticus.eleta.model_new.SyncManager;
 import com.hecticus.eleta.provider.list.ProvidersListFragment;
 import com.hecticus.eleta.purchases.list.PurchasesListFragment;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     @DebugLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        JodaTimeAndroid.init(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
         Realm.init(getApplicationContext());

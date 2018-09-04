@@ -29,6 +29,8 @@ import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.PermissionUtil;
 import com.hecticus.eleta.util.Util;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,6 +56,7 @@ public class HarvestsListFragment extends BaseFragment implements HarvestsListCo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_harvests_list, container, false);
             unbinder = ButterKnife.bind(this, rootView);

@@ -152,7 +152,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                     //invoice = new Invoice(invoicePost, ManagerDB.getProviderById());
 
                 }*/
-                //Log.d("debug json555", g.toJson(invoice));
+                Gson g = new Gson();
+                Log.d("debug fecha", g.toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog

@@ -145,8 +145,8 @@ public class CustomEditText extends LinearLayout {
     }
 
     private void initEditTextRuc(){
-        editText.setHint("XXXXX-Y-ZZZZ DV NN");
-        editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(18)});
+        editText.setHint("XXXXX-YYY-ZZZZ DV NN");
+        editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(20)});
         editText.addTextChangedListener(new TextWatcher()
         {
 
@@ -163,16 +163,16 @@ public class CustomEditText extends LinearLayout {
                     if (text.endsWith(" ") || text.endsWith("-"))
                         return;
 
-                    if (textlength == 5 || textlength == 7) {
+                    if (textlength == 5 || textlength == 9/*7*/) {
                         editText.setText(new StringBuilder(text).append("-").toString());
                         editText.setSelection(editText.getText().length());
-                    } else if (textlength == 6 || textlength == 8) {
+                    } else if (textlength == 6 || textlength == 10/*8*/) {
                         editText.setText(new StringBuilder(text).insert(textlength-1,"-").toString());
                         editText.setSelection(editText.getText().length());
-                    } else if (textlength == 12) {
+                    } else if (textlength == 14/*12*/) {
                         editText.setText(new StringBuilder(text).append(" DV ").toString());
                         editText.setSelection(editText.getText().length());
-                    } else if (textlength == 13) {
+                    } else if (textlength == 15/*13*/) {
                         editText.setText(new StringBuilder(text).insert(textlength-1," DV ").toString());
                         editText.setSelection(editText.getText().length());
                     }

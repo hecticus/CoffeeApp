@@ -12,6 +12,7 @@ import com.hecticus.eleta.base.BaseModel;
 import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.util.Util;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
@@ -151,10 +152,12 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     public String getInvoiceStartDate() {
 
-        TimeZone tz= Calendar.getInstance().getTimeZone();
-        Log.d("TIMEZONE", tz.toString());
+        /*TimeZone tz= Calendar.getInstance().getTimeZone();
+        Log.d("TIMEZONE", tz.getID());
         Log.d("TIMEZONE1", tz.getDisplayName());
-        return invoiceStartDate;
+        Util.parseDateTimeZoneServerToLocal(invoiceStartDate);
+        return invoiceStartDate;*/
+        return Util.parseDateTimeZoneServerToLocal(invoiceStartDate);
     }
 
     public void setInvoiceStartDate(String invoiceStartDate) {

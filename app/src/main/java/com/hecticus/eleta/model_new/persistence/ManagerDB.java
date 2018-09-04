@@ -17,6 +17,7 @@ import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
 import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -567,6 +568,7 @@ public class ManagerDB {
                         invoice.setStatusInvo(invoice.getInvoiceStatus().getName());
                         invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
                         invoice.setId2(invoice.getInvoiceId() + "-" + invoice.getLocalId());
+                        //invoice.setInvoiceStartDate(Util.parseDateTimeZone(invoice.getInvoiceStartDate()));
                         realm.insertOrUpdate(invoice);
                         /*Gson g = new Gson();
                         Log.d("DEBUG", g.toJson(invoice));*/

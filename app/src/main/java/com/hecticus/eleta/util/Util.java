@@ -3,6 +3,8 @@ package com.hecticus.eleta.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
@@ -20,13 +22,22 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import hugo.weaving.DebugLog;
 import io.realm.RealmObject;
@@ -74,6 +85,59 @@ public class Util {
         options.inSampleSize = 6;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
         imageView.setImageBitmap(bitmap);*/
+    }
+
+    public static String parseDateTimeZoneServerToLocal(String startDate){//2018-09-01 11:45:00
+        /*Log.d("TIMEZONE", startDate);
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(5,7)),
+                Integer.parseInt(startDate.substring(8,10)),
+                Integer.parseInt(startDate.substring(11,13)),
+                Integer.parseInt(startDate.substring(14,16)),
+                Integer.parseInt(startDate.substring(17,19)));
+
+        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        sdfMadrid.setTimeZone(TimeZone.getTimeZone("Europe/Amsterdam"));
+        Log.d("TIMEZONEyyy","Hora Buenos Aires:\t %s\n"+ sdfMadrid.format(calendar.getTime()));
+
+        SimpleDateFormat sdfArgentina = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        Log.d("TIMEZONE", tz.getID());
+        sdfArgentina.setTimeZone(TimeZone.getTimeZone(tz.getID()));
+        Log.d("TIMEZONExxx","Hora Buenos Aires:\t %s\n"+ sdfArgentina.format(calendar.getTime()));*/
+
+        DateTime fecha = new DateTime(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(5,7)),
+                Integer.parseInt(startDate.substring(8,10)),
+                Integer.parseInt(startDate.substring(11,13)),
+                Integer.parseInt(startDate.substring(14,16)),
+                Integer.parseInt(startDate.substring(17,19)),
+                DateTimeZone.forID("Etc/UTC"));//("Etc/GMT"));
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        Log.d("TIMEZONExxx","Hora server:"+ fecha);
+        Log.d("TIMEZONEyyy","Hora timeZone:"+ fecha.withZone(DateTimeZone.forID(tz.getID())));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return sdf.format(fecha);
+    }
+
+    public static String parseDateTimeZoneLocalToServer(String startDate){//2018-09-01 11:45:00
+
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        DateTime fecha = new DateTime(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(5,7)),
+                Integer.parseInt(startDate.substring(8,10)),
+                Integer.parseInt(startDate.substring(11,13)),
+                Integer.parseInt(startDate.substring(14,16)),
+                Integer.parseInt(startDate.substring(17,19)),
+                DateTimeZone.forID(tz.getID()));
+
+        Log.d("TIMEZONExxx","Hora timeZone:"+ fecha);
+        Log.d("TIMEZONEyyy","Hora server:"+ fecha.withZone(DateTimeZone.forID("Etc/UTC")));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return sdf.format(fecha);
     }
 
     public static void loadThumbnailsImageFromPath(String path, ImageView imageView) {
