@@ -654,7 +654,8 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             invoicePost.setProviderId(currentProvider.getIdProvider());
             invoicePost.setReceiverName(SessionManager.getUserName(context));
             invoicePost.setStartDate(Util.getCurrentDateForInvoice());
-            invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
+            Log.d("BUG", "brayandmb3" + Util.parseDateZH2(Util.parseDateTimeZoneServerToLocal(invoicePost.getStartDate()), "yyyy-MM-dd"));
+            invoicePost.setDate(Util.parseDateZH2(Util.parseDateTimeZoneServerToLocal(invoicePost.getStartDate()), "yyyy-MM-dd"));
             invoicePost.setBuyOption(Constants.BUY_OPTION_PURCHASE);
 
             Log.d("TEST", "--->getCurrentDateForInvoice " + invoicePost.getStartDate());

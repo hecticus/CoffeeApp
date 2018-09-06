@@ -90,7 +90,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
     @Override
     public void getPurchasesRequest(final int index) {
         if (!InternetManager.isConnected(mPresenter.context)) {
-            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_SELLER, Util.getCurrentDate());
+            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_SELLER, Util.getCurrentDateLocal());
             if (invoiceList != null) {
                 mPresenter.handleSuccessfulPurchasesRequest(invoiceList);
             } else {
@@ -98,7 +98,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             }
         } else {
             Log.d("DEBUG", "paso 1");
-            Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_SELLER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-28"
+            Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Util.getCurrentDateFinisth(), Constants.TYPE_SELLER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-28"
 
             call.enqueue(new Callback<InvoiceListResponse>() {
                 @DebugLog
@@ -112,7 +112,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
 
                             ManagerDB.saveNewInvoicesByType(Constants.TYPE_SELLER, response.body().getResult());
 
-                            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_SELLER, Util.getCurrentDate());
+                            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_SELLER, Util.getCurrentDateLocal());
                             if (invoiceList != null) {
                                 Log.d("OFFLINE", "--->getPurchasesRequest local after request: " + invoiceList.size());
                                 mPresenter.handleSuccessfulPurchasesRequest(invoiceList);

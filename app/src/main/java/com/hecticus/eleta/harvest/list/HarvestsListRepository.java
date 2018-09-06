@@ -89,14 +89,14 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
     @Override
     public void getHarvestsRequest(final int index) {
         if (!InternetManager.isConnected(mPresenter.context)) {
-            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_HARVESTER, Util.getCurrentDate());
+            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_HARVESTER, Util.getCurrentDateLocal());
             if (invoiceList != null) {
                 mPresenter.handleSuccessfulMixedHarvestsRequest(invoiceList);
             } else {
                 onError(mPresenter.context.getString(R.string.error_getting_harvests));
             }
         } else {
-            Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Constants.TYPE_HARVESTER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-25"
+            Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Util.getCurrentDateFinisth(), Constants.TYPE_HARVESTER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-25"
 
             call.enqueue(new Callback<InvoiceListResponse>() {
                 @DebugLog
@@ -105,13 +105,14 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                                        @NonNull Response<InvoiceListResponse> response) {
 
                     try {
+                        Log.d("DEBUG shamuel", "hp1");
                         if (response.isSuccessful() && response.body() != null) {
 
                             Log.d("OFFLINE", "--->getHarvestsRequest (" + response.body().getResult().size() + ") Response: " + response.body());
-
+                            Log.d("DEBUG shamuel", "hp2");
                             ManagerDB.saveNewInvoicesByType(Constants.TYPE_HARVESTER, response.body().getResult());
 
-                            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_HARVESTER, Util.getCurrentDate());
+                            List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_HARVESTER, Util.getCurrentDateLocal());
 
                             if (invoiceList != null) {
                                 Log.d("OFFLINE", "--->getHarvestsRequest local after request: " + invoiceList.size());
@@ -127,6 +128,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("DEBUG shamuel", "hp3");
                         onError(mPresenter.context.getString(R.string.error_getting_harvests));
                     }
                 }

@@ -19,7 +19,10 @@ import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -521,7 +524,6 @@ public class ManagerDB {
     @DebugLog
     public static boolean saveNewInvoicesByType(final int providerType, List<Invoice> invoiceList) {
         Realm realm = Realm.getDefaultInstance();
-
         try {
             final List<Invoice> savedInvoices
                     = realm.where(Invoice.class)
@@ -566,7 +568,18 @@ public class ManagerDB {
                             invoice.setIdentificationDocProvider(invoice.getProvider().getIdentificationDocProvider());
                         }
                         invoice.setStatusInvo(invoice.getInvoiceStatus().getName());
-                        invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
+
+
+
+                        Log.d("DEBUG shamuel", "hp mmm"+invoice.getInvoiceStartDate());
+                        Log.d("DEBUG shamuel2", "hp mmm"+parseDateZH(invoice.getInvoiceStartDate()));
+                        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        invoice.setDate(parseDateZH(invoice.getInvoiceStartDate()/*.split(" ")[0]*/));
+
+
+
+                        //invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
+                        Log.d("DEBUG shamuel", "hp mmm"+invoice.getInvoiceStartDate().split(" ")[0]);
                         invoice.setId2(invoice.getInvoiceId() + "-" + invoice.getLocalId());
                         //invoice.setInvoiceStartDate(Util.parseDateTimeZone(invoice.getInvoiceStartDate()));
                         realm.insertOrUpdate(invoice);
@@ -585,8 +598,25 @@ public class ManagerDB {
         return true;
     }
 
+    private static String parseDateZH(String fecha){
+
+        SimpleDateFormat sd1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        Date dt = null;
+        try {
+            dt = sd1.parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String date;
+        SimpleDateFormat sd2 = new SimpleDateFormat("yyyy-MM-dd");
+        date = sd2.format(dt);
+        return date;
+    }
+
     @DebugLog
     public static List<Invoice> getAllInvoicesByType(int providerType, String date) {
+
+        Log.d("DEBUG shami", date);
 
         return Realm.getDefaultInstance()
                 .where(Invoice.class)
@@ -892,6 +922,7 @@ public class ManagerDB {
                     @Override
                     public void execute(Realm realm) {
                         invoicePost.setInvoiceLocalId(finalInvoiceToInsert.getId2());
+                        invoicePost.setDate(finalInvoiceToInsert.getDate());
                         Number maxExistingInvoicePostId = realm.where(InvoicePost.class).max("invoicePostLocalId");
                         int nextExistingInvoicePostId = (maxExistingInvoicePostId == null) ? 1 : maxExistingInvoicePostId.intValue() + 1;
                         invoicePost.setInvoicePostLocalId(nextExistingInvoicePostId);
@@ -996,6 +1027,7 @@ public class ManagerDB {
                     @Override
                     public void execute(Realm realm) {
                         invoicePost.setInvoiceLocalId(finalInvoiceToInsert.getId2());
+                        invoicePost.setDate(finalInvoiceToInsert.getDate());
                         Number maxExistingInvoicePostId = realm.where(InvoicePost.class).max("invoicePostLocalId");
                         int nextExistingInvoicePostId = (maxExistingInvoicePostId == null) ? 1 : maxExistingInvoicePostId.intValue() + 1;
                         invoicePost.setInvoicePostLocalId(nextExistingInvoicePostId);

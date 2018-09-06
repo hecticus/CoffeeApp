@@ -57,6 +57,10 @@ public class ItemPost extends RealmObject implements JsonSerializer<ItemPost> {
 
     public ItemPost(){}
 
+    @SerializedName("start")
+    @Expose
+    private String date;
+
     @DebugLog
     public ItemPost(int itemTypeId, float amount){
         this.itemTypeId = itemTypeId;

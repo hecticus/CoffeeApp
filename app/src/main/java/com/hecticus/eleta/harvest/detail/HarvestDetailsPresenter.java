@@ -442,7 +442,8 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
             invoicePost.setReceiverName(SessionManager.getUserName(context));
             invoicePost.setStartDate(Util.getCurrentDateForInvoice());
-            invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
+            Log.d("BUG", "brayandmb3" + Util.parseDateZH2(Util.parseDateTimeZoneServerToLocal(invoicePost.getStartDate()), "yyyy-MM-dd"));
+            invoicePost.setDate(Util.parseDateZH2(Util.parseDateTimeZoneServerToLocal(invoicePost.getStartDate()), "yyyy-MM-dd"));
             invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
 
             Log.d("TEST", "--->getCurrentDateForInvoice " + invoicePost.getStartDate());

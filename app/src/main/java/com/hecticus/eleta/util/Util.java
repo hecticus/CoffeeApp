@@ -29,6 +29,7 @@ import org.joda.time.DateTimeZone;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -88,56 +89,71 @@ public class Util {
     }
 
     public static String parseDateTimeZoneServerToLocal(String startDate){//2018-09-01 11:45:00
-        /*Log.d("TIMEZONE", startDate);
-        Calendar calendar = new GregorianCalendar();
+        Log.d("TIMEZONEjjjjyyy", startDate);
+        /*Calendar calendar = new GregorianCalendar();
         calendar.set(Integer.parseInt(startDate.substring(0,4)),
-                Integer.parseInt(startDate.substring(5,7)),
+                Integer.parseInt(startDate.substring(5,7))-1,
                 Integer.parseInt(startDate.substring(8,10)),
                 Integer.parseInt(startDate.substring(11,13)),
                 Integer.parseInt(startDate.substring(14,16)),
                 Integer.parseInt(startDate.substring(17,19)));
 
-        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        sdfMadrid.setTimeZone(TimeZone.getTimeZone("Europe/Amsterdam"));
-        Log.d("TIMEZONEyyy","Hora Buenos Aires:\t %s\n"+ sdfMadrid.format(calendar.getTime()));
-
-        SimpleDateFormat sdfArgentina = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        TimeZone tz= Calendar.getInstance().getTimeZone();
-        Log.d("TIMEZONE", tz.getID());
-        sdfArgentina.setTimeZone(TimeZone.getTimeZone(tz.getID()));
-        Log.d("TIMEZONExxx","Hora Buenos Aires:\t %s\n"+ sdfArgentina.format(calendar.getTime()));*/
+        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        //sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        Log.d("TIMEZONEjjjjyyy","Hora server antes:"+ sdfMadrid.format(calendar.getTime()));
+        sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        Log.d("TIMEZONEjjjjyyy","Hora server despues:"+ sdfMadrid.format(calendar.getTime()));*/
 
         DateTime fecha = new DateTime(Integer.parseInt(startDate.substring(0,4)),
-                Integer.parseInt(startDate.substring(5,7)),
+                Integer.parseInt(startDate.substring(5,7))/*-1*/,
                 Integer.parseInt(startDate.substring(8,10)),
                 Integer.parseInt(startDate.substring(11,13)),
                 Integer.parseInt(startDate.substring(14,16)),
                 Integer.parseInt(startDate.substring(17,19)),
-                DateTimeZone.forID("Etc/UTC"));//("Etc/GMT"));
-        TimeZone tz= Calendar.getInstance().getTimeZone();
-        Log.d("TIMEZONExxx","Hora server:"+ fecha);
-        Log.d("TIMEZONEyyy","Hora timeZone:"+ fecha.withZone(DateTimeZone.forID(tz.getID())));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateTimeZone.forID("UTC"));
 
-        return sdf.format(fecha);
+        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        Log.d("TIMEZONEjjjjyyy","Hora server:"+ sdfMadrid.format(fecha.toDate()));
+
+
+        SimpleDateFormat sdfArgentina = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        Log.d("TIMEZONEjjjjyyy", tz.getID());
+        sdfArgentina.setTimeZone(TimeZone.getTimeZone(tz.getID()));
+        Log.d("TIMEZONEjjjjyyy","Hora local:"+ sdfArgentina.format(/*calendar.getTime()*/fecha.toDate()));
+
+        return sdfArgentina.format(/*calendar.getTime()*/fecha.toDate());
     }
 
     public static String parseDateTimeZoneLocalToServer(String startDate){//2018-09-01 11:45:00
 
-        TimeZone tz= Calendar.getInstance().getTimeZone();
-        DateTime fecha = new DateTime(Integer.parseInt(startDate.substring(0,4)),
-                Integer.parseInt(startDate.substring(5,7)),
+        Log.d("TIMEZONE", startDate);
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(5,7))-1,
                 Integer.parseInt(startDate.substring(8,10)),
                 Integer.parseInt(startDate.substring(11,13)),
                 Integer.parseInt(startDate.substring(14,16)),
-                Integer.parseInt(startDate.substring(17,19)),
-                DateTimeZone.forID(tz.getID()));
+                Integer.parseInt(startDate.substring(17,19)));
 
-        Log.d("TIMEZONExxx","Hora timeZone:"+ fecha);
-        Log.d("TIMEZONEyyy","Hora server:"+ fecha.withZone(DateTimeZone.forID("Etc/UTC")));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdfArgentina = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        sdfArgentina.setTimeZone(TimeZone.getTimeZone(tz.getID()));
+        Log.d("TIMEZONExxx","Hora local:"+ sdfArgentina.format(calendar.getTime()));
 
-        return sdf.format(fecha);
+        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+        Log.d("TIMEZONEyyy","Hora server antes:"+ sdfMadrid.format(calendar.getTime()));
+        sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        Log.d("TIMEZONEyyy","Hora server despues:"+ sdfMadrid.format(calendar.getTime()));
+
+        /*SimpleDateFormat sdfArgentina = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        TimeZone tz= Calendar.getInstance().getTimeZone();
+        sdfArgentina.setTimeZone(TimeZone.getTimeZone(tz.getID()));
+        Log.d("TIMEZONExxx","Hora local:"+ sdfArgentina.format(calendar.getTime()));*/
+
+        return sdfMadrid.format(calendar.getTime());
+
     }
 
     public static void loadThumbnailsImageFromPath(String path, ImageView imageView) {
@@ -148,10 +164,91 @@ public class Util {
     }
 
     @DebugLog
+    public static String getCurrentDateLocal() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = sdf.format(new Date());
+
+        return startDate;
+    }
+
+    @DebugLog
+    public static String parseDateZH2(String fecha, String formato){
+        Log.d("DEBUG" , "FECHAS ANTES Q EXPLOTE" +fecha);
+        SimpleDateFormat sd1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        sd1.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); //todo no entiendo bien como funciona
+        Date dt = null;
+        try {
+            dt = sd1.parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String date;
+        SimpleDateFormat sd2 = new SimpleDateFormat(formato);
+        date = sd2.format(dt);
+        return date;
+    }
+
+    @DebugLog
+    public static String parseDateZH(String fecha, String formato){
+        Log.d("DEBUG" , "FECHAS ANTES Q EXPLOTE" +fecha);
+        SimpleDateFormat sd1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sd1.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); //todo no entiendo bien como funciona
+        Date dt = null;
+        try {
+            dt = sd1.parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String date;
+        SimpleDateFormat sd2 = new SimpleDateFormat(formato);
+        date = sd2.format(dt);
+        return date;
+    }
+
+
+    @DebugLog
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Log.d("DEBUG FECHA", sdf.format(new Date()));
-        return sdf.format(new Date());
+        String startDate = sdf.format(new Date());
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(5,7))-1,
+                Integer.parseInt(startDate.substring(8,10)),
+                0,
+                0,
+                0);
+
+        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+        sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+
+        Log.d("TimeZone currentDate", "......."+sdfMadrid.format(calendar.getTime()));
+        return sdfMadrid.format(calendar.getTime());
+    }
+
+
+
+    @DebugLog
+    public static String getCurrentDateFinisth() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = sdf.format(new Date());
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(5,7))-1,
+                Integer.parseInt(startDate.substring(8,10)),
+                23,
+                59,
+                59);
+
+        SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+        sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+
+        Log.d("TimeZone currentDate", ".......finish"+sdfMadrid.format(calendar.getTime()));
+
+        return sdfMadrid.format(calendar.getTime());
     }
 
     @DebugLog
@@ -216,8 +313,8 @@ public class Util {
 
         // Date
         text.append(context.getString(R.string.date))
-                .append(": ").append(receiptResponse.getInvoice()
-                .getInvoiceStartDate().split(" ")[0]).append("\n");
+                .append(": ").append(parseDateZH2(receiptResponse.getInvoice()
+                .getInvoiceStartDate()/*.split(" ")[0]).append("\n")*/,"dd-MM-yyyy")).append("\n");
 
         DecimalFormat df = new DecimalFormat("#.00");
         df.setRoundingMode(RoundingMode.HALF_UP);

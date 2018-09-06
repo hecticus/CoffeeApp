@@ -47,11 +47,11 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     @Expose
     private StatusInvoice invoiceStatus;
 
-    @SerializedName("startDateInvoice")//("createdAt")
+    @SerializedName("startDate")//("createdAt")
     @Expose
     private String invoiceStartDate;
 
-    @SerializedName("closedDateInvoice")
+    @SerializedName("closedDate")
     @Expose
     private String invoiceClosedDate;
 
@@ -96,7 +96,8 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         providerName = invoicePost.getProviderName();
         identificationDocProvider = invoicePost.getIdentificationDocProvider();
         providerId = invoicePost.getProviderId();
-        date = invoiceStartDate.split(" ")[0];
+        Log.d("BUG", "brayandmb1" + invoicePost.getDate());
+        date = invoicePost.getDate();//invoiceStartDate.split(" ")[0]
     }
 
     public String getStatusInvo() {

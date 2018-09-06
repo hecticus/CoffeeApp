@@ -12,6 +12,7 @@ import com.hecticus.eleta.model_new.Invoice;
 import com.hecticus.eleta.model_new.InvoiceDetail;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -31,7 +32,7 @@ public interface InvoiceRetrofitInterface {
 
     //listo
     @GET("invoice")//getByDateByTypeProvider/{date}/{typeProvider}/{index}/10")
-    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
+    Call<InvoiceListResponse> getInvoicesByDateByTypeProvider(@Query("startDate") String date, @Query("finishDate") String dateF, @Query("typeProvider") int typeProvider/*, @Query("pageindex") int index, @Query("pagesize") int size*/);
 
     //listo con sincronizacion
     @DELETE("invoice/{id}")

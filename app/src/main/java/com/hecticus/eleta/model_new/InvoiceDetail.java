@@ -9,6 +9,7 @@ import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.request.invoice.PurityPost;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
+import com.hecticus.eleta.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class InvoiceDetail {
 
     private Long id;
     private Boolean deleted;
-    private String createdAt;
+    private String start;
     private String updatedAt;
     private String noteInvoiceDetail;
     private Float price;
@@ -46,6 +47,7 @@ public class InvoiceDetail {
         this.costItemType = invoiceDetails.getPriceItem();
         this.nameReceived = invoiceDetails.getReceiverName();
         this.nameDelivered = invoiceDetails.getDispatcherName();
+        this.start = invoiceDetails.getStartDate();
         try {
             this.itemType = new ItemType((long) invoiceDetails.getItemType().getId());
         }catch (Exception e){
@@ -110,6 +112,8 @@ public class InvoiceDetail {
         amountInvoiceDetail= itemPost.getAmount();
         nameReceived = invoicePost.getReceiverName();
         nameDelivered = invoicePost.getDispatcherName();
+        this.start = invoicePost.getStartDate();
+        Log.d("DEBUG", "currentDate invoiceDeatails" + start);
         if(!invoicePost.getBuyOption()){
             itemType = new ItemType((long) itemPost.getItemTypeId());
             lot = null;//new Lot((long) invoicePost.getLot());
@@ -138,12 +142,12 @@ public class InvoiceDetail {
         this.deleted = deleted;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getStart() {
+        return start;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setStart(String start) {
+        this.start = start;
     }
 
     public String getUpdatedAt() {

@@ -9,6 +9,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.hecticus.eleta.model.response.lot.Lot;
+import com.hecticus.eleta.util.Util;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -152,7 +153,7 @@ public class InvoicePost extends RealmObject implements JsonSerializer<InvoicePo
 
     @DebugLog
     public String getStartDate() {
-        return startDate;
+        return Util.parseDateTimeZoneLocalToServer(startDate);
     }
 
     public void setStartDate(String startDate) {

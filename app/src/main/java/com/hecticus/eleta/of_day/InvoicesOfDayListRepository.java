@@ -117,10 +117,10 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     invoice.getInvoiceId(),
                     invoice.getLocalId(),
                     isForHarvest);
-            Log.d("DEBUG 555555555555", "..." +detailsList.size());
+            Log.d("DEBUG 5555 json in", "..." +detailsList.size());
 
-            Log.d("DEBUG json invoiceDe", "id" + String.valueOf(invoice.getInvoiceId()));
-            Log.d("DEBUG json invoiceDet", "idLocal" + String.valueOf(invoice.getLocalId()));
+            Log.d("DEBUG 5555 json in", "id" + String.valueOf(invoice.getInvoiceId()));
+            Log.d("DEBUG 5555 json in", "idLocal" + String.valueOf(invoice.getLocalId()));
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 

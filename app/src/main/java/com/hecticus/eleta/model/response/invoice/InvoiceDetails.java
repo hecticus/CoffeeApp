@@ -17,6 +17,7 @@ import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.store.Store;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
+import com.hecticus.eleta.util.Util;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -90,7 +91,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     @Expose
     private float priceItem =-1;
 
-    @SerializedName("createdAt")
+    @SerializedName("startDate")
     @Expose
     private String startDate = "";
 
@@ -257,7 +258,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     }
 
     public String getStartDate() {
-        return startDate;
+        return Util.parseDateTimeZoneServerToLocal(startDate);
     }
 
     public void setStartDate(String startDate) {
@@ -464,18 +465,32 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
 
     @Override
     public String getReadableHeader() {
-        if (date == null) {
-            initDateTime();
+        String response = " ";
+        if (startDate != null) {
+            Log.d("DEBUG shami", "ReadableHeader" + startDate);
+            try{
+                response = Util.parseDateZH(startDate, "yyyy-MM-dd");
+            }catch (Exception e){
+                response = Util.parseDateZH2(startDate, "yyyy-MM-dd");
+            }
+            //initDateTime();
         }
-        return date;
+        return response;
     }
 
     @Override
     public String getReadableFirstInfo() {
-        if (time == null) {
-            initDateTime();
+        String response = " ";
+        if (startDate != null) {
+            Log.d("DEBUG shami", "ReadableFirstInfo" + startDate);
+            try {
+                response = Util.parseDateZH(startDate, "HH:mm:ss");
+            }catch (Exception e){
+                response = Util.parseDateZH2(startDate, "HH:mm:ss");
+            }
+            //initDateTime();
         }
-        return time;
+        return response;
     }
 
     @Override

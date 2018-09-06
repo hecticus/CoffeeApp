@@ -1,5 +1,7 @@
 package com.hecticus.eleta.model_new;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,7 +26,7 @@ public class Invoice implements Serializable {
     private Boolean buyOption;
     private StatusInvoice statusInvoice;
     private List<InvoiceDetail> itemtypes;
-    private String startDate;
+    private String start;
     private Provider provider;
 
     public Invoice() {
@@ -38,7 +40,8 @@ public class Invoice implements Serializable {
         //this.id = (long) invoicePost.getInvoiceId();
         this.buyOption = invoicePost.getBuyOption();
         this.provider = new Provider(provider, invoicePost.getProviderId());
-        this.startDate = invoicePost.getStartDate();
+        this.start = invoicePost.getStartDate();
+        Log.d("DEBUG", "currentDate invoice"+start);
         this.itemtypes = new ArrayList<>();
         for(int i=0; i<invoicePost.getItems().size(); i++ ) {
             itemtypes.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
@@ -116,12 +119,12 @@ public class Invoice implements Serializable {
         this.itemtypes = itemtypes;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getStart() {
+        return start;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStart(String start) {
+        this.start = start;
     }
 
     public Provider getProvider() {
