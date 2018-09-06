@@ -178,24 +178,13 @@ public class Invoice extends AbstractEntity{
         if(providerType != 0L)
             expressionList.eq("provider.providerType.id", providerType);
 
-        if(startDate != null)
+        if(startDate != null && closeDate != null) {
+            expressionList.between("startDate", startDate, closeDate);
+        } else if(startDate != null) {
             expressionList.ge("startDate", startDate);
-
-        if(closeDate!= null)
-            expressionList.ge("closedDate", closeDate);
-/*
-        if(startDateTime != null && finishDateTime != null) {
-            expressionList.between("orderRequests.orderTasks.startDateTime", startDateTime, finishDateTime);
-            expressionList.filterMany("orderRequests").between("orderTasks.startDateTime", startDateTime, finishDateTime);
-        } else if(startDateTime != null) {
-            expressionList.ge("orderRequests.orderTasks.startDateTime", startDateTime);
-            expressionList.filterMany("orderRequests").ge("orderTasks.startDateTime", startDateTime);
-        } else if(finishDateTime != null) {
-            expressionList.le("orderRequests.orderTasks.startDateTime", finishDateTime);
-            expressionList.filterMany("orderRequests").le("orderTasks.startDateTime", finishDateTime);
+        } else if(closeDate != null) {
+            expressionList.le("closeDate", closeDate);
         }
-
-        */
 
         if(nitName != null){
             expressionList
@@ -203,7 +192,6 @@ public class Invoice extends AbstractEntity{
                         .startsWith("provider.nameProvider", nitName)
                         .startsWith("provider.nitProvider", nitName);
         }
-
 
         if(sort != null)
             expressionList.orderBy(sort( sort));
