@@ -165,7 +165,7 @@ public class Invoice extends AbstractEntity{
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
-                                         ZonedDateTime closeDate, Long status ,boolean delete){
+                                         ZonedDateTime closeDate, Long status ,boolean delete, String nitName){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -196,6 +196,14 @@ public class Invoice extends AbstractEntity{
         }
 
         */
+
+        if(nitName != null){
+            expressionList
+                    .or()
+                        .startsWith("provider.nameProvider", nitName)
+                        .startsWith("provider.nitProvider", nitName);
+        }
+
 
         if(sort != null)
             expressionList.orderBy(sort( sort));

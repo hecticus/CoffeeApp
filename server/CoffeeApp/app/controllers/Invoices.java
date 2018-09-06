@@ -133,7 +133,7 @@ public class Invoices extends Controller {
     @CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
                                     String sort, Long id_provider, Long id_providertype,  String startDate,
-                                    String endDate, Long status ,boolean deleted){
+                                    String endDate, Long status ,boolean deleted,  String nitName){
         try {
 
             ZonedDateTime startTime_to = null;
@@ -151,7 +151,8 @@ public class Invoices extends Controller {
 
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
-                                                                        id_providertype, startTime_to, startTime_from, status, deleted);
+                                                                        id_providertype, startTime_to, startTime_from,
+                                                                        status, deleted, nitName);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
