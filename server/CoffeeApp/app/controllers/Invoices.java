@@ -179,10 +179,6 @@ public class Invoices extends Controller {
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
 
-/*        JsonNode startDate =  json.get("startDates");
-        if (startDate ==  null)
-            return Response.requiredParameter("startDateInvoiceDetail");
-        String fecha = startDate.asText().split("T")[0];*/
 
         JsonNode date = json.findValue("start");
         if(date == null)
@@ -211,21 +207,13 @@ public class Invoices extends Controller {
 
         Invoice newInvoice = null;
 
-        if(invoiceList.isEmpty()){  //
+        if(invoiceList == null){  //
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
         }else{
             newInvoice = invoiceList.get(0);
         }
-
-//        if(invoices == null){
-//            newInvoice = new Invoice();
-//            newInvoice.setProvider(invoice.getProvider());
-//            newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-//        }else{
-//            newInvoice = invoices;
-//        }
 
         for (JsonNode item : itemtypes) {
 
@@ -270,7 +258,7 @@ public class Invoices extends Controller {
 
             }
 
-            // Buscos la lista de invoicesDetail asociado a ese Invoice
+            // Busco la lista de invoicesDetail asociado a ese Invoice
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
 
             invoiceDetails.add(invoiceDetail);
