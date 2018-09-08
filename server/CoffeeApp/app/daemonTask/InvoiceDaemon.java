@@ -18,38 +18,16 @@ public class InvoiceDaemon {
 
 
     public void changesStatus(){
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-
-
-        Time hora = Time.valueOf(LocalTime.now()) ;
-
-        System.out.println("*** 000000000000000000000."+ hora);
-
-//        LocalDateTime todayAt6 = LocalDate.now().atTime(6, 29);
-//        Calendar calender = Calendar.getInstance();
-//        calender.set(Calendar.HOUR_OF_DAY, 24);
-//        System.out.println("hora de calender"+ calender);
-//        Date startTime = calender.getTime();
-//
-//        startTime.setHours(24);
-//        System.out.println("hora de starttime"+ startTime);
-//        Date date2pm = new java.util.Date();
-//        date2pm.setHours(14);
-//        date2pm.setMinutes(0);
-//
-//        Timer timer = new Timer();
-//        timer.schedule( new TimeClosed(), todayAt6, new Long(86400000));
+        System.out.println("*** Starting DaemonTask...");
+        System.out.println("*** Starting DaemonTask...");
+        System.out.println("*** Starting DaemonTask...");
+        System.out.println("*** Starting DaemonTask...");
 
         Date horaDespertar = new Date(System.currentTimeMillis());
 
         Calendar c = Calendar.getInstance();
         c.setTime(horaDespertar);
-        System.out.println(c.get(Calendar.DAY_OF_WEEK));
+
         // Si la hora es posterior a las 8am se programa la alarma para el dia siguiente
 //        if (c.get(Calendar.HOUR_OF_DAY) >= 22) {
 //            c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
@@ -61,7 +39,6 @@ public class InvoiceDaemon {
 
         horaDespertar = c.getTime();
         System.out.println(horaDespertar);
-        System.out.println(c.get(Calendar.DAY_OF_WEEK));
         // El despertador suena cada 24h (una vez al dia)
         int tiempoRepeticion = 86400000;
 

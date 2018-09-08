@@ -33,19 +33,15 @@ public abstract class Job extends Model {
     @Column(columnDefinition = "datetime")
     private ZonedDateTime close;
 
-
     private Time closeTime;
 
-
     private String Description;
-
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdatedTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false)
     protected ZonedDateTime updatedAt;
-
 
     private static Finder<Long, Job> finder = new Finder<>(Job.class);
 
