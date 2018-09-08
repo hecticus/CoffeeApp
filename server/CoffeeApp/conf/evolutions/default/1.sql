@@ -133,6 +133,14 @@ create table item_types (
   constraint pk_item_types primary key (id)
 );
 
+create table job (
+  id                            bigint auto_increment not null,
+  close                         datetime,
+  close_time                    time,
+  description                   varchar(255),
+  constraint pk_job primary key (id)
+);
+
 create table lots (
   id                            bigint auto_increment not null,
   farm_id                       bigint not null,
@@ -526,6 +534,8 @@ drop table if exists invoice_details;
 drop table if exists invoicesdetails_purities;
 
 drop table if exists item_types;
+
+drop table if exists job;
 
 drop table if exists lots;
 

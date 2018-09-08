@@ -159,7 +159,9 @@ public class Invoice extends AbstractEntity{
     }
 
     public static List<Invoice> findAllInvoiceActive() {
-        return finder.query().where().eq("statusInvoice.id", 11).findList();
+        return finder.query().where()
+                .eq("statusInvoice.id", 11)
+                .findList();
     }
 
 
