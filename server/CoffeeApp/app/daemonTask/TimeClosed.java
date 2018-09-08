@@ -22,7 +22,8 @@ public class TimeClosed extends TimerTask {
 
 
         List<Invoice> invoices = Invoice.findAllInvoiceActive();
-        StatusInvoice status = StatusInvoice.findById(new Long(12));
+        StatusInvoice status = new StatusInvoice();
+        status.setId(new Long(12));
         if(invoices != null){
             for (Invoice inv : invoices){
                 inv.setStatusInvoice(status);

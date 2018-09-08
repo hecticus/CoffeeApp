@@ -179,7 +179,6 @@ public class Invoices extends Controller {
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
 
-
         JsonNode date = json.findValue("start");
         if(date == null)
             return Response.requiredParameter("Requiere fecha de inicio de factura");
@@ -207,7 +206,7 @@ public class Invoices extends Controller {
 
         Invoice newInvoice = null;
 
-        if(invoiceList == null){  //
+        if( invoiceList.isEmpty()){
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
