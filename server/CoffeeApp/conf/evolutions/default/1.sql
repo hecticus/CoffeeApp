@@ -138,6 +138,7 @@ create table job (
   close                         datetime,
   close_time                    time,
   description                   varchar(255),
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_job primary key (id)
 );
 

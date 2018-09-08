@@ -3,8 +3,10 @@ package daemonTask;
 import models.Invoice;
 import models.status.StatusInvoice;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 public class InvoiceDaemon {
@@ -22,6 +24,11 @@ public class InvoiceDaemon {
         System.out.println("*** Loading control access tables...");
         System.out.println("*** Loading control access tables...");
         System.out.println("*** Loading control access tables...");
+
+
+        Time hora = Time.valueOf(LocalTime.now()) ;
+
+        System.out.println("*** 000000000000000000000."+ hora);
 
 //        LocalDateTime todayAt6 = LocalDate.now().atTime(6, 29);
 //        Calendar calender = Calendar.getInstance();
