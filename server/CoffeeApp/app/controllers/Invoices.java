@@ -7,6 +7,7 @@ import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
+import daemonTask.TimeClosed;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.*;
@@ -125,6 +126,16 @@ public class Invoices extends Controller {
     public  Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Invoice.findById(id)));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    @CoffeAppsecurity
+    public  Result closeInvoice() {
+        try {
+            TimeClosed.closeInvoice();
+            return Response.foundEntity(Json.toJson("Facturas cerradas"));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

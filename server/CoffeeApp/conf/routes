@@ -83,9 +83,9 @@ GET     /invoice/createReceipt/:id                                              
 POST    /invoice2                                                               controllers.Invoices.buyHarvestsAndCoffe()
 POST    /invoice/delete                                                         controllers.Invoices.deletes()
 POST    /invoice                                                                controllers.Invoices.create()
+POST    /invoice                                                                controllers.Invoices.closeInvoice()
 PUT     /invoice/:id                                                            controllers.Invoices.update(id : Long)
 DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
-
 
 ################################################################################
 ##·······                       InvoiceDetail                        ··········#

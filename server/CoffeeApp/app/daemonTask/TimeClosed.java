@@ -20,6 +20,16 @@ public class TimeClosed extends TimerTask {
 
         System.out.println("*** 000000000000000000000."+ hora);
 
+        closeInvoice();
+
+        System.out.println("*** Cerrando facturas...");
+        System.out.println("*** Cerrando facturas...");
+        System.out.println("*** Cerrando facturas...");
+
+    }
+
+
+    public static void  closeInvoice(){
         List<Invoice> invoices = Invoice.findAllInvoiceActive();
         StatusInvoice status = new StatusInvoice();
         status.setId(new Long(12));
@@ -29,10 +39,6 @@ public class TimeClosed extends TimerTask {
                 inv.update();
             }
         }
-
-        System.out.println("*** Cerrando facturas...");
-        System.out.println("*** Cerrando facturas...");
-        System.out.println("*** Cerrando facturas...");
 
     }
 }
