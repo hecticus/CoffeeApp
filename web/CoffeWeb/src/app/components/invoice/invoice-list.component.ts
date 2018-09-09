@@ -19,39 +19,41 @@ import { FilterService } from 'src/app/core/utils/filter/filter.service';
 	template: `
 		<h2 class="title">Reportes</h2>
 
-		<div class="row">
-			<!--<div class="field">
-				<mat-form-field>
-					<input matInput [matDatepicker]="picker" placeholder="fecha">
-					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-					<mat-datepicker #picker></mat-datepicker>
-				</mat-form-field>
-			</div>
-			<div class="field">
-				<mat-form-field>
-					<input matInput [matDatepicker]="picker2" placeholder="fecha">
-					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-					<mat-datepicker #picker></mat-datepicker>
-				</mat-form-field>
-			</div>-->
+		<div class="headerSearch">
+			<div class="row">
+				<!--<div class="field">
+					<mat-form-field>
+						<input matInput [matDatepicker]="picker" placeholder="fecha">
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<div class="field">
+					<mat-form-field>
+						<input matInput [matDatepicker]="picker2" placeholder="fecha">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+					</mat-form-field>
+				</div>-->
 
-			<div class="field filter">
-				<h4 class="title">Filtrar Por Fecha</h4>
-			</div>
-			<div class="field">
-				<mat-form-field  color="orange">
-				<mat-label>Fecha de Inicio</mat-label>
-				<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
-				<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-				<mat-datepicker #picker1></mat-datepicker>
-				</mat-form-field>
+				<div class="field filter">
+					<h4 class="title">Filtrar Por Fecha</h4>
+				</div>
+				<div class="field">
+					<mat-form-field  color="orange">
+					<mat-label>Fecha de Inicio</mat-label>
+					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
+					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+					<mat-datepicker #picker1></mat-datepicker>
+					</mat-form-field>
 
-				<mat-form-field  color="orange">
-					<mat-label>Fecha de cierre</mat-label>
-					<input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="picker2">
-					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-					<mat-datepicker #picker2 color="primary"></mat-datepicker>
-				</mat-form-field>
+					<mat-form-field  color="orange">
+						<mat-label>Fecha de cierre</mat-label>
+						<input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="picker2">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker #picker2 color="primary"></mat-datepicker>
+					</mat-form-field>
+				</div>
 			</div>
 		</div>
 
@@ -250,6 +252,7 @@ export class InvoiceListComponent implements OnInit {
 			// 'statusProvider': this.selectedStatus,
 			...this.filterService.filter
 		});
+
 		console.log('$event');
 		console.log(this.filterService.filter);
 		this.invoiceService.getAll(httpParams).subscribe(

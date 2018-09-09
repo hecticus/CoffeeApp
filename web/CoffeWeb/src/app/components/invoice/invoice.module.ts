@@ -63,4 +63,5 @@ import {
 	]
 })
 
+
 export class InvoiceModule { }

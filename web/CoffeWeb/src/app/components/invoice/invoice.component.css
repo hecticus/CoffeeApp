@@ -38,3 +38,8 @@ th.mat-sort-header-sorted {
 .table-header .sort.sort-down:after {
     content: "\25BC";
 }
+
+.headerSearch{
+    background-color: #e6dede;
+    margin: 5;
+}
