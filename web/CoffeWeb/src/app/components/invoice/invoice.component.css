@@ -40,6 +40,29 @@ th.mat-sort-header-sorted {
 }
 
 .headerSearch{
-    background-color: #e6dede;
-    margin: 5;
+    background-color: #f8f5f5;
+    margin: 10px;
+    position: sticky; 
+    border-radius:  10px;
+}
+
+.rowsm{
+    padding: 5%;
+    display: flex;
+    flex-direction: row;
+    height: 10px;
+
+}
+
+.field{
+    min-width: 200px;
+}
+
+.mat-select-value {
+    display: table-cell;
+    max-width: 0;
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
