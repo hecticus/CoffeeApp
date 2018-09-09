@@ -1,3 +1,4 @@
+import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ProviderService } from './../provider/provider.service';
 import { Status } from './../../core/models/status';
 import { BaseService } from '../../core/base.service';
@@ -7,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, Provider, ViewChild } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatIcon } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
@@ -17,10 +18,17 @@ import { FilterService } from 'src/app/core/utils/filter/filter.service';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
-		<h2 class="title">Reportes</h2>
+		<div class="row">
+			<h2 class="title">Reportes</h2>
+			<button class="position" mat-button color="primary" (click)="close()">
+				<i class="material-icons">
+					lock
+				</i>
+				Cerrar Facturas
+			</button>
+		<div>
 
 		<div class="headerSearch">
-			
 			<div class="rowsm">
 			<!--<div class="field filter">
 					<h4 class="title">Filtrar Por Fecha</h4>
@@ -182,7 +190,8 @@ export class InvoiceListComponent implements OnInit {
 		private statusInvoiceService: StatusInvoiceService,
 		private providerTypeService: ProviderTypeService,
 		private providerService: ProviderService,
-		public filterService: FilterService,
+		public  filterService: FilterService,
+		private notificationService: NotificationService,
 	) { }
 
 	ngOnInit() {
@@ -228,6 +237,11 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['typeProvider'];
 		}
 
+		if (this.filterService.filter['nitName'] === undefined) {
+			delete this.filterService.filter['nitName'];
+		}
+
+
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -254,6 +268,16 @@ export class InvoiceListComponent implements OnInit {
 	create() {
 		this.router.navigate(['./create'], {relativeTo: this.activatedRoute});
 	}
+
+	close() {
+		this.invoiceService.close({'ids': this.pageSizeOptions})
+			.subscribe(closes => {
+				this.notificationService.showSuccess();
+			}, err =>  {
+				this.notificationService.error(err);
+			});
+	}
+
 
 	manejo($event: any) {
 		console.log($event);
