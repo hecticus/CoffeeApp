@@ -28,7 +28,6 @@ public class TimeClosed extends TimerTask {
 
     }
 
-
     public static void  closeInvoice(){
         List<Invoice> invoices = Invoice.findAllInvoiceActive();
         StatusInvoice status = new StatusInvoice();

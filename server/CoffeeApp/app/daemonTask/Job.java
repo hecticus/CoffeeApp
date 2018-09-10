@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.ws.rs.DefaultValue;
 import java.sql.Time;
 import java.time.ZonedDateTime;
 
@@ -25,17 +26,12 @@ public abstract class Job extends Model {
     @Id
     protected Long id;
 
+    private String Description;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(columnDefinition = "datetime")
-    private ZonedDateTime close;
+    @DefaultValue("true")
+    private Boolean status;
 
     private Time closeTime;
-
-    private String Description;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -51,14 +47,6 @@ public abstract class Job extends Model {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public ZonedDateTime getClose() {
-        return close;
-    }
-
-    public void setClose(ZonedDateTime close) {
-        this.close = close;
     }
 
     public Time getCloseTime() {

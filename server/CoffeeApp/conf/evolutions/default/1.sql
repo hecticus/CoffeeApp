@@ -135,9 +135,9 @@ create table item_types (
 
 create table job (
   id                            bigint auto_increment not null,
-  close                         datetime,
-  close_time                    time,
   description                   varchar(255),
+  status                        tinyint(1) default 0,
+  close_time                    time,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_job primary key (id)
 );
