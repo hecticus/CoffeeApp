@@ -6,7 +6,7 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { InvoiceService } from './invoice.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Provider, ViewChild } from '@angular/core';
+import { Component, OnInit, Provider, ViewChild, TemplateRef } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
 import { MatTableDataSource, MatPaginator, MatSort, MatIcon } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -14,12 +14,13 @@ import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
 import { StatusInvoiceService } from 'src/app/components/status/status-invoice.service';
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
-
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h2 class="title">Reportes</h2>
-		<button class="position" mat-button color="primary" (click)="close()">
+		<button class="position" mat-button color="primary" (click)="openModal(template)">
 			<i class="material-icons">
 				lock
 			</i>
@@ -139,10 +140,26 @@ import { FilterService } from 'src/app/core/utils/filter/filter.service';
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
 
+		<ng-template #template>
+			<div class="modal-body text-center">
+				<div class="dialog-title">Confirmación </div>
+				<div class="dialog-message">¿Estas seguro que quieres cerrar todas las facturas?</div>
+				<div class="dialog-options">
+					<button class="btn-text green" type="button" (click)="close()">
+						<div class="text">Si</div>
+					</button>
+					<button class="btn-text red" type="button" (click)="decline()" >
+						<div class="text">No</div>
+					</button>
+				</div>
+			</div>
+		</ng-template>
+
 	`
 })
 
 export class InvoiceListComponent implements OnInit {
+	modalRef: BsModalRef;
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
@@ -190,6 +207,7 @@ export class InvoiceListComponent implements OnInit {
 		private providerService: ProviderService,
 		public  filterService: FilterService,
 		private notificationService: NotificationService,
+		private modalService: BsModalService,
 	) { }
 
 	ngOnInit() {
@@ -270,9 +288,11 @@ export class InvoiceListComponent implements OnInit {
 	close() {
 		this.invoiceService.close({'ids': this.pageSizeOptions})
 			.subscribe(closes => {
+				this.modalRef.hide();
 				this.notificationService.showSuccess();
 			}, err =>  {
 				this.notificationService.error(err);
+				this.modalRef.hide();
 			});
 	}
 
@@ -302,6 +322,13 @@ export class InvoiceListComponent implements OnInit {
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
 		console.log(id);
+	}
+	openModal(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+	}
+
+	decline(): void {
+		this.modalRef.hide();
 	}
 
 
