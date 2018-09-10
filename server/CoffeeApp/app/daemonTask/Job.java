@@ -21,8 +21,6 @@ public class Job extends BaseModel {
 
     private Integer delay;
 
-    private static Finder<Long, Job> finder = new Finder<>(Job.class);
-
     public Time getCloseTime() {
         return closeTime;
     }
@@ -55,5 +53,9 @@ public class Job extends BaseModel {
         this.delay = delay;
     }
 
+    private static Finder<Long, Job> finder = new Finder<>(Job.class);
 
+    public static Job findById(Long id){
+        return finder.byId(id);
+    }
 }

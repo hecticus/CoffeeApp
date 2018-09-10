@@ -34,14 +34,17 @@ public class InvoiceDaemon {
 //        int tiempoRepeticion = 1800;
 
         // Time houer= c.getTime().getHours();
-        Time time = Time.valueOf("23:00:00");
-        Job job = new Job();
-        job.setId(new Long(1));
-        job.setDescription("Time close Invoice");
-        job.setCloseTime(time);
-        job.setDelay(tiempoRepeticion);
-        job.setStatus(true);
-        job.save();
+        Job jobAux = Job.findById(new Long(1));
+        if (jobAux == null){
+            Time time = Time.valueOf("23:00:00");
+            Job job = new Job();
+            job.setId(new Long(1));
+            job.setDescription("Time close Invoice");
+            job.setCloseTime(time);
+            job.setDelay(tiempoRepeticion);
+            job.setStatus(true);
+            job.save();
+        }
 
 //        Programamos para que cierre las facturas a la media noche
         Timer temporizador = new Timer();
