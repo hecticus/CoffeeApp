@@ -307,16 +307,24 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         Log.d("DEBUG BRAYAN", g.toJson(itemTypeList));*/
 
 
+        /*itemTypeListAux.addAll(itemTypeList);*/
+
         if(!getIntent().getBooleanExtra("isAdd", false)) {
+            List<ItemType> itemTypeListAux = new ArrayList<>();
             for (int i = 0; i < itemTypeList.size(); i++) {
-                if (itemTypeList.get(i).getInputValue().equals("")) {
-                    itemTypeList.remove(i);
+                if (!itemTypeList.get(i).getInputValue().equals("")) {
+                    itemTypeListAux.add(itemTypeList.get(i));
                 }
             }
+            if (itemTypeListAux != null && itemTypeListAux.size() % 2 != 0)
+                observationsEditText.setBackground();
+            mAdapter.showNewDataSet(itemTypeListAux);
+        } else{
+            if (itemTypeList != null && itemTypeList.size() % 2 != 0)
+                observationsEditText.setBackground();
+            mAdapter.showNewDataSet(itemTypeList);
         }
-        if (itemTypeList != null && itemTypeList.size() % 2 != 0)
-            observationsEditText.setBackground();
-        mAdapter.showNewDataSet(itemTypeList);
+
     }
 
     @Override
