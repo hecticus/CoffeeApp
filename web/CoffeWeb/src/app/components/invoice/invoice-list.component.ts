@@ -18,15 +18,13 @@ import { FilterService } from 'src/app/core/utils/filter/filter.service';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
-		<div class="row">
-			<h2 class="title">Reportes</h2>
-			<button class="position" mat-button color="primary" (click)="close()">
-				<i class="material-icons">
-					lock
-				</i>
-				Cerrar Facturas
-			</button>
-		<div>
+		<h2 class="title">Reportes</h2>
+		<button class="position" mat-button color="primary" (click)="close()">
+			<i class="material-icons">
+				lock
+			</i>
+			Cerrar Facturas
+		</button>
 
 		<div class="headerSearch">
 			<div class="rowsm">

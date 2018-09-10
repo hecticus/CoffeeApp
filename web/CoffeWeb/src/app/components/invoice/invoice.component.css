@@ -44,6 +44,8 @@ th.mat-sort-header-sorted {
     margin: 10px;
     position: sticky; 
     border-radius:  10px;
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 .rowsm{
@@ -51,7 +53,6 @@ th.mat-sort-header-sorted {
     display: flex;
     flex-direction: row;
     height: 10px;
-
 }
 
 .field{
