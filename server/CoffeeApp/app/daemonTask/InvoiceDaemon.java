@@ -1,5 +1,6 @@
 package daemonTask;
 
+import java.sql.Time;
 import java.util.*;
 
 public class InvoiceDaemon {
@@ -10,6 +11,8 @@ public class InvoiceDaemon {
 
 
     public void changesStatus(){
+        Boolean value = true;
+
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
@@ -29,6 +32,16 @@ public class InvoiceDaemon {
 //        se cierran las facturas cada 24h (una vez al dia)
         int tiempoRepeticion = 86400000;
 //        int tiempoRepeticion = 1800;
+
+        // Time houer= c.getTime().getHours();
+        Time time = Time.valueOf("23:00:00");
+        Job job = new Job();
+        job.setId(new Long(1));
+        job.setDescription("Time close Invoice");
+        job.setCloseTime(time);
+        job.setDelay(tiempoRepeticion);
+        job.setStatus(true);
+        job.save();
 
 //        Programamos para que cierre las facturas a la media noche
         Timer temporizador = new Timer();
