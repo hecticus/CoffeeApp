@@ -23,7 +23,7 @@ public class InvoiceDaemon {
         Calendar c = Calendar.getInstance();
         c.setTime(horaDespertar);
 
-        c.set(Calendar.HOUR_OF_DAY, 20);
+        c.set(Calendar.HOUR_OF_DAY, 23);
         c.set(Calendar.MINUTE, 00);
         c.set(Calendar.SECOND, 0);
 
@@ -33,7 +33,6 @@ public class InvoiceDaemon {
         int tiempoRepeticion = 86400000;
 //        int tiempoRepeticion = 1800;
 
-        // Time houer= c.getTime().getHours();
         Job jobAux = Job.findById(new Long(1));
         if (jobAux == null){
             Time time = Time.valueOf("23:00:00");
@@ -44,6 +43,10 @@ public class InvoiceDaemon {
             job.setDelay(tiempoRepeticion);
             job.setStatus(true);
             job.save();
+        }
+
+        if (c.get(Calendar.HOUR_OF_DAY) >= 23) {
+            c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
         }
 
 //        Programamos para que cierre las facturas a la media noche
