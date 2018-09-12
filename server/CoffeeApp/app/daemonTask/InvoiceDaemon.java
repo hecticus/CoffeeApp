@@ -18,20 +18,7 @@ public class InvoiceDaemon {
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
 
-        Date horaDespertar = new Date(System.currentTimeMillis());
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(horaDespertar);
-
-        c.set(Calendar.HOUR_OF_DAY, 23);
-        c.set(Calendar.MINUTE, 00);
-        c.set(Calendar.SECOND, 0);
-
-        horaDespertar = c.getTime();
-        System.out.println(horaDespertar);
-//        se cierran las facturas cada 24h (una vez al dia)
-        int tiempoRepeticion = 86400000;
-//        int tiempoRepeticion = 1800;
 
         Job jobAux = Job.findById(new Long(1));
         if (jobAux == null){
@@ -40,18 +27,14 @@ public class InvoiceDaemon {
             job.setId(new Long(1));
             job.setDescription("Time close Invoice");
             job.setCloseTime(time);
-            job.setDelay(tiempoRepeticion);
+            job.setDelay(86400000);
             job.setStatus(true);
             job.save();
         }
 
-        if (c.get(Calendar.HOUR_OF_DAY) >= 23) {
-            c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
-        }
-
 //        Programamos para que cierre las facturas a la media noche
         Timer temporizador = new Timer();
-        temporizador.scheduleAtFixedRate(new TimeClosed(), horaDespertar, tiempoRepeticion);
+        temporizador.scheduleAtFixedRate(new InvoiceJob(), 0, 1800000);
     }
 
 }
