@@ -6,9 +6,16 @@ import models.status.StatusInvoice;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimeClosed extends TimerTask {
+
+    private Timer timer;
+
+    public TimeClosed(Timer t) {
+        this.timer = t;
+    }
 
     @Override
     public void run() {

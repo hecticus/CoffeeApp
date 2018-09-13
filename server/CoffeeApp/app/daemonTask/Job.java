@@ -1,9 +1,13 @@
 package daemonTask;
 
 import io.ebean.Finder;
+import models.status.StatusInvoice;
+import models.status.StatusJob;
 import multimedia.models.BaseModel;
+import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.ws.rs.DefaultValue;
 import java.sql.Time;
@@ -12,14 +16,20 @@ import java.sql.Time;
 @Table(name="job")
 public class Job extends BaseModel {
 
-    private String Description;
+    private String description;
 
-    @DefaultValue("true")
-    private Boolean status;
+    @ManyToOne
+//    @JsonBackReference
+    private StatusJob statusJob;
 
     private Time closeTime;
 
+    @Constraints.Required
     private Integer delay;
+
+    @DefaultValue("false")
+    @Constraints.Required
+    private Boolean stop;
 
     public Time getCloseTime() {
         return closeTime;
@@ -30,19 +40,27 @@ public class Job extends BaseModel {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public Boolean getStop() {
+        return stop;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setStop(Boolean stop) {
+        this.stop = stop;
+    }
+
+    public StatusJob getStatusJob() {
+        return statusJob;
+    }
+
+    public void setStatusJob(StatusJob statusJob) {
+        this.statusJob = statusJob;
     }
 
     public Integer getDelay() {

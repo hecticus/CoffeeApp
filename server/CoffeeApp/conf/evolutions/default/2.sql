@@ -162,7 +162,10 @@ INSERT INTO `status` ( id, dtype, name, description) VALUES
   (41, 'provider',      'Activo',      NULL),
   (42, 'provider',      'Inactivo',    NULL),
   (50, 'store',         'Activo',      NULL),
-  (51, 'store',         'Inactivo',    NULL);
+  (51, 'store',         'Inactivo',    NULL),
+  (60, 'job',           'Activo',      NULL),
+  (61, 'job',           'Inactivo',    NULL),
+  (62, 'job',           'Cancelado',   NULL);
 
 
 INSERT INTO `provider_type` (`id`,`deleted`,`name_provider_type`)  VALUES

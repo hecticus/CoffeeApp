@@ -138,9 +138,10 @@ create table job (
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   description                   varchar(255),
-  status                        tinyint(1) default 0,
+  status_job_id                 bigint,
   close_time                    time,
   delay                         integer,
+  stop                          tinyint(1) default 0,
   deleted                       tinyint(1) default 0 not null,
   constraint pk_job primary key (id)
 );
@@ -387,6 +388,9 @@ create index ix_item_types_provider_type_id on item_types (provider_type_id);
 alter table item_types add constraint fk_item_types_unit_id foreign key (unit_id) references units (id) on delete restrict on update restrict;
 create index ix_item_types_unit_id on item_types (unit_id);
 
+alter table job add constraint fk_job_status_job_id foreign key (status_job_id) references status (id) on delete restrict on update restrict;
+create index ix_job_status_job_id on job (status_job_id);
+
 alter table lots add constraint fk_lots_farm_id foreign key (farm_id) references farms (id) on delete restrict on update restrict;
 create index ix_lots_farm_id on lots (farm_id);
 
@@ -475,6 +479,9 @@ drop index ix_item_types_provider_type_id on item_types;
 
 alter table item_types drop foreign key fk_item_types_unit_id;
 drop index ix_item_types_unit_id on item_types;
+
+alter table job drop foreign key fk_job_status_job_id;
+drop index ix_job_status_job_id on job;
 
 alter table lots drop foreign key fk_lots_farm_id;
 drop index ix_lots_farm_id on lots;
