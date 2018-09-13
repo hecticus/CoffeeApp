@@ -24,7 +24,7 @@ public class InvoiceJob extends TimerTask {
         System.out.println("*** Starting job...");
         System.out.println("*** Starting job...");
 
-        Job job = Job.findById(new Long(1));
+        /*Job job = Job.findById(new Long(1));
 
         Timer timer = new Timer();
         TimeClosed timeClo = new TimeClosed(timer);
@@ -80,7 +80,7 @@ public class InvoiceJob extends TimerTask {
 
             timer.scheduleAtFixedRate(timeClo, horaDespertar, tiempoRepeticion);
 
-        }
+        }*/
 
     }
 }
