@@ -11,11 +11,11 @@ import java.util.TimerTask;
 
 public class TimeClosed extends TimerTask {
 
-//    private Timer timer;
+    private Timer timer;
 
-/*    public TimeClosed(Timer t) {
+    public TimeClosed(Timer t) {
         this.timer = t;
-    }*/
+    }
 
     @Override
     public void run() {

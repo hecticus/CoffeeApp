@@ -3,6 +3,7 @@ package daemonTask;
 import models.status.StatusJob;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.*;
 
 public class InvoiceDaemon {
@@ -11,28 +12,13 @@ public class InvoiceDaemon {
         changesStatus();
     }
 
-
     public void changesStatus(){
-        Boolean value = true;
-
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
-        Date horaDespertar = new Date(System.currentTimeMillis());
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(horaDespertar);
-
-        c.set(Calendar.HOUR_OF_DAY, 23);
-        c.set(Calendar.MINUTE, 00);
-        c.set(Calendar.SECOND, 0);
-
-        horaDespertar = c.getTime();
-        System.out.println(horaDespertar);
-//        se cierran las facturas cada 24h (una vez al dia)
-        int tiempoRepeticion = 86400000;
-//        int tiempoRepeticion = 1800;
+        Time hora = Time.valueOf(LocalTime.now()) ;
+        System.out.println("****** Starting DaemonTask..."+ hora);
 
         // Llenamos tabla Job
         Job jobAux = Job.findById(new Long(1));
@@ -50,17 +36,16 @@ public class InvoiceDaemon {
             job.save();
         }
 
-        if (c.get(Calendar.HOUR_OF_DAY) >= 23) {
-            c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
-        }
-
-//        Programamos para que cierre las facturas a la media noche
-        Timer temporizador = new Timer();
-        temporizador.scheduleAtFixedRate(new TimeClosed(), horaDespertar, tiempoRepeticion);
 
 
-/*        Timer temporizador = new Timer();
-        temporizador.scheduleAtFixedRate(new InvoiceJob(), 3000000, 5000000);*/
+        // Periodo de repeticion 15m
+        int periodTime = 100000;
+        // Tiempo de delay 5m
+        int delayTime = 50000;
+
+        Timer timer = new Timer("timerDaemon", true);
+        timer.scheduleAtFixedRate(new InvoiceJob(timer, Job.findById(new Long(1)).getUpdatedAt()),
+                                    delayTime, periodTime);
     }
 
 }
