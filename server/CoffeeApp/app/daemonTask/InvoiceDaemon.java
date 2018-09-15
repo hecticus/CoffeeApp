@@ -16,7 +16,6 @@ public class InvoiceDaemon {
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
         System.out.println("*** Starting DaemonTask...");
-        System.out.println("*** Starting DaemonTask...");
         System.out.println("****** Hour Starting DaemonTask..."+ Time.valueOf(LocalTime.now()));
 
         // Llenamos tabla Job
@@ -35,9 +34,9 @@ public class InvoiceDaemon {
             job.save();
         }
 
-        // Periodo de repeticion 15m
+        // Periodo de repeticion 15m = 900000
         int periodTime = 400000;
-        // Tiempo de delay 5m
+        // Tiempo de delay 5m = 300000
         int delayTime = 50000;
 
         Timer timer = new Timer("timerDaemon", true);

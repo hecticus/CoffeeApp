@@ -5,13 +5,15 @@ import java.util.Timer;
 
 public class TimerTaskInfo {
 
+    private Timer jobTimer;
+    private Timer daemonTimer;
     private ZonedDateTime timeUpdate;
     private boolean status;
     private int times = 0;
-    private int periodTime = 100000;
+    private int periodTime = 86400000;
     private int delayTime = 50000;
-    private Timer daemonTimer;
-    private Timer jobTimer;
+
+
 
 
     public TimerTaskInfo(ZonedDateTime timeUpdate, Timer originTimer) {
