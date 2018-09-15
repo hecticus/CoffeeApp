@@ -36,15 +36,16 @@ public class InvoiceDaemon {
             job.save();
         }
 
-
-
         // Periodo de repeticion 15m
         int periodTime = 100000;
         // Tiempo de delay 5m
         int delayTime = 50000;
 
         Timer timer = new Timer("timerDaemon", true);
-        timer.scheduleAtFixedRate(new InvoiceJob(timer, Job.findById(new Long(1)).getUpdatedAt()),
+        TimerTaskInfo taskInfo = new TimerTaskInfo( Job.findById(new Long(1)).getUpdatedAt(), timer);
+
+
+        timer.scheduleAtFixedRate(new InvoiceJob(taskInfo),
                                     delayTime, periodTime);
     }
 
