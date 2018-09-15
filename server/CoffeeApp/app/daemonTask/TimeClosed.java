@@ -24,15 +24,8 @@ public class TimeClosed extends TimerTask {
         System.out.println("*** Cerrando facturas...");
         System.out.println("*** Cerrando facturas...");
         System.out.println("*** Cerrando facturas...");
-
-        Time hora = Time.valueOf(LocalTime.now()) ;
-        System.out.println("*** 000000000000000000000."+ hora);
-
+        System.out.println("*** Hour Close Invoice"+ Time.valueOf(LocalTime.now()));
         closeInvoice();
-
-        System.out.println("*** Cerrando facturas...");
-        System.out.println("*** Cerrando facturas...");
-        System.out.println("*** Cerrando facturas...");
 
     }
 

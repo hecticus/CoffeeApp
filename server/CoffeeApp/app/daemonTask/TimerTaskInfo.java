@@ -8,22 +8,17 @@ public class TimerTaskInfo {
     private ZonedDateTime timeUpdate;
     private boolean status;
     private int times = 0;
-    private Timer originTimer;
     private int periodTime = 100000;
     private int delayTime = 50000;
+    private Timer daemonTimer;
+    private Timer jobTimer;
+
 
     public TimerTaskInfo(ZonedDateTime timeUpdate, Timer originTimer) {
-        this.timeUpdate = timeUpdate;
-        this.originTimer = originTimer;
         this.status = true;
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
+        this.timeUpdate = timeUpdate;
+        this.daemonTimer = originTimer;
+        this.jobTimer = new Timer();
     }
 
     public void setTimes(int newTimes) {
@@ -42,12 +37,28 @@ public class TimerTaskInfo {
         this.timeUpdate = timeUpdate;
     }
 
-    public Timer getOriginTimer() {
-        return originTimer;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setOriginTimer(Timer originTimer) {
-        this.originTimer = originTimer;
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public Timer getDaemonTimer() {
+        return daemonTimer;
+    }
+
+    public void setDaemonTimer(Timer daemonTimer) {
+        this.daemonTimer = daemonTimer;
+    }
+
+    public Timer getJobTimer() {
+        return jobTimer;
+    }
+
+    public void setJobTimer(Timer jobTimer) {
+        this.jobTimer = jobTimer;
     }
 
     public void increment() {
@@ -69,4 +80,16 @@ public class TimerTaskInfo {
     public void setDelayTime(int delayTime) {
         this.delayTime = delayTime;
     }
+
+    public void stopTimerJob(){
+        this.jobTimer.cancel();
+        this.jobTimer.purge();
+    }
+
+    public void stopTimerDaemon(){
+        this.daemonTimer.cancel();
+        this.daemonTimer.purge();
+    }
+
+
 }

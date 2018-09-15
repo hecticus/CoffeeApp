@@ -11,8 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 public class InvoiceJob extends TimerTask {
 
-    Timer timer = new Timer();
-
     TimerTaskInfo timerInfo;
 
     InvoiceJob(TimerTaskInfo  info){
@@ -27,7 +25,7 @@ public class InvoiceJob extends TimerTask {
         System.out.println("*** Starting job...");
         System.out.println("*** Starting job...");
         Time hora = Time.valueOf(LocalTime.now()) ;
-        System.out.println("****** Starting DaemonTask..."+ hora);
+        System.out.println("****** Hour Starting job..."+ hora);
 
 
         if (!job.isDeleted() || job !=null){
@@ -39,24 +37,23 @@ public class InvoiceJob extends TimerTask {
 
                 System.out.println(horas +"   HORAS1               sdsd");
                 System.out.println(minutes +"   mINUTTTTTOS              sdsd");
-                if( diffUpdate == 0 & this.timerInfo.getStatus()){
+                if( diffUpdate == 0 & this.timerInfo.isStatus()){
                     this.timerInfo.increment();
 
-
-                    System.out.println(this.timerInfo.getTimes());
-                    System.out.println("*** IGGGGGGGGGGGGGGGGGGGGGUAL...");
-
-                    if(minutes < 0 ){
+                    if(minutes < 0){
                         this.timerInfo.setStatus(false);
                         System.out.println("***++++++++++++++++++++++");
-                        this.timer.schedule(new TimeClosed(this.timer), 0, job.getDelay() );
-
+                        this.timerInfo.getJobTimer().schedule(new TimeClosed(this.timerInfo.getJobTimer()),
+                                                        0, job.getDelay() );
                     }
 
                 }else if(diffUpdate > 0){
                     this.timerInfo.setStatus(true);
                     this.timerInfo.setTimeUpdate(job.getUpdatedAt());
                     System.out.println("*** mAYOOOOOORRR...");
+                    if(!job.getStop()){
+                        this.timerInfo.stopTimerJob();
+                    }
 
                 }
 
