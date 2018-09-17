@@ -78,11 +78,11 @@ create table invoices (
   id                            bigint auto_increment not null,
   provider_id                   bigint not null,
   status_invoice_id             bigint,
+  start_date                    datetime,
+  closed_date                   datetime,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  start_date_invoice            TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  closed_date_invoice           TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint pk_invoices primary key (id)
 );
 
@@ -92,13 +92,15 @@ create table invoice_details (
   item_type_id                  bigint not null,
   lot_id                        bigint,
   store_id                      bigint,
-  price_item_type_by_lot        decimal(38) not null,
-  cost_item_type                decimal(38) not null,
-  amount_invoice_detail         decimal(38) not null,
+  price_item_type_by_lot        decimal(12,2),
+  cost_item_type                decimal(12,2),
+  amount_invoice_detail         decimal(12,2) not null,
   name_received                 varchar(100) not null,
   name_delivered                varchar(100) not null,
   freight                       tinyint(1) default 0 not null,
   note                          text,
+  start_date                    datetime,
+  closed_date                   datetime,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -109,9 +111,9 @@ create table invoicesdetails_purities (
   id                            bigint auto_increment not null,
   purity_id                     bigint not null,
   invoice_detail_id             bigint not null,
-  value_rate_invoice_detail_purity integer not null,
-  discount_rate_purity          integer not null,
-  total_discount_purity         integer not null,
+  value_rate_invoice_detail_purity decimal(12,2),
+  discount_rate_purity          decimal(12,2),
+  total_discount_purity         decimal(12,2),
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -123,12 +125,25 @@ create table item_types (
   provider_type_id              bigint not null,
   unit_id                       bigint not null,
   name_item_type                varchar(255) not null,
-  cost_item_type                decimal(38) not null,
+  cost_item_type                decimal(12,2) not null,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_item_types_name_item_type unique (name_item_type),
   constraint pk_item_types primary key (id)
+);
+
+create table job (
+  id                            bigint auto_increment not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  description                   varchar(255),
+  status_job_id                 bigint,
+  close_time                    time,
+  delay                         integer,
+  stop                          tinyint(1) default 0,
+  deleted                       tinyint(1) default 0 not null,
+  constraint pk_job primary key (id)
 );
 
 create table lots (
@@ -137,7 +152,7 @@ create table lots (
   name_lot                      varchar(50) not null,
   area_lot                      varchar(200) not null,
   heigh_lot                     double not null,
-  price_lot                     decimal(38) not null,
+  price_lot                     decimal(12,2) not null,
   status_lot_id                 bigint,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
@@ -165,6 +180,7 @@ create table multimedia_cdn (
   url                           text not null,
   mime_type                     varchar(200) not null,
   name_cdn                      varchar(200) not null,
+  deleted                       tinyint(1) default 0 not null,
   constraint pk_multimedia_cdn primary key (id)
 );
 
@@ -216,7 +232,7 @@ create table provider_type (
 create table purities (
   id                            bigint auto_increment not null,
   name_purity                   varchar(20) not null,
-  discount_rate_purity          integer not null,
+  discount_rate_purity          decimal(12,2) not null,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
@@ -234,6 +250,7 @@ create table multimedia_rescale_cdn (
   url                           text not null,
   name_cdn                      varchar(200) not null,
   multimedia_id                 bigint not null,
+  deleted                       tinyint(1) default 0 not null,
   constraint pk_multimedia_rescale_cdn primary key (id)
 );
 
@@ -371,6 +388,9 @@ create index ix_item_types_provider_type_id on item_types (provider_type_id);
 alter table item_types add constraint fk_item_types_unit_id foreign key (unit_id) references units (id) on delete restrict on update restrict;
 create index ix_item_types_unit_id on item_types (unit_id);
 
+alter table job add constraint fk_job_status_job_id foreign key (status_job_id) references status (id) on delete restrict on update restrict;
+create index ix_job_status_job_id on job (status_job_id);
+
 alter table lots add constraint fk_lots_farm_id foreign key (farm_id) references farms (id) on delete restrict on update restrict;
 create index ix_lots_farm_id on lots (farm_id);
 
@@ -460,6 +480,9 @@ drop index ix_item_types_provider_type_id on item_types;
 alter table item_types drop foreign key fk_item_types_unit_id;
 drop index ix_item_types_unit_id on item_types;
 
+alter table job drop foreign key fk_job_status_job_id;
+drop index ix_job_status_job_id on job;
+
 alter table lots drop foreign key fk_lots_farm_id;
 drop index ix_lots_farm_id on lots;
 
@@ -522,6 +545,8 @@ drop table if exists invoice_details;
 drop table if exists invoicesdetails_purities;
 
 drop table if exists item_types;
+
+drop table if exists job;
 
 drop table if exists lots;
 
