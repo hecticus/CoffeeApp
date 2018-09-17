@@ -1,3 +1,4 @@
+import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ProviderService } from './../provider/provider.service';
 import { Status } from './../../core/models/status';
 import { BaseService } from '../../core/base.service';
@@ -5,87 +6,82 @@ import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { InvoiceService } from './invoice.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Provider, ViewChild } from '@angular/core';
+import { Component, OnInit, Provider, ViewChild, TemplateRef } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatIcon } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
 import { StatusInvoiceService } from 'src/app/components/status/status-invoice.service';
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
-
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h2 class="title">Reportes</h2>
+		<button class="position" mat-button color="primary" (click)="openModal(template)">
+			<i class="material-icons">
+				lock
+			</i>
+			Cerrar Facturas
+		</button>
 
-		<div class="row">
-			<!--<div class="field">
-				<mat-form-field>
-					<input matInput [matDatepicker]="picker" placeholder="fecha">
-					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-					<mat-datepicker #picker></mat-datepicker>
-				</mat-form-field>
+		<div class="headerSearch">
+			<div class="rowsm">
+			<!--<div class="field filter">
+					<h4 class="title">Filtrar Por Fecha</h4>
+				</div>-->
+				<div class="field">
+					<mat-form-field  color="orange">
+					<mat-label>Fecha de Inicio</mat-label>
+					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
+					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+					<mat-datepicker #picker1></mat-datepicker>
+					</mat-form-field>
+
+					<mat-form-field  color="orange">
+						<mat-label>Fecha de cierre</mat-label>
+						<input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="picker2">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker #picker2 color="primary"></mat-datepicker>
+					</mat-form-field>
+				</div>
 			</div>
-			<div class="field">
-				<mat-form-field>
-					<input matInput [matDatepicker]="picker2" placeholder="fecha">
-					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-					<mat-datepicker #picker></mat-datepicker>
-				</mat-form-field>
-			</div>-->
 
-			<div class="field filter">
-				<h4 class="title">Filtrar Por Fecha</h4>
-			</div>
-			<div class="field">
-				<mat-form-field  color="orange">
-				<mat-label>Fecha de Inicio</mat-label>
-				<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
-				<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-				<mat-datepicker #picker1></mat-datepicker>
-				</mat-form-field>
+			<div class="rowsm">
+				<div class="field">
+					<input matInput placeholder="Nombre o Identificación" [(ngModel)]="filterService.filter['nitName']"
+																			(change)="filterService.put('nitName',
+																			$event.target.value)">
+				</div>
+				<div class="field">
+					<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['typeProvider']"
+																(change)="filterService.put('typeProvider',
+																$event.target.value)">
+						<mat-option>Ninguna</mat-option>
+						<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType }} </mat-option>
+					</mat-select>
+				</div>
 
-				<mat-form-field  color="orange">
-					<mat-label>Fecha de cierre</mat-label>
-					<input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="picker2">
-					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-					<mat-datepicker #picker2 color="primary"></mat-datepicker>
-				</mat-form-field>
+				<div class="field">
+					<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusInvoice']"
+														(change)="filterService.put('statusInvoice',
+														$event.target.value)">
+						<mat-option>Ninguna</mat-option>
+						<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
+					</mat-select>
+				</div>
+
+				<div class="container-button-filter">
+					<button class="btn-icon" title="Search" type="button" (click)="list(0)">
+						<i class="material-icons">search</i>
+					</button>
+				</div>
 			</div>
 		</div>
 
-
-		<div class="row">
-			<div class="field filter">
-				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
-			</div>
-
-			<div class="field">
-				<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['typeProvider']"
-															(change)="filterService.put('typeProvider',
-															$event.target.value)">
-					<mat-option>Ninguna</mat-option>
-					<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType }} </mat-option>
-				</mat-select>
-			</div>
-
-			<div class="field">
-				<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusInvoice']"
-													(change)="filterService.put('statusInvoice',
-													$event.target.value)">
-					<mat-option>Ninguna</mat-option>
-					<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
-				</mat-select>
-			</div>
-
-			<div class="container-button-filter">
-				<button class="btn-icon" title="Search" type="button" (click)="list(0)">
-					<i class="material-icons">search</i>
-				</button>
-			</div>
-		</div> <!-- -->
-
+		<!--Table -->
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
 			<table class="table" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
@@ -144,10 +140,26 @@ import { FilterService } from 'src/app/core/utils/filter/filter.service';
 			<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 		</div>
 
+		<ng-template #template>
+			<div class="modal-body text-center">
+				<div class="dialog-title">Confirmación </div>
+				<div class="dialog-message">¿Estas seguro que quieres cerrar todas las facturas?</div>
+				<div class="dialog-options">
+					<button class="btn-text green" type="button" (click)="close()">
+						<div class="text">Si</div>
+					</button>
+					<button class="btn-text red" type="button" (click)="decline()" >
+						<div class="text">No</div>
+					</button>
+				</div>
+			</div>
+		</ng-template>
+
 	`
 })
 
 export class InvoiceListComponent implements OnInit {
+	modalRef: BsModalRef;
 	form: FormGroup;
 	provType: ProviderType[];
 	providers: Provider[];
@@ -193,7 +205,9 @@ export class InvoiceListComponent implements OnInit {
 		private statusInvoiceService: StatusInvoiceService,
 		private providerTypeService: ProviderTypeService,
 		private providerService: ProviderService,
-		public filterService: FilterService,
+		public  filterService: FilterService,
+		private notificationService: NotificationService,
+		private modalService: BsModalService,
 	) { }
 
 	ngOnInit() {
@@ -239,6 +253,11 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['typeProvider'];
 		}
 
+		if (this.filterService.filter['nitName'] === undefined) {
+			delete this.filterService.filter['nitName'];
+		}
+
+
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -250,6 +269,7 @@ export class InvoiceListComponent implements OnInit {
 			// 'statusProvider': this.selectedStatus,
 			...this.filterService.filter
 		});
+
 		console.log('$event');
 		console.log(this.filterService.filter);
 		this.invoiceService.getAll(httpParams).subscribe(
@@ -264,6 +284,18 @@ export class InvoiceListComponent implements OnInit {
 	create() {
 		this.router.navigate(['./create'], {relativeTo: this.activatedRoute});
 	}
+
+	close() {
+		this.invoiceService.close({'ids': this.pageSizeOptions})
+			.subscribe(closes => {
+				this.modalRef.hide();
+				this.notificationService.showSuccess();
+			}, err =>  {
+				this.notificationService.error(err);
+				this.modalRef.hide();
+			});
+	}
+
 
 	manejo($event: any) {
 		console.log($event);
@@ -290,6 +322,13 @@ export class InvoiceListComponent implements OnInit {
 	read(id: number) {
 		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
 		console.log(id);
+	}
+	openModal(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+	}
+
+	decline(): void {
+		this.modalRef.hide();
 	}
 
 

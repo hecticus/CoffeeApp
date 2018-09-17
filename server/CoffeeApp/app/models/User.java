@@ -6,7 +6,6 @@ import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.annotation.Formula;
-import controllers.multimediaUtils.Multimedia;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
@@ -16,6 +15,7 @@ import security.models.AuthUser;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+
 /*
  * Bean for users registered in system.
  * @author Yenny Fung
@@ -104,10 +104,6 @@ public class User extends AbstractEntity {
         this.lastLogin = lastLogin;
     }
 
-    public static JsonNode uploadPhoto(JsonNode request) {
-        Multimedia multimedia = new Multimedia();
-        return multimedia.uploadPhoto(request);
-    }
 
     public static User findById(Long id){
         return finder.byId(id);

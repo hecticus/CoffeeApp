@@ -168,16 +168,6 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
-    public Result uploadPhoto(JsonNode request) {
-        try {
-            JsonNode jracksPhoto = User.uploadPhoto(request);
-            return controllers.responseUtils.Response.foundEntity(Json.toJson(jracksPhoto));
-        } catch (Exception e) {
-            return ExceptionsUtils.update(e);
-        }
-    }
-
 
 
     public Result changePassword() {

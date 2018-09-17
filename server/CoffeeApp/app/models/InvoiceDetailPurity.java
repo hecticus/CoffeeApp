@@ -1,6 +1,5 @@
 package models;
 
-import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
@@ -9,6 +8,7 @@ import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -30,24 +30,24 @@ public class InvoiceDetailPurity extends AbstractEntity{
     private InvoiceDetail invoiceDetail;
 
     @Constraints.Required
-    @Column(nullable = false)
-    private Integer valueRateInvoiceDetailPurity;
+    @Column(precision = 12, scale = 2)
+    private BigDecimal valueRateInvoiceDetailPurity;
 
     @Constraints.Required
-    @Column(nullable = false)
-    private Integer discountRatePurity;
+    @Column(precision = 12, scale = 2)
+    private BigDecimal discountRatePurity;
 
     //TODO Hacer formula que lo calcule
     @Constraints.Required
-    @Column(nullable = false)
-    private Integer totalDiscountPurity;
+    @Column(precision = 12, scale = 2)
+    private BigDecimal totalDiscountPurity;
 
     private static Finder<Long, InvoiceDetailPurity> finder = new Finder<>(InvoiceDetailPurity.class);
 
     public InvoiceDetailPurity() {
-        totalDiscountPurity = 0;
-        discountRatePurity = 0;
-        valueRateInvoiceDetailPurity = 0;
+        totalDiscountPurity = BigDecimal.valueOf(0);
+        discountRatePurity = BigDecimal.valueOf(0);
+        valueRateInvoiceDetailPurity = BigDecimal.valueOf(0);
     }
 
     public Purity getPurity() {
@@ -58,27 +58,27 @@ public class InvoiceDetailPurity extends AbstractEntity{
         this.purity = purity;
     }
 
-    public Integer getValueRateInvoiceDetailPurity() {
+    public BigDecimal getValueRateInvoiceDetailPurity() {
         return valueRateInvoiceDetailPurity;
     }
 
-    public void setValueRateInvoiceDetailPurity(Integer valueRateInvoiceDetailPurity) {
+    public void setValueRateInvoiceDetailPurity(BigDecimal valueRateInvoiceDetailPurity) {
         this.valueRateInvoiceDetailPurity = valueRateInvoiceDetailPurity;
     }
 
-    public Integer getTotalDiscountPurity() {
+    public BigDecimal getTotalDiscountPurity() {
         return totalDiscountPurity;
     }
 
-    public void setTotalDiscountPurity(Integer totalDiscountPurity) {
+    public void setTotalDiscountPurity(BigDecimal totalDiscountPurity) {
         this.totalDiscountPurity = totalDiscountPurity;
     }
 
-    public Integer getDiscountRatePurity() {
+    public BigDecimal getDiscountRatePurity() {
         return discountRatePurity;
     }
 
-    public void setDiscountRatePurity(Integer discountRatePurity) {
+    public void setDiscountRatePurity(BigDecimal discountRatePurity) {
         this.discountRatePurity = discountRatePurity;
     }
 

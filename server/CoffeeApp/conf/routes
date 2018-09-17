@@ -43,7 +43,6 @@ PUT     /user/:id                                                               
 DELETE  /user/:id                                                               controllers.Users.delete(id : Long)
 GET     /user/email/:email                                                      controllers.Users.findByEmail(email: String)
 GET     /user/authUser/:authUserId                                              controllers.Users.findByAuthUser(authUserId: java.lang.Long)
-#PUT     /user/:id/mediaProfile                                                  controllers.Users.createUserProfile(id: Long)
 PATCH   /user/:id/password                                                      controllers.Users.updatePassword(id: Long)
 POST    /oauth/changepassword                                                   controllers.Users.changePassword()
 
@@ -78,15 +77,15 @@ DELETE  /farm/:id                                                               
 ################################################################################
 ##·······                      Invoice                               ··········#
 ################################################################################
-GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, statusInvoice: Long ?= 0L, deleted: Boolean ?= false)
+GET     /invoice                                                                controllers.Invoices.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, providerId: Long ?= 0L, typeProvider: Long ?= 0L, startDate: String ?= null, endDate: String ?= null, statusInvoice: Long ?= 0L, deleted: Boolean ?= false, nitName: String ?= null)
 GET     /invoice/:id                                                            controllers.Invoices.findById(id : Long)
 GET     /invoice/createReceipt/:id                                              controllers.Invoices.createReceipt(id : Long)
 POST    /invoice2                                                               controllers.Invoices.buyHarvestsAndCoffe()
 POST    /invoice/delete                                                         controllers.Invoices.deletes()
 POST    /invoice                                                                controllers.Invoices.create()
+POST    /invoice/close                                                          controllers.Invoices.closeInvoice()
 PUT     /invoice/:id                                                            controllers.Invoices.update(id : Long)
 DELETE  /invoice/:id                                                            controllers.Invoices.delete(id : Long)
-
 
 ################################################################################
 ##·······                       InvoiceDetail                        ··········#
@@ -130,7 +129,7 @@ DELETE  /lot/:id                                                                
 
 
 ################################################################################
-##·······                          Media                             ··········#
+##·······                          Multimedias                       ··········#
 ################################################################################
 GET     /multimedias                                                            controllers.Multimedias.findAll()
 GET     /multimedias/:id                                                        controllers.Multimedias.findById(id: Long)

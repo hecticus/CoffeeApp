@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
@@ -20,6 +21,8 @@ import scala.reflect.internal.Trees;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -48,6 +51,13 @@ public class InvoiceDetails extends Controller {
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
+            JsonNode dateStart = json.findValue("start");
+            if(dateStart == null)
+                return Response.requiredParameter("Requiere fecha de inicio de Detalle");
+
+            ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
 
 
@@ -62,7 +72,7 @@ public class InvoiceDetails extends Controller {
                     return Response.requiredParameter("costItemType");
             }
 
-
+            invoiceDetail.setStartDate(startTime);
             invoiceDetail.save();
             return  Response.createdEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
@@ -112,10 +122,10 @@ public class InvoiceDetails extends Controller {
                 InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
 
                 invoiceDetailPurity.setPurity(puritys);
-                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.decimalValue());
                 invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
                 invoiceDetailPurity.setInvoiceDetail(InvoiceDetail.findById(id));
-                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
+                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity().multiply(valueRateInvoiceDetailPurity.decimalValue()));
 
                 invoiceDetailPurity.save();
 
@@ -171,12 +181,20 @@ public class InvoiceDetails extends Controller {
     @CoffeAppsecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long invoice, Long itemType, Long lot, Long store, String nameReceived,
-                          String nameDelivered, String startDateInvoiceDetail, Long status, boolean deleted){
+                          String nameDelivered, String startDate, Long status, boolean deleted){
         try {
+
+            ZonedDateTime startTime = null;
+
+            if (startDate != null){
+                startTime =  ZonedDateTime.parse (startDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
+
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
                                                                 invoice, itemType, lot,store, nameReceived, nameDelivered,
-                                                                startDateInvoiceDetail, status, deleted);
+                                                                startTime, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){

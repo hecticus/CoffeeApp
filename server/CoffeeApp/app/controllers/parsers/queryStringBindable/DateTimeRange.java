@@ -14,6 +14,7 @@ public class DateTimeRange implements QueryStringBindable<DateTimeRange> {
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX");
     public ZonedDateTime from;
     public ZonedDateTime to;
+
     @Override
     public Optional<DateTimeRange> bind(String key, Map<String, String[]> data) {
         try {

@@ -1,17 +1,15 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.CustomDeserializer.TimeDeserializer;
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
-import io.ebean.annotation.CreatedTimestamp;
 import io.ebean.annotation.Formula;
-import io.ebean.annotation.UpdatedTimestamp;
 import io.ebean.text.PathProperties;
 import models.status.StatusInvoice;
 import play.data.format.Formats;
@@ -45,38 +43,26 @@ public class Invoice extends AbstractEntity{
 //    private BigDecimal totalInvoice;
     @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
             "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
+    @Column(precision = 12, scale = 2, nullable = false)
     private BigDecimal totalInvoice;
 
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-//    //    @Constraints.Required
-//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonSerialize(using = CustomDateTimeSerializer.class)
-//    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-//    @Column(columnDefinition = "datetime")
-//    private ZonedDateTime startDateInvoice;
-//
-//    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-//    @JsonSerialize(using = CustomDateTimeSerializer.class)
-//    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-//    @Column(columnDefinition = "datetime")
-//    private ZonedDateTime closedDateInvoice;
-
     //    @Constraints.Required
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-    private ZonedDateTime startDateInvoice;
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    // @JsonSerialize(using = TimeDeserializer.class)
+    @JsonDeserialize(using = TimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime startDate;
 
-    @Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @UpdatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private ZonedDateTime closedDateInvoice;
+    // @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime closedDate;
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
@@ -101,12 +87,20 @@ public class Invoice extends AbstractEntity{
         this.statusInvoice = statusInvoice;
     }
 
-    public ZonedDateTime getClosedDateInvoice() {
-        return closedDateInvoice;
+    public ZonedDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setClosedDateInvoice(ZonedDateTime closedDateInvoice) {
-        this.closedDateInvoice = closedDateInvoice;
+    public void setStartDate(ZonedDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public ZonedDateTime getClosedDate() {
+        return closedDate;
+    }
+
+    public void setClosedDate(ZonedDateTime closedDate) {
+        this.closedDate = closedDate;
     }
 
     @JsonIgnore
@@ -122,13 +116,6 @@ public class Invoice extends AbstractEntity{
         return totalInvoice;
     }
 
-    public ZonedDateTime getStartDateInvoice() {
-        return startDateInvoice;
-    }
-
-    public void setStartDateInvoice(ZonedDateTime openDateInvoice) {
-        this.startDateInvoice = openDateInvoice;
-    }
 
     public void setTotalInvoice(BigDecimal totalInvoice) {
         this.totalInvoice = totalInvoice;
@@ -136,33 +123,32 @@ public class Invoice extends AbstractEntity{
 
     //METODOS DEFINIDOS
 
-    public static List<Invoice> getOpenByProviderId(Long id_provider, String fecha){
+    public static List<Invoice> getOpenseByProviderId(Long id_provider, String dateStart){
        return finder.query().where()
                .eq("provider.id", id_provider)
-               .startsWith("createdAt", fecha)
+               .startsWith("startDate", dateStart)
                .findList();
     }
 
-    public static Invoice invoicesByProviderId(Long id_provider){
+    public static List<Invoice> invoicesByProviderId(Long id_provider){
         return finder.query().where()
                 .eq("provider.id", id_provider)
-                .eq("statusInvoice.id", 11 )
                 .eq("deleted",false )
-                .findUnique();
+                .findList();
     }
 
-    public static Invoice invoicesByProvider(Provider provider, String fecha){
+    public static Invoice invoicesByProvider(Provider provider, ZonedDateTime dateStart){
         return finder.query().where()
                 .eq("provider.id", provider.getId())
-                .startsWith("createdAt", fecha)
+                .le("startDate", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findUnique();
     }
 
-    public static List<Invoice> invoicesListByProvider(Provider provider, String fecha){
+    public static List<Invoice> invoicesListByProvider(Long provider, ZonedDateTime dateStart){
         return finder.query().where()
-                .eq("provider.id", provider.getId())
-                .startsWith("createdAt", fecha)
+                .eq("provider.id", provider)
+                .le("startDate", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findList();
     }
@@ -172,13 +158,15 @@ public class Invoice extends AbstractEntity{
     }
 
     public static List<Invoice> findAllInvoiceActive() {
-        return finder.query().where().eq("statusInvoice.id", 11).findList();
+        return finder.query().where()
+                .eq("statusInvoice.id", 11)
+                .findList();
     }
 
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
-                                         String sort, Long id_provider, Long providerType, String startDate,
-                                         String endDate, Long status ,boolean delete){
+                                         String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
+                                         ZonedDateTime closeDate, Long status ,boolean delete, String nitName){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -191,11 +179,20 @@ public class Invoice extends AbstractEntity{
         if(providerType != 0L)
             expressionList.eq("provider.providerType.id", providerType);
 
-        if(startDate != null)
-            expressionList.startsWith("createdAt", startDate);
+        if(startDate != null && closeDate != null) {
+            expressionList.between("startDate", startDate, closeDate);
+        } else if(startDate != null) {
+            expressionList.ge("startDate", startDate);
+        } else if(closeDate != null) {
+            expressionList.le("closeDate", closeDate);
+        }
 
-        if(endDate!= null)
-            expressionList.startsWith("closedDateInvoice", endDate);
+        if(nitName != null){
+            expressionList
+                    .or()
+                        .startsWith("provider.nameProvider", nitName)
+                        .startsWith("provider.nitProvider", nitName);
+        }
 
         if(sort != null)
             expressionList.orderBy(sort( sort));

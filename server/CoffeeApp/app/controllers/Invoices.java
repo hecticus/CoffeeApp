@@ -1,10 +1,13 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
+import daemonTask.TimeClosed;
 import io.ebean.Ebean;
 import io.ebean.text.PathProperties;
 import models.*;
@@ -22,6 +25,8 @@ import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -48,11 +53,20 @@ public class Invoices extends Controller {
             if(json == null)
                 return Response.requiredJson();
 
+            String tim = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX").format(ZonedDateTime.now());
+            System.out.println(tim );
+
             Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             Invoice invoice = Json.fromJson(json, Invoice.class);
+
+            JsonNode date = json.findValue("start");
+            if(date == null)
+                return Response.requiredParameter("Requiere fecha de inicio de factura");
+            invoice.setStartDate(ZonedDateTime.parse (date.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")));
             invoice.save();
             return  Response.createdEntity(Json.toJson(invoice));
 
@@ -118,13 +132,38 @@ public class Invoices extends Controller {
     }
 
     @CoffeAppsecurity
-    public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
-                                    String sort, Long id_provider, Long id_providertype, String startDate,
-                                    String endDate, Long status ,boolean deleted){
+    public  Result closeInvoice() {
         try {
+            TimeClosed.closeInvoice();
+            return Response.foundEntity(Json.toJson("Facturas cerradas"));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    @CoffeAppsecurity
+    public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
+                                    String sort, Long id_provider, Long id_providertype,  String startDate,
+                                    String endDate, Long status ,boolean deleted,  String nitName){
+        try {
+
+            ZonedDateTime startTime_to = null;
+            ZonedDateTime startTime_from = null;
+
+            if (startDate != null){
+                startTime_to =  ZonedDateTime.parse (startDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
+
+            if (endDate != null){
+                 startTime_from =  ZonedDateTime.parse (endDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
+
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
-                                                                        id_providertype, startDate, endDate, status, deleted);
+                                                                        id_providertype, startTime_to, startTime_from,
+                                                                        status, deleted, nitName);
 
             return ResponseCollection.foundEntity(listPager, pathProperties);
         }catch(Exception e){
@@ -151,16 +190,18 @@ public class Invoices extends Controller {
         if (itemtypes == null)
             return Response.requiredParameter("itemtypes");
 
-        JsonNode startDate =  json.get("startDate");;
-        if (startDate ==  null)
-            return Response.requiredParameter("startDateInvoiceDetail");
-        String fecha = startDate.asText().split(" ")[0];
+        JsonNode date = json.findValue("start");
+        if(date == null)
+            return Response.requiredParameter("Requiere fecha de inicio de factura");
+
+        ZonedDateTime fecha =  ZonedDateTime.parse (date.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
 
         Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
         if (form.hasErrors())
             return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-        Invoice invoice2 = Json.fromJson(json, Invoice.class);
+        // Invoice invoice2 = Json.fromJson(json, Invoice.class);
         // Tengo el invoice recibido
         Invoice invoice = form.get();
 
@@ -169,15 +210,14 @@ public class Invoices extends Controller {
             return Response.requiredParameter("Proveedor Inactivo");
         }
 
+        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider().getId(), fecha);
 
-        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider(), fecha);
-
-//        Invoice invoices = invoiceList.get(0);
-//        Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
+        // Invoice invoices = invoiceList.get(0);
+        // Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
 
         Invoice newInvoice = null;
 
-        if(invoiceList.isEmpty()){
+        if( invoiceList.isEmpty()){
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
@@ -185,19 +225,18 @@ public class Invoices extends Controller {
             newInvoice = invoiceList.get(0);
         }
 
-//        if(invoices == null){
-//            newInvoice = new Invoice();
-//            newInvoice.setProvider(invoice.getProvider());
-//            newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-//        }else{
-//            newInvoice = invoices;
-//        }
-
         for (JsonNode item : itemtypes) {
 
             Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
             if (formDetail.hasErrors())
                 return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
+
+            JsonNode dateStart = item.findValue("start");
+            if(dateStart == null)
+                return Response.requiredParameter("Requiere fecha de inicio de Detalle");
+
+            ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
 
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
 
@@ -229,14 +268,17 @@ public class Invoices extends Controller {
 
             }
 
-            // Buscos la lista de invoicesDetail asociado a esa Invoice
+            // Busco la lista de invoicesDetail asociado a ese Invoice
             List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
 
             invoiceDetails.add(invoiceDetail);
-            newInvoice.setInvoiceDetails(invoiceDetails);
 
+            newInvoice.setInvoiceDetails(invoiceDetails);
+            newInvoice.setStartDate(fecha);
             newInvoice.save();
+
             invoiceDetail.setInvoice(newInvoice);
+            invoiceDetail.setStartDate(startTime);
             invoiceDetail.save();
 
             if(!option)  {
@@ -264,10 +306,10 @@ public class Invoices extends Controller {
                         auxCreate = true;
                     }
                     invoiceDetailPurity.setPurity(puritys);
-                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.asInt());
+                    invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.decimalValue());
                     invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
                     invoiceDetailPurity.setInvoiceDetail(invoiceDetail);
-                    invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity() * valueRateInvoiceDetailPurity.asInt());
+                    invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity().multiply( valueRateInvoiceDetailPurity.decimalValue()));
                     if(auxCreate) invoiceDetailPurity.save();
                     else invoiceDetailPurity.update();
 
@@ -291,17 +333,5 @@ public class Invoices extends Controller {
         response.set("invoice", Json.toJson(invoice));
         return Response.createdEntity(response);
     }
-//    @CoffeAppsecurity
-//    public  Result createReceipt(Long idInvoice)  {
-//        Invoice invoice = Invoice.findById(idInvoice);
-//        ObjectNode response = Json.newObject();
-//        response.put("nameCompany", config.getString("play.company.name"));
-//        response.put("invoiceDescription", config.getString("play.harvest.invoice.description"));
-//        response.put("invoiceType", config.getString("play.harvest.invoice.type"));
-//        response.put("RUC", config.getString("play.purchase.ruc"));
-//        response.put("telephonoCompany", config.getString("play.company.telephone"));
-//        response.set("invoice", Json.toJson(invoice));
-//        return Response.createdEntity(response);
-//    }
 
 }

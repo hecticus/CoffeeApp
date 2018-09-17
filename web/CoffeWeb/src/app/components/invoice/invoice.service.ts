@@ -28,6 +28,10 @@ export class InvoiceService {
 		return this.http.put<any>(InvoiceService.BASE_URL + '/' + lot.id, lot);
 	}
 
+	close(ids: {'ids': number[]}): Observable<Lot> {
+		return this.http.post<any>(InvoiceService.BASE_URL + '/close', ids );
+	}
+
 	delete(id: number): Observable<any> {
 		return this.http.delete<any>(InvoiceService.BASE_URL + '/' + id);
 	}

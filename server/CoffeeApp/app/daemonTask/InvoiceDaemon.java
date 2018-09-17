@@ -1,70 +1,66 @@
 package daemonTask;
 
-import models.Invoice;
-import models.status.StatusInvoice;
+import models.status.StatusJob;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.sql.Time;
 import java.util.*;
 
-public class InvoiceDaemon extends TimerTask {
+public class InvoiceDaemon {
 
     public InvoiceDaemon() {
         changesStatus();
     }
 
-    @Override
-    public void run() {
-
-//        closeInvoice();
-    }
-
 
     public void changesStatus(){
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
-        System.out.println("*** Loading control access tables...");
+        Boolean value = true;
 
-        LocalDateTime todayAt6 = LocalDate.now().atTime(6, 29);
-        Calendar calender = Calendar.getInstance();
-        calender.set(Calendar.HOUR_OF_DAY, 24);
-        System.out.println("hora de calender"+ calender);
-        Date startTime = calender.getTime();
+        System.out.println("*** Starting DaemonTask...");
+        System.out.println("*** Starting DaemonTask...");
+        System.out.println("*** Starting DaemonTask...");
+        System.out.println("*** Starting DaemonTask...");
+        Date horaDespertar = new Date(System.currentTimeMillis());
 
-        startTime.setHours(24);
-        System.out.println("hora de starttime"+ startTime);
-//        Date date2pm = new java.util.Date();
-//        date2pm.set.setHour(14);
-//        date2pm.setMinutes(0);
+        Calendar c = Calendar.getInstance();
+        c.setTime(horaDespertar);
 
-//        Timer timer = new Timer();
-//
-//        timer.schedule( run(), todayAt6, 86400000);
-    }
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 00);
+        c.set(Calendar.SECOND, 0);
+
+        horaDespertar = c.getTime();
+        System.out.println(horaDespertar);
+//        se cierran las facturas cada 24h (una vez al dia)
+        int tiempoRepeticion = 86400000;
+//        int tiempoRepeticion = 1800;
+
+        // Llenamos tabla Job
+        Job jobAux = Job.findById(new Long(1));
+        StatusJob status = new StatusJob();
+        status.setId(new Long(60));
+        if (jobAux == null){
+            Time time = Time.valueOf("23:00:00");
+            Job job = new Job();
+            job.setId(new Long(1));
+            job.setDescription("Time close Invoice");
+            job.setCloseTime(time);
+            job.setDelay(86400000);
+            job.setStatusJob(status);
+            job.setStop(false);
+            job.save();
+        }
+
+        if (c.get(Calendar.HOUR_OF_DAY) >= 23) {
+            c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
+        }
+
+//        Programamos para que cierre las facturas a la media noche
+        Timer temporizador = new Timer();
+        temporizador.scheduleAtFixedRate(new TimeClosed(), horaDespertar, tiempoRepeticion);
 
 
-
-
-//    public void closeInvoice() {
-//        List<Invoice> invoices = Invoice.findAllInvoiceActive();
-//        StatusInvoice status = StatusInvoice.findById(new Long(12));
-//        for (Invoice inv : invoices){
-//            inv.setStatusInvoice(status);
-//            inv.update();
-//        }
-//        System.out.println("jsjsjsjjjsjsjsjsjsjsj");
-//    }
-
-    private static Date getTomorrowMorning2AM(){
-
-        Date date12am = new java.util.Date();
-        date12am.setHours(24);
-        date12am.setMinutes(0);
-
-        return date12am;
+/*        Timer temporizador = new Timer();
+        temporizador.scheduleAtFixedRate(new InvoiceJob(), 3000000, 5000000);*/
     }
 
 }

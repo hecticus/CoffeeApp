@@ -1,13 +1,13 @@
 package security.models;
 
 import com.avaje.ebean.Ebean;
+import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 

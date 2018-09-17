@@ -8,6 +8,7 @@ import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class Purity extends AbstractEntity{
     private String namePurity;
 
     @Constraints.Required
-    @Column(nullable = false)
-    private Integer discountRatePurity;
+    @Column(precision = 12, scale = 2, nullable = false)
+    private BigDecimal discountRatePurity;
 
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)
     private List<InvoiceDetailPurity> invoiceDetailPurities;
@@ -34,7 +35,7 @@ public class Purity extends AbstractEntity{
     private static Finder<Long, Purity> finder = new Finder<>(Purity.class);
 
     public Purity() {
-        discountRatePurity = 0;
+        discountRatePurity = BigDecimal.ZERO;
         invoiceDetailPurities = new ArrayList<>();
     }
 
@@ -49,11 +50,11 @@ public class Purity extends AbstractEntity{
         this.namePurity = namePurity;
     }
 
-    public Integer getDiscountRatePurity() {
+    public BigDecimal getDiscountRatePurity() {
         return discountRatePurity;
     }
 
-    public void setDiscountRatePurity(Integer discountRatePurity) {
+    public void setDiscountRatePurity(BigDecimal discountRatePurity) {
         discountRatePurity = discountRatePurity;
     }
 
