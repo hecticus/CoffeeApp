@@ -27,8 +27,10 @@ import com.hecticus.eleta.model.response.harvest.Harvest;
 import com.hecticus.eleta.model_new.GlobalRequests;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.SyncManager;
+import com.hecticus.eleta.model_new.persistence.Migrations;
 import com.hecticus.eleta.provider.list.ProvidersListFragment;
 import com.hecticus.eleta.purchases.list.PurchasesListFragment;
+import com.hecticus.eleta.util.Constants;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -37,6 +39,7 @@ import java.util.List;
 
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class HomeActivity extends AppCompatActivity implements HomeContract.View {
 
@@ -57,6 +60,12 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
         Realm.init(getApplicationContext());
+        final RealmConfiguration configuration = new RealmConfiguration.Builder()
+                                                        .name("coffeeleta.realm")
+                                                        .schemaVersion(Constants.VERSION_DB)
+                                                        .migration(new Migrations())
+                                                        .build();
+        Realm.setDefaultConfiguration(configuration);
 
         try {
             Crashlytics.setUserEmail(SessionManager.getUserEmail(this));
