@@ -316,7 +316,8 @@ public class Util {
                 .append(": ").append(parseDateZH2(receiptResponse.getInvoice()
                 .getInvoiceStartDate()/*.split(" ")[0]).append("\n")*/,"dd-MM-yyyy")).append("\n");
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat df1 = new DecimalFormat("0.0000");
         df.setRoundingMode(RoundingMode.HALF_UP);
 
         InvoiceDetails firstDetail = detailsResponse.getListInvoiceDetails().get(0);
@@ -342,8 +343,8 @@ public class Util {
             // User(Operator) name
             text.append(context.getString(R.string.operator)).append(": ").append(SessionManager.getUserName(context)).append("\n\n");
 
-            text.append(String.format("%12s", " ")).append("Libras")
-                    .append("  ").append(String.format("%8s", "Precio")).append("      Monto\n");
+            text.append(String.format("%17s", " ")).append("Libras")
+                    .append("  ").append(String.format("%8s", "Precio")).append("     Monto\n");
 
             for (InvoiceDetails detail : detailsResponse.getListInvoiceDetails()) {
                 String[] nameArray = detail.getItemType().getName().split(" ");
@@ -376,9 +377,9 @@ public class Util {
 
                         text.append(nameArrayList.get(i))
                                 .append(" ")
-                                .append(String.format("%11s", detail.getAmount()))
+                                .append(String.format("%11s", df.format(detail.getAmount())))
                                 .append(" ")
-                                .append(String.format("%9s", df.format(detail.getPriceByLot())))
+                                .append(String.format("%9s", df1.format(detail.getPriceByLot())))
                                 .append(" ")
                                 .append(String.format("%10s", df.format(totalAmount)))
                                 .append("\n");
@@ -454,7 +455,7 @@ public class Util {
 
                         text.append(String.format("%-10s", nameArrayList.get(i))).append(" ")
                                 .append(String.format("%6s", currentDetail.getAmount())).append(" ")
-                                .append(String.format("%10s", df.format(currentDetail.getPriceItem()))).append(" ")
+                                .append(String.format("%10s", df1.format(currentDetail.getPriceItem()))).append(" ")
                                 .append(String.format("%11s", df.format(totalAmount)))
                                 .append("\n");
                     } else {

@@ -21,6 +21,7 @@ import com.hecticus.eleta.util.Util;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -254,6 +255,7 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     }
 
     public void setPriceByLot(float priceByLot) {
+
         this.priceByLot = priceByLot;
     }
 

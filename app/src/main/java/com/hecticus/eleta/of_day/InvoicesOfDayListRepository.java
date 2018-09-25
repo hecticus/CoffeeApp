@@ -158,6 +158,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
                             Log.d("DEBUG", "paso3");
+                            //response.body().getListInvoiceDetails().get(0).setPriceByLot((float) 50.5555);
                             //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests(true));
                             Log.d("DEBUG", "paso4");
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());

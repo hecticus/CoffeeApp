@@ -62,8 +62,10 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         Realm.init(getApplicationContext());
         final RealmConfiguration configuration = new RealmConfiguration.Builder()
                                                         .name("coffeeleta.realm")
-                                                        .schemaVersion(Constants.VERSION_DB)
-                                                        .migration(new Migrations())
+                                                        .schemaVersion(Constants.VERSION_DB_PROD)
+                                                        //.name("coffeeletadev.realm")
+                                                        //.schemaVersion(Constants.VERSION_DB_DEV)
+                                                        //.migration(new Migrations())
                                                         .build();
         Realm.setDefaultConfiguration(configuration);
 

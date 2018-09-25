@@ -277,6 +277,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
                 try {
                     if (response.isSuccessful() && response.body() != null) {
+                        //response.body().getListInvoiceDetails().get(0).setPriceByLot((float) 50.5555);
                         //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                         onHarvestUpdated();

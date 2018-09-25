@@ -3,6 +3,7 @@ package com.hecticus.eleta.harvest.list;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model_new.SessionManager;
@@ -241,6 +242,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
+                            //response.body().getListInvoiceDetails().get(0).setPriceByLot((float) 50.5555);
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             /*List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                                     invoiceParam.getInvoiceId(),
