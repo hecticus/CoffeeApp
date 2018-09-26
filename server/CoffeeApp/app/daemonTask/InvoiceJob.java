@@ -2,10 +2,6 @@ package daemonTask;
 
 import java.sql.Time;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
@@ -20,13 +16,12 @@ public class InvoiceJob extends TimerTask {
     @Override
     public void run(){
 
-        Job job = Job.findById(new Long(1));
         System.out.println("*** Starting job...");
         System.out.println("*** Starting job...");
         System.out.println("*** Starting job...");
         Time hora = Time.valueOf(LocalTime.now()) ;
-        System.out.println("****** Hour Starting job..."+ hora);
-
+        System.out.println("****** Hour Starting job..."+ Time.valueOf(LocalTime.now()));
+        Job job = Job.findById(new Long(1));
 
         if (!job.isDeleted() || job !=null){
             if (job.getStatusJob().getId().intValue() == 60){
