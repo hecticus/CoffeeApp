@@ -1,20 +1,17 @@
 package daemonTask;
 
-import controllers.parsers.queryStringBindable.DateTime;
-import org.jclouds.location.Zone;
-import org.joda.time.Minutes;
-
 import java.sql.Time;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
+import java.time.LocalTime;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class InvoiceJob extends TimerTask {
 
+    TimerTaskInfo timerInfo;
 
+    InvoiceJob(TimerTaskInfo  info){
+        timerInfo = info;
+    }
 
     @Override
     public void run(){
@@ -22,65 +19,41 @@ public class InvoiceJob extends TimerTask {
         System.out.println("*** Starting job...");
         System.out.println("*** Starting job...");
         System.out.println("*** Starting job...");
-        System.out.println("*** Starting job...");
-
-        /*Job job = Job.findById(new Long(1));
-
-        Timer timer = new Timer();
-        TimeClosed timeClo = new TimeClosed(timer);
+        Time hora = Time.valueOf(LocalTime.now()) ;
+        System.out.println("****** Hour Starting job..."+ Time.valueOf(LocalTime.now()));
+        Job job = Job.findById(new Long(1));
 
         if (!job.isDeleted() || job !=null){
-
             if (job.getStatusJob().getId().intValue() == 60){
+                int diffUpdate = job.getUpdatedAt().toLocalTime().compareTo(this.timerInfo.getTimeUpdate().toLocalTime());
+                long diffHora = job.getCloseTime().getTime() - hora.getTime();
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(diffHora) % 60;
+                long horas = TimeUnit.MILLISECONDS.toHours(diffHora) % 24;
 
-                Time timeClose = job.getCloseTime();
-                System.out.println(timeClose);
+                System.out.println("diffHours = "+ horas );
+                System.out.println("diffmenutes = "+ minutes );
+                if( diffUpdate == 0 & this.timerInfo.isStatus()){
+                    this.timerInfo.increment();
 
-                Time horaActual = new Time(System.currentTimeMillis());
-
-                System.out.println("Hora actual"+ horaActual);
-
-                    if(horaActual.getTime() >= job.getCloseTime().getTime()){
-                        Long diff = job.getCloseTime().getTime() - horaActual.getTime();
-                        long hours = TimeUnit.MILLISECONDS.toHours(diff);
-                        long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
-                        System.out.println("*** hour..."+ hours);
-                        System.out.println("*** toSeconds..."+ minutes);
-
-                        //        Programamos para que cierre las facturas a la media noche
-
-                        timer.scheduleAtFixedRate(timeClo, job.getCloseTime(), job.getDelay());
+                    if(minutes < 0){
+                        this.timerInfo.setStatus(false);
+                        System.out.println("++++++++++++++++++++++");
+                        this.timerInfo.getJobTimer().schedule(new TimeClosed(this.timerInfo.getJobTimer()),
+                                                        0, job.getDelay() );
                     }
+
+                }else if(diffUpdate > 0){
+                    this.timerInfo.setStatus(true);
+                    this.timerInfo.setTimeUpdate(job.getUpdatedAt());
+                    System.out.println("**Update Job table**");
+                    if(job.getStop()){
+                        this.timerInfo.stopTimerJob();
+                    }
+
+                }
+
             }
-
-        }else if(job.getStop()){
-            System.out.println("*** else...");
-
-            Date horaDespertar = new Date(System.currentTimeMillis());
-
-            Calendar c = Calendar.getInstance();
-            c.setTime(horaDespertar);
-
-            c.set(Calendar.HOUR_OF_DAY, 23);
-            c.set(Calendar.MINUTE, 00);
-            c.set(Calendar.SECOND, 0);
-
-            horaDespertar = c.getTime();
-            System.out.println(horaDespertar);
-//        se cierran las facturas cada 24h (una vez al dia)
-            int tiempoRepeticion = 86400000;
-//        int tiempoRepeticion = 1800;
-            int halfHouer = 1800000;
-
-            if (c.get(Calendar.HOUR_OF_DAY) >= 23) {
-                c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
-            }
-
-            //        Programamos para que cierre las facturas a la media noche
-
-            timer.scheduleAtFixedRate(timeClo, horaDespertar, tiempoRepeticion);
-
-        }*/
+        }
 
     }
 }

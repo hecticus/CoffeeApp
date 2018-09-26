@@ -43,7 +43,7 @@ public class Lot extends AbstractEntity{
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(precision = 12, scale = 2, nullable = false)
+    @Column(precision = 12, scale = 4, nullable = false)
     private BigDecimal priceLot;
 
     @ManyToOne
