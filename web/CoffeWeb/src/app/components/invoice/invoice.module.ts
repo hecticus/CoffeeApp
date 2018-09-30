@@ -20,7 +20,6 @@ import {
 	MatSelectModule,
 	MatDatepickerModule,
 	MatNativeDateModule,
-	MatIcon,
 	MatIconModule,
 	} from '@angular/material';
 

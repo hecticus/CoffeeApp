@@ -9,5 +9,6 @@ export class Invoice extends BaseModel {
 	closedDateInvoice: string;
 	totalInvoice: number;
 	invoiceDetails: InvoiceDetail [];
-
+	startDate: string;
+	closedDate: string;
 }

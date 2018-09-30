@@ -5,12 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
-
-
 @NgModule({
 	declarations: [
 		ValidatorComponent,
-
 	],
 	imports: [
 		BrowserModule,

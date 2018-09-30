@@ -18,6 +18,7 @@ import { UnitComponent } from './components/unit/unit.component';
 import { UtilsModule } from './core/utils/utils.module';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ng6-toastr-notifications';
+import { DatePickerModule } from './core/utils/custom-date-adapter.component';
 
 @NgModule({
 declarations: [
@@ -41,6 +42,7 @@ imports: [
 	FormsModule,
 	RouterModule,
 	Ng2SmartTableModule,
+	DatePickerModule,
 	ToastrModule.forRoot(),
 
 	UtilsModule,

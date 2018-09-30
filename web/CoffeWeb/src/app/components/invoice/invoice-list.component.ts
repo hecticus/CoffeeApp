@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, Provider, ViewChild, TemplateRef } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
-import { MatTableDataSource, MatPaginator, MatSort, MatIcon } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
@@ -16,6 +16,7 @@ import { StatusInvoiceService } from 'src/app/components/status/status-invoice.s
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import * as moment from 'moment';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
@@ -35,7 +36,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 				<div class="field">
 					<mat-form-field  color="orange">
 					<mat-label>Fecha de Inicio</mat-label>
-					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
+					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1"  [(ngModel)]="filterService.filter['nitName']"
+					(change)="filterService.put('nitName',
+					date)">
 					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 					<mat-datepicker #picker1></mat-datepicker>
 					</mat-form-field>
@@ -159,6 +162,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 })
 
 export class InvoiceListComponent implements OnInit {
+	date = new Date( );
+
 	modalRef: BsModalRef;
 	form: FormGroup;
 	provType: ProviderType[];
@@ -208,7 +213,8 @@ export class InvoiceListComponent implements OnInit {
 		public  filterService: FilterService,
 		private notificationService: NotificationService,
 		private modalService: BsModalService,
-	) { }
+	) {
+	}
 
 	ngOnInit() {
 		this.dataSource.sort = this.sort;
@@ -257,7 +263,7 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['nitName'];
 		}
 
-
+		console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00-03');
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -330,6 +336,4 @@ export class InvoiceListComponent implements OnInit {
 	decline(): void {
 		this.modalRef.hide();
 	}
-
-
 }
