@@ -1,3 +1,4 @@
+import { MY_DATE_FORMATS } from './../../core/utils/custom-date-adapter.component';
 import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ProviderService } from './../provider/provider.service';
 import { Status } from './../../core/models/status';
@@ -16,7 +17,17 @@ import { StatusInvoiceService } from 'src/app/components/status/status-invoice.s
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import * as moment from 'moment';
+import { CustomDateAdapter } from '../../core/utils/custom-date-adapter.component';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+// Depending on whether rollup is used, moment needs to be imported differently.
+// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
+// syntax. However, rollup creates a synthetic default module and we thus need to import it using
+// the `default as` syntax.
+import * as _moment from 'moment';
+
+const moment =  _moment;
+
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
@@ -32,13 +43,12 @@ import * as moment from 'moment';
 			<div class="rowsm">
 			<!--<div class="field filter">
 					<h4 class="title">Filtrar Por Fecha</h4>
-				</div>-->
+				</div>
 				<div class="field">
 					<mat-form-field  color="orange">
 					<mat-label>Fecha de Inicio</mat-label>
-					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1"  [(ngModel)]="filterService.filter['nitName']"
-					(change)="filterService.put('nitName',
-					date)">
+					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1"  [(ngModel)]="date"
+					(change)="change($event.target.value)">
 					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 					<mat-datepicker #picker1></mat-datepicker>
 					</mat-form-field>
@@ -50,7 +60,7 @@ import * as moment from 'moment';
 						<mat-datepicker #picker2 color="primary"></mat-datepicker>
 					</mat-form-field>
 				</div>
-			</div>
+			</div>-->
 
 			<div class="rowsm">
 				<div class="field">
@@ -158,7 +168,15 @@ import * as moment from 'moment';
 			</div>
 		</ng-template>
 
-	`
+	`,
+	providers: [
+		{
+			provide: DateAdapter, useClass: CustomDateAdapter
+		},
+		{
+			provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS
+		}
+	]
 })
 
 export class InvoiceListComponent implements OnInit {
@@ -213,6 +231,7 @@ export class InvoiceListComponent implements OnInit {
 		public  filterService: FilterService,
 		private notificationService: NotificationService,
 		private modalService: BsModalService,
+		private adapter: DateAdapter<any>,
 	) {
 	}
 
@@ -335,5 +354,10 @@ export class InvoiceListComponent implements OnInit {
 
 	decline(): void {
 		this.modalRef.hide();
+	}
+
+	change(date: Date) {
+		console.log("id");
+		this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
 	}
 }

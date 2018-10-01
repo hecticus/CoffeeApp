@@ -1,3 +1,4 @@
+import { MatNativeDateModule, MatDatepickerModule } from '@angular/material';
 import { HomeModule } from './components/home/home.module';
 import { AuthModule } from './components/auth/auth.module';
 import { AppComponent } from './app.component';
@@ -44,6 +45,10 @@ imports: [
 	Ng2SmartTableModule,
 	DatePickerModule,
 	ToastrModule.forRoot(),
+	DatePickerModule,
+	MatDatepickerModule,
+	MatNativeDateModule,
+
 
 	UtilsModule,
 	AuthModule,
