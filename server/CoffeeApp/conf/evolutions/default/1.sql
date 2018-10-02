@@ -140,6 +140,7 @@ create table job (
   description                   varchar(255),
   status_job_id                 bigint,
   close_time                    time,
+  closed_date                   datetime,
   delay                         integer,
   stop                          tinyint(1) default 0,
   deleted                       tinyint(1) default 0 not null,
