@@ -23,6 +23,8 @@ import java.time.ZonedDateTime;
 @Table(name="job")
 public class Job extends BaseModel {
 
+//    Sun Jan 01 2017 00:00:00 GMT-0400
+
     private String description;
 
     @ManyToOne

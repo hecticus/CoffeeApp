@@ -43,12 +43,11 @@ const moment =  _moment;
 			<div class="rowsm">
 			<!--<div class="field filter">
 					<h4 class="title">Filtrar Por Fecha</h4>
-				</div>
+				</div> -->
 				<div class="field">
 					<mat-form-field  color="orange">
 					<mat-label>Fecha de Inicio</mat-label>
-					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1"  [(ngModel)]="date"
-					(change)="change($event.target.value)">
+					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
 					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 					<mat-datepicker #picker1></mat-datepicker>
 					</mat-form-field>
@@ -60,7 +59,7 @@ const moment =  _moment;
 						<mat-datepicker #picker2 color="primary"></mat-datepicker>
 					</mat-form-field>
 				</div>
-			</div>-->
+			</div>
 
 			<div class="rowsm">
 				<div class="field">
@@ -180,8 +179,6 @@ const moment =  _moment;
 })
 
 export class InvoiceListComponent implements OnInit {
-	date = new Date( );
-
 	modalRef: BsModalRef;
 	form: FormGroup;
 	provType: ProviderType[];
@@ -282,7 +279,7 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['nitName'];
 		}
 
-		console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00-03');
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00-03');
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -356,8 +353,8 @@ export class InvoiceListComponent implements OnInit {
 		this.modalRef.hide();
 	}
 
-	change(date: Date) {
-		console.log("id");
-		this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
-	}
+	// change(date: Date) {
+	// 	console.log("id");
+	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
+	// }
 }
