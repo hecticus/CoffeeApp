@@ -32,6 +32,9 @@ public class TimeClosed extends TimerTask {
     public static void  closeInvoice(){
         List<Invoice> invoices = Invoice.findAllInvoiceActive();
         ZonedDateTime dateTime = ZonedDateTime.now();
+        Job job = Job.findById(new Long(1));
+        job.setClosedDate(dateTime);
+        job.update();
         StatusInvoice status = new StatusInvoice();
         status.setId(new Long(12));
         if(!invoices.isEmpty()){
