@@ -153,14 +153,14 @@ public class Invoices extends Controller {
             ZonedDateTime startTime_from = null;
 
             if (startDate != null){
-                startTime_to =  ZonedDateTime.parse (startDate);
-            }
-
-            if (endDate != null){
-                 startTime_from =  ZonedDateTime.parse (endDate,
+                startTime_to =  ZonedDateTime.parse (startDate,
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
             }
 
+            if (endDate != null){
+                startTime_from =  ZonedDateTime.parse (endDate,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            }
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
                                                                         id_providertype, startTime_to, startTime_from,
