@@ -1,3 +1,4 @@
+import { MY_DATE_FORMATS } from './../../core/utils/custom-date-adapter.component';
 import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ProviderService } from './../provider/provider.service';
 import { Status } from './../../core/models/status';
@@ -8,7 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, Provider, ViewChild, TemplateRef } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
-import { MatTableDataSource, MatPaginator, MatSort, MatIcon } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
 import { Pager } from '../../core/models/pager';
@@ -16,6 +17,17 @@ import { StatusInvoiceService } from 'src/app/components/status/status-invoice.s
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { CustomDateAdapter } from '../../core/utils/custom-date-adapter.component';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+// Depending on whether rollup is used, moment needs to be imported differently.
+// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
+// syntax. However, rollup creates a synthetic default module and we thus need to import it using
+// the `default as` syntax.
+import * as _moment from 'moment';
+
+const moment =  _moment;
+
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
@@ -31,7 +43,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 			<div class="rowsm">
 			<!--<div class="field filter">
 					<h4 class="title">Filtrar Por Fecha</h4>
-				</div>-->
+				</div> -->
 				<div class="field">
 					<mat-form-field  color="orange">
 					<mat-label>Fecha de Inicio</mat-label>
@@ -155,7 +167,15 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 			</div>
 		</ng-template>
 
-	`
+	`,
+	providers: [
+		{
+			provide: DateAdapter, useClass: CustomDateAdapter
+		},
+		{
+			provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS
+		}
+	]
 })
 
 export class InvoiceListComponent implements OnInit {
@@ -208,7 +228,9 @@ export class InvoiceListComponent implements OnInit {
 		public  filterService: FilterService,
 		private notificationService: NotificationService,
 		private modalService: BsModalService,
-	) { }
+		private adapter: DateAdapter<any>,
+	) {
+	}
 
 	ngOnInit() {
 		this.dataSource.sort = this.sort;
@@ -257,7 +279,7 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['nitName'];
 		}
 
-
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00-03');
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -331,5 +353,8 @@ export class InvoiceListComponent implements OnInit {
 		this.modalRef.hide();
 	}
 
-
+	// change(date: Date) {
+	// 	console.log("id");
+	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
+	// }
 }

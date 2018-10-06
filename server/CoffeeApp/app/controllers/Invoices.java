@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.parsers.queryStringBindable.DateTime;
 import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -156,10 +158,9 @@ public class Invoices extends Controller {
             }
 
             if (endDate != null){
-                 startTime_from =  ZonedDateTime.parse (endDate,
+                startTime_from =  ZonedDateTime.parse (endDate,
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
             }
-
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
                                                                         id_providertype, startTime_to, startTime_from,

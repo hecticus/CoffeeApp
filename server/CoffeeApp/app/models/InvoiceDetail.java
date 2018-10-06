@@ -49,12 +49,12 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     @Constraints.Min(0)
     @Constraints.Required
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 4)
     private BigDecimal priceItemTypeByLot; //esta en lote desconozco la relacion Toma de Cosecha
 
     @Constraints.Required
     @Constraints.Min(0)
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 4)
     private BigDecimal costItemType;//esta en Item Type desconozco la relacion Toma del app para venderf
 
     @Constraints.Required

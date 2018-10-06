@@ -26,7 +26,7 @@ public class Purity extends AbstractEntity{
     private String namePurity;
 
     @Constraints.Required
-    @Column(precision = 12, scale = 2, nullable = false)
+    @Column(precision = 12, scale = 4, nullable = false)
     private BigDecimal discountRatePurity;
 
     @OneToMany(mappedBy = "purity", cascade= CascadeType.ALL)

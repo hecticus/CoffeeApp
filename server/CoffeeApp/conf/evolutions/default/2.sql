@@ -223,6 +223,10 @@ INSERT INTO `purities` (`id`,`deleted`,`name_purity`,`discount_rate_purity`) VAL
 (2, 0, '% Granos Bocados',     30),
 (3, 1, '% Granos Eliminados',  15);
 
+
+INSERT INTO `job` (`id`,`description`,`status_job_id`,`close_time`,`delay`,`stop`,`deleted`) VALUES
+(1,'Time close Invoice',60,'23:00:00',86400000,0,0);
+
 # --- !Downs
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -255,6 +259,8 @@ TRUNCATE `invoicesdetails_purities`;
 TRUNCATE `multimedia`;
 
 TRUNCATE `multimedia_cdn`;
+
+TRUNCATE `job`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 

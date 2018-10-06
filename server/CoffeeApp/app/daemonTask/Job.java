@@ -1,20 +1,29 @@
 package daemonTask;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import io.ebean.Finder;
-import models.status.StatusInvoice;
 import models.status.StatusJob;
 import multimedia.models.BaseModel;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.ws.rs.DefaultValue;
 import java.sql.Time;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="job")
 public class Job extends BaseModel {
+
+//    Sun Jan 01 2017 00:00:00 GMT-0400
 
     private String description;
 
@@ -23,6 +32,13 @@ public class Job extends BaseModel {
     private StatusJob statusJob;
 
     private Time closeTime;
+
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @Column(columnDefinition = "datetime")
+    private ZonedDateTime closedDate;
 
     @Constraints.Required
     private Integer delay;
@@ -75,5 +91,13 @@ public class Job extends BaseModel {
 
     public static Job findById(Long id){
         return finder.byId(id);
+    }
+
+    public ZonedDateTime getClosedDate() {
+        return closedDate;
+    }
+
+    public void setClosedDate(ZonedDateTime closedDate) {
+        this.closedDate = closedDate;
     }
 }
