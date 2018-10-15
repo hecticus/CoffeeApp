@@ -1,3 +1,4 @@
+
 import { ToastrModule } from 'ng6-toastr-notifications';
 import { ValidatorComponent } from './validator/validator.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
