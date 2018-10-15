@@ -1,3 +1,4 @@
+import { ExcelService } from './../../core/utils/excel/excel.service';
 import { MY_DATE_FORMATS } from './../../core/utils/custom-date-adapter.component';
 import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ProviderService } from './../provider/provider.service';
@@ -37,6 +38,13 @@ const moment =  _moment;
 				lock
 			</i>
 			Cerrar Facturas
+		</button>
+
+
+		<button (click)="exportAsXLSX()">
+			<i  class="material-icons" style="font-size:48px;">
+				receipt
+			</i>
 		</button>
 
 		<div class="headerSearch">
@@ -179,6 +187,21 @@ const moment =  _moment;
 })
 
 export class InvoiceListComponent implements OnInit {
+
+	data: any = [{
+		eid: 'e101',
+		ename: 'ravi',
+		esal: 1000
+		}, {
+		eid: 'e102',
+		ename: 'ram',
+		esal: 2000
+		}, {
+		eid: 'e103',
+		ename: 'rajesh',
+		esal: 3000
+	}];
+
 	modalRef: BsModalRef;
 	form: FormGroup;
 	provType: ProviderType[];
@@ -229,6 +252,7 @@ export class InvoiceListComponent implements OnInit {
 		private notificationService: NotificationService,
 		private modalService: BsModalService,
 		private adapter: DateAdapter<any>,
+		private excelService: ExcelService,
 	) {
 	}
 
@@ -357,4 +381,10 @@ export class InvoiceListComponent implements OnInit {
 	// 	console.log("id");
 	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
 	// }
+
+	exportAsXLSX(): void {
+		this.excelService.exportAsExcelFile(this.dataSource.data, 'sample');
+	}
+
 }
+

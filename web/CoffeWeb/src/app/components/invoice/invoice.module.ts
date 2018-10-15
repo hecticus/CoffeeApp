@@ -1,3 +1,4 @@
+import { ExcelService } from './../../core/utils/excel/excel.service';
 import { CommonModule } from '@angular/common';
 import { FilterService } from './../../core/utils/filter/filter.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -62,6 +63,7 @@ import {
 	providers: [
 		InvoiceService,
 		FilterService,
+		ExcelService,
 	]
 })
 
