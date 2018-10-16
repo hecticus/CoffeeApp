@@ -1,12 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
 import models.*;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
@@ -17,7 +15,6 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import scala.reflect.internal.Trees;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
@@ -34,11 +31,6 @@ public class InvoiceDetails extends Controller {
     @Inject
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
-
-    public InvoiceDetails(){
-        propertiesCollection.putPropertiesCollection("s", "(*)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
 
     @CoffeAppsecurity
     public Result create() {
@@ -191,12 +183,11 @@ public class InvoiceDetails extends Controller {
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
             }
 
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
+            ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, propertiesCollection.getPathProperties(collection), sort,
                                                                 invoice, itemType, lot,store, nameReceived, nameDelivered,
                                                                 startTime, status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

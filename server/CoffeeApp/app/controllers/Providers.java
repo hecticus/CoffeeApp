@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import controllers.responseUtils.PropertiesCollection;
 import controllers.responseUtils.ResponseCollection;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
@@ -33,6 +34,7 @@ public class Providers extends Controller {
 
     @Inject
     private FormFactory formFactory;
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     @CoffeAppsecurity
     public Result create() {
@@ -45,7 +47,6 @@ public class Providers extends Controller {
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-//            Provider provider = Json.fromJson(json, Provider.class);
             Provider provider= form.get();
             provider.setStatusProvider(StatusProvider.findById(new Long(41)));
             Provider aux = Provider.findByProvider(provider);
@@ -136,10 +137,8 @@ public class Providers extends Controller {
 
     @CoffeAppsecurity
     public Result findById(Long id) {
-//    public Result findById(Long id, String collection) {
         try {
             return Response.foundEntity(Json.toJson(Provider.findById(id)));
-//            return Response.foundEntity(Provider.findId(id, pathProperties), pathProperties);
         }catch(Exception e){
             return NsExceptionsUtils.find(e);
         }
@@ -152,17 +151,13 @@ public class Providers extends Controller {
                            String phoneNumberProvider, String emailProvider,
                            String contactNameProvider, Long status, boolean deleted){
         try {
-            PathProperties pathProperties = null;
-            if (collection != null)
-                pathProperties = PathProperties.parse(collection);
 
-            ListPagerCollection listPager = Provider.findAll( index, size,  pathProperties, sort, name,
+            ListPagerCollection listPager = Provider.findAll( index, size, propertiesCollection.getPathProperties(collection), sort, name,
                                                             idProviderType, identificationDocProvider, addressProvider,
                                                             phoneNumberProvider, emailProvider,  contactNameProvider,
                                                             status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-//            return Response.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return  NsExceptionsUtils.find(e);
         }

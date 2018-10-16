@@ -30,17 +30,12 @@ public class Invoice extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn( nullable = false)
-//    @JsonBackReference
     @Constraints.Required
     private Provider provider;
 
     @ManyToOne
-//    @JsonBackReference
     private StatusInvoice statusInvoice;
 
-//    @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot) " +
-//            "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
-//    private BigDecimal totalInvoice;
     @Formula(select = "(SELECT SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) " +
             "FROM  invoice_details i WHERE i.deleted = 0 AND i.invoice_id = ${ta}.id)")
     @Column(precision = 12, scale = 2, nullable = false)
@@ -49,21 +44,18 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-    //    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    // @JsonSerialize(using = TimeDeserializer.class)
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = TimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime startDate;
 
-    // @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
-
 
     // GETTER AND SETTER
     private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);

@@ -25,11 +25,6 @@ public class Lots extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public Lots(){
-        propertiesCollection.putPropertiesCollection("s", "(idLot, nameLot)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
     @CoffeAppsecurity
     public Result create() {
         try {
@@ -109,11 +104,10 @@ public class Lots extends Controller {
     public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
                            String name, Long idFarm, Long status, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize, pathProperties, sort, name, idFarm,
+            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize,  propertiesCollection.getPathProperties(collection), sort, name, idFarm,
                                                         status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

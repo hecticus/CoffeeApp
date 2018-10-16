@@ -33,11 +33,6 @@ public class Purities extends Controller{
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public Purities(){
-        propertiesCollection.putPropertiesCollection("s", "(id, name)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
     @CoffeAppsecurity
     public Result preCreate() {
         try {
@@ -59,7 +54,6 @@ public class Purities extends Controller{
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
 
-            // mapping object-json
             Purity purity = Json.fromJson(json, Purity.class);
             purity.save();
             return Response.createdEntity(Json.toJson(purity));
@@ -126,9 +120,8 @@ public class Purities extends Controller{
     @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection, String sort, String name, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Purity.findAll(index, size, pathProperties, sort, name, deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            ListPagerCollection listPager = Purity.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, deleted);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

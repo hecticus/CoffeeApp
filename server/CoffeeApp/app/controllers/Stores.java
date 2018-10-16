@@ -31,12 +31,6 @@ public class Stores {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public Stores(){
-        propertiesCollection.putPropertiesCollection("s", "(id, name)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
-
     @CoffeAppsecurity
     public Result create() {
         try {
@@ -115,9 +109,9 @@ public class Stores {
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, Long status, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Store.findAll(index, size, pathProperties, sort, name, status, deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            ListPagerCollection listPager = Store.findAll(index, size,  propertiesCollection.getPathProperties(collection),
+                                                            sort, name, status, deleted);
+            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

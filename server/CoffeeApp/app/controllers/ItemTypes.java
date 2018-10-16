@@ -29,11 +29,6 @@ public class ItemTypes extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public ItemTypes(){
-        propertiesCollection.putPropertiesCollection("s", "(id, name)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
     @CoffeAppsecurity
     public Result create() {
         try{
@@ -113,11 +108,10 @@ public class ItemTypes extends Controller {
     public Result findAll(Integer pageIndex, Integer pageSize, String collection,
                           String sort, String name, Long idProviderType, Long unit, boolean deleted ) {
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = ItemType.findAll( pageIndex, pageSize, pathProperties,
+            ListPagerCollection listPager = ItemType.findAll( pageIndex, pageSize, propertiesCollection.getPathProperties(collection),
                     sort, name, idProviderType, unit, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

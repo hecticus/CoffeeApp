@@ -1,16 +1,12 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.parsers.queryStringBindable.DateTime;
-import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import daemonTask.TimeClosed;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
 import models.*;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
@@ -28,7 +24,6 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,15 +33,7 @@ public class Invoices extends Controller {
 
     @Inject
     private FormFactory formFactory;
-
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
-
-    public Invoices(){
-        propertiesCollection.putPropertiesCollection("s", "(id, name)");
-        propertiesCollection.putPropertiesCollection("m", "(*" +
-                ", provider(id_Provider, identificationDoc_Provider, fullName_Provider, address_Provider" +
-                " phoneNumber_Provider,email_Provider, providerType(id_ProviderType, name_ProviderType))");
-    }
 
     @CoffeAppsecurity
     public    Result create() {
@@ -161,12 +148,14 @@ public class Invoices extends Controller {
                 startTime_from =  ZonedDateTime.parse (endDate,
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
             }
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize, pathProperties, sort, id_provider,
+
+            ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize,
+                                                                        propertiesCollection.getPathProperties(collection),
+                                                                        sort, id_provider,
                                                                         id_providertype, startTime_to, startTime_from,
                                                                         status, deleted, nitName);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

@@ -28,8 +28,6 @@ import java.util.List;
 public class  InvoiceDetail  extends AbstractEntity{
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
     private Invoice invoice;
 
     @ManyToOne
@@ -38,13 +36,9 @@ public class  InvoiceDetail  extends AbstractEntity{
     private ItemType itemType;
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
     private Lot lot;
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
     private Store store;
 
     @Constraints.Min(0)
@@ -77,13 +71,6 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(columnDefinition = "text")
     private String note;
 
-//    @Formula(select = "(" +
-//            "SELECT ((i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) - (SELECT SUM(p.total_discount_purity) FROM invoicesdetails_purities p WHERE p.deleted = 0 AND p.invoice_detail_id = ${ta}.id ))" +
-//            "FROM invoice_details i " +
-//            "WHERE i.deleted = 0 AND i.id = ${ta}.id" +
-//            ")")
-//    private BigDecimal totalInvoiceDetail;
-
     @Formula(select = "(" +
                 "SELECT (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type)" +
                 "FROM invoice_details i " +
@@ -92,8 +79,6 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(precision = 12, scale = 2)
     private BigDecimal totalInvoiceDetail;
 
-
-    //    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @JsonSerialize(using = CustomDateTimeSerializer.class)

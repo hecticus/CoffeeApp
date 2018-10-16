@@ -109,9 +109,8 @@ public class Units extends Controller {
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name,  boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Unit.findAll(index, size, pathProperties, sort, name,  deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            ListPagerCollection listPager = Unit.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name,  deleted);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

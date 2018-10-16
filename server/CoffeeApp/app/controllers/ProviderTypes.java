@@ -29,10 +29,6 @@ public class ProviderTypes {
     private FormFactory formFactory;
     private static controllers.responseUtils.PropertiesCollection propertiesCollection = new controllers.responseUtils.PropertiesCollection();
 
-    public ProviderTypes(){
-        propertiesCollection.putPropertiesCollection("s", "(idProviderType, nameProviderType)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
 
     @CoffeAppsecurity
     public Result create() {
@@ -87,7 +83,6 @@ public class ProviderTypes {
         }
     }
 
-//
     @CoffeAppsecurity
     public Result delete(Long id) {
         try{
@@ -123,14 +118,9 @@ public class ProviderTypes {
                            String sort, String name, boolean deleted){
         try {
 
-            PathProperties pathProperties = null;
-            if (collection != null)
-                pathProperties = PathProperties.parse(collection);
-
-            ListPagerCollection listPager = ProviderType.findAll(index, size, pathProperties, sort, name, deleted);
-//            PagedList pagedList = ProviderType.findAll2(index, size, pathProperties, sort, name, deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
-//            return Response.foundEntity(pagedList, pathProperties);
+            ListPagerCollection listPager = ProviderType.findAll(index, size, propertiesCollection.getPathProperties(collection),
+                                                                sort, name, deleted);
+            return ResponseCollection.foundEntity(listPager,propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

@@ -48,7 +48,6 @@ public class Multimedias extends Controller {
 
             JsonNode name = request.findValue("name");
             multimediaCDN1.setPath(DTYPE_PROVIDER_PROFILE.concat("/").concat(name.asText()));
-//            multimediaCDN1.save();
 
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
             node.set("multimediaCDN",  Json.toJson(multimediaCDN1));
@@ -86,22 +85,18 @@ public class Multimedias extends Controller {
 
             JsonNode name = request.findValue("name");
             multimediaCDN1.setPath(DTYPE_PROVIDER_PROFILE.concat("/").concat(name.asText()));
-//            multimediaCDN1.save();
 
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
             node.set("multimediaCDN",  Json.toJson(multimediaCDN1));
-//            node.putPOJO("provider", provider);
 
             Form<Multimedia> form = formFactory.form(Multimedia.class).bindFromRequest();
             if (form.hasErrors())
                 return Response.invalidParameter(form.errorsAsJson());
 
             Multimedia multimedia = form.get();
-//            multimedia.setProvider(provider);
             multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
             multimedia.save();
 
-//            System.out.println(multimedia.getName() + multimedia.getId());
             provider.setMultimediaProfile(multimedia);
             provider.update();
 
@@ -129,10 +124,6 @@ public class Multimedias extends Controller {
             multimediaCDN1.setId(multimedia.getMultimediaCDN().getId());
             multimediaCDN1.update();
 
-//            JsonNode name = request.findValue("name");
-//            multimediaCDN1.setPath(DTYPE_PROVIDER_PROFILE.concat("/").concat(name.asText()));
-////            multimediaCDN1.save();
-//
             ObjectNode node = (ObjectNode) new ObjectMapper().readTree(request.toString());
             node.set("multimediaCDN",  Json.toJson(multimediaCDN1));
 //            node.putPOJO("provider", provider);
@@ -144,13 +135,6 @@ public class Multimedias extends Controller {
             Multimedia multimediaUp = form.get();
             multimediaUp.setId(id);
             multimediaUp.update();
-////            multimedia.setProvider(provider);
-//            multimedia.setDtype(DTYPE_PROVIDER_PROFILE);
-//            multimedia.save();
-//
-//            System.out.println(multimedia.getName() + multimedia.getId());
-//            provider.setMultimediaProfile(multimedia);
-//            provider.update();
 
             return Response.createdEntity(Json.toJson(multimedia));
         }catch(Exception e){
