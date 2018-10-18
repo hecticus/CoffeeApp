@@ -76,7 +76,7 @@ th.mat-sort-header-sorted {
 }
 
 .mydp .selection {
-    width: 100%;
+    width: 350px;
     outline: 0;
     background-color: #FFF;
     display: table-cell;
