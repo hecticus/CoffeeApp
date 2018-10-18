@@ -7,7 +7,7 @@ import { BaseService } from '../../core/base.service';
 import { ProviderTypeService } from '../provider-type/provider-type.service';
 import { InvoiceService } from './invoice.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit, Provider, ViewChild, TemplateRef } from '@angular/core';
 import { ProviderType } from '../../core/models/provider-type';
 import { MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
@@ -54,15 +54,17 @@ const moment =  _moment;
 				</div> -->
 				<div class="field">
 					<mat-form-field  color="orange">
-					<mat-label>Fecha de Inicio</mat-label>
-					<input  matInput [min]="minDate1" [max]="maxDate1" [matDatepicker]="picker1">
-					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-					<mat-datepicker #picker1></mat-datepicker>
+						<mat-label>Fecha de Inicio</mat-label>
+							<input  matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1" [(ngModel)]="filterService.filter['startDate']"
+							(change)="filterService.put('startDate',
+							$event.target.value)">
+						<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+						<mat-datepicker #picker1></mat-datepicker>
 					</mat-form-field>
 
 					<mat-form-field  color="orange">
 						<mat-label>Fecha de cierre</mat-label>
-						<input matInput [min]="minDate2" [max]="maxDate2" [matDatepicker]="picker2">
+							<input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker2">
 						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 						<mat-datepicker #picker2 color="primary"></mat-datepicker>
 					</mat-form-field>
@@ -188,20 +190,6 @@ const moment =  _moment;
 
 export class InvoiceListComponent implements OnInit {
 
-	data: any = [{
-		eid: 'e101',
-		ename: 'ravi',
-		esal: 1000
-		}, {
-		eid: 'e102',
-		ename: 'ram',
-		esal: 2000
-		}, {
-		eid: 'e103',
-		ename: 'rajesh',
-		esal: 3000
-	}];
-
 	modalRef: BsModalRef;
 	form: FormGroup;
 	provType: ProviderType[];
@@ -214,8 +202,8 @@ export class InvoiceListComponent implements OnInit {
 	// let month = currentTime.getMonth() + 1;
 	// let day = currentTime.getDate();
 	// let year = currentTime.getFullYear();
-	minDate1 = new Date(2018, 0, 1);
-	maxDate1 = new Date();
+	minDate = new Date(2018, 0, 4);
+	maxDate = new Date();
 
 	minDate2 = new Date(2000, 0, 1);
 	maxDate2 = new Date();
@@ -253,6 +241,7 @@ export class InvoiceListComponent implements OnInit {
 		private modalService: BsModalService,
 		private adapter: DateAdapter<any>,
 		private excelService: ExcelService,
+		private fb: FormBuilder,
 	) {
 	}
 
@@ -289,7 +278,21 @@ export class InvoiceListComponent implements OnInit {
 	}
 
 	list(page = 0) {
+		console.log('0000000000000000000000000000000000000000000000');
+		if (this.filterService.filter['startDate'] !== undefined) {
+		// 	delete this.filterService.filter['startDate'];
+		// } else {
+			console.log(this.filterService.filter['startDate']);
+			let dt = new Date(this.filterService.filter['startDate']);
+			console.log(dt.toString);
+			// Object.keys(this.filterService.filter).forEach( key => {
+			// 	console.log('22222222222222');
+			// 	if (this.filterService.filter[key] === 'startDate') {
+			// 		console.log(1343);
+			// 	}
+			// });
 
+		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
 			delete this.filterService.filter['statusInvoice'];
@@ -316,7 +319,6 @@ export class InvoiceListComponent implements OnInit {
 			...this.filterService.filter
 		});
 
-		console.log('$event');
 		console.log(this.filterService.filter);
 		this.invoiceService.getAll(httpParams).subscribe(
 			data => {
@@ -376,7 +378,6 @@ export class InvoiceListComponent implements OnInit {
 	decline(): void {
 		this.modalRef.hide();
 	}
-
 	// change(date: Date) {
 	// 	console.log("id");
 	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
@@ -385,6 +386,7 @@ export class InvoiceListComponent implements OnInit {
 	exportAsXLSX(): void {
 		this.excelService.exportAsExcelFile(this.dataSource.data, 'sample');
 	}
+
 
 }
 
