@@ -20,6 +20,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { CustomDateAdapter } from '../../core/utils/custom-date-adapter.component';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {IMyDpOptions, IMyDateModel} from 'mydatepicker';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -51,13 +52,10 @@ const moment =  _moment;
 			<div class="rowsm">
 			<!--<div class="field filter">
 					<h4 class="title">Filtrar Por Fecha</h4>
-				</div> -->
-				<div class="field">
-					<mat-form-field  color="orange">
+				</div>
+				<mat-form-field  color="orange">
 						<mat-label>Fecha de Inicio</mat-label>
-							<input  matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1" [(ngModel)]="filterService.filter['startDate']"
-							(change)="filterService.put('startDate',
-							$event.target.value)">
+							<input  matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1">
 						<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 						<mat-datepicker #picker1></mat-datepicker>
 					</mat-form-field>
@@ -68,6 +66,13 @@ const moment =  _moment;
 						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 						<mat-datepicker #picker2 color="primary"></mat-datepicker>
 					</mat-form-field>
+				-->
+				<div class="field">
+					<my-date-picker [options]="myDatePickerOptions"
+						[(ngModel)]="filterService.filter['startDate']"
+						(change)="filterService.put('startDate',
+						$event.target.value)">
+					</my-date-picker>
 				</div>
 			</div>
 
@@ -226,6 +231,14 @@ export class InvoiceListComponent implements OnInit {
 	// const allowMultiSelect = true;
 	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
 
+	myDatePickerOptions: IMyDpOptions = {
+		// other options...
+		dateFormat: 'yyyy-mm-dd',
+		minYear: 2017,
+		firstDayOfWeek: 'mo',
+		sunHighlight: true,
+	};
+
 	seler = 4;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -278,20 +291,15 @@ export class InvoiceListComponent implements OnInit {
 	}
 
 	list(page = 0) {
-		console.log('0000000000000000000000000000000000000000000000');
-		if (this.filterService.filter['startDate'] !== undefined) {
-		// 	delete this.filterService.filter['startDate'];
-		// } else {
+		if (this.filterService.filter['startDate'] === undefined ||
+					this.filterService.filter['startDate'] === null ) {
+			delete this.filterService.filter['startDate'];
+		} else {
+			let vv = this.filterService.filter['startDate'];
 			console.log(this.filterService.filter['startDate']);
-			let dt = new Date(this.filterService.filter['startDate']);
-			console.log(dt.toString);
-			// Object.keys(this.filterService.filter).forEach( key => {
-			// 	console.log('22222222222222');
-			// 	if (this.filterService.filter[key] === 'startDate') {
-			// 		console.log(1343);
-			// 	}
-			// });
-
+			console.log(vv['formatted'] + 'T00:00:00-03');
+			delete this.filterService.filter['startDate'];
+			this.filterService.put('startDate', vv['formatted'] + 'T00:00:00-03');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
@@ -387,6 +395,11 @@ export class InvoiceListComponent implements OnInit {
 		this.excelService.exportAsExcelFile(this.dataSource.data, 'sample');
 	}
 
+
+
+	onDateChanged(event: IMyDateModel) {
+		// event properties are: event.date, event.jsdate, event.formatted and event.epoc
+	}
 
 }
 
