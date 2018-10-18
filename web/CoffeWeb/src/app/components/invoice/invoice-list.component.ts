@@ -50,27 +50,17 @@ const moment =  _moment;
 
 		<div class="headerSearch">
 			<div class="rowsm">
-			<!--<div class="field filter">
-					<h4 class="title">Filtrar Por Fecha</h4>
-				</div>
-				<mat-form-field  color="orange">
-						<mat-label>Fecha de Inicio</mat-label>
-							<input  matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1">
-						<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-						<mat-datepicker #picker1></mat-datepicker>
-					</mat-form-field>
-
-					<mat-form-field  color="orange">
-						<mat-label>Fecha de cierre</mat-label>
-							<input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker2">
-						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-						<mat-datepicker #picker2 color="primary"></mat-datepicker>
-					</mat-form-field>
-				-->
 				<div class="field">
+					<!--StartDate-->
 					<my-date-picker [options]="myDatePickerOptions"
 						[(ngModel)]="filterService.filter['startDate']"
 						(change)="filterService.put('startDate',
+						$event.target.value)">
+					</my-date-picker>
+					<!--EndDate-->
+					<my-date-picker [options]="myDatePickerOptions"
+						[(ngModel)]="filterService.filter['closedDate']"
+						(change)="filterService.put('closedDate',
 						$event.target.value)">
 					</my-date-picker>
 				</div>

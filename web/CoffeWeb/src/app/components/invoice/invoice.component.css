@@ -74,3 +74,15 @@ th.mat-sort-header-sorted {
     position: absolute !important;
 
 }
+
+.mydp .selection {
+    width: 100%;
+    outline: 0;
+    background-color: #FFF;
+    display: table-cell;
+    position: absolute;
+    text-overflow: ellipsis;
+    padding-left: 6px;
+    border: none;
+    color: #555;
+}
