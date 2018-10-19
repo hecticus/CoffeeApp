@@ -98,8 +98,8 @@ th.mat-sort-header-sorted {
 }
 .item1 { grid-area: title; }
 .item2 { grid-area: button; }
-.item3 { grid-area: date; }
-.item3 { grid-area: date; }
+.item3 { grid-area: date1; }
+.item3 { grid-area: date2; }
 .item4 { grid-area: search1; }
 .item5 { grid-area: footer; }
 
@@ -121,12 +121,28 @@ th.mat-sort-header-sorted {
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
+    margin-bottom: 10px;
 
 }
 
 .container > .button {
     grid-column-end: 5;
     
+}
+
+.container > .date1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    margin-left: 0.5%;
+}
+
+.container > .date2{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 
 button{

@@ -35,7 +35,7 @@ const moment =  _moment;
 	template: `
 		<div class="container">
 			<div class="title">
-				<h2 class="title">Reportes</h2>
+				<h2>Reportes</h2>
 			</div>
 
 			<div class="button">
@@ -45,6 +45,23 @@ const moment =  _moment;
 				<button (click)="exportAsXLSX()">
 					<i  class="material-icons">receipt</i>
 				</button>
+			</div>
+
+			<!--StartDate-->
+			<div class="date1">
+				<my-date-picker [options]="myDatePickerOptions"
+					[(ngModel)]="filterService.filter['startDate']"
+					(change)="filterService.put('startDate',
+					$event.target.value)">
+				</my-date-picker>
+			</div>
+			<!--EndDate-->
+			<div class="date2">
+				<my-date-picker [options]="myDatePickerOptions"
+					[(ngModel)]="filterService.filter['closedDate']"
+					(change)="filterService.put('closedDate',
+					$event.target.value)">
+				</my-date-picker>
 			</div>
 		</div>
 
