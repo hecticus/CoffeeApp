@@ -33,36 +33,40 @@ const moment =  _moment;
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
-		<h2 class="title">Reportes</h2>
-		<button class="position" mat-button color="primary" (click)="openModal(template)">
-			<i class="material-icons">
-				lock
-			</i>
-			Cerrar Facturas
-		</button>
+		<div class="container">
+			<div class="title">
+				<h2 class="title">Reportes</h2>
+			</div>
 
-
-		<button (click)="exportAsXLSX()">
-			<i  class="material-icons" style="font-size:48px;">
-				receipt
-			</i>
-		</button>
+			<div class="button">
+				<button (click)="openModal(template)">
+					<i class="material-icons">lock</i>
+				</button>
+				<button (click)="exportAsXLSX()">
+					<i  class="material-icons">receipt</i>
+				</button>
+			</div>
+		</div>
 
 		<div class="headerSearch">
 			<div class="rowsm">
 				<div class="field">
 					<!--StartDate-->
-					<my-date-picker [options]="myDatePickerOptions"
-						[(ngModel)]="filterService.filter['startDate']"
-						(change)="filterService.put('startDate',
-						$event.target.value)">
-					</my-date-picker>
+					<div class="contentDate">
+						<my-date-picker [options]="myDatePickerOptions"
+							[(ngModel)]="filterService.filter['startDate']"
+							(change)="filterService.put('startDate',
+							$event.target.value)">
+						</my-date-picker>
+					</div>
 					<!--EndDate-->
-					<my-date-picker [options]="myDatePickerOptions"
-						[(ngModel)]="filterService.filter['closedDate']"
-						(change)="filterService.put('closedDate',
-						$event.target.value)">
-					</my-date-picker>
+					<div class="contentDate">
+						<my-date-picker [options]="myDatePickerOptions"
+							[(ngModel)]="filterService.filter['closedDate']"
+							(change)="filterService.put('closedDate',
+							$event.target.value)">
+						</my-date-picker>
+					</div>
 				</div>
 			</div>
 
