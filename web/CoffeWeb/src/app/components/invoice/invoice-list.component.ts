@@ -38,7 +38,7 @@ const moment =  _moment;
 				<h2>Reportes</h2>
 			</div>
 
-			<div class="button">
+			<div class="button1">
 				<button (click)="openModal(template)">
 					<i class="material-icons">lock</i>
 				</button>
@@ -55,6 +55,7 @@ const moment =  _moment;
 					$event.target.value)">
 				</my-date-picker>
 			</div>
+
 			<!--EndDate-->
 			<div class="date2">
 				<my-date-picker [options]="myDatePickerOptions"
@@ -63,60 +64,37 @@ const moment =  _moment;
 					$event.target.value)">
 				</my-date-picker>
 			</div>
-		</div>
 
-		<div class="headerSearch">
-			<div class="rowsm">
-				<div class="field">
-					<!--StartDate-->
-					<div class="contentDate">
-						<my-date-picker [options]="myDatePickerOptions"
-							[(ngModel)]="filterService.filter['startDate']"
-							(change)="filterService.put('startDate',
-							$event.target.value)">
-						</my-date-picker>
-					</div>
-					<!--EndDate-->
-					<div class="contentDate">
-						<my-date-picker [options]="myDatePickerOptions"
-							[(ngModel)]="filterService.filter['closedDate']"
-							(change)="filterService.put('closedDate',
-							$event.target.value)">
-						</my-date-picker>
-					</div>
-				</div>
+			<div class="item5">
+				<input matInput placeholder="Nombre o Identificación" [(ngModel)]="filterService.filter['nitName']"
+									(change)="filterService.put('nitName',
+									$event.target.value)">
 			</div>
 
-			<div class="rowsm">
-				<div class="field">
-					<input matInput placeholder="Nombre o Identificación" [(ngModel)]="filterService.filter['nitName']"
-																			(change)="filterService.put('nitName',
-																			$event.target.value)">
-				</div>
-				<div class="field">
-					<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['typeProvider']"
-																(change)="filterService.put('typeProvider',
-																$event.target.value)">
-						<mat-option>Ninguna</mat-option>
-						<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType }} </mat-option>
-					</mat-select>
-				</div>
-
-				<div class="field">
-					<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusInvoice']"
-														(change)="filterService.put('statusInvoice',
-														$event.target.value)">
-						<mat-option>Ninguna</mat-option>
-						<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
-					</mat-select>
-				</div>
-
-				<div class="container-button-filter">
-					<button class="btn-icon" title="Search" type="button" (click)="list(0)">
-						<i class="material-icons">search</i>
-					</button>
-				</div>
+			<div class="item6">
+				<mat-select placeholder="Tipo de Proveedor" [(ngModel)]="filterService.filter['typeProvider']"
+							(change)="filterService.put('typeProvider',
+							$event.target.value)">
+					<mat-option>Ninguna</mat-option>
+					<mat-option *ngFor="let pt of provType" [value]="pt.id"> {{pt.nameProviderType }} </mat-option>
+				</mat-select>
 			</div>
+
+			<div class="item7">
+				<mat-select placeholder="Estatus" [(ngModel)]="filterService.filter['statusInvoice']"
+							(change)="filterService.put('statusInvoice',
+							$event.target.value)">
+					<mat-option>Ninguna</mat-option>
+					<mat-option *ngFor="let s of status" [value]="s.id"> {{s.name}} </mat-option>
+				</mat-select>
+			</div>
+
+			<div class="item8">
+				<button (click)="list(0)">
+					<i class="material-icons">search</i>
+				</button>
+			</div>
+
 		</div>
 
 		<!--Table -->

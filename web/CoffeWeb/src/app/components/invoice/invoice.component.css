@@ -96,19 +96,27 @@ th.mat-sort-header-sorted {
     position: sticky; 
     margin-top: 50px;
 }
+
+
+.item0 { grid-area: blanck; }
 .item1 { grid-area: title; }
-.item2 { grid-area: button; }
+.item2 { grid-area: button1; }
 .item3 { grid-area: date1; }
 .item3 { grid-area: date2; }
 .item4 { grid-area: search1; }
-.item5 { grid-area: footer; }
-
+.item5 { grid-area: filter1; }
+.item6 { grid-area: filter2; }
+.item7 { grid-area: filter3; }
+.item8 { grid-area: search2; }
+.item9 { grid-area: date3; }
 
 .container {
     display: grid;
     /* grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;     */
-    grid-template-areas: 'title title button button';
+    grid-template-areas:'title title title button1'
+                        'date1 date2 date3 search1'
+                        'filter1 filter2 filter3 search2';
 
     margin-top: 10px;
     margin-bottom: 10px;
@@ -125,9 +133,12 @@ th.mat-sort-header-sorted {
 
 }
 
-.container > .button {
+.container > .button1 {
+    grid-column-start: 4;
     grid-column-end: 5;
-    
+    grid-row-start: 1;
+    grid-row-end: 2;
+
 }
 
 .container > .date1 {
@@ -145,7 +156,54 @@ th.mat-sort-header-sorted {
     grid-row-end: 3;
 }
 
-button{
-    display: inline;
-    align-items: flex-end;
+
+.container > filter1{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    max-width: 229px;
+}
+
+.container > filter2{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+.container > filter3{
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+.container > search2{
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+input:hover, textarea:hover, select:hover, .select:hover {
+    border: 1px solid #f2f2f2;
+    /* background-color: #f2f2f2; */
+    border-radius: 4px;
+}
+
+button, input[type="file"]+label {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 2px;
+    box-sizing: content-box;
+    display: -ms-inline-grid;
+    justify-content: center;
+    transition: all .2s linear;
+    background-color: white;
+    /* margin-right: 0.5px; */
+    /* position: absolute; */
 }
