@@ -139,9 +139,9 @@ const moment =  _moment;
 				</ng-container>
 
 				<!-- Position  openDateInvoice -->
-				<ng-container matColumnDef="createdAt">
+				<ng-container matColumnDef="startDate">
 					<th class="table-header" mat-header-cell *matHeaderCellDef  mat-sort-header>Fecha de Apertura</th>
-						<td mat-cell *matCellDef="let invoice"> {{invoice.createdAt || '-'}} </td>
+						<td mat-cell *matCellDef="let invoice"> {{invoice.startDate || '-'}} </td>
 				</ng-container>
 
 				<!-- Position totalInvoice -->
@@ -204,7 +204,7 @@ export class InvoiceListComponent implements OnInit {
 
 	// Order Columns Display
 	columnsToDisplay = ['select',  'provider.providerType.nameProviderType',
-	'statusInvoice.name', 'provider.nameProvider', 'createdAt', 'totalInvoice'];
+	'statusInvoice.name', 'provider.nameProvider', 'startDate', 'totalInvoice'];
 
 	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs
@@ -392,7 +392,8 @@ export class InvoiceListComponent implements OnInit {
 	// }
 
 	exportAsXLSX(): void {
-		this.excelService.exportAsExcelFile(this.dataSource.data, 'sample');
+
+		this.excelService.exportAsExcelFile(this.dataSource.data, 'Reporte');
 	}
 
 
