@@ -393,7 +393,18 @@ export class InvoiceListComponent implements OnInit {
 
 	exportAsXLSX(): void {
 
-		this.excelService.exportAsExcelFile(this.dataSource.data, 'Reporte');
+		let httpParams = BaseService.jsonToHttpParams({
+			collection: 'startDate, closedDate, provider(nameProvider, nitProvider,' +
+				'providerType(nameProviderType)), statusProvider(name), totalInvoice',
+			...this.filterService.filter
+		});
+
+		this.invoiceService.getAll(httpParams).subscribe(
+				data => {
+					console.log(data['result']);
+					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
+				}
+		);
 	}
 
 
