@@ -22,10 +22,6 @@ import { CustomDateAdapter } from '../../core/utils/custom-date-adapter.componen
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {IMyDpOptions, IMyDateModel} from 'mydatepicker';
 
-// Depending on whether rollup is used, moment needs to be imported differently.
-// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
-// syntax. However, rollup creates a synthetic default module and we thus need to import it using
-// the `default as` syntax.
 import * as _moment from 'moment';
 
 const moment =  _moment;
@@ -42,8 +38,11 @@ const moment =  _moment;
 				<button (click)="openModal(template)">
 					<i class="material-icons">lock</i>
 				</button>
-				<button (click)="exportAsXLSX()">
+				<button (click)="exportTotalAsXLSX()">
 					<i  class="material-icons">receipt</i>
+				</button>
+				<button (click)="exportDetailAsXLSX()">
+					<i class="material-icons">description</i>
 				</button>
 			</div>
 
@@ -94,7 +93,6 @@ const moment =  _moment;
 					<i class="material-icons">search</i>
 				</button>
 			</div>
-
 		</div>
 
 		<!--Table -->
@@ -407,7 +405,24 @@ export class InvoiceListComponent implements OnInit {
 		);
 	}
 
+	exportTotalAsXLSX(): void {
 
+		this.invoiceService.getTotal().subscribe(
+				data => {
+					console.log(data['result']);
+					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
+				}
+		);
+	}
+
+	exportDetailAsXLSX(): void {
+		this.invoiceService.getDetail().subscribe(
+				data => {
+					console.log(data['result']);
+					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
+				}
+		);
+	}
 
 	onDateChanged(event: IMyDateModel) {
 		// event properties are: event.date, event.jsdate, event.formatted and event.epoc
