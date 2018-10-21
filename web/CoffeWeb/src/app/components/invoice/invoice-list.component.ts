@@ -395,7 +395,7 @@ export class InvoiceListComponent implements OnInit {
 
 		let httpParams = BaseService.jsonToHttpParams({
 			collection: 'startDate, closedDate, provider(nameProvider, nitProvider,' +
-				'providerType(nameProviderType)), statusProvider(name), totalInvoice',
+				'providerType(nameProviderType), statusProvider(name), totalInvoice',
 			...this.filterService.filter
 		});
 

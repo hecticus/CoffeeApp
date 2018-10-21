@@ -206,4 +206,76 @@ public class Invoice extends AbstractEntity{
                 pageSize);
     }
 
-}
+    public static ListPagerCollection createTotalReport(){
+
+        ExpressionList expressionList = finder.query().where();
+
+
+        /*String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
+                " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
+                " prov.id_provider AS prov_id, prov.fullname_provider as full_name," +
+                " prov.address_provider as address," +
+                " prov.contactname_provider as contact_name, prov.identificationdoc_provider as identification_doc," +
+                " prov.phonenumber_provider as phone_number, prov.photo_provider as photo_provider" +
+                " FROM invoices invo " +
+                " INNER JOIN  providers prov ON prov.id_provider = invo.id_provider " +
+                " where invo.duedate_invoice like '"+date+"%'";*/
+
+
+        String sql = " SELECT \n" +
+                "    c.created_at as 'Fecha de Apertura',\n" +
+                "    c.closed_date as 'Fecha de Cierre',\n" +
+                "    t.name_provider_type as 'Nombre del Proveedor',\n" +
+                "    p.name_provider as 'Tipo de Proveedor',\n" +
+                "    p.nit_provider as 'Identificación del Proveedor',\n" +
+                "    s.name as 'Status de Factura',\n" +
+                "   \tSUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) as 'Total de la Factura'\n" +
+                "FROM\n" +
+                "    CoffeeApp.invoices AS c,\n" +
+                "    CoffeeApp.providers AS p,\n" +
+                "    CoffeeApp.status AS s,\n" +
+                "    CoffeeApp.provider_type as t,\n" +
+                "    CoffeeApp.invoice_details as i\n" +
+                "WHERE\n" +
+                "    c.provider_id = p.id\n" +
+                "        AND c.status_invoice_id = s.id\n" +
+                "        AND p.provider_type_id = t.id\n" +
+                "        AND i.deleted = 0 \n" +
+                "        AND i.invoice_id = c.id\n" +
+                "GROUP BY  c.created_at,\n" +
+                "    c.closed_date,\n" +
+                "    t.name_provider_type,\n" +
+                "    p.name_provider,\n" +
+                "    p.nit_provider,\n" +
+                "    s.name;";
+
+        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
+/*                .setParameter("typeProvider", typeProvider)
+                .setParameter("date", date)
+                .setParameter("pageIndex",pageIndex)
+                .setParameter("pagesize",pagesize)
+                .findList();*/
+/*
+        List<Invoice> invoiceList =toInvoices(sqlRows);*/
+
+
+        /*return new ListPagerCollection(expressionList.findList());*/
+        return new ListPagerCollection(sqlRows);
+    }
+/*    SELECT
+    c.created_at,
+    c.closed_date,
+    t.name_provider_type,
+    p.name_provider,
+    p.nit_provider,
+    s.name
+            FROM
+    CoffeeApp.invoices AS c,
+    CoffeeApp.providers AS p,
+    CoffeeApp.status AS s,
+    CoffeeApp.provider_type as t
+            WHERE
+    c.provider_id = p.id
+    AND c.status_invoice_id = s.id
+    AND p.provider_type_id = t.id;*/
+    }
