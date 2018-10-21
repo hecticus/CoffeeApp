@@ -175,7 +175,7 @@ public class Invoices extends Controller {
     @CoffeAppsecurity
     public  Result createDetailReport() {
         try {
-            ListPagerCollection listPager = Invoice.createTotalReport();
+            ListPagerCollection listPager = Invoice.createDetailReport();
 
             return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
