@@ -35,15 +35,17 @@ const moment =  _moment;
 			</div>
 
 			<div class="button1">
-				<button (click)="openModal(template)">
-					<i class="material-icons">lock</i>
-				</button>
-				<button (click)="exportTotalAsXLSX()">
-					<i  class="material-icons">receipt</i>
-				</button>
-				<button (click)="exportDetailAsXLSX()">
-					<i class="material-icons">description</i>
-				</button>
+				<div class="buttons">
+					<button class="b1" (click)="openModal(template)">
+						<i class="material-icons">lock</i>
+					</button>
+					<button (click)="exportTotalAsXLSX()">
+						<i  class="material-icons">receipt</i>
+					</button>
+					<button (click)="exportDetailAsXLSX()">
+						<i class="material-icons">description</i>
+					</button>
+				</div>
 			</div>
 
 			<!--StartDate-->
