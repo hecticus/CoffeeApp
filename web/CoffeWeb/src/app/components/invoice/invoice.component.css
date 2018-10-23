@@ -150,6 +150,7 @@ th.mat-sort-header-sorted {
     grid-row-start: 2;
     grid-row-end: 3;
     margin: 2px;
+    background-color: #f8f5f5;
 }
 
 .container > .date2{
@@ -158,6 +159,7 @@ th.mat-sort-header-sorted {
     grid-row-start: 2;
     grid-row-end: 3;
     margin: 2px;
+    background-color: #f8f5f5;
 }
 
 
@@ -167,6 +169,7 @@ th.mat-sort-header-sorted {
     grid-row-start: 3;
     grid-row-end: 4;
     max-width: 229px;
+    background-color: #f8f5f5;
 }
 
 .container > filter2{
@@ -174,6 +177,7 @@ th.mat-sort-header-sorted {
     grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end: 4;
+    background-color: #f8f5f5;
 }
 
 .container > filter3{
@@ -181,6 +185,7 @@ th.mat-sort-header-sorted {
     grid-column-end: 4;
     grid-row-start: 3;
     grid-row-end: 4;
+    background-color: #f8f5f5;
 }
 
 .container > search2{
@@ -188,6 +193,7 @@ th.mat-sort-header-sorted {
     grid-column-end: 5;
     grid-row-start: 3;
     grid-row-end: 4;
+    background-color: #f8f5f5;
 }
 
 input:hover, textarea:hover, select:hover, .select:hover {
