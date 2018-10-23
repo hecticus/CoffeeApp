@@ -6,13 +6,16 @@ package com.hecticus.eleta.util;
 
 public class Constants {
     //public static final String BASE_URL = "http://10.0.3.105:9000/";
-    public static final String BASE_URL = "https://api.coffee.hecticus.com";
-    //public static final String BASE_URL = "https://dev.api.coffee.hecticus.com/";
+    /*public static final String BASE_URL = "https://api.coffee.hecticus.com";
+    public static final int VERSION_DB_PROD = 2;*/
+
+    public static final String BASE_URL = "https://dev.api.coffee.hecticus.com/";
+    public static final int VERSION_DB_DEV = 2;
 
     public static final String FAKE_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6ImVkd2luZGVyZXB1ZXN0b0BnbWFpbC5jb20iLCJqdGkiOiI1IiwiaWF0IjoxNTE2Njc4MTQzLCJzdWIiOiJsb2dpbi8iLCJpc3MiOiJodHRwczovL2Rldi5jb2ZmZWUuaGVjdGljdXMuY29tLyMifQ.wkwffOAzge8Y7jlOCnjhfH3iEv-tjrlsS2o9Z3MpGb4T7cuUF-55BDhoUbeq84NSebHUN2UJlsxjH4AS9TXUXQ";
 
-    //public static final int VERSION_DB_DEV = 1;
-    public static final int VERSION_DB_PROD = 2;
+
+
 
     public static final int INITIAL_PAGE_IN_PAGER = 0;
 

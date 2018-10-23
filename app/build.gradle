@@ -67,7 +67,16 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5') {
         transitive = true;
     }
+    compile('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
+        transitive = true;
+    }
+}
+
+crashlytics {
+    enableNdk true
+    androidNdkOut 'src/main/obj'
+    androidNdkLibsOut 'src/main/libs'
 }

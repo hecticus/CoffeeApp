@@ -2,6 +2,7 @@ package com.hecticus.eleta.model_new;
 
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hecticus.eleta.model.response.farm.FarmsListResponse;
@@ -16,6 +17,7 @@ import com.hecticus.eleta.model_new.retrofit_interface.HarvestRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.PurchaseRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 
 import java.io.IOException;
 
@@ -86,6 +88,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.saveNewItemsType(Constants.TYPE_HARVESTER, response.body().getResult());
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }
@@ -112,6 +115,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.saveNewFarms( response.body().getResult());
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }
@@ -138,6 +142,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.saveNewLots( response.body().getResult());
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }
@@ -164,6 +169,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.saveNewStores(response.body().getResult());
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }
@@ -190,6 +196,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.saveNewItemsType(Constants.TYPE_SELLER, response.body().getResult());
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }
@@ -216,6 +223,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.saveNewPurities(response.body().getResult());
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }
@@ -245,6 +253,7 @@ public class GlobalRequests {
                 try {
                     ManagerDB.updateProviders(response.body().getResult(), sellerProviderType);
                 } catch (Exception e) {
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
                     e.printStackTrace();
                 }
             }

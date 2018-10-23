@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseActivity;
 import com.hecticus.eleta.custom_views.CustomEditText;
@@ -42,7 +43,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("BUG", "--->Initializing Crashlytics");
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
         setContentView(R.layout.activity_login);
 

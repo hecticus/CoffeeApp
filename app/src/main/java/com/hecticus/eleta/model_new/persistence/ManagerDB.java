@@ -309,7 +309,6 @@ public class ManagerDB {
         ArrayList<Provider> finalProviderList = new ArrayList<>(providerList);
 
         List<Provider> deletedProviderList = Realm.getDefaultInstance().where(Provider.class).equalTo("deleteOffline", true).equalTo("idProviderType", type).findAllSorted("fullNameProvider");
-        Log.d("DEBUG", "prividerDelete.size()="+ deletedProviderList.size());
         for (Provider provider : deletedProviderList) {
             if (provider.getIdProvider() > -1) {
                 int ind = provider.indexByIdIn(finalProviderList);

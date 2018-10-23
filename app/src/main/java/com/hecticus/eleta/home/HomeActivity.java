@@ -25,6 +25,7 @@ import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.login.LoginActivity;
 import com.hecticus.eleta.model.response.harvest.Harvest;
 import com.hecticus.eleta.model_new.GlobalRequests;
+import com.hecticus.eleta.model_new.Provider;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.SyncManager;
 import com.hecticus.eleta.model_new.persistence.Migrations;
@@ -61,17 +62,21 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         setContentView(R.layout.activity_logged_in);
         Realm.init(getApplicationContext());
         final RealmConfiguration configuration = new RealmConfiguration.Builder()
-                                                        .name("coffeeleta.realm")
-                                                        .schemaVersion(Constants.VERSION_DB_PROD)
-                                                        //.name("coffeeletadev.realm")
-                                                        //.schemaVersion(Constants.VERSION_DB_DEV)
-                                                        //.migration(new Migrations())
+                                                        /*.name("coffeeleta.realm")
+                                                        .schemaVersion(Constants.VERSION_DB_PROD)/*
+                                                        .migration(new Migrations())*/
+                                                        .name("coffeeletadev.realm")
+                                                        .schemaVersion(Constants.VERSION_DB_DEV)
                                                         .build();
         Realm.setDefaultConfiguration(configuration);
 
         try {
-            Crashlytics.setUserEmail(SessionManager.getUserEmail(this));
-            Crashlytics.setUserName(SessionManager.getUserName(this));
+            /*Crashlytics.setUserEmail(SessionManager.getUserEmail(this));
+            Crashlytics.setUserName(SessionManager.getUserName(this));*/
+            Crashlytics.setUserIdentifier("12345");
+            Crashlytics.setUserEmail("ingbrayanmendoza@gmail.com");
+            Crashlytics.setUserName("Test User Brayan");
+            Log.d("DEBUG", "init crashlytics success");
         } catch (Exception e) {
             Log.e("BUG", "--->Exception setting user data for Crashlytics: " + e);
             e.printStackTrace();
@@ -180,8 +185,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         hideProgress();
 
         Toast.makeText(this, "Error de sincronización:\n" + errorMessage, Toast.LENGTH_LONG).show();
-        Toast.makeText(this, "Error de sincronización:\n" + errorMessage, Toast.LENGTH_LONG).show();
-        Toast.makeText(this, "Error de sincronización:\n" + errorMessage, Toast.LENGTH_LONG).show();
+        /*Toast.makeText(this, "Error de sincronización:\n" + errorMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Error de sincronización:\n" + errorMessage, Toast.LENGTH_LONG).show();*/
 
 
         /*if (syncErrorType == SyncManager.SyncErrorType.DELETING_PROVIDER_WITH_OPEN_INVOICES)

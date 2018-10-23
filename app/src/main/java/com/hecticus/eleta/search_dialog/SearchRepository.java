@@ -3,6 +3,7 @@ package com.hecticus.eleta.search_dialog;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.response.providers.ProviderType;
@@ -12,6 +13,7 @@ import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProvidersListResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,11 +88,13 @@ public class SearchRepository implements SearchContract.Repository {
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult());
                             currentProviders = finalList;
                             onGetProvidersSuccess(finalList);
-                        } else
-                            onError(mPresenter.context.getString(R.string.error_getting_providers));
+                        } else {
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_providers));
+                        }
                     } catch (Exception e) {
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_providers));
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_providers));
                     }
                 }
 
@@ -98,7 +102,7 @@ public class SearchRepository implements SearchContract.Repository {
                 @Override
                 public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
                     t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_providers));
+                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_getting_providers));
                 }
             });
         }

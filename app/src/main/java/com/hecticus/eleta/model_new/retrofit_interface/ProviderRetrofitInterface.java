@@ -25,7 +25,7 @@ public interface ProviderRetrofitInterface {
 
     //listo sincroniza
     @POST("provider")
-    Call<ProviderCreationResponse> createProvider( @Body Provider providerToCreate);
+    Call<ProviderCreationResponse> createProvider(@Body Provider providerToCreate);
 
     //listo sincroniza
     @PUT("provider/{id}")
