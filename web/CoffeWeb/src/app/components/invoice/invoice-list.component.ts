@@ -29,7 +29,7 @@ const moment =  _moment;
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
-		<div class="container">
+		<div class="container1">
 			<div class="title">
 				<h2>Reportes</h2>
 			</div>
@@ -47,7 +47,7 @@ const moment =  _moment;
 					</button>
 				</div>
 			</div>
-
+			<!--<div class=""></div>
 			<!--StartDate-->
 			<div class="date1">
 				<my-date-picker [options]="myDatePickerOptions"

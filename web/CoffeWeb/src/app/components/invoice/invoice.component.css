@@ -110,7 +110,7 @@ th.mat-sort-header-sorted {
 .item8 { grid-area: search2; }
 .item9 { grid-area: date3; }
 
-.container {
+.container1 {
     display: grid;
     /* grid-template-rows: 1fr 1fr 1fr 1fr;*/
     grid-template-columns: 1fr 1fr 1fr 1fr;     
@@ -126,7 +126,7 @@ th.mat-sort-header-sorted {
     width: 100%;
 }
 
-.container > .title {
+.container1 > .title {
     /* grid-column: 1 / 4; */
     grid-column-start: 1;
     grid-column-end: 3;
@@ -136,7 +136,7 @@ th.mat-sort-header-sorted {
 
 }
 
-.container > .button1 {
+.container1 > .button1 {
     grid-column-start: 4;
     grid-column-end: 5;
     grid-row-start: 1;
@@ -144,7 +144,7 @@ th.mat-sort-header-sorted {
     margin-left: 160px;
 }
 
-.container > .date1 {
+.container1 > .date1 {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 2;
@@ -152,7 +152,7 @@ th.mat-sort-header-sorted {
     margin: 2px;
 }
 
-.container > .date2{
+.container1 > .date2{
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 2;
@@ -161,7 +161,7 @@ th.mat-sort-header-sorted {
 }
 
 
-.container > filter1{
+.container1 > filter1{
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 3;
@@ -169,21 +169,21 @@ th.mat-sort-header-sorted {
     max-width: 229px;
 }
 
-.container > filter2{
+.container1 > filter2{
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end: 4;
 }
 
-.container > filter3{
+.container1 > filter3{
     grid-column-start: 3;
     grid-column-end: 4;
     grid-row-start: 3;
     grid-row-end: 4;
 }
 
-.container > search2{
+.container1 > search2{
     grid-column-start: 4;
     grid-column-end: 5;
     grid-row-start: 3;
