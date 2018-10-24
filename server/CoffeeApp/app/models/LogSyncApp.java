@@ -17,10 +17,13 @@ public class LogSyncApp extends  AbstractEntity {
     @ManyToOne
     User user;
 
-    @Constraints.Required
     @Column(nullable = false)
     @DbJson
     JsonNode content;
+
+    @Column(nullable = false)
+    @Lob
+    String description;
 
     public User getUser() {
         return user;
@@ -36,6 +39,14 @@ public class LogSyncApp extends  AbstractEntity {
 
     public void setContent(JsonNode content) {
         this.content = content;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     private static Finder<Long, LogSyncApp> finder = new Finder<>(LogSyncApp.class);
