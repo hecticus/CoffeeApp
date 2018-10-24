@@ -631,7 +631,6 @@ public class SyncManager {
                                     .findFirst();
                             if (invoice != null) {
                                 realm.beginTransaction();
-                                Log.d("DETAILS brayan", "--->Success invoiceDetails. invoiceDetails=" + invoice);
                                 try {
                                     invoice.setAddOffline(false);
                                     realm.insertOrUpdate(invoice);
@@ -639,7 +638,6 @@ public class SyncManager {
                                     ErrorHandling.errorCodeBdLocal(e);
                                 }
                                 realm.commitTransaction();
-                                Log.d("DETAILS brayan", "--->Success invoiceDetails. OK");
                             } else {
                                 Log.e("DETAILS brayan", "--->invoiceDetails==null");
                             }

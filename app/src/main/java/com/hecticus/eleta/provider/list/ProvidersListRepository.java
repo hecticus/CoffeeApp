@@ -108,7 +108,37 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
             mPresenter.handleSuccessfulMixedProvidersRequest(currentProviders);
         } else {
             Call<ProvidersListResponse> call = providersApi.providersByType(providerType);
-            new ManagerServices<>(call, new ManagerServices.ServiceListener<ProvidersListResponse>() {
+            call.enqueue(new Callback<ProvidersListResponse>() {
+
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProvidersListResponse> call,
+                                       @NonNull Response<ProvidersListResponse> response) {
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            ManagerDB.updateProviders(response.body().getResult(), providerType);
+                            List<Provider> finalList = ManagerDB.mixAndGetValids(providerType, response.body().getResult());
+                            currentProviders = finalList;
+                            onGetProvidersSuccess(finalList);
+                        } catch (Exception e) {
+                            ErrorHandling.errorCodeInServerResponseProcessing(e);
+                            e.printStackTrace();
+                            manageError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_providers), response);
+                        }
+                    } else {
+                        manageError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_providers), response);
+                    }
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_getting_providers));
+                }
+            });
+            /*new ManagerServices<>(call, new ManagerServices.ServiceListener<ProvidersListResponse>() {
                 @DebugLog
                 @Override
                 public void onSuccess(Response<ProvidersListResponse> response) {
@@ -136,7 +166,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                     SessionManager.clearPreferences(mPresenter.context);
                     mPresenter.invalidToken();
                 }
-            });
+            });*/
         }
     }
 
@@ -167,10 +197,11 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult(), name);
                             onGetProvidersSuccess(finalList);
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_providers), response);
+                            manageError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_providers), response);
                     } catch (Exception e) {
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_providers));
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_providers));
                     }
                 }
 
@@ -178,7 +209,8 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                 @Override
                 public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
                     t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_providers));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_providers));
                 }
             });
         }
@@ -188,12 +220,10 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
     @Override
     public void deleteProvider(final Provider provider) {
         if (!InternetManager.isConnected(mPresenter.context) || provider.getIdProvider() <0 || ManagerDB.providerHasOfflineOperation(provider)) {
-            //TODO check if has invoices
-
             if (ManagerDB.deleteProvider(provider)) {
                 mPresenter.onProviderDeleted();
             } else {
-                onError(mPresenter.context.getString(R.string.error_deleting_provider));
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_deleting_provider));
             }
         } else {
             Call<ResponseBody> call = providersApi.deleteProvider(provider.getIdProvider());
@@ -208,7 +238,7 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
                             mPresenter.onProviderDeleted();
                         } catch (Exception e) {
                             ErrorHandling.errorCodeInServerResponseProcessing(e);
-                            manageError(mPresenter.context.getString(R.string.error_deleting_provider), response);
+                            manageError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_deleting_provider), response);
                         }
                     } else {
                         if (response.code() == 409){
@@ -222,7 +252,8 @@ public class ProvidersListRepository implements ProvidersListContract.Repository
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    onError(ErrorHandling.errorCodeWebServiceFailed+mPresenter.context.getString(R.string.error_deleting_provider));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_deleting_provider));
                     Log.d("ERROR", t.toString());
                     t.printStackTrace();
                 }

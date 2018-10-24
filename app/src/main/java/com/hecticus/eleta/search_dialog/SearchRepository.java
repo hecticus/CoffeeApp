@@ -69,7 +69,6 @@ public class SearchRepository implements SearchContract.Repository {
     public void getAllProvidersByType(final int type) {
         if (!InternetManager.isConnected(mPresenter.context)) {
             currentProviders = ManagerDB.getAllProvidersByType(type);
-            Log.d("TEST", "current providers " + currentProviders);
             mPresenter.handleSuccessfulSortedProvidersRequest(currentProviders);
         } else {
             Call<ProvidersListResponse> call = providersApi.providersByType(type);
@@ -82,8 +81,6 @@ public class SearchRepository implements SearchContract.Repository {
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-                            //currentProviders = response.body().getResult();
-                            //onGetProvidersSuccess(response.body());
                             ManagerDB.updateProviders(response.body().getResult(), type);
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult());
                             currentProviders = finalList;
@@ -102,7 +99,8 @@ public class SearchRepository implements SearchContract.Repository {
                 @Override
                 public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
                     t.printStackTrace();
-                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_getting_providers));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_providers));
                 }
             });
         }
@@ -134,14 +132,14 @@ public class SearchRepository implements SearchContract.Repository {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             ManagerDB.updateProviders(response.body().getResult(), type);
-                            //onGetProvidersSuccess(response.body());
                             List<Provider> finalList = ManagerDB.mixAndGetValids(type, response.body().getResult(), name);
                             onGetProvidersSuccess(finalList);
                         } else
-                            onError(mPresenter.context.getString(R.string.error_getting_providers));
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_providers));
                     } catch (Exception e) {
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_providers));
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_providers));
                     }
                 }
 
@@ -149,7 +147,8 @@ public class SearchRepository implements SearchContract.Repository {
                 @Override
                 public void onFailure(@NonNull Call<ProvidersListResponse> call, @NonNull Throwable t) {
                     t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_providers));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_providers));
                 }
             });
         }

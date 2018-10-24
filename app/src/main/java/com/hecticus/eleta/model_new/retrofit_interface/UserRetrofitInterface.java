@@ -17,15 +17,6 @@ import retrofit2.http.Path;
 
 public interface UserRetrofitInterface {
 
-    /*String loginUrl = "user/login";
-    String logoutUrl = "user/logout";
-    String recoverPasswordUrl = "user/reset/{email}";*/
-
-
-    /*String loginUrl = "/oauth/token";
-    String logoutUrl = "/oauth/revokeToken";
-    String recoverPasswordUrl = "user/reset/{email}";*/
-
     @FormUrlEncoded
     @POST("oauth/token")
     Call<ResponseBody> loginRequest(@Field("grant_type") String grant_type, @Field("username") String username
@@ -35,7 +26,7 @@ public interface UserRetrofitInterface {
     Call<ResponseBody> getUser(@Path("id") long id);
 
     @GET("oauth/revokeToken")
-    Call<ResponseBody> logOutRequest(/*@Header("Authorization") String token*/);
+    Call<ResponseBody> logOutRequest();
 
     @GET("oauth/auth")
     Call<ResponseBody> recoverPasswordRequest(@Path("email") String email);

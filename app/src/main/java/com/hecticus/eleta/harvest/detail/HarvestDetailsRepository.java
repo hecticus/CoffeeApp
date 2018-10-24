@@ -26,6 +26,7 @@ import com.hecticus.eleta.model.response.lot.LotsListResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.HarvestRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 
 import org.json.JSONObject;
 
@@ -125,60 +126,30 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             if (isAdd) {
                 if(ManagerDB.saveNewInvoice1(Constants.TYPE_HARVESTER, invoicePost)){
                     onHarvestUpdated();
-                }
-
-
-
-                /*if (ManagerDB.saveNewInvoice(Constants.TYPE_HARVESTER, invoicePost)) {
-                    onHarvestUpdated();
-
                 } else {
-                    onError();
-                }*/
-            } /*else {
-                Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
-                if (ManagerDB.updateInvoiceDetails(invoicePost, null))
-                    onHarvestUpdated();
-                else
-                    onError();
-            }*/
+                    onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_changes));
+                }
+            }
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                Invoice invoice;
-                //try{
-                    invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
-                /*} catch (Exception e){
-                    //invoice = new Invoice(invoicePost, ManagerDB.getProviderById());
+                Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
 
-                }*/
-                Gson g = new Gson();
-                Log.d("debug fecha", g.toJson(invoice));
-                call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
+                call = invoiceApi.newInvoiceDetail(invoice);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog
                     @Override
                     public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                         try {
-                            Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
-                            Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-
-                        try {
                             if (response.isSuccessful()) {
-                                //onHarvestUpdated();
                                 getDetails(response.body().getResult().getInvoiceId());
                             } else {
-                                Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                                manageError(response);
+                                onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_changes));
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            onError();
+                            ErrorHandling.errorCodeInServerResponseProcessing(e);
+                            onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_saving_changes));
                         }
 
                     }
@@ -186,16 +157,11 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                     @DebugLog
                     @Override
                     public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
-                        t.printStackTrace();
-                        Log.e("RETRO", "--->ERROR");
-                        onError();
+                        ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                        onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_saving_changes));
                     }
                 });
-            } else {
-                //todo put
-                //call = invoiceApi.updateInvoiceDetail(invoicePost);
             }
-
         }
     }
 
@@ -206,7 +172,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 if (ManagerDB.updateInvoiceDetails1(invoiceDetails, 2))
                     onHarvestUpdated();
                 else
-                    onError();
+                    onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_harvests));
         } else {
                 endPoint(invoiceDetails);
         }
@@ -233,13 +199,13 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             @DebugLog
             @Override
             public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
-                try {
+                /*try {
                     Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
                     Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 try {
                     if (response.isSuccessful()) {
@@ -247,11 +213,12 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                         getDetails(response.body().getResult().getInvoiceId());
                     } else {
                         Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                        manageError(response);
+                        onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_harvests));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    onError();
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
+                    onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_saving_harvests));
                 }
 
             }
@@ -259,9 +226,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             @DebugLog
             @Override
             public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
-                t.printStackTrace();
-                Log.e("RETRO", "--->ERROR");
-                onError();
+                ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_saving_harvests));
             }
         });
     }
@@ -277,19 +243,19 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
                 try {
                     if (response.isSuccessful() && response.body() != null) {
-                        //response.body().getListInvoiceDetails().get(0).setPriceByLot((float) 50.5555);
-                        //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                         onHarvestUpdated();
-                    } else
-                        //manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
-                        onHarvestUpdated();
+                    } else { //todo brayan de aqui para abajo puede que toque comentar los msj y descomentar los onHarvestUpdated();
+                        onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_harvests));
+                        //onHarvestUpdated();
+                    }
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    //onError(mPresenter.context.getString(R.string.error_getting_harvests));
-                    onHarvestUpdated();
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
+                    onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_harvests));
+                    //onHarvestUpdated();
 
                 }
             }
@@ -297,9 +263,9 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                //onError(mPresenter.context.getString(R.string.error_getting_harvests));
-                onHarvestUpdated();
+                ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_harvests));
+                //onHarvestUpdated();
             }
         });
     }

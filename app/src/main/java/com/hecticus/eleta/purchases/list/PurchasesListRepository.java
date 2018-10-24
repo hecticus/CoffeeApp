@@ -15,6 +15,7 @@ import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 import com.hecticus.eleta.util.Util;
 
 import java.io.IOException;
@@ -94,10 +95,9 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             if (invoiceList != null) {
                 mPresenter.handleSuccessfulPurchasesRequest(invoiceList);
             } else {
-                onError(mPresenter.context.getString(R.string.error_getting_purchases), "getPurchasesRequest getAllInvoicesByType null list");
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_getting_purchases), "getPurchasesRequest getAllInvoicesByType null list");
             }
         } else {
-            Log.d("DEBUG", "paso 1");
             Call<InvoiceListResponse> call = invoiceApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Util.getCurrentDateFinisth(), Constants.TYPE_SELLER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-28"
 
             call.enqueue(new Callback<InvoiceListResponse>() {
@@ -107,26 +107,20 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                                        @NonNull Response<InvoiceListResponse> response) {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-
-                            Log.d("OFFLINE", "--->getPurchasesRequest (" + response.body().getResult().size() + ") Response: " + response.body());
-
                             ManagerDB.saveNewInvoicesByType(Constants.TYPE_SELLER, response.body().getResult());
 
                             List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_SELLER, Util.getCurrentDateLocal());
                             if (invoiceList != null) {
-                                Log.d("OFFLINE", "--->getPurchasesRequest local after request: " + invoiceList.size());
                                 mPresenter.handleSuccessfulPurchasesRequest(invoiceList);
                             } else {
-                                Log.e("OFFLINE", "--->getPurchasesRequest local after request null list");
-                                onError(mPresenter.context.getString(R.string.error_getting_purchases), "Got purchases from response but null in db");
+                                onError("%%"+ ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_purchases), "Got purchases from response but null in db");
                             }
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_purchases), response, "Got bad purchases response: " + response);
+                            manageError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_purchases), response, "Got bad purchases response: " + response);
                     } catch (Exception e) {
                         e.printStackTrace();
-
-                        Log.d("DEBUG", "eroor");
-                        onError(mPresenter.context.getString(R.string.error_getting_purchases),
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_purchases),
                                 "Exception when handling purchases response: " + e + " // "
                                         + (response == null ? "Null response" : "Response body: " + response.body()));
                     }
@@ -135,9 +129,8 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<InvoiceListResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    Log.d("DEBUG", "fallo");
-                    onError(mPresenter.context.getString(R.string.error_getting_purchases), "onFailure getting purchases: " + t);
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_purchases), "onFailure getting purchases: " + t);
                 }
             });
         }
@@ -155,7 +148,7 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
             if (ManagerDB.deleteHarvestOrPurchaseInvoice(remoteInvoiceId, localInvoiceId))
                 mPresenter.onPurchaseDeleted();
             else
-                onError(mPresenter.context.getString(R.string.error_deleting_purchase), "Cannot delete purchase from db");
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_deleting_purchase), "Cannot delete purchase from db");
         } else {
 
             Call<Message> call = invoiceApi.deleteInvoice(remoteInvoiceId);
@@ -167,13 +160,13 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                         if (response.isSuccessful()) {
                             // In case the purchase was created locally and it's not synced
                             ManagerDB.deleteHarvestOrPurchaseInvoiceOnline(remoteInvoiceId);
-
                             mPresenter.onPurchaseDeleted();
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_deleting_purchase), response, "deletePurchase bad response: " + response);
+                            manageError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_deleting_purchase), response, "deletePurchase bad response: " + response);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_deleting_purchase),
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_deleting_purchase),
                                 "Exception when handling deletePurchase response: " + e + " // "
                                         + (response == null ? "Null response" : "Response body: " + response.body()));
                     }
@@ -182,8 +175,8 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                 @DebugLog
                 @Override
                 public void onFailure(Call<Message> call, Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_deleting_purchase), "deletePurchase failure: " + t);
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_deleting_purchase), "deletePurchase failure: " + t);
                 }
             });
         }
@@ -202,9 +195,6 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
 
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoiceParam)) {
 
-            Log.d("PRINT", "--->getReceiptDetails FROM OFFLINE");
-
-            //List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getInvoiceId(), invoiceParam.getLocalId());
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                     invoiceParam.getInvoiceId(),
                     invoiceParam.getLocalId(),
@@ -212,23 +202,15 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 
-            /*if (invoiceList != null) {
-                localResponse.setHarvests(invoiceList);
-            } else {
-                onError(mPresenter.context.getString(R.string.error_getting_information_to_print), "No offline invoice found");
-            }*/
-
             if (detailsList != null) {
                 localResponse.setListInvoiceDetails(detailsList);
             } else {
-                onError(mPresenter.context.getString(R.string.error_getting_information_to_print), "No offline invoice found");
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_getting_information_to_print), "No offline invoice found");
             }
 
             if (detailsList != null) {
                 localResponse.setListInvoiceDetails(detailsList);
             }
-
-            //mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(localResponse);
             onGetReceiptDetailsSuccess(localResponse);
 
         } else {
@@ -248,19 +230,20 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
                             onGetReceiptDetailsSuccess(response.body());
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response, "getReceiptDetails bad response: " + response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_information_to_print), "getReceiptDetails bad response: " + response);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_information_to_print), "getReceiptDetails exception" + e);
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_information_to_print), "getReceiptDetails exception" + e);
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_information_to_print), t + "");
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_information_to_print), t + "");
                 }
             });
         }
@@ -301,19 +284,20 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                         if (response.isSuccessful() && response.body() != null) {
                             onGetReceiptSuccess(response.body());
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response, "getReceiptOfInvoiceForPrinting bad response: " + response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_information_to_print),"getReceiptOfInvoiceForPrinting bad response: " + response);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_information_to_print), "getReceiptOfInvoiceForPrinting exception: " + e);
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_information_to_print), "getReceiptOfInvoiceForPrinting exception: " + e);
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<ReceiptResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_information_to_print), t + "");
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_getting_information_to_print), t + "");
                 }
             });
         }

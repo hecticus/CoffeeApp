@@ -20,12 +20,14 @@ import com.hecticus.eleta.model.response.providers.ProviderCreationResponse;
 import com.hecticus.eleta.model.response.providers.ProviderImageUpdateResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 import com.hecticus.eleta.util.FileUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
@@ -165,14 +167,6 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @DebugLog
                 @Override
                 public void onResponse(@NonNull Call<ProviderCreationResponse> call, @NonNull Response<ProviderCreationResponse> response) {
-                    try {
-                        Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
-                        Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
 
                     try {
                         if (response.isSuccessful()) {
@@ -186,7 +180,6 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                         } else {
                             JSONObject errorBody = new JSONObject(response.errorBody().string());
                             String errorMessage = errorBody.getString("message");
-                            Log.d("DEBUG msj error:", errorMessage);
                             if(errorMessage.equals("Constrain violation: Duplicate entry '"+providerParam.getIdentificationDocProvider()+"' for key 'uq_providers_nit_provider'")){ //rut existe
                                 if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
                                     onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
@@ -200,14 +193,14 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                                     }
                                 } else {
                                     //Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
-                                    onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                                    onCreateError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_during_operation));
                                 }
                             }
                         }
                     } catch (Exception e) {
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
                         e.printStackTrace();
-                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                        //onError();
+                        onCreateError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_during_operation));
                     }
 
                 }
@@ -216,60 +209,11 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @Override
                 public void onFailure(Call<ProviderCreationResponse> call, Throwable t) {
                     t.printStackTrace();
-                    Log.e("RETRO", "--->ERROR");
-                    onCreateError(mPresenter.context.getString(R.string.error_during_operation));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onCreateError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_during_operation));
                 }
             });
 
-            /*new ManagerServices<>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
-                @DebugLog
-                @Override
-                public void onSuccess(Response<ProviderCreationResponse> response) {
-                    try {
-                        mPresenter.uploadImage(response.body().getProvider(), imagePath);
-                        onProviderSaved(response.body().getProvider());
-                        Log.d("DETAILS", "--->Success createProviderRequest:" + response.body());
-                    } catch (Exception e) {
-                        onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                    }
-                }
-
-                @DebugLog
-                @Override
-                public void onError(boolean fail, int code, Response<ProviderCreationResponse> response, String errorMessage) {
-                    //if (fail || code != 409) {
-                        //Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
-                        //onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                    //} else {
-                        //Log.d("DETAILS", "--->createProviderRequest Error 1a Existe (" + code + "):" + response.body());
-                        //onCreateError(mPresenter.context.getString(R.string.already_exists));
-                    //}/
-                    Log.d("DEBUG msj error:", errorMessage);
-                    if(errorMessage.equals("Duplicate entry '24543' for key 'uq_providers_nit_provider'")){ //rut existe
-                        if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
-                            onCreateError(mPresenter.context.getString(R.string.ruc_already_exists));
-                        } else {// es cosechador
-                            onCreateError(mPresenter.context.getString(R.string.dni_already_exists));
-                        }
-                    } else{
-                        if (errorMessage.substring(0,57).equals("Invalid parameter: There is  a provider active with name:")) {//name existe
-                            if (providerParam.getProviderType().getIdProviderType()==1) { //es proveedor
-                                onCreateError(mPresenter.context.getString(R.string.already_exists_name_provider));
-                            }
-                        } else {
-                            Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
-                            onCreateError(mPresenter.context.getString(R.string.error_during_operation));
-                        }
-                    }
-                }
-
-                @DebugLog
-                @Override
-                public void onInvalidToken() {
-                    //Session.clearPreferences(mPresenter.context);
-                    //mPresenter.invalidToken();
-                }
-            });*/
         }
     }
 
@@ -321,7 +265,58 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         } else {
             Log.d("DETAILS", "--->Sent provider: " + providerParam);
             Call<ProviderCreationResponse> call = providerDetailsDataApi.updateProviderData(providerParam.getIdProvider(),providerParam);
-            ManagerServices service = new ManagerServices<ProviderCreationResponse>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
+
+            call.enqueue(new Callback<ProviderCreationResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProviderCreationResponse> call,
+                                       @NonNull Response<ProviderCreationResponse> response) {
+
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            try {
+                                Log.d("DEBUG isimg", String.valueOf(isImg));
+                                if(!isImg){
+                                    onProviderSaved(response.body().getProvider());
+                                }
+                                //onProviderSaved(response.body().getProvider());
+                                Log.d("DETAILS", "--->Success updateProviderRequest:" + response.body());
+                            } catch (Exception e) {
+                                ErrorHandling.errorCodeInServerResponseProcessing(e);
+                                e.printStackTrace();
+                                onCreateError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_getting_providers));
+                            }
+                        } else {
+                            if (response.code() != 409) {
+                                Log.d("DETAILS", "--->updateProviderRequest Error 2 (" + response.code() + "):" + (response != null ? response.body() : ""));
+                                onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
+                            } else {
+                                if (response.errorBody() != null && response.errorBody().equals("registered [fullNameProvider]")) {
+                                    Log.d("DETAILS", "--->updateProviderRequest Error 2 fullNameProvider (" + response.code() + "):" + (response != null ? response.body() : ""));
+                                    onDataUpdateError(Constants.ErrorType.NAME_EXISTING);
+                                } else {
+                                    Log.d("DETAILS", "--->updateProviderRequest Error DNI/RUC (" + response.code() + "):" + response.body());
+                                    if (providerParam.isHarvester())
+                                        onDataUpdateError(Constants.ErrorType.DNI_EXISTING);
+                                    else
+                                        onDataUpdateError(Constants.ErrorType.RUC_EXISTING);
+                                }
+                            }
+                            onCreateError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_providers));
+                        }
+
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onCreateError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_providers));
+                }
+            });
+
+            /*new ManagerServices<ProviderCreationResponse>(call, new ManagerServices.ServiceListener<ProviderCreationResponse>() {
                 @DebugLog
                 @Override
                 public void onSuccess(Response<ProviderCreationResponse> response) {
@@ -362,7 +357,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                     SessionManager.clearPreferences(mPresenter.context);
                     mPresenter.invalidToken();
                 }
-            });
+            });*/
         }
     }
 

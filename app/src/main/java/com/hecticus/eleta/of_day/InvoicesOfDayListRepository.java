@@ -16,6 +16,7 @@ import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 
 import java.io.IOException;
 import java.util.List;
@@ -109,31 +110,17 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     public void getHarvestsOrPurchasesOfInvoiceRequest(final Invoice invoice) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoice)) {
 
-            Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM OFFLINE");
-
-            //List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
-            //Log.d("DEBUG harvestofday", String.valueOf(invoiceList.size()));
             List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                     invoice.getInvoiceId(),
                     invoice.getLocalId(),
                     isForHarvest);
-            Log.d("DEBUG 5555 json in", "..." +detailsList.size());
-
-            Log.d("DEBUG 5555 json in", "id" + String.valueOf(invoice.getInvoiceId()));
-            Log.d("DEBUG 5555 json in", "idLocal" + String.valueOf(invoice.getLocalId()));
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
-
-            /*if (invoiceList != null) {
-                localResponse.setHarvests(invoiceList);
-            } else {
-                onError(mPresenter.context.getString(R.string.error_getting_harvests));
-            }*/
 
             if (detailsList != null) {
                 localResponse.setListInvoiceDetails(detailsList);
             } else {
-                onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_getting_harvests));
             }
 
             if (detailsList != null) {
@@ -144,44 +131,33 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
         } else {
 
-            Log.d("HOD", "--->getHarvestsOrPurchasesOfInvoiceRequest FROM ONLINE");
-
             Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoice.getInvoiceId());
-            Log.d("DEBUG", String.valueOf(invoice.getInvoiceId()));
             call.enqueue(new Callback<InvoiceDetailsResponse>() {
                 @DebugLog
                 @Override
                 public void onResponse(@NonNull Call<InvoiceDetailsResponse> call,
                                        @NonNull Response<InvoiceDetailsResponse> response) {
-
                     try {
-                        Log.d("DEBUG", "paso2");
                         if (response.isSuccessful() && response.body() != null) {
-                            Log.d("DEBUG", "paso3");
-                            //response.body().getListInvoiceDetails().get(0).setPriceByLot((float) 50.5555);
-                            //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoice.getInvoiceId(), response.body().getHarvests(true));
-                            Log.d("DEBUG", "paso4");
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
-                            Log.d("DEBUG", "paso5");
                             InvoiceDetailsResponse invoiceDetailsResponse = new InvoiceDetailsResponse();
                             invoiceDetailsResponse.setListInvoiceDetails(ManagerDB.mixAndGetValidsInvoiceDetails(response.body().getListInvoiceDetails(), invoice.getInvoiceId()));
-                            onGetHarvestsSuccess(/*response.body()*/ invoiceDetailsResponse, true);
-                            Log.d("DEBUG", "paso6");
+                            onGetHarvestsSuccess( invoiceDetailsResponse, true);
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_harvests));
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_harvests));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
-                    Log.d("DEBUG", "paso5");
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_harvests));
                 }
             });
         }
@@ -191,17 +167,15 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
     @Override
     public void deleteHarvestOrPurchase(Invoice invoice, String date, final InvoiceDetails harvestOrPurchase) {
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoice)*/) {
-            Log.d("DEBUG", "policia 2");
-            Log.d("DEBUG", "policia id"+ harvestOrPurchase.getId());
-            Log.d("DEBUG", "policia id" + harvestOrPurchase.getLocalId());
 
             if (ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId())) {
-                Log.d("DEBUG", "policia 3");
                 List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                         invoice.getInvoiceId(),
                         invoice.getLocalId(),
                         isForHarvest);
                 mPresenter.onHarvestDeleted(detailsList, true);
+            } else {
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error));
             }
             /*if (ManagerDB.delete(invoice.getId2(), date, harvestOrPurchase.getId())) {
                 List<HarvestOfDay> harvestsOrPurchasesOfDayList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoice.getInvoiceId(), invoice.getLocalId());
@@ -250,23 +224,22 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                                     harvestOrPurchase.getLocalId(),
                                     isForHarvest);*/
                             mPresenter.onHarvestDeleted(response.body().getListInvoiceDetails(), true);
-                        } else
-                            Log.d("DEBUG", "ERROR BORRANDO1");
-                            manageError(mPresenter.context.getString(R.string.error_deleting_harvest), response);
+                        } else {
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error));
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.d("DEBUG", "ERROR BORRANDO2");
-                        onError(mPresenter.context.getString(R.string.error_deleting_harvest));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(Call<InvoiceDetailsResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    Log.d("DEBUG", "ERROR BORRANDO3");
-                    onError(mPresenter.context.getString(R.string.error_deleting_harvest));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error));
                 }
             });
         }
@@ -277,15 +250,16 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
 
     public void closeInvoiceRequest(Invoice post) {
         if (!InternetManager.isConnected(mPresenter.context)) {
-            ManagerDB.updateStatusInvoice(post);
-            mPresenter.onCloseInvoiceSuccessful();
-
+            if(ManagerDB.updateStatusInvoice(post)) {
+                mPresenter.onCloseInvoiceSuccessful();
+            } else {
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_closing_purchase));
+            }
         } else {
             com.hecticus.eleta.model_new.Invoice invoice1
                     = new com.hecticus.eleta.model_new.Invoice(post,
                     post.getProvider(),
                     new StatusInvoice(12, false, "Cerrada", null));
-            //Log.d("DEBUG id close", post.getId() + "");
             Call<Message> call = invoiceApi.closeInvoice(invoice1.getId().intValue(), invoice1);
 
             call.enqueue(new Callback<Message>() {
@@ -298,20 +272,21 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         if (response.isSuccessful() && response.body() != null) {
                             mPresenter.onCloseInvoiceSuccessful();
                         } else {
-                            manageError(mPresenter.context.getString(R.string.error_closing_purchase), response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_closing_purchase));
 
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_closing_purchase));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_closing_purchase));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_closing_purchase));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_closing_purchase));
                 }
             });
         }
@@ -354,19 +329,20 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         if (response.isSuccessful() && response.body() != null) {
                             onGetReceiptSuccess(response.body());
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_information_to_print));
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_information_to_print));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<ReceiptResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_information_to_print));
                 }
             });
         }

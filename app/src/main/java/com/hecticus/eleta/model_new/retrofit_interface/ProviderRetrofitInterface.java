@@ -31,30 +31,24 @@ public interface ProviderRetrofitInterface {
     @PUT("provider/{id}")
     Call<ProviderCreationResponse> updateProviderData(@Path("id") int id, @Body Provider providerToUpdate);
 
-    //nada
+    //nada no esta offline
     @POST("provider/{id}/mediaProfile")
     Call<ResponseBody> updateProviderImage(@Path("id") int id, @Body MultimediaProfile media);
 
-    //nada
+    //nada no estaoffline
     @PUT("multimedias/{id}")
     Call<ResponseBody> putProviderImage(@Path("id") int id, @Body MultimediaProfile media);
 
     //listo
     @GET("provider")
-    Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("nameProvider") String name);
+    Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("") String name);
 
     //listo
     @GET("provider")
     Call<ProvidersListResponse> providersByType(@Query("providerType") int providerTypeId);
 
-    //listo, sincroniza tengo un error fantasma
+    //listo
     @DELETE("provider/{idProvider}")
     Call<ResponseBody> deleteProvider(@Path("idProvider") int idProvider);
-
-    @GET("provider/{id}")
-    Call<ResponseBody> getProviderById(@Path("id") int id);
-
-    @DELETE("provider/{idProvider}")
-    Call<Message> deleteProvider1(@Path("idProvider") int idProvider);
 
 }

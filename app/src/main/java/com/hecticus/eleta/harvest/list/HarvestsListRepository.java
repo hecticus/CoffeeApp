@@ -16,6 +16,7 @@ import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 import com.hecticus.eleta.util.Util;
 
 import java.io.IOException;
@@ -94,7 +95,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
             if (invoiceList != null) {
                 mPresenter.handleSuccessfulMixedHarvestsRequest(invoiceList);
             } else {
-                onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_getting_harvests));
             }
         } else {
             Call<InvoiceListResponse> call = harvestApi.getInvoicesByDateByTypeProvider(Util.getCurrentDate(), Util.getCurrentDateFinisth(), Constants.TYPE_HARVESTER/*, index, 10*/);//Util.getCurrentDate()//"2017-09-25"
@@ -106,39 +107,33 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                                        @NonNull Response<InvoiceListResponse> response) {
 
                     try {
-                        Log.d("DEBUG shamuel", "hp1");
                         if (response.isSuccessful() && response.body() != null) {
 
-                            Log.d("OFFLINE", "--->getHarvestsRequest (" + response.body().getResult().size() + ") Response: " + response.body());
-                            Log.d("DEBUG shamuel", "hp2");
                             ManagerDB.saveNewInvoicesByType(Constants.TYPE_HARVESTER, response.body().getResult());
 
                             List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_HARVESTER, Util.getCurrentDateLocal());
 
                             if (invoiceList != null) {
-                                Log.d("OFFLINE", "--->getHarvestsRequest local after request: " + invoiceList.size());
                                 mPresenter.handleSuccessfulMixedHarvestsRequest(invoiceList);
                             } else {
-                                Log.e("OFFLINE", "--->getHarvestsRequest local after request null list");
-                                onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                                onError("%%"+ ErrorHandling.errorCodeWebServiceNotSuccess +mPresenter.context.getString(R.string.error_getting_harvests));
 
                             }
-                            //onGetHarvestsSuccess(response.body());//todo eliminar
                         } else {
-                            manageError(mPresenter.context.getString(R.string.error_getting_harvests), response);
+                            manageError(ErrorHandling.errorCodeWebServiceNotSuccess +mPresenter.context.getString(R.string.error_getting_harvests), response);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.d("DEBUG shamuel", "hp3");
-                        onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_harvests));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<InvoiceListResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_harvests));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_harvests));
                 }
             });
         }
@@ -155,7 +150,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
             if (ManagerDB.deleteHarvestOrPurchaseInvoice(remoteInvoiceId, localInvoiceId))
                 mPresenter.onHarvestDeleted();
             else
-                onError(mPresenter.context.getString(R.string.error_deleting_harvest));
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_deleting_harvest));
         } else {
             Call<Message> call = harvestApi.deleteInvoice(remoteInvoiceId);
             call.enqueue(new Callback<Message>() {
@@ -168,19 +163,20 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                             ManagerDB.deleteHarvestOrPurchaseInvoiceOnline(remoteInvoiceId);
                             mPresenter.onHarvestDeleted();
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_deleting_harvest), response);
+                            manageError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_deleting_harvest), response);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_deleting_harvest));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_deleting_harvest));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(Call<Message> call, Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_deleting_harvest));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_deleting_harvest));
                 }
             });
         }
@@ -199,9 +195,6 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoiceParam)*/) {
 
-            Log.d("PRINT", "--->getReceiptDetails FROM OFFLINE");
-
-            //List<HarvestOfDay> invoiceList = ManagerDB.getAllHarvestsOrPurchasesOfDayByInvoice(invoiceParam.getInvoiceId(), invoiceParam.getLocalId());
             List<InvoiceDetails> detailsList =
                     ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                             invoiceParam.getInvoiceId(),
@@ -210,27 +203,18 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
             InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
 
-            /*if (invoiceList != null) {
-                localResponse.setHarvests(invoiceList);
-            } else {
-                onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
-            }*/
             if (detailsList != null) {
                 localResponse.setListInvoiceDetails(detailsList);
             } else {
-                onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_getting_information_to_print));
             }
 
             if (detailsList != null) {
                 localResponse.setListInvoiceDetails(detailsList);
             }
-
-            //mPresenter.handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(localResponse);
             onGetReceiptDetailsSuccess(localResponse);
 
         } else {
-
-            Log.d("PRINT", "--->getReceiptDetails FROM ONLINE");
 
             Call<InvoiceDetailsResponse> call = harvestApi.getInvoiceDetails(invoiceParam.getInvoiceId());
 
@@ -242,29 +226,23 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-                            //response.body().getListInvoiceDetails().get(0).setPriceByLot((float) 50.5555);
                             ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
-                            /*List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                                    invoiceParam.getInvoiceId(),
-                                    invoiceParam.getLocalId(),
-                                    true);
-                            InvoiceDetailsResponse localResponse = new InvoiceDetailsResponse();
-                            localResponse.setListInvoiceDetails(detailsList);*/
                             onGetReceiptDetailsSuccess(response.body());
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_information_to_print));
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_information_to_print));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed +mPresenter.context.getString(R.string.error_getting_information_to_print));
                 }
             });
         }
@@ -305,19 +283,20 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                         if (response.isSuccessful() && response.body() != null) {
                             onGetReceiptSuccess(response.body());
                         } else
-                            manageError(mPresenter.context.getString(R.string.error_getting_information_to_print), response);
+                            onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_information_to_print));
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        onError(ErrorHandling.errorCodeInServerResponseProcessing +mPresenter.context.getString(R.string.error_getting_information_to_print));
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<ReceiptResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                    onError(mPresenter.context.getString(R.string.error_getting_information_to_print));
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_getting_information_to_print));
                 }
             });
         }

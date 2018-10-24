@@ -60,6 +60,8 @@
     <string name="error_getting_purchases">Error obteniendo compras</string>
     <string name="data_updated_correctly">Datos actualizados correctamente</string>
     <string name="error_getting_harvests">Error obteniendo cosechas</string>
+    <string name="error_saving_harvests">Error guardando cosecha</string>
+    <string name="error_saving_purchases">Error guardando compra</string>
     <string name="dni_or_name">DNI o Nombre</string>
     <string name="edit">Editar</string>
     <string name="error">Error</string>

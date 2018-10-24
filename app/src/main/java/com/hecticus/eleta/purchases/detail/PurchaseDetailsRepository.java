@@ -25,6 +25,7 @@ import com.hecticus.eleta.model.response.store.StoresListResponse;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.model_new.retrofit_interface.PurchaseRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.ErrorHandling;
 
 import org.json.JSONObject;
 
@@ -119,57 +120,38 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 if (ManagerDB.saveNewInvoice1(Constants.TYPE_SELLER, invoicePost)) {
                     onPurchaseUpdated();
                 } else {
-                    onError();
+                    onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_changes));
                 }
-            } /*else {
-                Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
-                if (ManagerDB.updateInvoiceDetails(invoicePost, mPresenter.getOriginalDetailsPuritiesList())) {
-                    onPurchaseUpdated();
-                } else
-                    onError();
-            }*/
+            }
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                Log.d("DEBUG1", "PASO");
                 Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
-                Log.d("DEBUG2", "PASO22");
-                Gson g = new Gson();
-                Log.d("DEBUG json", g.toJson(invoice));
-                call = invoiceApi.newInvoiceDetail(invoice/*, invoicePost.getProviderId(), invoicePost.getStartDate()*/);
-                //Log.d("DEBUG1", g.toJson(invoicePost));
+                call = invoiceApi.newInvoiceDetail(invoice);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog
                     @Override
                     public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                         try {
-                            Log.d("DEBUG2", "PASO");
                             if (response.isSuccessful()) {
-                                Log.d("DEBUG3", "PASO");
                                 getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId());
                             } else {
-                                Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                                manageError(response);
+                                onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_changes));
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            onError();
+                            ErrorHandling.errorCodeInServerResponseProcessing(e);
+                            onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_saving_changes));
                         }
                     }
 
                     @DebugLog
                     @Override
                     public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
-                        t.printStackTrace();
-                        Log.e("RETRO", "--->ERROR");
-                        onError();
+                        ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                        onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_saving_changes));
                     }
                 });
-            } else {
-                //Log.d("DEBUG2", g.toJson(invoicePost));
-                //todo put
-                //call = invoiceApi.updateInvoiceDetail(invoicePost);
-
             }
 
         }
@@ -182,7 +164,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             if (ManagerDB.updateInvoiceDetails1(invoiceDetail,1)) {
                 onPurchaseUpdated();
             } else
-                onError();
+                onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_purchases));
         } else {
             /*List<InvoiceDetails> invoiceDetailsList = ManagerDB.getInvoiceDetailsByInvoice(invoicePost.getInvoiceId());
             for(int i=0; i<invoiceDetailsList.size(); i++){
@@ -216,11 +198,12 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                         getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId());
                     } else {
                         Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
-                        manageError(response);
+                        onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_purchases));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    onError();
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
+                    onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error_saving_purchases));
                 }
 
             }
@@ -228,9 +211,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             @DebugLog
             @Override
             public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
-                t.printStackTrace();
-                Log.e("RETRO", "--->ERROR");
-                onError();
+                ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error_saving_purchases));
             }
         });
     }
@@ -246,11 +228,14 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                                    @NonNull Response<InvoiceDetailsResponse> response) {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
-                        //ManagerDB.saveNewHarvestsOrPurchasesOfDayById(invoiceId, response.body().getHarvests(true));
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
+                    } else{
+                        onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
+                    onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error));
                 }
 
                 onPurchaseUpdated();
@@ -259,9 +244,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                Log.d("DEBUG5", "errorrrrrrrrrrrrrrrrrrrrrrrrr");
-                onError();
+                ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                onError(ErrorHandling.errorCodeWebServiceFailed + mPresenter.context.getString(R.string.error));
             }
         });
     }
