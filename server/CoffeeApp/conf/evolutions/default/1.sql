@@ -149,8 +149,8 @@ create table job (
 
 create table log_sync_app (
   id                            bigint auto_increment not null,
-  user_id                       bigint,
-  data                          longtext,
+  user_id                       bigint not null,
+  content                       longtext not null,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,

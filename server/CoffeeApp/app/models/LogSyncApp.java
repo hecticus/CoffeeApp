@@ -1,8 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.annotation.DbJson;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -11,12 +13,14 @@ import javax.persistence.*;
 public class LogSyncApp extends  AbstractEntity {
 
     @Constraints.Required
+    @JoinColumn( nullable = false)
     @ManyToOne
     User user;
 
     @Constraints.Required
-    @Lob
-    private String data;
+    @Column(nullable = false)
+    @DbJson
+    JsonNode content;
 
     public User getUser() {
         return user;
@@ -26,12 +30,12 @@ public class LogSyncApp extends  AbstractEntity {
         this.user = user;
     }
 
-    public String getData() {
-        return data;
+    public JsonNode getContent() {
+        return content;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setContent(JsonNode content) {
+        this.content = content;
     }
 
     private static Finder<Long, LogSyncApp> finder = new Finder<>(LogSyncApp.class);
