@@ -57,9 +57,9 @@ public class Invoice extends AbstractEntity{
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
 
-    // GETTER AND SETTER
-    private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
 
+
+    // GETTER AND SETTER
     public Invoice() {
         invoiceDetails = new ArrayList<>();
     }
@@ -115,6 +115,11 @@ public class Invoice extends AbstractEntity{
     }
 
     //METODOS DEFINIDOS
+    private static Finder<Long, Invoice> finder = new Finder<>(Invoice.class);
+
+    public static Invoice findById(Long id){
+        return finder.byId(id);
+    }
 
     public static List<Invoice> getOpenseByProviderId(Long id_provider, String dateStart){
        return finder.query().where()
@@ -144,10 +149,6 @@ public class Invoice extends AbstractEntity{
                 .le("startDate", dateStart)
                 .eq("statusInvoice.id", 11 )
                 .findList();
-    }
-
-    public static Invoice findById(Long id){
-        return finder.byId(id);
     }
 
     public static List<Invoice> findAllInvoiceActive() {

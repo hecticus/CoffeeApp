@@ -147,6 +147,16 @@ create table job (
   constraint pk_job primary key (id)
 );
 
+create table log_sync_app (
+  id                            bigint auto_increment not null,
+  user_id                       bigint,
+  data                          longtext,
+  deleted                       tinyint(1) default 0 not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint pk_log_sync_app primary key (id)
+);
+
 create table lots (
   id                            bigint auto_increment not null,
   farm_id                       bigint not null,
@@ -392,6 +402,9 @@ create index ix_item_types_unit_id on item_types (unit_id);
 alter table job add constraint fk_job_status_job_id foreign key (status_job_id) references status (id) on delete restrict on update restrict;
 create index ix_job_status_job_id on job (status_job_id);
 
+alter table log_sync_app add constraint fk_log_sync_app_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_log_sync_app_user_id on log_sync_app (user_id);
+
 alter table lots add constraint fk_lots_farm_id foreign key (farm_id) references farms (id) on delete restrict on update restrict;
 create index ix_lots_farm_id on lots (farm_id);
 
@@ -484,6 +497,9 @@ drop index ix_item_types_unit_id on item_types;
 alter table job drop foreign key fk_job_status_job_id;
 drop index ix_job_status_job_id on job;
 
+alter table log_sync_app drop foreign key fk_log_sync_app_user_id;
+drop index ix_log_sync_app_user_id on log_sync_app;
+
 alter table lots drop foreign key fk_lots_farm_id;
 drop index ix_lots_farm_id on lots;
 
@@ -548,6 +564,8 @@ drop table if exists invoicesdetails_purities;
 drop table if exists item_types;
 
 drop table if exists job;
+
+drop table if exists log_sync_app;
 
 drop table if exists lots;
 

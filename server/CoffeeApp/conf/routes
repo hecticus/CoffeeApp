@@ -120,6 +120,15 @@ PUT     /itemType/:id                                                           
 DELETE  /itemType/:id                                                           controllers.ItemTypes.delete(id : Long)
 
 ################################################################################
+##·······                   LogSyncApp                               ··········#
+################################################################################
+GET     /logSyncApps                                                            controllers.LogSyncApps.findAll()
+GET     /logSyncApps/:id                                                        controllers.LogSyncApps.findById(id : Long)
+POST    /logSyncApps                                                            controllers.LogSyncApps.create()
+PUT     /logSyncApps/:id                                                        controllers.LogSyncApps.update(id : Long)
+DELETE  /logSyncApps/:id                                                        controllers.LogSyncApps.delete(id : Long)
+
+################################################################################
 ##·······                          lot                               ··········#
 ################################################################################
 GET     /lot                                                                    controllers.Lots.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, nameLot: String ?= null, farm:  Long ?= 0L, statusLot: Long ?= 0L, deleted: Boolean ?= false)
