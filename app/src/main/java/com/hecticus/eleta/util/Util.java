@@ -29,6 +29,7 @@ import org.joda.time.DateTimeZone;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -314,7 +315,8 @@ public class Util {
         // Date
         text.append(context.getString(R.string.date))
                 .append(": ").append(parseDateZH2(receiptResponse.getInvoice()
-                .getInvoiceStartDate()/*.split(" ")[0]).append("\n")*/,"dd-MM-yyyy")).append("\n");
+                .getInvoiceStartDate()/*.split(" ")[0]).append("\n")*/,"dd-MM-yyyy")).append("   ")
+                .append(parseDateToString(Calendar.getInstance().getTime())).append("\n");
 
         DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat df1 = new DecimalFormat("0.0000");
@@ -507,5 +509,10 @@ public class Util {
         whole.append(end);
 
         return whole.toString();
+    }
+
+    public static String parseDateToString(Date fecha){
+        Format formatter = new SimpleDateFormat("hh:mm a");
+        return formatter.format(fecha);
     }
 }
