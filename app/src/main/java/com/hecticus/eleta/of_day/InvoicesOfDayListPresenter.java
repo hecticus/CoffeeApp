@@ -59,7 +59,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         /*for (InvoiceDetails detail : detailsList) {
             //if (harvestOfDay.getDateTime().equals(detail.getStartDate())) {
             //if (detail.getStartDate().equals(detailsOfHarvest.getStartDate())) { //todo edit
-                Log.d("OFFLINE", "--->onClickEditButton adding detail (" + detail.getItemType() + ") to next view: " + detail);
+                LogDataBase.d("OFFLINE", "--->onClickEditButton adding detail (" + detail.getItemType() + ") to next view: " + detail);
 
                 //FIXME: We use a clone and remove these as they will be properly populated when creating the view
                 try {
@@ -77,7 +77,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                 }
 
             /*} else
-                Log.d("OFFLINE", "--->onClickEditButton NOT adding detail (" + detail.getItemType() + ")to next view: " + detail);
+                LogDataBase.d("OFFLINE", "--->onClickEditButton NOT adding detail (" + detail.getItemType() + ")to next view: " + detail);
                 */
         //}
 
@@ -166,7 +166,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public boolean isCurrentClosedInvoice() {//3 = a factura cerrada
         /*Gson g= new Gson();
-        Log.d("DEBUGGGGGGGG", g.toJson(currentInvoice));*/
+        LogDataBase.d("DEBUGGGGGGGG", g.toJson(currentInvoice));*/
         try {
             return currentInvoice.getStatusInvo().equals("Cerrada");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
         }catch (Exception e){
@@ -178,7 +178,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
     @Override
     public void handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest(InvoiceDetailsResponse invoiceDetailsResponse, Boolean control) {
 
-        //Log.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());//invoiceDetailsResponse.getListInvoiceDetails().size());
+        //LogDataBase.d("HOD", "--->handleSuccessfulHarvestsOrPurchasesOfInvoiceRequest: " + invoiceDetailsResponse.getHarvests().size());//invoiceDetailsResponse.getListInvoiceDetails().size());
 
         detailsList = invoiceDetailsResponse.getListInvoiceDetails();
         //harvestsOrPurchasesOfDayList = invoiceDetailsResponse.getHarvests(control);

@@ -1,11 +1,12 @@
 package com.hecticus.eleta.model_new;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hecticus.eleta.R;
+import com.google.gson.JsonObject;
 import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
@@ -37,8 +38,10 @@ import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +62,8 @@ public class SyncManager {
 
     private static ProviderRetrofitInterface providersApi;
     private static InvoiceRetrofitInterface invoiceApi;
+    private static Boolean isSyncParcial = false;
+    private User user = new User(SessionManager.getUserId(HomeActivity.INSTANCE));
 
     private List<Provider> providersList;
     private List<InvoicePost> invoicePostList;
@@ -106,7 +111,6 @@ public class SyncManager {
     @DebugLog
     public void startSync() {
         syncProviders();
-
     }
 
     @DebugLog
@@ -201,33 +205,65 @@ public class SyncManager {
                             realm.commitTransaction();
                         } finally {
                             realm.close();
+                            syncNextPendingProvider();
                             if (oldLocalProviderId != null)
                                 updateProviderIdInInvoices(oldLocalProviderId, newProviderId);
-
-                            try {
-                                if (currentProviderToSync.getMultimediaProfile().getMultimediaCDN().getUrl() != null)
+                            /*try {
+                                if (currentProviderToSync.getMultimediaProfile().getMultimediaCDN().getUrl() != null){
                                     syncProviderPhoto(currentProviderToSync);
+                                    syncNextPendingProvider();
+                                }
                                 else
                                     syncNextPendingProvider();
                             }catch (Exception e){
                                 ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
                                 syncNextPendingProvider();
-                            }
+                            }*/
 
 
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //todo
+                        isSyncParcial = true;
                         ErrorHandling.errorCodeInServerResponseProcessing(e);
-                        Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
-                        HomeActivity.INSTANCE.syncFailed("deleteOfDaySync exception: " + e.getMessage());
+                        if(operationName.equals("createProviderSync")){
+                            if(logDataBase(new Gson().toJson(currentProviderToSync),"errorCatch Sync en endPoint (/provider) por post... "+ e.toString())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                currentProviderToSync.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        } else {
+                            if(logDataBase(new Gson().toJson(currentProviderToSync),"errorCatch Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+ e.toString())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                currentProviderToSync.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        }
                     }
                 } else {
-                    /*//todo como manejar errores aca si es success
-                    Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
+                    isSyncParcial = true;
+                    if(operationName.equals("createProviderSync")){
+                        if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider) por post... "+ response.errorBody()) !=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            currentProviderToSync.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                    } else {
+                        if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+response.errorBody())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            currentProviderToSync.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                    }
+                    syncNextPendingProvider();
+                    /*//todo como manejar errores aca si no es success
+                    LogDataBase.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
                     HomeActivity.INSTANCE.syncFailed("deleteOfDaySync errorResponse: " + response);*/
-                    //Log.d("DETAILS", "--->Fail (" + code + ") " + operationName + ":" + response);
+                    //LogDataBase.d("DETAILS", "--->Fail (" + code + ") " + operationName + ":" + response);
 
                     /*if (response.code() == 409) { //todo revisar
                         if (errorMessage != null && errorMessage.equals("registered [fullNameProvider]")) {
@@ -254,10 +290,25 @@ public class SyncManager {
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
-                //todo como manejar errores aca si falla webservice
+                isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                Log.d("DETAILS", "--->" + operationName + " Fail token");
-                HomeActivity.INSTANCE.syncFailed(operationName + " onInvalidToken:");
+                if(operationName.equals("createProviderSync")){
+                    if(logDataBase(new Gson().toJson(currentProviderToSync),"errorFatal Sync en endPoint (/provider) por post... " +t.toString())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        currentProviderToSync.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+
+                } else {
+                    if(logDataBase(new Gson().toJson(currentProviderToSync),"errorFatal Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+t.toString())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        currentProviderToSync.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                }
+                syncNextPendingProvider();
             }
         });
     }
@@ -272,7 +323,7 @@ public class SyncManager {
         }
 
         if (!imageToUploadFile.exists()) {
-            //Log.e("PHOTO", "--->Can't sync image: " + provider.getMultimediaProfile().getMultimediaCDN().getUrl()); //todo img
+            //LogDataBase.e("PHOTO", "--->Can't sync image: " + provider.getMultimediaProfile().getMultimediaCDN().getUrl()); //todo img
             syncNextPendingProvider();
             return;
         }
@@ -432,72 +483,96 @@ public class SyncManager {
         somethingHasBeenSynced = true;
 
         Call<CreateInvoiceResponse> call;
-        if (firstInvoicePost.getInvoiceId() == -1) {
-            com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
+        //if (firstInvoicePost.getInvoiceId() == -1) {
+            final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
 
             call = invoiceApi.newInvoiceDetail(invoice);
-            new ManagerServices<>(call, new ManagerServices.ServiceListener<CreateInvoiceResponse>() {
-                @DebugLog
+            call.enqueue(new Callback<CreateInvoiceResponse>() {
                 @Override
-                public void onSuccess(Response<CreateInvoiceResponse> response) {
-                    try {
+                public void onResponse(Call<CreateInvoiceResponse> call, Response<CreateInvoiceResponse> response) {
 
-                        Log.d("DETAILS", "--->Success saveInvoiceSync Request:" + response.body());
-                        //int properInvoiceId = firstInvoice.getInvoicePostLocalId();
-                        //String dateSuffix = firstInvoice.getStartDate().endsWith(".0") ? "" : ".0";
-
-                        //ManagerDB.delete(firstInvoice.getId2(), firstInvoice.getStartDate() + dateSuffix, properInvoiceId + "-" + firstInvoice.getStartDate())
-
-                        Realm realm = Realm.getDefaultInstance();
-
-                        List<Invoice> invoiceList1 = realm.where(Invoice.class).findAll();
-                        Log.d("DETAILS", "--->" + invoiceList1);
-
-
-                        final Invoice invoiceInRealm = realm
-                                .where(Invoice.class)
-                                .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
-                                .findFirst();
-
+                    Log.d("DEBUG", "response: " + response.code());
+                    if (response.isSuccessful() && response.body() != null) {
                         try {
 
-                            if (invoiceInRealm != null) {
+                            Log.d("DETAILS", "--->Success saveInvoiceSync Request:" + response.body());
+                            //int properInvoiceId = firstInvoice.getInvoicePostLocalId();
+                            //String dateSuffix = firstInvoice.getStartDate().endsWith(".0") ? "" : ".0";
+
+                            //ManagerDB.delete(firstInvoice.getId2(), firstInvoice.getStartDate() + dateSuffix, properInvoiceId + "-" + firstInvoice.getStartDate())
+
+                            Realm realm = Realm.getDefaultInstance();
+
+                            List<Invoice> invoiceList1 = realm.where(Invoice.class).findAll();
+                            Log.d("DETAILS", "--->" + invoiceList1);
+
+
+                            final Invoice invoiceInRealm = realm
+                                    .where(Invoice.class)
+                                    .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
+                                    .findFirst();
+
+                            try {
+
+                                if (invoiceInRealm != null) {
+                                    realm.beginTransaction();
+                                    invoiceInRealm.deleteFromRealm();
+                                    realm.commitTransaction();
+                                }
+
+                                ManagerDB.findAndDeleteLocalInvoicePost(firstInvoicePost);
+
+                            } finally {
+                                realm.close();
+                                saveNextInvoice();
+                            }
+                        } catch (Exception e) {
+                            isSyncParcial = true;
+                            if(logDataBase(new Gson().toJson(invoice),"error catch Sync en endPoint (/invoice2) por post... " + e.toString())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                invoiceInRealm.deleteFromRealm();
+                                firstInvoicePost.deleteFromRealm();
                                 realm.commitTransaction();
                             }
-
-                            ManagerDB.findAndDeleteLocalInvoicePost(firstInvoicePost);
-
-                        } finally {
-                            realm.close();
-                            saveNextInvoice();
+                            ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
-                        e.printStackTrace();
-                        HomeActivity.INSTANCE.syncFailed("saveInvoiceSync exception: " + e.getMessage());
+                    } else {
+                        isSyncParcial = true;
+                        if(logDataBase(new Gson().toJson(invoice),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice2) por post... " + response.errorBody())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstInvoicePost.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                        saveNextInvoice();
+
                     }
                 }
 
-                @DebugLog
                 @Override
-                public void onError(boolean fail, int code, Response<CreateInvoiceResponse> response, String errorMessage) {
+                public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                    isSyncParcial = true;
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    if(logDataBase(new Gson().toJson(invoice),"errorFatal Sync en endPoint (/invoice2) por post... " +t.toString())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        firstInvoicePost.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    saveNextInvoice();
 
-                    HomeActivity.INSTANCE.syncFailed("saveInvoiceSync errorResponse: " + response);
-                }
-
-                @DebugLog
-                @Override
-                public void onInvalidToken() {
-                    //HomeActivity.INSTANCE.syncFailed("saveInvoiceSync onInvalidToken");
                 }
             });
-        } else {
+
+        //}
+
+
+        /*else {
             Log.d("DETAILS", "---> firstInvoicePost is an edition: " + firstInvoicePost);
             //todo put
             //call = invoiceApi.updateInvoiceDetail(firstInvoicePost);
-        }
+        }*/
 
 
     }
@@ -539,7 +614,7 @@ public class SyncManager {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 Log.d("DEBUG", "response: " + response.code());
-                if (response.code() == 200 || response.code() == 201) {
+                if (response.isSuccessful() && response.body()!=null) {
                     try {
 
                         Realm realm = Realm.getDefaultInstance();
@@ -565,9 +640,23 @@ public class SyncManager {
                             deleteNextProvider();
                         }
                     } catch (Exception e) {
+                        isSyncParcial = true;
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
+                        if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"err catch Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +e.toString())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstProvider.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
                     }
                 } else {
+                    isSyncParcial = true;
+                    if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"error ResponseCode()="+ response.code()+"Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +response.errorBody())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        firstProvider.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
                     deleteNextProvider();
                     //Todo indicar que el proveedor no pudo ser eliminado xq posee invoice abierto
                     //HomeActivity.INSTANCE.syncFailed("deleteProviderSync errorResponse (DELETING_PROVIDER_WITH_OPEN_INVOICES): " + response);
@@ -577,8 +666,15 @@ public class SyncManager {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                t.printStackTrace();
+                if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"errorFatal Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +t.toString())!=-1){
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    firstProvider.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+                deleteNextProvider();
             }
         });
     }
@@ -611,7 +707,7 @@ public class SyncManager {
         invoiceDetailsAdd.remove(firstInvoiceDetails);
 
         somethingHasBeenSynced = true;
-        InvoiceDetail invoiceDetail = new InvoiceDetail(firstInvoiceDetails);
+        final InvoiceDetail invoiceDetail = new InvoiceDetail(firstInvoiceDetails);
         invoiceDetail.setId(null);
         Call<ResponseBody> call = invoiceApi.newInvoiceDetailAdd(invoiceDetail);
 
@@ -646,16 +742,25 @@ public class SyncManager {
                             addNextInvoiceDetails();
                         }
                     }catch (Exception e) {
-                        //todo
+                        isSyncParcial = true;
                         ErrorHandling.errorCodeInServerResponseProcessing(e);
-                        Log.d("DETAILS brayan", "--->Fail invoiceDetails after success:" + response);
-                        HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync exception: " + e.getMessage());
+                        if(logDataBase(new Gson().toJson(invoiceDetail),"error catch Sync en endPoint (/invoiceDetail) por post... " +e.toString())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstInvoiceDetails.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
                     }
 
                 } else {
-                    //todo como manejar errores aca si es success
-                    Log.d("DETAILS", "--->Fail deleteInvoiceSync:111" + response);
-                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync111 errorResponse: " + response);
+                    isSyncParcial = true;
+                    if(logDataBase(new Gson().toJson(invoiceDetail),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por post... " + response.errorBody())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        firstInvoiceDetails.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    addNextInvoiceDetails();
                 }
 
             }
@@ -663,10 +768,15 @@ public class SyncManager {
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                //todo como manejar errores aca si falla webservice
+                isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                Log.d("DETAILS", "--->Fail token");
-                HomeActivity.INSTANCE.syncFailed("deleteOfDaySync onInvalidToken");
+                if(logDataBase(new Gson().toJson(invoiceDetail),"errorFatal Sync en endPoint (/invoiceDetail) por post... " +t.toString())!=-1){
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    firstInvoiceDetails.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+                addNextInvoiceDetails();
             }
         });
 
@@ -738,25 +848,41 @@ public class SyncManager {
                                 deleteNextInvoice();
                             }
                         }catch (Exception e) {
-                            //todo
+                            isSyncParcial = true;
+                            if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"errorFatal Sync en endPoint (/invoice/"+firstInvoice.getInvoiceId()+") por delete... "+e.toString())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                firstInvoice.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
                             ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
-                            HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync exception: " + e.getMessage());
                         }
 
                     } else {
-                        //todo como manejar errores aca si es success
-                        Log.d("DETAILS", "--->Fail deleteInvoiceSync:222" + response);
-                        HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync222 errorResponse: " + response);
+                        isSyncParcial = true;
+                        if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"
+                                                                                                +firstInvoice.getInvoiceId()+") por delete... " +response.errorBody())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstInvoice.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                        deleteNextInvoice();
                     }
                 }
 
                 @DebugLog
                 @Override
                 public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
-                    //todo como manejar errores aca si falla webservice
+                    isSyncParcial = true;
                     ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                    Log.d("DETAILS", "--->Fail token");
-                    HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync onInvalidToken");
+                    if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"errorFatal Sync en endPoint (/invoice/"+firstInvoice.getInvoiceId()+") por delete... " +t.toString())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        firstInvoice.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    deleteNextInvoice();
                 }
             });
         }
@@ -779,7 +905,6 @@ public class SyncManager {
             }
         } catch (Exception e) {
             ErrorHandling.errorCodeBdLocal(e);
-            //HomeActivity.INSTANCE.syncFailed("deleteInvoiceSync exception: " + e.getMessage()); todo
         }
     }
 
@@ -840,27 +965,45 @@ public class SyncManager {
                             editNextInvoiceDetails();
                         }
                     } catch (Exception e) {
-                        //todo
+                        isSyncParcial = true;
+                        if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error catch Sync en endPoint (/invoiceDetail) por put... " + e.toString())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstInvoiceDetails.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
-                        HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync exception: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 } else {
-                    //todo como manejar errores aca si es success
-                    Log.d("DETAILS", "--->editNextInvoiceDetails Sync onError. Response:" + response);
+                    isSyncParcial = true;
+                    if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por put... " + response.errorBody())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        firstInvoiceDetails.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    editNextInvoiceDetails();
+                    /*Log.d("DETAILS", "--->editNextInvoiceDetails Sync onError. Response:" + response);
                     if (response.code() == 409)
                         HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync errorResponse : " + response);
                     else
-                        HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync errorResponse: " + response);
+                        HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync errorResponse: " + response);*/
                 }
             }
 
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                //todo como manejar errores aca si falla webservice
+                isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                Log.d("DETAILS", "--->Fail token");
-                HomeActivity.INSTANCE.syncFailed("editNextInvoiceDetails Sync onInvalidToken");
+                if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"errorFatal Sync en endPoint (/invoiceDetail) por put... " + t.toString())!=-1){
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    firstInvoiceDetails.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+                editNextInvoiceDetails();
             }
         });
 
@@ -924,6 +1067,7 @@ public class SyncManager {
                                     realm.commitTransaction();
                                 } else {
                                     Log.e("DETAILS", "--->Success deleteOfDaySync. (2/2/3) Can't delete NULL hodToDelete");
+                                    deleteNextOfDay();
                                 }
 
                             } finally {
@@ -932,16 +1076,25 @@ public class SyncManager {
                             }
 
                         } catch (Exception e) {
-                            e.printStackTrace();
-                            //todo
+                            isSyncParcial = true;
+                            if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error catch Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " +e.toString())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                firstOfDetails.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
                             ErrorHandling.errorCodeInServerResponseProcessing(e);
-                            Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
-                            HomeActivity.INSTANCE.syncFailed("deleteOfDaySync exception: " + e.getMessage());
+
                         }
                     } else {
-                        //todo como manejar errores aca si es success
-                        Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
-                        HomeActivity.INSTANCE.syncFailed("deleteOfDaySync errorResponse: " + response);
+                        isSyncParcial = true;
+                        if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " + response.errorBody())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstOfDetails.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                        deleteNextOfDay();
                     }
 
             }
@@ -949,10 +1102,15 @@ public class SyncManager {
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
-                //todo como manejar errores aca si falla webservice
+                isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                Log.d("DETAILS", "--->Fail token");
-                HomeActivity.INSTANCE.syncFailed("deleteOfDaySync onInvalidToken");
+                if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"errorFatal Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " +t.toString())!=-1){
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    firstOfDetails.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+                deleteNextOfDay();
             }
         });
     }
@@ -991,7 +1149,7 @@ public class SyncManager {
         final Invoice firstInvoiceClosed = invoiceClosed.get(0);
         invoiceClosed.remove(firstInvoiceClosed);
 
-        com.hecticus.eleta.model_new.Invoice invoice1
+        final com.hecticus.eleta.model_new.Invoice invoice1
                 = new com.hecticus.eleta.model_new.Invoice(firstInvoiceClosed,
                 ManagerDB.getProviderById(firstInvoiceClosed.getProviderId()),
                 new StatusInvoice(12, false, "Cerrada", null));
@@ -1004,7 +1162,7 @@ public class SyncManager {
             public void onResponse(@NonNull Call<Message> call,
                                    @NonNull Response<Message> response) {
 
-                if(response.code()==200 || response.code()==201){
+                if(response.isSuccessful() && response.body() != null){
                     try {
                         Realm realm = Realm.getDefaultInstance();
                         try {
@@ -1018,24 +1176,40 @@ public class SyncManager {
                         }
 
                     } catch (Exception e) {
-                        //todo
+                        isSyncParcial = true;
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
-                        HomeActivity.INSTANCE.syncFailed("deleteOfDaySync exception: " + e.getMessage());
+                        if(logDataBase(new Gson().toJson(invoice1),"error catch Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+") por put... " +e.toString())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            firstInvoiceClosed.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
                     }
                 } else {
-                    //todo como manejar errores aca si es success
-                    Log.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
-                    HomeActivity.INSTANCE.syncFailed("deleteOfDaySync errorResponse: " + response);
+                    isSyncParcial = true;
+                    if(logDataBase(new Gson().toJson(invoice1),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+
+                                                                                                                ") por put... " +response.errorBody())!=-1){
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        firstInvoiceClosed.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    deleteNextCloseInvoice();
                 }
             }
 
             @DebugLog
             @Override
             public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
-                //todo como manejar errores aca si falla webservice
+                isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                Log.d("DETAILS", "--->Fail token");
-                HomeActivity.INSTANCE.syncFailed("deleteOfDaySync onInvalidToken");
+                if(logDataBase(new Gson().toJson(invoice1),"errorFatal Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+") por put... " +t.toString())!=-1){
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    firstInvoiceClosed.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+                deleteNextCloseInvoice();
             }
         });
 
@@ -1046,10 +1220,81 @@ public class SyncManager {
         //todo nose
         try {
             FileUtils.clearTempImages();
-        }catch (Exception e){
+        } catch (Exception e) {
         }
-        HomeActivity.INSTANCE.syncSuccessful(failedImageUploads);
+        if (isSyncParcial) {
+            HomeActivity.INSTANCE.syncPartial();
+        } else {
+            HomeActivity.INSTANCE.syncSuccessful(failedImageUploads);
+        }
     }
+
+    /*@DebugLog
+    private void logDataBase(String json, String description){
+        Call<ResponseBody> call = invoiceApi.logDataBase(new LogDataBase(user, json, description));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
+
+                if(response.isSuccessful()){
+                    try {
+
+                    } catch (Exception e) {
+                        ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
+                    }
+                }
+            }
+
+            @DebugLog
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                ErrorHandling.syncErrorCodeWebServiceFailed(t);
+            }
+        });
+    }*/
+
+    @DebugLog
+    private int logDataBase(String json, String description) {
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        MediaType jsonType = MediaType.parse("application/json; charset=utf-8");
+
+        RequestBody body = RequestBody.create(jsonType,new Gson().toJson(new LogDataBase(user, json, description)));
+        Request request = new Request.Builder()
+                .url(Constants.BASE_URL+"logSyncApps")
+                .post(body)
+                .build();
+
+
+        okhttp3.Response response = null;
+        int code = -1;
+        try {
+            //--------------------------------------------------------------------------------------
+            response = client.newCall(request).execute();
+            //--------------------------------------------------------------------------------------
+
+            if (response != null) {
+                if(response.isSuccessful()){
+                    return 200;
+                }
+                response.body().close(); //ToDo check this line
+            } else{
+                return -1;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        return code;
+
+    }
+
+
+
+
 
 }
 

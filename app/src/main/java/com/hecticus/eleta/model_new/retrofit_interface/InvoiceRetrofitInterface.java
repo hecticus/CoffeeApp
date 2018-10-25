@@ -10,6 +10,7 @@ import com.hecticus.eleta.model.response.invoice.InvoiceListResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model_new.Invoice;
 import com.hecticus.eleta.model_new.InvoiceDetail;
+import com.hecticus.eleta.model_new.LogDataBase;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,5 +68,11 @@ public interface InvoiceRetrofitInterface {
     //listo creo no necesita sincronizacion
     @GET("invoice/createReceipt/{id}")
     Call<ReceiptResponse> getReceipt(@Path("id") int invoiceId);
+
+    @POST("logSyncApps")
+    Call<ResponseBody> logDataBase(@Body LogDataBase log);
+
+
+
 
 }

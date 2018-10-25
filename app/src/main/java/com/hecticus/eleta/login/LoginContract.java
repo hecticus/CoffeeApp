@@ -53,7 +53,7 @@ public class LoginContract {
 
         void onLoginError(String errorMessageFromServer);
 
-        void saveTokens(AccessTokenResponse accessTokenResponse, String email, String name);
+        void saveTokens(AccessTokenResponse accessTokenResponse, String email, String name, Long id);
 
     }
 

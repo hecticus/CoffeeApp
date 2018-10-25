@@ -105,7 +105,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @Override
     public void onSaveChanges(Lot selectedLot, List<ItemType> items, String observations) {
         /*Gson g = new Gson();
-        /*Log.d("DEBUG spiner lot2", g.toJson(selectedLot));*/
+        /*LogDataBase.d("DEBUG spiner lot2", g.toJson(selectedLot));*/
         mView.showWorkingIndicator();
 
         if (currentProvider == null) {
@@ -172,7 +172,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @Override
     public InvoicePost getChanges(final Lot lotId, final List<ItemType> itemsTypesList, final String observations) {
         /*Gson g = new Gson();
-        Log.d("DEBUG spiner lot1", g.toJson(lotId));*/
+        LogDataBase.d("DEBUG spiner lot1", g.toJson(lotId));*/
         //todo no edita
         InvoicePost invoicePostWithChanges = null;
 
@@ -459,12 +459,12 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoice().getInvoiceId());
             }
             invoicePost.setProviderId(currentProvider.getIdProvider());
-            Log.d("DEBUG!!!!!", "--->"+ invoicePost.getProviderId());
+            LogDataBase.d("DEBUG!!!!!", "--->"+ invoicePost.getProviderId());
             invoicePost.setDispatcherName(currentProvider.getFullNameProvider());
             invoicePost.setReceiverName(currentDetailsList.get(0).getReceiverName());
             invoicePost.setStartDate(currentDetailsList.get(0).getStartDate());
             invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
-            Log.d("DEBUG", "PASO 1");
+            LogDataBase.d("DEBUG", "PASO 1");
 
             if (invoicePost.getLot() == -1 && currentDetailsList.get(0).getLot() != null) {
                 invoicePost.setLot(currentDetailsList.get(0).getLot().getId());
@@ -475,11 +475,11 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             if (invoicePost.getItems() == null) {
                 invoicePost.setItems(new ArrayList<ItemPost>());
             }
-            Log.d("DEBUG", "PASO 2");
+            LogDataBase.d("DEBUG", "PASO 2");
 
             invoicePost.setDate(invoicePost.getStartDate().split(" ")[0]);
             Gson g = new Gson();
-            Log.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
+            LogDataBase.d("DEBUG!!!!!", "--->"+ g.toJson(invoicePost));
             //mRepository.saveHarvestRequest(invoicePost, false);*/
 
             mRepository.editHarvestRequest(currentDetailsList.get(0));

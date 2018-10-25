@@ -110,7 +110,7 @@ public class LoginRepository implements LoginContract.Repository {
                         } else {
                             onLoginError(mPresenter.context.getString(R.string.error_connection));
                             //Utils.snackbarLong(SigninActivity.this, R.string.error_connection, contButtonSignIn);
-                            //Log.d("DEBUG", "Error en la conexion con el user " + user.getEmail());
+                            //LogDataBase.d("DEBUG", "Error en la conexion con el user " + user.getEmail());
                         }
                     }
 
@@ -143,7 +143,7 @@ public class LoginRepository implements LoginContract.Repository {
                     } else {
                         //try {
                             //JSONObject errorJsonObject = new JSONObject(response.errorBody().string());
-                            Log.d("LOGIN", "--->loginErrorResponse: " + response.errorBody().toString());//errorJsonObject);
+                            LogDataBase.d("LOGIN", "--->loginErrorResponse: " + response.errorBody().toString());//errorJsonObject);
                             //onLoginError(errorJsonObject.optString("message", null));
                         /*} catch (JSONException | IOException e) {
                             e.printStackTrace();
@@ -156,7 +156,7 @@ public class LoginRepository implements LoginContract.Repository {
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
                     t.printStackTrace();
-                    Log.e("RETRO", "--->Login Repository onFailure");
+                    LogDataBase.e("RETRO", "--->Login Repository onFailure");
                     onLoginError(null);
                 }
             });*/
@@ -184,7 +184,8 @@ public class LoginRepository implements LoginContract.Repository {
                             JSONObject result = json.getJSONObject("result");
                             String email = result.getJSONObject("authUser").getString("email");
                             String name = result.getString("firstName");
-                            saveTokens(accessTokenResponse, email, name);
+                            Long id = result.getLong("id");
+                            saveTokens(accessTokenResponse, email, name, id);
                             mPresenter.onLoginSuccess();
                         } catch (IOException | JSONException e) {
                             //onLoginError(mPresenter.context.getString(R.string.error_something_went_wrong));
@@ -193,7 +194,7 @@ public class LoginRepository implements LoginContract.Repository {
                     } else  {
                         onLoginError(mPresenter.context.getString(R.string.error_connection));
                         //Utils.snackbarLong(SigninActivity.this, R.string.error_connection, contButtonSignIn);
-                        //Log.d("DEBUG", "Error en la conexion con el user " + user.getEmail());
+                        //LogDataBase.d("DEBUG", "Error en la conexion con el user " + user.getEmail());
                     }
                 }
 
@@ -223,9 +224,9 @@ public class LoginRepository implements LoginContract.Repository {
 
     @DebugLog
     @Override
-    public void saveTokens(AccessTokenResponse accessTokenResponse, String email, String name) {
+    public void saveTokens(AccessTokenResponse accessTokenResponse, String email, String name, Long id) {
         Context context = mPresenter.context;
-        SessionManager.updateSession(context, accessTokenResponse, email, name);
+        SessionManager.updateSession(context, accessTokenResponse, email, name, id);
     }
 
 }

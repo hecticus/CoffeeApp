@@ -18,6 +18,7 @@ public class SessionManager {
     private static String SESSION_PREFERENCE = "SESSION_PREFERENCE";
     private static String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static String USER_NAME = "USER_NAME";
+    private static String USER_ID = "USER_ID";
     private static String USER_EMAIL = "USER_EMAIL";
 
 
@@ -50,6 +51,12 @@ public class SessionManager {
     }
 
     @DebugLog
+    public static Long getUserId(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(USER_ID, -1);
+    }
+
+    @DebugLog
     public static void clearPreferences(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -59,12 +66,13 @@ public class SessionManager {
 
     @DebugLog
     public static void updateSession(Context context, AccessTokenResponse accessTokenResponse,
-                                     String email, String name) {
+                                     String email, String name, long id) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SESSION_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ACCESS_TOKEN, accessTokenResponse.getAccess_token());
         editor.putString(USER_EMAIL, /*response.getEmail()*/ email);
         editor.putString(USER_NAME, /*response.getName()*/ name);
+        editor.putLong(USER_ID, /*response.getName()*/ id);
         editor.commit();
     }
 }

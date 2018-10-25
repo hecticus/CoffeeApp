@@ -193,15 +193,15 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
 
         /*Gson g = new Gson();
-        Log.d("DEBUG con lot", g.toJson(new InvoiceDetail(invoiceDetail)));*/
+        LogDataBase.d("DEBUG con lot", g.toJson(new InvoiceDetail(invoiceDetail)));*/
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog
             @Override
             public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                 /*try {
-                    Log.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
-                    Log.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
+                    LogDataBase.e("BUG", "--->onResponse saveHarvestRequest1" + response.body());
+                    LogDataBase.e("BUG", "--->onResponse saveHarvestRequest2" + response.message());
                 }
                 catch (Exception e) {
                     e.printStackTrace();

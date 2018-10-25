@@ -78,11 +78,11 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
         Invoice initialInvoice = null;
         if(getIntent().getBooleanExtra("control", false)) {
             if (getIntent().getIntExtra("invoice", -1) > -1) {//getIntent().getStringExtra("invoice") != null) {//
-                //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
                 //todo nose
                 //todo invoice
                 initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
-                //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
                 //initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
 
                 Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
@@ -90,11 +90,11 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
                 Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
         } else {
             if (getIntent().getStringExtra("invoice") != null) {//getIntent().getIntExtra("invoice", -1) > -1) {//
-                //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
                 //todo nose
                 //todo invoice
                 //initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
-                //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
                 //initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
                 initialInvoice = ManagerDB.getInvoiceByIdLocal(new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class).getLocalId());
 
@@ -183,7 +183,7 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
             intent.putExtra("canEdit", true);
             startActivityForResult(intent, 1);
 
-            //Log.d("", "" + Util.getGson().toJson(detailsList));
+            //LogDataBase.d("", "" + Util.getGson().toJson(detailsList));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

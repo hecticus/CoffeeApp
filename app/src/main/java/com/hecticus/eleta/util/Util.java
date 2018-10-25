@@ -100,9 +100,9 @@ public class Util {
 
         SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         //sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-        Log.d("TIMEZONEjjjjyyy","Hora server antes:"+ sdfMadrid.format(calendar.getTime()));
+        LogDataBase.d("TIMEZONEjjjjyyy","Hora server antes:"+ sdfMadrid.format(calendar.getTime()));
         sdfMadrid.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-        Log.d("TIMEZONEjjjjyyy","Hora server despues:"+ sdfMadrid.format(calendar.getTime()));*/
+        LogDataBase.d("TIMEZONEjjjjyyy","Hora server despues:"+ sdfMadrid.format(calendar.getTime()));*/
 
         DateTime fecha = new DateTime(Integer.parseInt(startDate.substring(0,4)),
                 Integer.parseInt(startDate.substring(5,7))/*-1*/,
@@ -150,7 +150,7 @@ public class Util {
         /*SimpleDateFormat sdfArgentina = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         TimeZone tz= Calendar.getInstance().getTimeZone();
         sdfArgentina.setTimeZone(TimeZone.getTimeZone(tz.getID()));
-        Log.d("TIMEZONExxx","Hora local:"+ sdfArgentina.format(calendar.getTime()));*/
+        LogDataBase.d("TIMEZONExxx","Hora local:"+ sdfArgentina.format(calendar.getTime()));*/
 
         return sdfMadrid.format(calendar.getTime());
 

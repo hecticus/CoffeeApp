@@ -118,7 +118,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
 
     @Override
     public boolean canDelete() {
-        //Log.d("DEBUGGGGGGGG", String.valueOf(!getInvoiceStatus().getDescription().equals("Closed")));
+        //LogDataBase.d("DEBUGGGGGGGG", String.valueOf(!getInvoiceStatus().getDescription().equals("Closed")));
         if(/*getInvoiceStatus().getDescription()*/getStatusInvo().equals("Cerrada")){
             return false;
         }else{
@@ -154,8 +154,8 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
     public String getInvoiceStartDate() {
 
         /*TimeZone tz= Calendar.getInstance().getTimeZone();
-        Log.d("TIMEZONE", tz.getID());
-        Log.d("TIMEZONE1", tz.getDisplayName());
+        LogDataBase.d("TIMEZONE", tz.getID());
+        LogDataBase.d("TIMEZONE1", tz.getDisplayName());
         Util.parseDateTimeZoneServerToLocal(invoiceStartDate);
         return invoiceStartDate;*/
         return Util.parseDateTimeZoneServerToLocal(invoiceStartDate);

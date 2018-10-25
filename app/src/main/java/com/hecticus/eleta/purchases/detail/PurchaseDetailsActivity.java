@@ -131,7 +131,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         /*if (getIntent().getSerializableExtra("details") != null) {
             Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
             }.getType();
-            Log.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
+            LogDataBase.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
             details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);
         }*/
         //details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
@@ -148,7 +148,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
                     details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
                 } else {
                     details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("detailsLocal", -1)));
-                    //Log.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
+                    //LogDataBase.d("DEBUG", "lote"+ String.valueOf(details.get(0).getLotId()));
                     details.get(0).setStore(ManagerDB.getStoreById(details.get(0).getStoreId()));
                     details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));
                 }
@@ -309,7 +309,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     @Override
     public void updateItems(List<ItemType> itemTypeList, int selectedId) {
         /*Gson g = new Gson();
-        Log.d("DEBUG listItems id:"+String.valueOf(selectedId), g.toJson(itemTypeList));*/
+        LogDataBase.d("DEBUG listItems id:"+String.valueOf(selectedId), g.toJson(itemTypeList));*/
         itemsSpinner.setValuesAndSelect(itemTypeList, selectedId);
 
     }

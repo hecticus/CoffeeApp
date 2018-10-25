@@ -142,7 +142,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         //if (getIntent().getSerializableExtra("details") != null) {
             /*Type founderListType = new TypeToken<ArrayList<InvoiceDetails>>() {
             }.getType();
-            Log.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
+            LogDataBase.d("DEBUG json", getIntent().getStringExtra("details")); //todo nose
             details = new Gson().fromJson(getIntent().getStringExtra("details"), founderListType);*/
             //details.add(new Gson().fromJson(getIntent().getStringExtra("details"), InvoiceDetails.class));
         //}
@@ -304,7 +304,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void updateItems(List<ItemType> itemTypeList) {
         /*Gson g = new Gson();
-        Log.d("DEBUG BRAYAN", g.toJson(itemTypeList));*/
+        LogDataBase.d("DEBUG BRAYAN", g.toJson(itemTypeList));*/
 
 
         /*itemTypeListAux.addAll(itemTypeList);*/

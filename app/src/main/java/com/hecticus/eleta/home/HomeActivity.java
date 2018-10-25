@@ -197,6 +197,11 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     }
 
     @DebugLog
+    public void syncPartial() {
+        Toast.makeText(this, "!Sincronización de manera parcial!", Toast.LENGTH_LONG).show();
+    }
+
+    @DebugLog
     public void syncSuccessful(int failedImageUploadsCount) {
         hideProgress();
         if (failedImageUploadsCount == 0)

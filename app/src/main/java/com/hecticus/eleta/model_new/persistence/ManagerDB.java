@@ -61,7 +61,7 @@ public class ManagerDB {
                 @Override
                 public void execute(Realm realm) {
                     /*Gson g = new Gson();
-                    Log.d("DEBUG", g.toJson(provider));*/
+                    LogDataBase.d("DEBUG", g.toJson(provider));*/
                     realm.insertOrUpdate(provider);
                     Log.d("BUG", "--->saveNewProvider " + provider);
                 }
@@ -356,7 +356,7 @@ public class ManagerDB {
                         provider.setIdProviderType(idProviderType);//(provider.getProviderType().getIdProviderType());
                         realm.insertOrUpdate(provider);
 
-                        //Log.d("Repository", "--->Inserted/Updated provider: " + provider.toString());
+                        //LogDataBase.d("Repository", "--->Inserted/Updated provider: " + provider.toString());
 
                     }
                 });
@@ -583,7 +583,7 @@ public class ManagerDB {
                         //invoice.setInvoiceStartDate(Util.parseDateTimeZone(invoice.getInvoiceStartDate()));
                         realm.insertOrUpdate(invoice);
                         /*Gson g = new Gson();
-                        Log.d("DEBUG", g.toJson(invoice));*/
+                        LogDataBase.d("DEBUG", g.toJson(invoice));*/
                         Log.d("Repository", "--->Inserted " + invoice.toString());
                     }
                 });
@@ -648,7 +648,7 @@ public class ManagerDB {
                         harvestOfDay.setInvoiceId(invoiceId);
                         harvestOfDay.setId(invoiceId + "-" + harvestOfDay.getStartDate());
                         realm.insertOrUpdate(harvestOfDay);
-                        Log.d("Repository", "--->saveNewHarvestsOrPurchasesOfDayById Inserted HOD: " + harvestOfDay.toString());
+                        LogDataBase.d("Repository", "--->saveNewHarvestsOrPurchasesOfDayById Inserted HOD: " + harvestOfDay.toString());
                     }
                 });
             }
@@ -668,7 +668,7 @@ public class ManagerDB {
                         .equalTo("deleteOffline", false)
                         .findAllSorted("startDate");
 
-        Log.d("HOD", "--->getAllHarvestsOrPurchasesOfDayByInvoice ALL HOD IN DB: " + completeList.size());
+        LogDataBase.d("HOD", "--->getAllHarvestsOrPurchasesOfDayByInvoice ALL HOD IN DB: " + completeList.size());
 
         if (invoiceId != -1) {
             return Realm.getDefaultInstance()
@@ -1006,7 +1006,7 @@ public class ManagerDB {
 
                         Log.d("OFFLINE", "--->Inserted* finalInvoice: " + finalInvoiceToInsert.toString());
                         Log.d("OFFLINE", "--->Inserted invoicePost: " + invoicePost.toString());
-                        //Log.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
+                        //LogDataBase.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
 
                     }
                 });
@@ -1112,7 +1112,7 @@ public class ManagerDB {
 
                         Log.d("OFFLINE", "--->Inserted* finalInvoice: " + finalInvoiceToInsert.toString());
                         Log.d("OFFLINE", "--->Inserted invoicePost: " + invoicePost.toString());
-                        //Log.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
+                        //LogDataBase.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
 
                     }
                 });
@@ -1135,7 +1135,7 @@ public class ManagerDB {
     public static boolean saveNewInvoice(final int type, final InvoicePost invoicePost) {
         Realm realm = Realm.getDefaultInstance();
 
-        /*Log.d("Invoice", "--->Generated id for provider: "+providerId);
+        /*LogDataBase.d("Invoice", "--->Generated id for provider: "+providerId);
 
         invoicePost.setProviderId(providerId);*/
 
@@ -1245,7 +1245,7 @@ public class ManagerDB {
 
                     Log.d("OFFLINE", "--->Inserted* finalInvoice: " + finalInvoiceToInsert.toString());
                     Log.d("OFFLINE", "--->Inserted invoicePost: " + invoicePost.toString());
-                    //Log.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
+                    //LogDataBase.d("OFFLINE", "--->Inserted invoice HOD: " + harvestOfDay.toString());
 
                 }
             });
@@ -1360,7 +1360,7 @@ public class ManagerDB {
                         existing = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();
                         Log.e("DEBUG", "Existe offline" + String.valueOf(existing != null));
                     }
-                    //Log.d("DEBUG", "ID del item post al crearlo" + existing.getItemPostLocalId());
+                    //LogDataBase.d("DEBUG", "ID del item post al crearlo" + existing.getItemPostLocalId());
                     InvoiceDetails invoiceDetailsAux = existing;
                     if (existing != null && invoiceDetails.getInvoiceId()!=existing.getInvoiceId()) {
                         existing.deleteFromRealm();
@@ -1399,18 +1399,18 @@ public class ManagerDB {
                     //todo lo mismo q new invoice
                     if (type == Constants.TYPE_SELLER) {
                         for (InvoiceDetailPurity invoiceDetailPurity : invoiceDetails.getDetailPurities()) {
-                            //Log.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailPurity);
+                            //LogDataBase.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailPurity);
                             //InvoiceDetails invoiceDetailsLocal = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();
                             if (invoiceDetails.getId()==-1) {
                                 try {
                                     InvoiceDetailPurity invoiceDetailsPurityLocal = realm.where(InvoiceDetailPurity.class).equalTo("purityPostLocalId", invoiceDetailPurity.getPurityPostLocalId()).findFirst();
                                     PurityPost purityPostLocal = realm.where(PurityPost.class).equalTo("purityPostLocalId", invoiceDetailPurity.getPurityPostLocalId()).findFirst();
-                                    //Log.d("DEBUG brayan", "InvoiceDetailPurity: " + invoiceDetailsPurityLocal);
+                                    //LogDataBase.d("DEBUG brayan", "InvoiceDetailPurity: " + invoiceDetailsPurityLocal);
                                     if (purityPostLocal != null) {
                                         Log.e("dario", "value" + invoiceDetailPurity.getRateValue());
-                                        //Log.e("DEBUG brayan", "Saving InvoiceDetailPurity (saveNewInvoice) purities entro if"+invoiceDetailPurity.getRateValue());
+                                        //LogDataBase.e("DEBUG brayan", "Saving InvoiceDetailPurity (saveNewInvoice) purities entro if"+invoiceDetailPurity.getRateValue());
                                         purityPostLocal.setRateValue(invoiceDetailPurity.getRateValue());
-                                        //Log.e("DEBUG brayan", "puritiesPostlocal" + purityPostLocal);
+                                        //LogDataBase.e("DEBUG brayan", "puritiesPostlocal" + purityPostLocal);
                                         realm.insertOrUpdate(purityPostLocal);
                                     }
                                     invoiceDetailsPurityLocal.setRateValue(invoiceDetailPurity.getRateValue());
@@ -1457,9 +1457,9 @@ public class ManagerDB {
                             }
                         }
                     }
-                    /*Log.e("BRAYANNNN", "1");
+                    /*LogDataBase.e("BRAYANNNN", "1");
                     if (invoiceDetails != null) {
-                        Log.e("BRAYANNNN", "2");*/
+                        LogDataBase.e("BRAYANNNN", "2");*/
                         if(isOnline){
                             invoiceDetails.setEditOffline(true);
                             realm.insertOrUpdate(invoiceDetails);
@@ -1533,14 +1533,14 @@ public class ManagerDB {
 
 
                                     /*Gson g = new Gson();
-                                    Log.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + g.toJson(invoiceDetailPurity));
+                                    LogDataBase.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + g.toJson(invoiceDetailPurity));
                                     invoiceDetailPurity.setLocalId(invoiceDetails.getWholeId() + "-" + invoiceDetailPurity.getPurity().getId());
                                     invoiceDetailPurity.setDetailId(invoiceDetails.getWholeId());
                                     *//*Number maxPurityPostId = realm.where(PurityPost.class).max("purityPostLocalId");
                                     int nextPurityPostId = (maxPurityPostId == null) ? 1 : maxPurityPostId.intValue() + 1;
                                     purityPost.setPurityPostLocalId(nextPurityPostId);
                                     purityPost.setItemPostLocalId(item.getItemPostLocalId());
-                                    Log.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + purityPost);
+                                    LogDataBase.d("PURITIES", "--->Saving purityPost (saveNewInvoice): " + purityPost);
                                     realm.insertOrUpdate(purityPost);*/
 
                                     /*InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
@@ -1633,7 +1633,7 @@ public class ManagerDB {
                                 newItems.remove(itemWithNewVersion);
                                 /*if (invoicePost.getType() == Constants.TYPE_SELLER) {
 
-                                    Log.d("PURITIES", "--->TYPE_SELLER:" + detailsPuritiesListParam);
+                                    LogDataBase.d("PURITIES", "--->TYPE_SELLER:" + detailsPuritiesListParam);
                                 }*/
 
                             } else {
@@ -1702,7 +1702,7 @@ public class ManagerDB {
                         harvestOfDay.setTotalAmount(newTotalAmount);
                         realm.insertOrUpdate(harvestOfDay);*/
 
-                        //Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated harvestOfDay: " + harvestOfDay);
+                        //LogDataBase.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated harvestOfDay: " + harvestOfDay);
 
                     }
                 });
@@ -1744,7 +1744,7 @@ public class ManagerDB {
         provider.setProviderTypeId(provider.getProviderType().getIdProviderType());
         realm.insertOrUpdate(provider);
 
-        Log.d("Repository", "--->Inserted/Updated provider: " + provider.toString());
+        LogDataBase.d("Repository", "--->Inserted/Updated provider: " + provider.toString());
 
         }
         });
@@ -1752,7 +1752,7 @@ public class ManagerDB {
          } finally {
          realm.close();
          List<Provider> providers = getAllProvidersByType(2);
-         Log.d("TEST","providers "+providers);
+         LogDataBase.d("TEST","providers "+providers);
          }
          * */
     }
@@ -1775,7 +1775,7 @@ public class ManagerDB {
 
             final Invoice invoiceInRealm = realm.copyFromRealm(savedInvoice);
 
-            Log.d("PURITIES", "--->updateInvoiceDetails trying");
+            LogDataBase.d("PURITIES", "--->updateInvoiceDetails trying");
             try {
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
@@ -1799,7 +1799,7 @@ public class ManagerDB {
                             boolean currentItemIsForUpdate = itemWithNewVersion != null;
 
                             if (currentItemIsForUpdate) {
-                                Log.d("PURITIES", "--->currentItemIsForUpdate itemWithNewVersion: " + itemWithNewVersion);
+                                LogDataBase.d("PURITIES", "--->currentItemIsForUpdate itemWithNewVersion: " + itemWithNewVersion);
 
                                 newTotalAmount += itemWithNewVersion.getAmount();
                                 realm.insertOrUpdate(itemWithNewVersion);
@@ -1808,12 +1808,12 @@ public class ManagerDB {
                                 details.setInvoiceId(invoicePost.getInvoiceId() == -1 ? invoicePost.getInvoicePostLocalId() : invoicePost.getInvoiceId());
                                 details.setLocalId(itemWithNewVersion.getInvoiceDetailId());
                                 details.setWholeId(oldInvoiceDetails.get(i).getWholeId());
-                                Log.d("PURITIES", "--->currentItemIsForUpdate. Details to save: " + details);
+                                LogDataBase.d("PURITIES", "--->currentItemIsForUpdate. Details to save: " + details);
                                 realm.insertOrUpdate(details);
                                 newItems.remove(itemWithNewVersion);
                                 /*if (invoicePost.getType() == Constants.TYPE_SELLER) {
 
-                                    Log.d("PURITIES", "--->TYPE_SELLER:" + detailsPuritiesListParam);
+                                    LogDataBase.d("PURITIES", "--->TYPE_SELLER:" + detailsPuritiesListParam);
                                 }*/
 
                             /*} else {
@@ -1829,7 +1829,7 @@ public class ManagerDB {
                                     details.setObservation(invoicePost.getObservations());
                                 }
 
-                                Log.d("PURITIES", "--->currentItemIsNew. Details to save: " + details);
+                                LogDataBase.d("PURITIES", "--->currentItemIsNew. Details to save: " + details);
 
                                 if (details != null) {
                                     realm.insertOrUpdate(details);
@@ -1840,7 +1840,7 @@ public class ManagerDB {
 
                         if (invoiceInRealm.isAddOffline()) {
 
-                            Log.d("PURITIES", "--->updateInvoiceDetails. " +
+                            LogDataBase.d("PURITIES", "--->updateInvoiceDetails. " +
                                     "invoiceInRealm.isAddOffline()");
 
                             for (ItemPost newItem : newItems) {
@@ -1857,21 +1857,21 @@ public class ManagerDB {
                                 details.setInvoiceId(invoicePost.getInvoiceId() == -1 ? invoicePost.getInvoicePostLocalId() : invoicePost.getInvoiceId());
                                 details.setLocalId(nextDetailsId);
                                 details.setWholeId(details.getId() + "-" + details.getLocalId());
-                                Log.d("PURITIES", "--->updateInvoiceDetails detail: " + details);
+                                LogDataBase.d("PURITIES", "--->updateInvoiceDetails detail: " + details);
                                 realm.insertOrUpdate(details);
                             }
                         } else {
-                            Log.d("PURITIES", "--->updateInvoiceDetails. " +
+                            LogDataBase.d("PURITIES", "--->updateInvoiceDetails. " +
                                     "invoiceInRealm !isAddOffline()");
                         }
 
                         invoiceInRealm.setEditOffline(true);
                         realm.insertOrUpdate(invoiceInRealm);
-                        Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated invoiceInRealm: " + invoiceInRealm);
+                        LogDataBase.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated invoiceInRealm: " + invoiceInRealm);
 
                         invoicePost.setTotal(newTotalAmount);
                         realm.insertOrUpdate(invoicePost);
-                        Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated invoicePost: " + invoicePost);
+                        LogDataBase.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated invoicePost: " + invoicePost);
 
                         HarvestOfDay harvestOfDay = new HarvestOfDay();
                         harvestOfDay.setInvoiceId(invoicePost.getInvoiceId() == -1 ? invoicePost.getInvoicePostLocalId() : invoicePost.getInvoiceId());
@@ -1882,7 +1882,7 @@ public class ManagerDB {
                         harvestOfDay.setTotalAmount(newTotalAmount);
                         realm.insertOrUpdate(harvestOfDay);
 
-                        Log.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated harvestOfDay: " + harvestOfDay);
+                        LogDataBase.d("PURITIES", "--->updateInvoiceDetails Inserted/Updated harvestOfDay: " + harvestOfDay);
 
                     }
                 });
@@ -1895,7 +1895,7 @@ public class ManagerDB {
             return true;
 
         } else {
-            Log.e("OFFLINE", "--->updateInvoiceDetail invoice not found: \n" + invoicePost);
+            LogDataBase.e("OFFLINE", "--->updateInvoiceDetail invoice not found: \n" + invoicePost);
 
 
             RealmResults<Invoice> invoicesListInRealm = realm
@@ -1905,7 +1905,7 @@ public class ManagerDB {
             Object[] array = invoicesListInRealm.toArray();
 
             for (int i = 0; i < array.length; i++) {
-                Log.e("OFFLINE", "--->Invoice found: " + array[i].toString());
+                LogDataBase.e("OFFLINE", "--->Invoice found: " + array[i].toString());
             }
 
             return false;
@@ -1924,7 +1924,7 @@ public class ManagerDB {
         provider.setProviderTypeId(provider.getProviderType().getIdProviderType());
         realm.insertOrUpdate(provider);
 
-        Log.d("Repository", "--->Inserted/Updated provider: " + provider.toString());
+        LogDataBase.d("Repository", "--->Inserted/Updated provider: " + provider.toString());
 
         }
         });
@@ -1932,7 +1932,7 @@ public class ManagerDB {
          } finally {
          realm.close();
          List<Provider> providers = getAllProvidersByType(2);
-         Log.d("TEST","providers "+providers);
+         LogDataBase.d("TEST","providers "+providers);
          }
          * */
     //}
@@ -2006,7 +2006,7 @@ public class ManagerDB {
 
                     if (harvestOfDay != null) {
 
-                        Log.d("HODBUG", "--->Item to delete has Of day: " + harvestOfDay);
+                        LogDataBase.d("HODBUG", "--->Item to delete has Of day: " + harvestOfDay);
 
                         List<InvoiceDetails> detailsList = realm.where(InvoiceDetails.class)
                                 .equalTo("invoiceId", harvestOfDay.getInvoiceId())
@@ -2023,10 +2023,10 @@ public class ManagerDB {
                                     .endGroup()
                                     .findFirst();
 
-                            Log.d("HODBUG", "--->Looking for invoicePost of item to delete (Params: invoiceLocalId=" + invoiceLocalId + ", dateWithoutSuffix:" + dateWithoutSuffix + ", dateWithSuffix: " + (dateWithoutSuffix + ".0") + ")");
+                            LogDataBase.d("HODBUG", "--->Looking for invoicePost of item to delete (Params: invoiceLocalId=" + invoiceLocalId + ", dateWithoutSuffix:" + dateWithoutSuffix + ", dateWithSuffix: " + (dateWithoutSuffix + ".0") + ")");
 
                             if (invoicePost != null) {
-                                Log.d("HODBUG", "--->Item to delete (is isAddOffline) has invoicePost: " + invoicePost);
+                                LogDataBase.d("HODBUG", "--->Item to delete (is isAddOffline) has invoicePost: " + invoicePost);
 
                                 int idInvoicePost = invoicePost.getInvoicePostLocalId();
 
@@ -2042,7 +2042,7 @@ public class ManagerDB {
                                     }
                                 }
                             } else
-                                Log.e("HODBUG", "--->Item to delete (is isAddOffline) has no invoicePost");
+                                LogDataBase.e("HODBUG", "--->Item to delete (is isAddOffline) has no invoicePost");
 
                             //harvestOfDay.deleteFromRealm();
 
@@ -2085,7 +2085,7 @@ public class ManagerDB {
                             }
                         }
                     } else
-                        Log.e("HODBUG", "--->Item to delete has NO Of day");*/
+                        LogDataBase.e("HODBUG", "--->Item to delete has NO Of day");*/
                 }
             });
         } catch (Exception e) {
@@ -2331,7 +2331,7 @@ public class ManagerDB {
                 }
             });
         } /*else
-            Log.d("OFFLINE", "--->deleteHarvestInvoice Invoice not found: " + remoteInvoiceId + "/" + localInvoiceId);
+            LogDataBase.d("OFFLINE", "--->deleteHarvestInvoice Invoice not found: " + remoteInvoiceId + "/" + localInvoiceId);
 
         final InvoicePost invoicePostInRealm = realm
                 .where(InvoicePost.class)
@@ -2339,7 +2339,7 @@ public class ManagerDB {
                 .findFirst();
 
         if (invoicePostInRealm != null) {
-            Log.d("OFFLINE", "--->deleteHarvestInvoice found InvoicePost to delete: " + invoicePostInRealm);
+            LogDataBase.d("OFFLINE", "--->deleteHarvestInvoice found InvoicePost to delete: " + invoicePostInRealm);
 
             realm.executeTransaction(new Realm.Transaction() {
                 @DebugLog
@@ -2350,7 +2350,7 @@ public class ManagerDB {
                 }
             });
         } else
-            Log.d("OFFLINE", "--->deleteHarvestInvoice InvoicePost not found: " + invoiceInRealm.getId2());*/
+            LogDataBase.d("OFFLINE", "--->deleteHarvestInvoice InvoicePost not found: " + invoiceInRealm.getId2());*/
         return deleted[0];
     }
 

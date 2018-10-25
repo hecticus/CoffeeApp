@@ -114,7 +114,7 @@ public class HomeRepository implements HomeContract.Repository {
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 t.printStackTrace();
-                Log.e("RETRO", "--->" + RecoveryPasswordActivity.class.getSimpleName() + " onFailure +" + call + " + " + t);
+                LogDataBase.e("RETRO", "--->" + RecoveryPasswordActivity.class.getSimpleName() + " onFailure +" + call + " + " + t);
                 onLogoutError();
             }
         });*/

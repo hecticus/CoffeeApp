@@ -201,13 +201,13 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
             intent.putExtra("isForProviderCreation", false);
             intent.putExtra("canEdit", true);
             intent.putExtra("isHarvester", selectedProvider.isHarvester());
-            /*Log.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
+            /*LogDataBase.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
             intent.putExtra("provider", Util.getGson().toJson(selectedProvider));*/
 
 
 
             boolean control = ManagerDB.isProviderOffline(selectedProvider);
-            //Log.d("DEBUG details", "control" + control);
+            //LogDataBase.d("DEBUG details", "control" + control);
             intent.putExtra("control", control);
             Log.d("DEBUG", "policia control " + control );
             if(InternetManager.isConnected(getActivity()) && !control){

@@ -154,12 +154,12 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 }
             }
         //Gson g = new Gson();
-            //Log.d("DEBUG", g.toJson(providerParam));
-            //Log.d("DEBUg desde bd", ManagerDB.getProviderByIdentificationDoc(providerParam.getIdentificationDocProvider()).toString());
+            //LogDataBase.d("DEBUG", g.toJson(providerParam));
+            //LogDataBase.d("DEBUg desde bd", ManagerDB.getProviderByIdentificationDoc(providerParam.getIdentificationDocProvider()).toString());
         } else {
             Log.d("DETAILS", "--->Sent provider: " + providerParam);
             /*Gson g = new Gson();
-            Log.d("DEBUG DETAILS555",  g.toJson(providerParam));*/
+            LogDataBase.d("DEBUG DETAILS555",  g.toJson(providerParam));*/
 
             Call<ProviderCreationResponse> call = providerDetailsDataApi.createProvider(providerParam);
 
@@ -192,7 +192,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                                         onCreateError(mPresenter.context.getString(R.string.already_exists_name_provider));
                                     }
                                 } else {
-                                    //Log.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
+                                    //LogDataBase.d("DETAILS", "--->createProviderRequest Error (" + code + "):" + (response != null ? response.body() : ""));
                                     onCreateError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_during_operation));
                                 }
                             }
@@ -320,12 +320,12 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @DebugLog
                 @Override
                 public void onSuccess(Response<ProviderCreationResponse> response) {
-                    try { Log.d("DEBUG isimg", String.valueOf(isImg));
+                    try { LogDataBase.d("DEBUG isimg", String.valueOf(isImg));
                         if(!isImg){
                             onProviderSaved(response.body().getProvider());
                         }
                         //onProviderSaved(response.body().getProvider());
-                        Log.d("DETAILS", "--->Success updateProviderRequest:" + response.body());
+                        LogDataBase.d("DETAILS", "--->Success updateProviderRequest:" + response.body());
                     } catch (Exception e) {
                         onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
                     }
@@ -335,14 +335,14 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                 @Override
                 public void onError(boolean fail, int code, Response<ProviderCreationResponse> response, String errorMessage) {
                     if (fail || code != 409) {
-                        Log.d("DETAILS", "--->updateProviderRequest Error 2 (" + code + "):" + (response != null ? response.body() : ""));
+                        LogDataBase.d("DETAILS", "--->updateProviderRequest Error 2 (" + code + "):" + (response != null ? response.body() : ""));
                         onDataUpdateError(Constants.ErrorType.GENERIC_ERROR_DURING_OPERATION);
                     } else {
                         if (errorMessage != null && errorMessage.equals("registered [fullNameProvider]")) {
-                            Log.d("DETAILS", "--->updateProviderRequest Error 2 fullNameProvider (" + code + "):" + (response != null ? response.body() : ""));
+                            LogDataBase.d("DETAILS", "--->updateProviderRequest Error 2 fullNameProvider (" + code + "):" + (response != null ? response.body() : ""));
                             onDataUpdateError(Constants.ErrorType.NAME_EXISTING);
                         } else {
-                            Log.d("DETAILS", "--->updateProviderRequest Error DNI/RUC (" + response.code() + "):" + response.body());
+                            LogDataBase.d("DETAILS", "--->updateProviderRequest Error DNI/RUC (" + response.code() + "):" + response.body());
                             if (providerParam.isHarvester())
                                 onDataUpdateError(Constants.ErrorType.DNI_EXISTING);
                             else
@@ -435,11 +435,11 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         provider.setMultimediaProfile(new MultimediaProfile("image", new MultimediaCDN(base64Image)));
 
         /*Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(provider));*/
+        LogDataBase.d("DEBUG imege", g.toJson(provider));*/
 
         MultimediaProfile media = new MultimediaProfile("image", new MultimediaCDN(base64Image));
         /*Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(media));*/
+        LogDataBase.d("DEBUG imege", g.toJson(media));*/
 
         Call<ResponseBody> call = providerImageApi.updateProviderImage(provider.getIdProvider(), media);
         call.enqueue(new Callback<ResponseBody>() {
@@ -506,11 +506,11 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
         //provider.setPhotoProvider(base64Image);
 
         /*Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(provider));*/
+        LogDataBase.d("DEBUG imege", g.toJson(provider));*/
 
         MultimediaProfile media = new MultimediaProfile(id, "image", new MultimediaCDN(base64Image));
         /*Gson g = new Gson();
-        Log.d("DEBUG imege", g.toJson(media));*/
+        LogDataBase.d("DEBUG imege", g.toJson(media));*/
 
         Call<ResponseBody> call = providerImageApi.putProviderImage(id, media);
         call.enqueue(new Callback<ResponseBody>() {

@@ -107,7 +107,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             //initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider",-1));//new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
             //mPresenter.
             initialProvider = new Gson().fromJson(getIntent().getStringExtra("provider"), Provider.class);
-            //Log.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
+            //LogDataBase.d("DEBUG intent 2",  initialProvider.getFullNameProvider());
         }*/
 
 
@@ -121,14 +121,14 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
                     initialProvider = ManagerDB.getProviderById(getIntent().getIntExtra("provider", -1));
 
                     /*details.add(ManagerDB.getInvoiceDetailById(getIntent().getIntExtra("details", -1)));
-                    Log.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
+                    LogDataBase.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
                     details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
                     details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));*/
                 } else {
                     initialProvider = ManagerDB.getProviderByIdentificationDoc(getIntent().getStringExtra("providerLocal"));
 
                     /*details.add(ManagerDB.getInvoiceDetailByIdLocal(getIntent().getIntExtra("providerLocal", -1)));
-                    Log.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
+                    LogDataBase.d("DEBUG", "lote" + String.valueOf(details.get(0).getLotId()));
                     details.get(0).setLot(ManagerDB.getLotById(details.get(0).getLotId()));
                     details.get(0).setItemType(new ItemType(details.get(0).getItemTypeId()));*/
                 }
@@ -387,15 +387,15 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
                         /*if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                             permissionsNeeded.add("Read storage");
-                            Log.d("DEBUG", "policia pide permisos1");
+                            LogDataBase.d("DEBUG", "policia pide permisos1");
                         }
                         if (!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                             permissionsNeeded.add("Write storage");
-                            Log.d("DEBUG", "policia pide permisos2");
+                            LogDataBase.d("DEBUG", "policia pide permisos2");
                         }
                         if(!addPermission(permissionsList, Manifest.permission.CAMERA)) {
                             permissionsNeeded.add("Camera");
-                            Log.d("DEBUG", "policia pide permisos3");
+                            LogDataBase.d("DEBUG", "policia pide permisos3");
                         }
                         if (permissionsNeeded.size() > 0) {
                             requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),

@@ -80,18 +80,18 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
         Invoice initialInvoice = null;
         /*if (getIntent().getIntExtra("invoice",-1) > -1){  // getIntent().getStringExtra("invoice") != null) {
-            Log.d("DEBUG", String.valueOf(getIntent().getIntExtra("invoice", -1)));
+            LogDataBase.d("DEBUG", String.valueOf(getIntent().getIntExtra("invoice", -1)));
             //todo nose
             //todo invoice
             initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice",-1));/*new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);*/
         //}*/
         if(getIntent().getBooleanExtra("control", false)) {
             if (getIntent().getIntExtra("invoice", -1) > -1) {//getIntent().getStringExtra("invoice") != null) {//
-                //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
                 //todo nose
                 //todo invoice
                 initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
-                //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
                 //initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
 
                 Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());
@@ -99,11 +99,11 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
                 Log.e("HarvestsOfDayListAct", "--->No invoice sent to HarvestsOfDayActivity");
         } else {
             if (getIntent().getStringExtra("invoice") != null) {//getIntent().getIntExtra("invoice", -1) > -1) {//
-                //Log.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("HarvestsOfDayListAct", "--->Invoice json after intent: \n" + getIntent().getStringExtra("invoice"));
                 //todo nose
                 //todo invoice
                 //initialInvoice = ManagerDB.getInvoiceById(getIntent().getIntExtra("invoice", -1));//new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
-                //Log.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
+                //LogDataBase.d("DEBUG Prueba", getIntent().getStringExtra("invoice"));
                 initialInvoice = new Gson().fromJson(getIntent().getStringExtra("invoice"), Invoice.class);
 
                 Log.d("HarvestsOfDayListAct", "--->Invoice class rebuilt: \n" + initialInvoice.toString());

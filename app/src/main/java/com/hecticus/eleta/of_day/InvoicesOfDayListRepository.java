@@ -197,10 +197,10 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                 }
 
                 if (harvestsOrPurchasesOfDayList.size() == 0) {
-                    Log.d("HOD", "--->Invoice has " + harvestsOrPurchasesOfDayList.size() + " items of day to also delete");
+                    LogDataBase.d("HOD", "--->Invoice has " + harvestsOrPurchasesOfDayList.size() + " items of day to also delete");
                     ManagerDB.delete(invoice.getInvoiceId(), invoice.getLocalId());
                 } else {
-                    Log.d("HOD", "--->Invoice has no items of day to also delete");
+                    LogDataBase.d("HOD", "--->Invoice has no items of day to also delete");
                 }
 
                 mPresenter.onHarvestDeleted(response, false);
@@ -217,7 +217,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                         if (response.isSuccessful() && response.body() != null) {
                             //ManagerDB.deleteInvoiceDetails(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId()); todo no se
                             ManagerDB.deleteInvoiceDetailsOnline(harvestOrPurchase.getId(), harvestOrPurchase.getLocalId());
-                            //Log.d("DEBUG delete online", String.valueOf(variable));
+                            //LogDataBase.d("DEBUG delete online", String.valueOf(variable));
 
                             /*List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
                                     harvestOrPurchase.getId(),

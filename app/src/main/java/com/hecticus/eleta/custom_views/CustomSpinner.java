@@ -86,7 +86,7 @@ public class CustomSpinner extends LinearLayout {
 
     public ItemSpinnerInterface getSelectedItem(){
         /*Gson g = new Gson();
-        Log.d("DEBUG spiner lot", g.toJson(spinner.getSelectedItem()));*/
+        LogDataBase.d("DEBUG spiner lot", g.toJson(spinner.getSelectedItem()));*/
         return (ItemSpinnerInterface) spinner.getSelectedItem();
     }
 }
