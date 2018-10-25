@@ -188,9 +188,10 @@ public class Invoices extends Controller {
                                 String sort, Long id_provider, Long id_providertype,  String startDate,
                                 String endDate, Long status ,boolean deleted,  String nitName) {
         try {
-            ListPagerCollection listPager = Invoice.createReport(Integer pageIndex, Integer pageSize,  String collection,
+            ListPagerCollection listPager = Invoice.createDetailReport();
+            /*Invoice.createReport(Integer pageIndex, Integer pageSize,  String collection,
                     String sort, Long id_provider, Long id_providertype,  String startDate,
-                    String endDate, Long status ,boolean deleted,  String nitName)
+                    String endDate, Long status ,boolean deleted,  String nitName);*/
 
             return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
