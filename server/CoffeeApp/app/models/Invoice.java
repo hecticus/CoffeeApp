@@ -276,7 +276,47 @@ public class Invoice extends AbstractEntity{
         return new ListPagerCollection(sqlRows);
     }
 
+    public static ListPagerCollection createReport(Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
+                                                   String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
+                                                   ZonedDateTime closeDate, Long status ,boolean delete, String nitName){
 
+        String sql = " SELECT \n" +
+                "    DATE_FORMAT(c.created_at, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
+                "    DATE_FORMAT(c.closed_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Cierre',\n" +
+                "    p.nit_provider as 'Identificación del Proveedor',\n" +
+                "    p.name_provider as 'Nombre del Proveedor',\n" +
+                "    l.name_lot as 'Nombre del Lote',\n" +
+                "    i.amount_invoice_detail as Peso,\n" +
+                "    it.name_item_type as 'Clase de Cafe',\n" +
+                "    i.cost_item_type as 'Precio',\n" +
+                "    i.price_item_type_by_lot as 'Costo',\n" +
+                "    (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) AS Total\n" +
+                "FROM\n" +
+                "    CoffeeApp.invoices AS c,\n" +
+                "    CoffeeApp.providers AS p,\n" +
+                "    CoffeeApp.lots AS l,\n" +
+                "    CoffeeApp.invoice_details AS i,\n" +
+                "    CoffeeApp.item_types AS it\n" +
+                "WHERE\n" +
+                "    c.provider_id = p.id\n" +
+                "        AND i.deleted = 0\n" +
+                "        AND i.invoice_id = c.id\n" +
+                "        AND i.lot_id = l.id\n" +
+                "        AND i.item_type_id = it.id\n" +
+                "GROUP BY c.created_at , c.closed_date , p.name_provider , \n" +
+                "p.nit_provider , i.amount_invoice_detail , i.price_item_type_by_lot , i.cost_item_type , \n" +
+                "l.name_lot , i.price_item_type_by_lot , it.name_item_type;";
+
+        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
+                .setParameter("typeProvider", providerType)
+                .setParameter("status", status)
+                .findList();
+
+
+//        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
+
+        return new ListPagerCollection(sqlRows);
+    }
 
 /*    String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
             " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +

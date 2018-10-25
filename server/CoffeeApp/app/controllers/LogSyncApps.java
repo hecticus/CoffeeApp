@@ -32,9 +32,9 @@ public class LogSyncApps extends Controller {
             if(json == null)
                 return Response.requiredJson();
 
-          /*  Form<LogSyncApps> form = formFactory.form(LogSyncApps.class).bind(json);
+            Form<LogSyncApps> form = formFactory.form(LogSyncApps.class).bind(json);
             if (form.hasErrors())
-                return controllers.utils.Response.invalidParameter(form.errorsAsJson());*/
+                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
             LogSyncApp logSyncApp = Json.fromJson(json, LogSyncApp.class);
 

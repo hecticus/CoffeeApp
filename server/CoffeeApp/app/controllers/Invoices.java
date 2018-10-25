@@ -184,6 +184,21 @@ public class Invoices extends Controller {
     }
 
     @CoffeAppsecurity
+    public  Result createReport(Integer pageIndex, Integer pageSize,  String collection,
+                                String sort, Long id_provider, Long id_providertype,  String startDate,
+                                String endDate, Long status ,boolean deleted,  String nitName) {
+        try {
+            ListPagerCollection listPager = Invoice.createReport(Integer pageIndex, Integer pageSize,  String collection,
+                    String sort, Long id_provider, Long id_providertype,  String startDate,
+                    String endDate, Long status ,boolean deleted,  String nitName)
+
+            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
+    @CoffeAppsecurity
     public  Result buyHarvestsAndCoffe( ){
 
         boolean auxCreate = false;

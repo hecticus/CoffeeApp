@@ -17,11 +17,9 @@ public class LogSyncApp extends  AbstractEntity {
     @ManyToOne
     User user;
 
-    @Column(nullable = false)
     @DbJson
     JsonNode content;
 
-    @Column(nullable = false)
     @Lob
     String description;
 
