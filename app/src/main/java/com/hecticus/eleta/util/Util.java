@@ -327,7 +327,7 @@ public class Util {
         Log.d("PRINTOFFLINE", "--->firstDetail to print: " + firstDetail);
 
         if (isHarvest) {
-            text.append(context.getString(R.string.lot)).append(": ").append(firstDetail.getLot().getName()).append("\n");
+            /*text.append(context.getString(R.string.lot)).append(": ").append(firstDetail.getLot().getName()).append("\n");*/
 
             if (receiptResponse.getInvoice().getProvider() != null) {// Remote invoice
 
@@ -345,8 +345,8 @@ public class Util {
             // User(Operator) name
             text.append(context.getString(R.string.operator)).append(": ").append(SessionManager.getUserName(context)).append("\n\n");
 
-            text.append(String.format("%17s", " ")).append("Libras")
-                    .append("  ").append(String.format("%8s", "Precio")).append("     Monto\n");
+            text.append(String.format("%15s", " ")).append("Lote    ").append("Libras")
+                    .append("  ").append(String.format("%8s", "Precio")).append("   Monto\n");
 
             for (InvoiceDetails detail : detailsResponse.getListInvoiceDetails()) {
                 String[] nameArray = detail.getItemType().getName().split(" ");
@@ -379,11 +379,13 @@ public class Util {
 
                         text.append(nameArrayList.get(i))
                                 .append(" ")
-                                .append(String.format("%11s", df.format(detail.getAmount())))
+                                .append(String.format("%8s", detail.getLot().getName()))
                                 .append(" ")
-                                .append(String.format("%9s", df1.format(detail.getPriceByLot())))
+                                .append(String.format("%6s", df.format(detail.getAmount())))
                                 .append(" ")
-                                .append(String.format("%10s", df.format(totalAmount)))
+                                .append(String.format("%8s", df1.format(detail.getPriceByLot())))
+                                .append(" ")
+                                .append(String.format("%6s", df.format(totalAmount)))
                                 .append("\n");
                     } else {
                         text.append(String.format("%-10s", nameArrayList.get(i))).append("\n");
