@@ -57,7 +57,9 @@
     <string name="providers">Proveedores</string>
     <string name="observations">Observaciones</string>
     <string name="new_purchase">NUEVA COMPRA</string>
+    <string name="button_add_another">Guardar y agregar</string>
     <string name="saved_harvests">Cosecha guardada exitosamente</string>
+    <string name="saved_purchases">Compra guardada exitosamente</string>
     <string name="error_getting_purchases">Error obteniendo compras</string>
     <string name="data_updated_correctly">Datos actualizados correctamente</string>
     <string name="error_getting_harvests">Error obteniendo cosechas</string>

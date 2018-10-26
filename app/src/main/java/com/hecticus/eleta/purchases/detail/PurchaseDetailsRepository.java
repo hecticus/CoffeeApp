@@ -114,11 +114,11 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
 
     @DebugLog
     @Override
-    public void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd) {
+    public void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd, final Boolean addAnother) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost, isAdd)) {
             if (isAdd) {
                 if (ManagerDB.saveNewInvoice1(Constants.TYPE_SELLER, invoicePost)) {
-                    onPurchaseUpdated();
+                    onPurchaseUpdated(true);
                 } else {
                     onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_changes));
                 }
@@ -134,7 +134,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                     public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                         try {
                             if (response.isSuccessful()) {
-                                getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId());
+                                getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId(), addAnother);
                             } else {
                                 onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_changes));
                             }
@@ -162,7 +162,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost, false)*/) {
             Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
             if (ManagerDB.updateInvoiceDetails1(invoiceDetail,1)) {
-                onPurchaseUpdated();
+                onPurchaseUpdated(false);
             } else
                 onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_purchases));
         } else {
@@ -195,7 +195,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 try {
                     if (response.isSuccessful()) {
                         //onHarvestUpdated();
-                        getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId());
+                        getAndSaveInvoiceDetails(response.body().getResult().getInvoiceId(), false);
                     } else {
                         Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                         onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_purchases));
@@ -218,7 +218,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     }
 
     @DebugLog
-    private void getAndSaveInvoiceDetails(final int invoiceId) {
+    private void getAndSaveInvoiceDetails(final int invoiceId, final Boolean addAnother) {
         Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceId);
 
         call.enqueue(new Callback<InvoiceDetailsResponse>() {
@@ -229,6 +229,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
+                        onPurchaseUpdated(addAnother);
                     } else{
                         onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error));
                     }
@@ -238,7 +239,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
                     onError(ErrorHandling.errorCodeInServerResponseProcessing + mPresenter.context.getString(R.string.error));
                 }
 
-                onPurchaseUpdated();
+
             }
 
             @DebugLog
@@ -261,8 +262,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
     }
 
     @Override
-    public void onPurchaseUpdated() {
-        mPresenter.onPurchaseUpdated();
+    public void onPurchaseUpdated(Boolean addAnother) {
+        mPresenter.onPurchaseUpdated(addAnother);
     }
 
     @Override

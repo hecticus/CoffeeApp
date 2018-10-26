@@ -49,6 +49,8 @@ public class PurchaseDetailsContract {
 
         void invalidToken();
 
+        void addAnother();
+
         void showDialogConfirmation();
 
     }
@@ -69,7 +71,7 @@ public class PurchaseDetailsContract {
 
         void onError(String error);
 
-        void onPurchaseUpdated();
+        void onPurchaseUpdated(Boolean addAnother);
 
         void loadStores(List<Store> storesList);
 
@@ -85,12 +87,12 @@ public class PurchaseDetailsContract {
 
         void invalidToken();
 
-        void onSaveConfirmedInDialog();
+        void onSaveConfirmedInDialog(Boolean addAnother);
     }
 
     public interface Repository {
 
-        void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd);
+        void savePurchaseRequest(InvoicePost invoicePost, boolean isAdd, Boolean addAnother);
 
         void editPurchaseRequest(InvoicePost invoicePost, InvoiceDetails invoiceDetail);
 
@@ -98,7 +100,7 @@ public class PurchaseDetailsContract {
 
         void onError(String error);
 
-        void onPurchaseUpdated();
+        void onPurchaseUpdated(Boolean addAnother);
 
         void getItemTypesRequest();
 

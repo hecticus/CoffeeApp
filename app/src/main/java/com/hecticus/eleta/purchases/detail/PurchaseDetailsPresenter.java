@@ -428,10 +428,16 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
     @DebugLog
     @Override
-    public void onPurchaseUpdated() {
+    public void onPurchaseUpdated(Boolean addAnother) {
         mView.hideWorkingIndicator();
-        mView.showMessage(context.getString(R.string.data_updated_correctly));
-        mView.handleSuccessfulUpdate();
+        if(addAnother){
+            mView.showMessage(context.getString(R.string.saved_purchases));
+            mView.addAnother();
+        } else{
+            mView.showMessage(context.getString(R.string.data_updated_correctly));
+            mView.handleSuccessfulUpdate();
+        }
+
     }
 
     @DebugLog
@@ -643,8 +649,8 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
 
     @DebugLog
     @Override
-    public void onSaveConfirmedInDialog() {
-        //mView.showWorkingIndicator();
+    public void onSaveConfirmedInDialog(Boolean addAnother) {
+        mView.showWorkingIndicator();
 
         invoicePost.setIdentificationDocProvider(currentProvider.getIdentificationDocProvider());
         invoicePost.setProviderName(currentProvider.getFullNameProvider());
@@ -659,8 +665,11 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
             invoicePost.setBuyOption(Constants.BUY_OPTION_PURCHASE);
 
             Log.d("TEST", "--->getCurrentDateForInvoice " + invoicePost.getStartDate());
-
-            mRepository.savePurchaseRequest(invoicePost, true);
+            if(addAnother) {
+                mRepository.savePurchaseRequest(invoicePost, true, true);
+            }else{
+                mRepository.savePurchaseRequest(invoicePost, true, false);
+            }
         } else {
             /*if (currentDetailsList.get(0).getInvoice() == null) {
                 invoicePost.setInvoiceId(currentDetailsList.get(0).getInvoiceId());

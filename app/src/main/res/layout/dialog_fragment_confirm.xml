@@ -107,7 +107,7 @@
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
         android:background="#fff"
-        android:text="agregar otra"
+        android:text="@string/button_add_another"
         android:textColor="@color/colorEletaGreen" />
 
     <Button

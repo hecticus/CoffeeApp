@@ -113,6 +113,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     @BindView(R.id.purchase_details_button_add)
     ImageButton addImageButton;
 
+    private List<Purity> listAux;
     private PurchaseDetailsContract.Actions mPresenter;
     private EditListAdapter puritiesAdapter;
 
@@ -317,6 +318,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     @DebugLog
     @Override
     public void updatePurities(List<Purity> puritiesList) {
+        listAux = puritiesList;
         if (puritiesList != null && puritiesList.size() % 2 != 0) {
             observationsEditText.setBackground();
         } else {
@@ -366,6 +368,16 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
         intent.putExtra("invalidToken", true);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void addAnother() {
+        //todo brayan
+        puritiesAdapter.showAddAnother(listAux);
+        amountEditText.setText("");
+        dispatcherEditText.setText("");
+        observationsEditText.setText("");
+        priceEditText.setText("");
     }
 
     @Override
@@ -426,11 +438,11 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
     @Override
     public void onAcceptConfirm() {
-        mPresenter.onSaveConfirmedInDialog();
+        mPresenter.onSaveConfirmedInDialog(false);
     }
 
     @Override
     public void onAddAnother() {
-        mPresenter.onSaveConfirmedInDialog();
+        mPresenter.onSaveConfirmedInDialog(true);
     }
 }

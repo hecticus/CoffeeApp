@@ -121,7 +121,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
     @DebugLog
     @Override
-    public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd, Boolean addAnother) {
+    public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd, final Boolean addAnother) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,isAdd)) {
             if (isAdd) {
                 if(ManagerDB.saveNewInvoice1(Constants.TYPE_HARVESTER, invoicePost)){
@@ -142,7 +142,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                     public void onResponse(@NonNull Call<CreateInvoiceResponse> call, @NonNull Response<CreateInvoiceResponse> response) {
                         try {
                             if (response.isSuccessful()) {
-                                getDetails(response.body().getResult().getInvoiceId());
+                                getDetails(response.body().getResult().getInvoiceId(), addAnother);
                             } else {
                                 onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_changes));
                             }
@@ -210,7 +210,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 try {
                     if (response.isSuccessful()) {
                         //onHarvestUpdated();
-                        getDetails(response.body().getResult().getInvoiceId());
+                        getDetails(response.body().getResult().getInvoiceId(), false);
                     } else {
                         Log.e("RETRO", "--->ERROR" + new JSONObject(response.errorBody().string()));
                         onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_harvests));
@@ -232,7 +232,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         });
     }
 
-    private void getDetails(final int invoiceId){
+    private void getDetails(final int invoiceId, final Boolean addAnother){
         Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceId);
 
         call.enqueue(new Callback<InvoiceDetailsResponse>() {
@@ -244,7 +244,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
-                        onHarvestUpdated(true);
+                        onHarvestUpdated(addAnother);
                     } else { //todo brayan de aqui para abajo puede que toque comentar los msj y descomentar los onHarvestUpdated();
                         onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_harvests));
                         //onHarvestUpdated();

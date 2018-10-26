@@ -452,8 +452,11 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
             invoicePost.setBuyOption(Constants.BUY_OPTION_HARVEST);
 
             Log.d("TEST", "--->getCurrentDateForInvoice " + invoicePost.getStartDate());
-
-            mRepository.saveHarvestRequest(invoicePost, true, true);
+            if(addAnother) {
+                mRepository.saveHarvestRequest(invoicePost, true, true);
+            } else{
+                mRepository.saveHarvestRequest(invoicePost, true, false);
+            }
         } else {
 
             /*boolean createdOffline = false;

@@ -391,6 +391,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void addAnother() {
         mAdapter.showAddAnother(listAux);
+        observationsEditText.setText("");
     }
 
     @DebugLog
