@@ -69,6 +69,7 @@
 
     <string name="error_getting_harvests">Error getting harvests</string>
     <string name="error_saving_harvests">Error saving harvest</string>
+    <string name="saved_harvests">Harvest successfully saved</string>
     <string name="error_saving_purchases">Error saving purchase</string>
     <string name="error_deleting_harvest">Error deleting harvest</string>
     <string name="harvest_deleted_successful">Harvest deleted successfully!</string>

@@ -428,4 +428,9 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     public void onAcceptConfirm() {
         mPresenter.onSaveConfirmedInDialog();
     }
+
+    @Override
+    public void onAddAnother() {
+        mPresenter.onSaveConfirmedInDialog();
+    }
 }

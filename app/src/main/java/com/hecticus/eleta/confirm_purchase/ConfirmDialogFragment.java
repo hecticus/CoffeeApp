@@ -190,6 +190,13 @@ public class ConfirmDialogFragment extends DialogFragment {
     }
 
     @DebugLog
+    @OnClick(R.id.dialog_save_add_another)
+    public void onClickAddAnother() {
+        mCallback.onAddAnother();
+        getDialog().dismiss();
+    }
+
+    @DebugLog
     @OnClick(R.id.dialog_confirm_accept_button)
     public void onClickConfirmButton() {
         mCallback.onAcceptConfirm();

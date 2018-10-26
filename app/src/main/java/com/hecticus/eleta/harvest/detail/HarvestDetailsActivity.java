@@ -105,6 +105,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     private HarvestDetailsContract.Actions mPresenter;
     private EditListAdapter mAdapter;
+    private List<ItemType> listAux;
 
     @DebugLog
     @Override
@@ -303,11 +304,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     @Override
     public void updateItems(List<ItemType> itemTypeList) {
-        /*Gson g = new Gson();
-        LogDataBase.d("DEBUG BRAYAN", g.toJson(itemTypeList));*/
-
-
-        /*itemTypeListAux.addAll(itemTypeList);*/
+        //todo brayan
+        listAux = itemTypeList;
 
         if(!getIntent().getBooleanExtra("isAdd", false)) {
             List<ItemType> itemTypeListAux = new ArrayList<>();
@@ -390,6 +388,11 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         mConfirmDialogFragment.show(getSupportFragmentManager(), "confirm");
     }
 
+    @Override
+    public void addAnother() {
+        mAdapter.showAddAnother(listAux);
+    }
+
     @DebugLog
     private void showHarvesterSearchDialog() {
         SearchDialogFragment dialog = new SearchDialogFragment();
@@ -424,6 +427,12 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void onAcceptConfirm() {
         InvoiceDetails invoiceDetails = new InvoiceDetails();
-        mPresenter.acceptSave(getIntent().getIntExtra("idProvider", -1), invoiceDetails);
+        mPresenter.acceptSave(getIntent().getIntExtra("idProvider", -1), invoiceDetails, false);
+    }
+
+    @Override
+    public void onAddAnother() {
+        InvoiceDetails invoiceDetails = new InvoiceDetails();
+        mPresenter.acceptSave(getIntent().getIntExtra("idProvider", -1), invoiceDetails, true);
     }
 }

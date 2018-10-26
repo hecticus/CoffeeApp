@@ -51,6 +51,8 @@ public class HarvestDetailsContract {
 
         void showDialogConfirmation();
 
+        void addAnother();
+
     }
 
     public interface Actions {
@@ -69,7 +71,7 @@ public class HarvestDetailsContract {
 
         void onError(String error);
 
-        void onHarvestUpdated();
+        void onHarvestUpdated(Boolean addAnother);
 
         void loadFarms(List<Farm> farmsList);
 
@@ -85,13 +87,13 @@ public class HarvestDetailsContract {
 
         void invalidToken();
 
-        void acceptSave(int idProvider, InvoiceDetails invoiceDetails);
+        void acceptSave(int idProvider, InvoiceDetails invoiceDetails, Boolean addAnother);
 
     }
 
     public interface Repository {
 
-        void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd);
+        void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd, Boolean addAnother);
 
         void editHarvestRequest(InvoiceDetails invoiceDetails);
 
@@ -99,7 +101,7 @@ public class HarvestDetailsContract {
 
         void onError(String error);
 
-        void onHarvestUpdated();
+        void onHarvestUpdated(Boolean addAnother);
 
         void getItemTypesRequest();
 

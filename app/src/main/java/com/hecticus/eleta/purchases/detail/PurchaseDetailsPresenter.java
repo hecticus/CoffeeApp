@@ -644,7 +644,7 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
     @DebugLog
     @Override
     public void onSaveConfirmedInDialog() {
-        mView.showWorkingIndicator();
+        //mView.showWorkingIndicator();
 
         invoicePost.setIdentificationDocProvider(currentProvider.getIdentificationDocProvider());
         invoicePost.setProviderName(currentProvider.getFullNameProvider());

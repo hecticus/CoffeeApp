@@ -7,4 +7,6 @@ package com.hecticus.eleta.model_new.callback;
 public interface AcceptConfirmInterface {
 
     void onAcceptConfirm();
+
+    void onAddAnother();
 }

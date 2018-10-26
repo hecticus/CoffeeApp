@@ -259,10 +259,15 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     @DebugLog
     @Override
-    public void onHarvestUpdated() {
+    public void onHarvestUpdated(Boolean addAnother) {
         mView.hideWorkingIndicator();
-        mView.showMessage(context.getString(R.string.data_updated_correctly));
-        mView.handleSuccessfulUpdate();
+        if(addAnother){
+            mView.showMessage(context.getString(R.string.saved_harvests));
+            mView.addAnother();
+        } else {
+            mView.showMessage(context.getString(R.string.data_updated_correctly));
+            mView.handleSuccessfulUpdate();
+        }
     }
 
     @DebugLog
@@ -427,7 +432,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
     @DebugLog
     @Override
-    public void acceptSave(int idProvider, InvoiceDetails invoiceDetail) {
+    public void acceptSave(int idProvider, InvoiceDetails invoiceDetail, Boolean addAnother) {
         Log.d("BUG", "--->currentProvider onSaveConfirmedInDialog: " + currentProvider);
         if(idProvider!=-1){
             invoicePost.setInvoiceId(idProvider);
@@ -448,7 +453,7 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
 
             Log.d("TEST", "--->getCurrentDateForInvoice " + invoicePost.getStartDate());
 
-            mRepository.saveHarvestRequest(invoicePost, true);
+            mRepository.saveHarvestRequest(invoicePost, true, true);
         } else {
 
             /*boolean createdOffline = false;

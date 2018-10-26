@@ -108,6 +108,15 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
     }
 
     @DebugLog
+    public void showAddAnother(List<? extends BaseEditableModel> listParam) {
+        list = listParam;
+        for(int i= 0; i<list.size(); i++){
+            list.get(i).setInputValue("");
+        }
+        notifyDataSetChanged();
+    }
+
+    @DebugLog
     public List<? extends BaseEditableModel> getValues() {
         return list;
     }

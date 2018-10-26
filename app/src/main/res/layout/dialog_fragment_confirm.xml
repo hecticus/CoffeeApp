@@ -99,8 +99,8 @@
         android:text="@string/cancel"
         android:textColor="@color/colorEletaGreen" />
 
-    <!--<Button
-        android:id="@+id/dialog_save_add_harvest"
+    <Button
+        android:id="@+id/dialog_save_add_another"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout1"
@@ -108,7 +108,7 @@
         android:layout_gravity="center_horizontal"
         android:background="#fff"
         android:text="agregar otra"
-        android:textColor="@color/colorEletaGreen" />-->
+        android:textColor="@color/colorEletaGreen" />
 
     <Button
         android:id="@+id/dialog_confirm_accept_button"

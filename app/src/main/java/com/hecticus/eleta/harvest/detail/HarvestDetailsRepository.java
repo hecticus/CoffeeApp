@@ -121,11 +121,11 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
     @DebugLog
     @Override
-    public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd) {
+    public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd, Boolean addAnother) {
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,isAdd)) {
             if (isAdd) {
                 if(ManagerDB.saveNewInvoice1(Constants.TYPE_HARVESTER, invoicePost)){
-                    onHarvestUpdated();
+                    onHarvestUpdated(addAnother);
                 } else {
                     onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_changes));
                 }
@@ -170,7 +170,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         if (!InternetManager.isConnected(mPresenter.context) /*|| ManagerDB.invoiceHasOfflineOperation(invoicePost,false)*/) {
                 Log.d("OFFLINE", "--->saveHarvestRequest Offline Edit");
                 if (ManagerDB.updateInvoiceDetails1(invoiceDetails, 2))
-                    onHarvestUpdated();
+                    onHarvestUpdated(false);
                 else
                     onError(ErrorHandling.errorCodeBDLocal + mPresenter.context.getString(R.string.error_saving_harvests));
         } else {
@@ -244,7 +244,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
-                        onHarvestUpdated();
+                        onHarvestUpdated(true);
                     } else { //todo brayan de aqui para abajo puede que toque comentar los msj y descomentar los onHarvestUpdated();
                         onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_getting_harvests));
                         //onHarvestUpdated();
@@ -284,8 +284,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
     @DebugLog
     @Override
-    public void onHarvestUpdated() {
-        mPresenter.onHarvestUpdated();
+    public void onHarvestUpdated(Boolean addAnother) {
+        mPresenter.onHarvestUpdated(addAnother);
     }
 
     @DebugLog
