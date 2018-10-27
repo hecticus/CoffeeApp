@@ -17,6 +17,7 @@ public class CustomDateTimeSerializer extends JsonSerializer<ZonedDateTime> {
 
     @Override
     public void serialize(ZonedDateTime value, JsonGenerator jgen, SerializerProvider arg2) throws IOException {
+
         jgen.writeString(DATETIME_FORMATTER.format(value));
     }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.CustomDeserializer.TimeDeserializer;
 import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
@@ -16,6 +15,7 @@ import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -44,20 +44,16 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
+    @Valid
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = TimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
     @Column(columnDefinition = "datetime")
     private ZonedDateTime startDate;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
-
 
 
     // GETTER AND SETTER
@@ -81,10 +77,12 @@ public class Invoice extends AbstractEntity{
         this.statusInvoice = statusInvoice;
     }
 
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     public ZonedDateTime getStartDate() {
         return startDate;
     }
 
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public void setStartDate(ZonedDateTime startDate) {
         this.startDate = startDate;
     }
@@ -160,8 +158,8 @@ public class Invoice extends AbstractEntity{
 
 
     public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
-                                         String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
-                                         ZonedDateTime closeDate, Long status ,boolean delete, String nitName){
+                                         String sort, Long id_provider, Long providerType,  String startDate,
+                                         String closeDate, Long status ,boolean delete, String nitName){
 
         ExpressionList expressionList = finder.query().where();
 
