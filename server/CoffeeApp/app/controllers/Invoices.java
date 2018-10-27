@@ -228,19 +228,16 @@ public class Invoices extends Controller {
         if (form.hasErrors())
             return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-        // Invoice invoice2 = Json.fromJson(json, Invoice.class);
-        // Tengo el invoice recibido
         Invoice invoice = form.get();
 
         Provider provStatus = Provider.findById(invoice.getProvider().getId());
+
         if (provStatus.getStatusProvider().getId().intValue() == 42 ){
             return Response.requiredParameter("Proveedor Inactivo");
         }
 
+        // Get all invoice by provider and date
         List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider().getId(), fecha);
-
-        // Invoice invoices = invoiceList.get(0);
-        // Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
 
         Invoice newInvoice = null;
 
@@ -248,6 +245,7 @@ public class Invoices extends Controller {
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
+            newInvoice.setStartDate(fecha);
         }else{
             newInvoice = invoiceList.get(0);
         }
@@ -274,9 +272,6 @@ public class Invoices extends Controller {
                     return Response.requiredParameter("lot");
 
                 Lot lot = Lot.findById(invoiceDetail.getLot().getId());
-                System.out.println(lot.getNameLot());
-
-                System.out.println(invoiceDetail.getLot().getId());
                 invoiceDetail.setLot(lot);
                 invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
                 invoiceDetail.setCostItemType(new BigDecimal(0));
@@ -301,7 +296,6 @@ public class Invoices extends Controller {
             invoiceDetails.add(invoiceDetail);
 
             newInvoice.setInvoiceDetails(invoiceDetails);
-            newInvoice.setStartDate(fecha);
             newInvoice.save();
 
             invoiceDetail.setInvoice(newInvoice);

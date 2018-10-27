@@ -211,7 +211,7 @@ public class Invoice extends AbstractEntity{
     public static ListPagerCollection createTotalReport(){
 
         String sql = " SELECT \n" +
-                "    DATE_FORMAT(c.created_at, '%d/%m/%Y %H:%i:%s') as 'Fecha de Apertura',\n" +
+                "    DATE_FORMAT(c.created_at, '%d/%m/%Y'T'%H:%i:%sZ') as 'Fecha de Apertura',\n" +
                 "    DATE_FORMAT(c.closed_date, '%d/%m/%Y %H:%i:%s') as 'Fecha de Cierre',\n" +
                 "    s.name as 'Status de Factura',\n" +
                 "    t.name_provider_type as 'Tipo de Proveedor',\n" +
@@ -282,7 +282,7 @@ public class Invoice extends AbstractEntity{
                                                    ZonedDateTime closeDate, Long status ,boolean delete, String nitName){
 
         String sql = " SELECT \n" +
-                "    DATE_FORMAT(c.created_at, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
+                "    DATE_FORMAT(c.created_at, '%d/%m/%Y'T'%H:%i:%s'Z'') AS 'Fecha de Apertura',\n" +
                 "    DATE_FORMAT(c.closed_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Cierre',\n" +
                 "    p.nit_provider as 'Identificación del Proveedor',\n" +
                 "    p.name_provider as 'Nombre del Proveedor',\n" +
