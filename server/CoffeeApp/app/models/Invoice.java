@@ -44,10 +44,10 @@ public class Invoice extends AbstractEntity{
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceDetail> invoiceDetails;
 
-    @Valid
+    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
-    @Column(columnDefinition = "datetime")
+    @Column(columnDefinition = "datetime", nullable = false)
     private ZonedDateTime startDate;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")

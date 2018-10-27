@@ -24,7 +24,6 @@ import security.authorization.CoffeAppsecurity;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -221,17 +220,6 @@ public class Invoices extends Controller {
 
         for (JsonNode item : itemtypes) {
 
-            Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
-            if (formDetail.hasErrors())
-                return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
-
-            JsonNode dateStart = item.findValue("start");
-            if(dateStart == null)
-                return Response.requiredParameter("Requiere fecha de inicio de Detalle");
-
-            ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
-
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
 
             if (option) {
@@ -268,7 +256,7 @@ public class Invoices extends Controller {
             newInvoice.save();
 
             invoiceDetail.setInvoice(newInvoice);
-            invoiceDetail.setStartDate(startTime);
+//            invoiceDetail.setStartDate(startTime);
             invoiceDetail.save();
 
             if(!option)  {
