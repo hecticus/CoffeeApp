@@ -2,10 +2,6 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.Formula;
@@ -15,7 +11,6 @@ import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -77,12 +72,10 @@ public class Invoice extends AbstractEntity{
         this.statusInvoice = statusInvoice;
     }
 
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     public ZonedDateTime getStartDate() {
         return startDate;
     }
 
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public void setStartDate(ZonedDateTime startDate) {
         this.startDate = startDate;
     }
@@ -241,7 +234,9 @@ public class Invoice extends AbstractEntity{
         return new ListPagerCollection(sqlRows);
     }
 
-    public static ListPagerCollection createDetailReport(){
+    public static ListPagerCollection createDetailReport(Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
+                                                         String sort, Long id_provider, Long providerType,  String startDate,
+                                                         String closeDate, Long status ,boolean delete, String nitName){
 
         String sql = " SELECT \n" +
                 "    DATE_FORMAT(c.created_at, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
@@ -270,152 +265,78 @@ public class Invoice extends AbstractEntity{
                 "p.nit_provider , i.amount_invoice_detail , i.price_item_type_by_lot , i.cost_item_type , \n" +
                 "l.name_lot , i.price_item_type_by_lot , it.name_item_type;";
 
+/*
+        if(providerType != 0L)
+            sql += "        AND pt.id = "+ providerType;
+
+        if(nitName != null)
+            sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
+
+        if(status != 0L)
+            sql += "        AND s.id = " + status;
+
+        if(startDate != null && closeDate != null) {
+            sql += "        AND i.start_date BETWEEN "+ startDate +" AND " + closeDate + "\n";
+        } else if(startDate != null) {
+            sql += "        AND i.start_date >=  "+ startDate + "\n";
+        } else if(closeDate != null) {
+            sql += "        AND i.start_date <= " + closeDate + "\n";
+        }
+*/
+
+
+
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 
         return new ListPagerCollection(sqlRows);
     }
 
     public static ListPagerCollection createReport(Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
-                                                   String sort, Long id_provider, Long providerType,  ZonedDateTime startDate,
-                                                   ZonedDateTime closeDate, Long status ,boolean delete, String nitName){
+                                                   String sort, Long id_provider, Long providerType,  String startDate,
+                                                   String closeDate, Long status ,boolean delete, String nitName){
 
-        String sql = " SELECT \n" +
-                "    DATE_FORMAT(c.created_at, '%d/%m/%Y'T'%H:%i:%s'Z'') AS 'Fecha de Apertura',\n" +
-                "    DATE_FORMAT(c.closed_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Cierre',\n" +
-                "    p.nit_provider as 'Identificación del Proveedor',\n" +
-                "    p.name_provider as 'Nombre del Proveedor',\n" +
-                "    l.name_lot as 'Nombre del Lote',\n" +
-                "    i.amount_invoice_detail as Peso,\n" +
-                "    it.name_item_type as 'Clase de Cafe',\n" +
-                "    i.cost_item_type as 'Precio',\n" +
-                "    i.price_item_type_by_lot as 'Costo',\n" +
-                "    (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) AS Total\n" +
+        String sql = "SELECT \n" +
+                "    DATE_FORMAT(i.start_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
+//                "    DATE_FORMAT(i.closed_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Cierre',\n" +
+                "    p.nit_provider AS 'Identificación del Proveedor',\n" +
+                "    p.name_provider AS 'Nombre del Proveedor',\n" +
+                "    SUM(id.amount_invoice_detail) AS Peso,\n" +
+                "    SUM(id.amount_invoice_detail * id.price_item_type_by_lot + id.amount_invoice_detail * id.cost_item_type) AS 'Total de la Factura'\n" +
                 "FROM\n" +
-                "    CoffeeApp.invoices AS c,\n" +
+                "    CoffeeApp.invoices AS i,\n" +
+                "    CoffeeApp.invoice_details AS id,\n" +
                 "    CoffeeApp.providers AS p,\n" +
-                "    CoffeeApp.lots AS l,\n" +
-                "    CoffeeApp.invoice_details AS i,\n" +
-                "    CoffeeApp.item_types AS it\n" +
+                "    CoffeeApp.provider_type AS pt,\n" +
+                "    CoffeeApp.status AS s\n" +
                 "WHERE\n" +
-                "    c.provider_id = p.id\n" +
+                "    i.provider_id = p.id\n" +
+                "        AND p.provider_type_id = pt.id\n" +
                 "        AND i.deleted = 0\n" +
-                "        AND i.invoice_id = c.id\n" +
-                "        AND i.lot_id = l.id\n" +
-                "        AND i.item_type_id = it.id\n" +
-                "GROUP BY c.created_at , c.closed_date , p.name_provider , \n" +
-                "p.nit_provider , i.amount_invoice_detail , i.price_item_type_by_lot , i.cost_item_type , \n" +
-                "l.name_lot , i.price_item_type_by_lot , it.name_item_type;";
+                "        AND id.invoice_id = i.id\n" +
+                "        AND s.id = i.status_invoice_id\n";
 
-        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-                .setParameter("typeProvider", providerType)
-                .setParameter("status", status)
-                .findList();
+        if(providerType != 0L)
+                sql += "        AND pt.id = "+ providerType;
 
+        if(nitName != null)
+            sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
 
-//        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
+        if(status != 0L)
+            sql += "        AND s.id = " + status;
+
+        if(startDate != null && closeDate != null) {
+            sql += "        AND i.start_date BETWEEN "+ startDate +" AND " + closeDate + "\n";
+        } else if(startDate != null) {
+            sql += "        AND i.start_date >=  "+ startDate + "\n";
+        } else if(closeDate != null) {
+            sql += "        AND i.start_date <= " + closeDate + "\n";
+        }
+
+        sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider;";
+
+        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 
         return new ListPagerCollection(sqlRows);
     }
 
-/*    String sql = "SELECT invo.id_invoice AS invo_id, invo.status_invoice as status, invo.duedate_invoice as start_date, " +
-            " invo.closeddate_invoice as closed_date, invo.total_invoice as total," +
-            " prov.id_provider AS prov_id, prov.fullname_provider as full_name," +
-            " prov.address_provider as address," +
-            " prov.contactname_provider as contact_name, prov.identificationdoc_provider as identification_doc," +
-            " prov.phonenumber_provider as phone_number, prov.photo_provider as photo_provider" +
-            " FROM invoices invo " +
-            " INNER JOIN  providers prov ON prov.id_provider = invo.id_provider " +
-            " where invo.duedate_invoice like '"+date+"%'";
-
-        if(typeProvider!=-1)  sql+=" and prov.id_providertype= :typeProvider ";
-
-    sql+=" and invo.status_delete=0 and prov.status_delete=0 order by prov.fullname_provider ASC ";
-
-    //    sql += " limit :pageIndex, :pagesize";
-
-
-    List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql)
-            .setParameter("typeProvider", typeProvider)
-            .setParameter("date", date)
-            .setParameter("pageIndex",pageIndex)
-            .setParameter("pagesize",pagesize)
-            .findList();
-
-    List<Invoice> invoiceList =toInvoices(sqlRows);
-
-
-
-
-
-    List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider().getId(), fecha);
-
-    // Invoice invoices = invoiceList.get(0);
-    // Invoice invoices = Invoice.invoicesByProvider(invoice.getProvider(), fecha);
-
-    Invoice newInvoice = null;
-
-        if( invoiceList.isEmpty()){
-                newInvoice = new Invoice();
-                newInvoice.setProvider(invoice.getProvider());
-                newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-                }else{
-                newInvoice = invoiceList.get(0);
-                }
-
-                for (JsonNode item : itemtypes) {
-
-                Form<InvoiceDetail> formDetail = formFactory.form(InvoiceDetail.class).bind(item);
-        if (formDetail.hasErrors())
-        return controllers.utils.Response.invalidParameter(formDetail.errorsAsJson());
-
-        JsonNode dateStart = item.findValue("start");
-        if(dateStart == null)
-        return Response.requiredParameter("Requiere fecha de inicio de Detalle");
-
-        ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
-
-        InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
-
-        if (option) {
-        // Harvest -- true
-        JsonNode idLot = item.get("lot");
-        if (idLot == null)
-        return Response.requiredParameter("lot");
-
-        Lot lot = Lot.findById(invoiceDetail.getLot().getId());
-        System.out.println(lot.getNameLot());
-
-        System.out.println(invoiceDetail.getLot().getId());
-        invoiceDetail.setLot(lot);
-        invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
-        invoiceDetail.setCostItemType(new BigDecimal(0));
-        } else {
-        // Coffee -- false
-        JsonNode price = item.get("price");
-        if (price == null)
-        return Response.requiredParameter("price");
-
-        JsonNode store = item.get("store");
-        if (store == null)
-        return Response.requiredParameter("store");
-
-        invoiceDetail.setPriceItemTypeByLot(new BigDecimal(0));
-        invoiceDetail.setCostItemType(price.decimalValue());
-
-        }
-
-        // Busco la lista de invoicesDetail asociado a ese Invoice
-        List<InvoiceDetail> invoiceDetails = newInvoice.getInvoiceDetails();
-
-        invoiceDetails.add(invoiceDetail);
-
-        newInvoice.setInvoiceDetails(invoiceDetails);
-        newInvoice.setStartDate(fecha);
-        newInvoice.save();
-
-        invoiceDetail.setInvoice(newInvoice);
-        invoiceDetail.setStartDate(startTime);
-        invoiceDetail.save();
-    */
 }

@@ -345,8 +345,6 @@ create table user (
   longitude                     double,
   address                       varchar(200),
   phone                         varchar(20),
-  phone2                        varchar(20),
-  email2                        varchar(50),
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,

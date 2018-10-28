@@ -20,15 +20,6 @@ public class Contact {
     @Column(length = 20)
     private String phone = null;
 
-    @Constraints.MaxLength(20)
-    @Column(length = 20)
-    private String phone2 = null;
-
-    @Constraints.MaxLength(50)
-    @Constraints.Email
-    @Column(length = 50)
-    private String email2 = null;
-
     public Double getLongitude() {
         return longitude;
     }
@@ -52,23 +43,6 @@ public class Contact {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public String getPhone2() {
-        return phone2;
-    }
-
-    public void setPhone2(String phone2) {
-        this.phone2 = phone2;
-    }
-
-    public String getEmail2() {
-        return email2;
-    }
-
-    public void setEmail2(String email2) {
-        this.email2 = email2;
-    }
-
     public Double getLatitude() {
         return latitude;
     }

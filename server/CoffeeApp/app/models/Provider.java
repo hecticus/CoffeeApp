@@ -40,37 +40,24 @@ public class Provider extends AbstractEntity{
     @Column(nullable = false,length = 60)
     private String addressProvider;
 
-//    @Constraints.Required
     @Constraints.MaxLength(20)
     @Column( length = 20)
     private String numberProvider;
 
     @Constraints.Email
-//    @Constraints.Required
     private String emailProvider;
 
-//    @Constraints.Required
     @Constraints.MaxLength(50)
     @Column( length = 50)
     private String contactNameProvider;
 
     @ManyToOne
-//    @JsonBackReference
-//    @Constraints.Required
     private StatusProvider statusProvider;
 
-//    @OneToOne(cascade = CascadeType.REMOVE)
-//    private Media mediaProfile;
-
-//    @JsonBackReference
-    @OneToOne(cascade = CascadeType.ALL)//, mappedBy = "provider", cascade = CascadeType.REMOVE)
-//    @OneToOne( mappedBy = "provider", cascade = CascadeType.REMOVE)
-//    @JoinColumn( referencedColumnName = "id")
-//    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
     private Multimedia multimediaProfile;
 
     @OneToMany(mappedBy = "provider")
-//    @JsonManagedReference
     @JsonIgnore
     private List<Invoice> invoices;
 

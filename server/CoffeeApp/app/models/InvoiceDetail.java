@@ -1,10 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.Formula;

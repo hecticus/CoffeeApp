@@ -122,14 +122,14 @@ public class Invoices extends Controller {
 
     @CoffeAppsecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
-                                    String sort, Long id_provider, Long id_providertype,  String startDate,
+                                    String sort, Long id_provider, Long providerType,  String startDate,
                                     String endDate, Long status ,boolean deleted,  String nitName){
         try {
 
             ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize,
                                                                         propertiesCollection.getPathProperties(collection),
                                                                         sort, id_provider,
-                                                                        id_providertype, startDate, endDate,
+                                                                        providerType, startDate, endDate,
                                                                         status, deleted, nitName);
 
             return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
@@ -150,9 +150,14 @@ public class Invoices extends Controller {
     }
 
     @CoffeAppsecurity
-    public  Result createDetailReport() {
+    public  Result createDetailReport(Integer pageIndex, Integer pageSize,  String collection,
+                                      String sort, Long id_provider, Long id_providertype,  String startDate,
+                                      String endDate, Long status ,boolean deleted,  String nitName) {
         try {
-            ListPagerCollection listPager = Invoice.createDetailReport();
+            ListPagerCollection listPager = Invoice.createDetailReport(pageIndex, pageSize,
+                                                        propertiesCollection.getPathProperties(collection),
+                                                        sort, id_provider, id_providertype, startDate,
+                                                        endDate, status, deleted, nitName);
 
             return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
@@ -161,16 +166,16 @@ public class Invoices extends Controller {
     }
 
     @CoffeAppsecurity
-    public  Result createReport(Integer pageIndex, Integer pageSize,  String collection,
-                                String sort, Long id_provider, Long id_providertype,  String startDate,
-                                String endDate, Long status ,boolean deleted,  String nitName) {
+    public  Result createReport(  Integer pageIndex, Integer pageSize,  String collection,
+                                  String sort, Long id_provider, Long id_providertype,  String startDate,
+                                  String endDate, Long status ,boolean deleted,  String nitName) {
         try {
-            ListPagerCollection listPager = Invoice.createDetailReport();
-            /*Invoice.createReport(Integer pageIndex, Integer pageSize,  String collection,
-                    String sort, Long id_provider, Long id_providertype,  String startDate,
-                    String endDate, Long status ,boolean deleted,  String nitName);*/
+            ListPagerCollection listPager = Invoice.createReport(pageIndex, pageSize,
+                                                    propertiesCollection.getPathProperties(collection),
+                                                    sort, id_provider, id_providertype, startDate,
+                                                    endDate, status, deleted, nitName);
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
+            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -197,7 +202,7 @@ public class Invoices extends Controller {
             return Response.requiredParameter("itemtypes");
 
         Invoice invoice = Json.fromJson(json, Invoice.class);
-        ZonedDateTime fecha = invoice.getStartDate();
+        ZonedDateTime auxDate = invoice.getStartDate();
 
         if (Provider.findById(invoice.getProvider().getId()) == null ||
                 Provider.findById(invoice.getProvider().getId()).getStatusProvider().getId().intValue() == 42  ){
@@ -205,7 +210,7 @@ public class Invoices extends Controller {
         }
 
         // Get all invoice by provider and date
-        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider().getId(), fecha);
+        List<Invoice> invoiceList = Invoice.invoicesListByProvider(invoice.getProvider().getId(), auxDate);
 
         Invoice newInvoice = null;
 
@@ -213,7 +218,7 @@ public class Invoices extends Controller {
             newInvoice = new Invoice();
             newInvoice.setProvider(invoice.getProvider());
             newInvoice.setStatusInvoice(StatusInvoice.findById(new Long(11)));
-            newInvoice.setStartDate(fecha);
+            newInvoice.setStartDate(auxDate);
         }else{
             newInvoice = invoiceList.get(0);
         }
