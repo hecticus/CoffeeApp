@@ -62,19 +62,23 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
             if (isDialog) {
                 genericItemViewHolder.getContainerButtonsView().setVisibility(View.GONE);
             } else {
-                genericItemViewHolder.getPrintImageButton().setVisibility(View.VISIBLE);
-                genericItemViewHolder.getEditImageButton().setVisibility(View.GONE);
+                /*genericItemViewHolder.getPrintImageButton().setVisibility(View.VISIBLE);
                 genericItemViewHolder.getPrintImageButton().setOnClickListener(new View.OnClickListener() {
                     @DebugLog
                     @Override
                     public void onClick(View view) {
                         mPresenter.onClickPrintButton(list.get(position));
                     }
-                });
+                });*/
+                genericItemViewHolder.getEditImageButton().setVisibility(View.GONE);
+
             }
         }
 
         if (list.get(position).canDelete()) {
+            //genericItemViewHolder.getPrintImageButton().setVisibility(View.INVISIBLE);
+            genericItemViewHolder.getView().setVisibility(View.GONE);
+            genericItemViewHolder.getPrintImageButton().setVisibility(View.GONE);
             genericItemViewHolder.getDeleteImageButton().setVisibility(View.VISIBLE);
             genericItemViewHolder.getDeleteImageButton().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,7 +87,17 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericItemViewHold
                 }
             });
         } else {
-            genericItemViewHolder.getDeleteImageButton().setVisibility(View.INVISIBLE);
+            //genericItemViewHolder.getDeleteImageButton().setVisibility(View.INVISIBLE);
+            genericItemViewHolder.getView().setVisibility(View.GONE);
+            genericItemViewHolder.getDeleteImageButton().setVisibility(View.GONE);
+            genericItemViewHolder.getPrintImageButton().setVisibility(View.VISIBLE);
+            genericItemViewHolder.getPrintImageButton().setOnClickListener(new View.OnClickListener() {
+                @DebugLog
+                @Override
+                public void onClick(View view) {
+                    mPresenter.onClickPrintButton(list.get(position));
+                }
+            });
         }
 
 

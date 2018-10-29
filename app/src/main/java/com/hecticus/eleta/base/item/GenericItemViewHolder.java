@@ -35,6 +35,9 @@ public class GenericItemViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_whole_linearlayout)
     LinearLayout itemWholeLinearLayout;
 
+    @BindView(R.id.view)
+    View view;
+
     public GenericItemViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -86,5 +89,13 @@ public class GenericItemViewHolder extends RecyclerView.ViewHolder {
 
     public void setItemWholeLinearLayout(LinearLayout itemWholeDoctorLinearLayout) {
         this.itemWholeLinearLayout = itemWholeDoctorLinearLayout;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
     }
 }
