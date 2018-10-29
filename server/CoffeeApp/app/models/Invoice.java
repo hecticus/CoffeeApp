@@ -335,7 +335,8 @@ public class Invoice extends AbstractEntity{
             sql += "        AND i.start_date <= '" + closeDate + "'\n";
         }
 
-        sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider;";
+        sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider\n" +
+                "ORDER BY p.name_provider, i.start_date ASC";
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 
