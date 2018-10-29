@@ -134,7 +134,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
                 Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
-
+                Log.d("DEBUG invoice", new Gson().toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog
@@ -144,6 +144,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                             if (response.isSuccessful()) {
                                 getDetails(response.body().getResult().getInvoiceId(), addAnother);
                             } else {
+                                Log.d("DEBUG", response.errorBody().string());
                                 onError(ErrorHandling.errorCodeWebServiceNotSuccess + mPresenter.context.getString(R.string.error_saving_changes));
                             }
                         } catch (Exception e) {

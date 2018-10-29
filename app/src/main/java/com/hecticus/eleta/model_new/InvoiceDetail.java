@@ -21,7 +21,7 @@ public class InvoiceDetail {
 
     private Long id;
     private Boolean deleted;
-    private String start;
+    private String startDate;
     private String updatedAt;
     private String noteInvoiceDetail;
     private Float price;
@@ -47,7 +47,7 @@ public class InvoiceDetail {
         this.costItemType = invoiceDetails.getPriceItem();
         this.nameReceived = invoiceDetails.getReceiverName();
         this.nameDelivered = invoiceDetails.getDispatcherName();
-        this.start = invoiceDetails.getStartDate();
+        this.startDate = invoiceDetails.getStartDate();
         try {
             this.itemType = new ItemType((long) invoiceDetails.getItemType().getId());
         }catch (Exception e){
@@ -112,8 +112,8 @@ public class InvoiceDetail {
         amountInvoiceDetail= itemPost.getAmount();
         nameReceived = invoicePost.getReceiverName();
         nameDelivered = invoicePost.getDispatcherName();
-        this.start = invoicePost.getStartDate();
-        Log.d("DEBUG", "currentDate invoiceDeatails" + start);
+        this.startDate = invoicePost.getStartDate();
+        Log.d("DEBUG", "currentDate invoiceDeatails" + startDate);
         if(!invoicePost.getBuyOption()){
             itemType = new ItemType((long) itemPost.getItemTypeId());
             lot = null;//new Lot((long) invoicePost.getLot());
@@ -142,12 +142,12 @@ public class InvoiceDetail {
         this.deleted = deleted;
     }
 
-    public String getStart() {
-        return start;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStart(String start) {
-        this.start = start;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public String getUpdatedAt() {

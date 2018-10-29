@@ -26,7 +26,7 @@ public class Invoice implements Serializable {
     private Boolean buyOption;
     private StatusInvoice statusInvoice;
     private List<InvoiceDetail> itemtypes;
-    private String start;
+    private String startDate;
     private Provider provider;
 
     public Invoice() {
@@ -40,8 +40,8 @@ public class Invoice implements Serializable {
         //this.id = (long) invoicePost.getInvoiceId();
         this.buyOption = invoicePost.getBuyOption();
         this.provider = new Provider(provider, invoicePost.getProviderId());
-        this.start = invoicePost.getStartDate();
-        Log.d("DEBUG", "currentDate invoice"+start);
+        this.startDate = invoicePost.getStartDate();
+        Log.d("DEBUG", "currentDate invoice"+startDate);
         this.itemtypes = new ArrayList<>();
         for(int i=0; i<invoicePost.getItems().size(); i++ ) {
             itemtypes.add(new InvoiceDetail(invoicePost.getItems().get(i), invoicePost));
@@ -119,12 +119,12 @@ public class Invoice implements Serializable {
         this.itemtypes = itemtypes;
     }
 
-    public String getStart() {
-        return start;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStart(String start) {
-        this.start = start;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public Provider getProvider() {

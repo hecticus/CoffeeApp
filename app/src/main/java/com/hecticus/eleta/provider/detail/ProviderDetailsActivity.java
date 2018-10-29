@@ -41,6 +41,8 @@ import com.hecticus.eleta.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -267,7 +269,12 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
         //maybeModifiedProvider.setProviderType();
 
-        maybeModifiedProvider.setIdentificationDocProvider(dniEditText.getText().trim());
+        if(dniEditText.getText().trim().isEmpty()) {
+            int numero = (int) (Math.random() * 99) + 1;
+            maybeModifiedProvider.setIdentificationDocProvider(numero + Util.parseDateDni(Calendar.getInstance().getTime()));
+        }else{
+            maybeModifiedProvider.setIdentificationDocProvider(dniEditText.getText().trim());
+        }
 
         maybeModifiedProvider.setFullNameProvider(nameEditText.getText().trim());
 
@@ -303,7 +310,6 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
             Log.e("DEBUGERROR", "la url esta null");
         }
 
-        Log.e("DEBUGERROR", "Policia 1");
         dniEditText.setText(provider.getIdentificationDocProvider());
         nameEditText.setText(provider.getFullNameProvider());
         addressEditText.setText(provider.getAddressProvider());
@@ -331,12 +337,17 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
     private boolean validFields() {
 
         if (dniEditText.getText().trim().isEmpty()) {
+            //todo dni no obligatorio
             if (mPresenter.isHarvester()) {
-                showMessage(getString(R.string.dni_empty));
+                /*int numero = (int) (Math.random() * 99) + 1;
+                dniEditText.setText(numero + Util.parseDateDni(Calendar.getInstance().getTime()));
+                Log.d("DEBUG", numero + Util.parseDateDni(Calendar.getInstance().getTime()));
+                //showMessage(getString(R.string.dni_empty));*/
             } else {
                 showMessage(getString(R.string.ruc_empty));
+                return false;
             }
-            return false;
+
         }
 
 
@@ -346,10 +357,10 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         }
 
 
-        if (addressEditText.getText().trim().isEmpty()) {
+        /*if (addressEditText.getText().trim().isEmpty()) {
             showMessage(getString(R.string.address_empty));
             return false;
-        }
+        }*/
 
 
         /*if (phoneEditText.getText().trim().isEmpty()) {
