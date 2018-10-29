@@ -159,6 +159,7 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
     public void closedInvoice() {
         mAdapter.setShowActions(false);
         makePurchaseButtom.setVisibility(View.INVISIBLE);
+        printInvoiceButton.setVisibility(View.VISIBLE);
     }
 
     @DebugLog
@@ -225,6 +226,8 @@ public class HarvestsOfDayListActivity extends BaseActivity implements InvoicesO
 
         if (mPresenter.isCurrentClosedInvoice()) {
             makePurchaseButtom.setVisibility(View.INVISIBLE);
+        } else {
+            printInvoiceButton.setVisibility(View.INVISIBLE);
         }
 
         initString();
