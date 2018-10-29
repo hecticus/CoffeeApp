@@ -238,53 +238,56 @@ public class Invoice extends AbstractEntity{
                                                          String sort, Long id_provider, Long providerType,  String startDate,
                                                          String closeDate, Long status ,boolean delete, String nitName){
 
-        String sql = " SELECT \n" +
-                "    DATE_FORMAT(c.created_at, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
-                "    DATE_FORMAT(c.closed_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Cierre',\n" +
-                "    p.nit_provider as 'Identificación del Proveedor',\n" +
-                "    p.name_provider as 'Nombre del Proveedor',\n" +
-                "    l.name_lot as 'Nombre del Lote',\n" +
-                "    i.amount_invoice_detail as Peso,\n" +
-                "    it.name_item_type as 'Clase de Cafe',\n" +
-                "    i.cost_item_type as 'Precio',\n" +
-                "    i.price_item_type_by_lot as 'Costo',\n" +
-                "    (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) AS Total\n" +
+        String sql = "SELECT \n" +
+                "    p.nit_provider AS 'Identificación del Proveedor',\n" +
+                "    p.name_provider AS 'Nombre del Proveedor',\n" +
+                "    DATE_FORMAT(id.start_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
+                "    -- i.closed_date AS 'Fecha de Cierre',\n" +
+                "    i.id AS 'Numero de Recibo',\n" +
+                "    id.price_item_type_by_lot AS 'Costo de Cafe',\n" +
+                "    id.cost_item_type AS 'Precio del Cafe',\n" +
+                "    id.amount_invoice_detail AS Peso,\n" +
+                "    it.name_item_type AS 'Tipo de Cafe',\n" +
+                "    (id.amount_invoice_detail * id.price_item_type_by_lot + id.amount_invoice_detail * id.cost_item_type) AS 'Total de la Factura'\n" +
                 "FROM\n" +
-                "    CoffeeApp.invoices AS c,\n" +
+                "    CoffeeApp.invoices AS i,\n" +
+                "    CoffeeApp.invoice_details AS id,\n" +
                 "    CoffeeApp.providers AS p,\n" +
+                "    CoffeeApp.provider_type AS pt,\n" +
+                "    CoffeeApp.status AS s,\n" +
                 "    CoffeeApp.lots AS l,\n" +
-                "    CoffeeApp.invoice_details AS i,\n" +
                 "    CoffeeApp.item_types AS it\n" +
                 "WHERE\n" +
-                "    c.provider_id = p.id\n" +
+                "    i.provider_id = p.id\n" +
+                "        AND p.provider_type_id = pt.id\n" +
                 "        AND i.deleted = 0\n" +
-                "        AND i.invoice_id = c.id\n" +
-                "        AND i.lot_id = l.id\n" +
-                "        AND i.item_type_id = it.id\n" +
-                "GROUP BY c.created_at , c.closed_date , p.name_provider , \n" +
-                "p.nit_provider , i.amount_invoice_detail , i.price_item_type_by_lot , i.cost_item_type , \n" +
-                "l.name_lot , i.price_item_type_by_lot , it.name_item_type;";
+                "        AND id.deleted = 0\n" +
+                "        AND id.invoice_id = i.id\n" +
+                "        AND s.id = i.status_invoice_id\n" +
+                "        AND (id.lot_id = l.id OR id.lot_id IS NULL)\n" +
+                "        AND id.item_type_id = it.id\n ";
 
-/*
         if(providerType != 0L)
-            sql += "        AND pt.id = "+ providerType;
+            sql += "        AND pt.id = "+ providerType + "\n";
 
         if(nitName != null)
             sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
 
         if(status != 0L)
-            sql += "        AND s.id = " + status;
+            sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
 
         if(startDate != null && closeDate != null) {
-            sql += "        AND i.start_date BETWEEN "+ startDate +" AND " + closeDate + "\n";
+            sql += "        AND id.start_date BETWEEN '"+ startDate +"' AND '" + closeDate + "'\n";
         } else if(startDate != null) {
-            sql += "        AND i.start_date >=  "+ startDate + "\n";
+            sql += "        AND id.start_date >=  '"+startDate +"'\n";
         } else if(closeDate != null) {
-            sql += "        AND i.start_date <= " + closeDate + "\n";
+            sql += "        AND id.start_date <= '"+ closeDate +"'\n";
         }
-*/
 
-
+        sql +=  "GROUP BY id.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider,\n" +
+                "id.amount_invoice_detail, id.price_item_type_by_lot, id.amount_invoice_detail, id.cost_item_type,\n" +
+                "it.name_item_type, i.id\n" +
+                "ORDER BY p.name_provider, i.id, id.start_date ASC;";
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 
@@ -316,20 +319,20 @@ public class Invoice extends AbstractEntity{
                 "        AND s.id = i.status_invoice_id\n";
 
         if(providerType != 0L)
-                sql += "        AND pt.id = "+ providerType;
+                sql += "        AND pt.id = "+ providerType + "\n";
 
         if(nitName != null)
             sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
 
         if(status != 0L)
-            sql += "        AND s.id = " + status;
+            sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
 
         if(startDate != null && closeDate != null) {
-            sql += "        AND i.start_date BETWEEN "+ startDate +" AND " + closeDate + "\n";
+            sql += "        AND i.start_date BETWEEN '"+ startDate +"' AND '" + closeDate + "'\n";
         } else if(startDate != null) {
-            sql += "        AND i.start_date >=  "+ startDate + "\n";
+            sql += "        AND i.start_date >=  '"+ startDate + "'\n";
         } else if(closeDate != null) {
-            sql += "        AND i.start_date <= " + closeDate + "\n";
+            sql += "        AND i.start_date <= '" + closeDate + "'\n";
         }
 
         sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider;";
