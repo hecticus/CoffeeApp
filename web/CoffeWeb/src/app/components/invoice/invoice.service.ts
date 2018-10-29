@@ -49,7 +49,7 @@ export class InvoiceService {
 	}
 
 	getTotal(params: HttpParams = new HttpParams()): Observable<any> {
-		return this.http.get<any>(InvoiceService.BASE_URL + '/createTotalReport', {params: params});
+		return this.http.get<any>(InvoiceService.BASE_URL + '/createReport', {params: params});
 	}
 
 	getDetail(params: HttpParams = new HttpParams()): Observable<any> {

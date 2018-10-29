@@ -288,9 +288,9 @@ export class InvoiceListComponent implements OnInit {
 		} else if (startDate['formatted'] !== undefined &&
 			startDate['formatted'] !== null ) {
 				console.log(this.filterService.filter['startDate']);
-				console.log(startDate['formatted'] + 'T00:00:00-03');
+				console.log(startDate['formatted'] + 'T00:00:00Z');
 				delete this.filterService.filter['startDate'];
-				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00-03');
+				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00Z');
 		}
 
 		if ( closedDate === undefined || closedDate === null ) {
@@ -298,9 +298,9 @@ export class InvoiceListComponent implements OnInit {
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
 			console.log(this.filterService.filter['closedDate']);
-			console.log(closedDate['formatted'] + 'T00:00:00-03');
+			console.log(closedDate['formatted'] + 'T00:00:00Z');
 			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00-03');
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
@@ -315,7 +315,7 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['nitName'];
 		}
 
-		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00-03');
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00Z');
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -389,7 +389,7 @@ export class InvoiceListComponent implements OnInit {
 	}
 	// change(date: Date) {
 	// 	console.log("id");
-	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00-03');
+	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00Z');
 	// }
 
 	exportAsXLSX(): void {
@@ -409,8 +409,55 @@ export class InvoiceListComponent implements OnInit {
 	}
 
 	exportTotalAsXLSX(): void {
+		let startDate = this.filterService.filter['startDate'];
+		let closedDate = this.filterService.filter['closedDate'];
 
-		this.invoiceService.getTotal().subscribe(
+		if ( startDate === undefined || startDate === null ) {
+			delete this.filterService.filter['startDate'];
+		} else if (startDate['formatted'] !== undefined &&
+			startDate['formatted'] !== null ) {
+				console.log(this.filterService.filter['startDate']);
+				console.log(startDate['formatted'] + 'T00:00:00Z');
+				delete this.filterService.filter['startDate'];
+				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00Z');
+		}
+
+		if ( closedDate === undefined || closedDate === null ) {
+			delete this.filterService.filter['closedDate'];
+		} else if (closedDate['formatted'] !== undefined &&
+				closedDate['formatted'] !== null ) {
+			console.log(this.filterService.filter['closedDate']);
+			console.log(closedDate['formatted'] + 'T00:00:00Z');
+			delete this.filterService.filter['closedDate'];
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
+		}
+
+		if (this.filterService.filter['statusInvoice'] === undefined) {
+			delete this.filterService.filter['statusInvoice'];
+		}
+
+		if (this.filterService.filter['typeProvider'] === undefined) {
+			delete this.filterService.filter['typeProvider'];
+		}
+
+		if (this.filterService.filter['nitName'] === undefined) {
+			delete this.filterService.filter['nitName'];
+		}
+
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00Z');
+		let httpParams = BaseService.jsonToHttpParams({
+			// sort: this.table.sort,
+			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
+			// 			'createdAt, providerType(id, nameProviderType), statusProvider(id, name))',
+			// 'pager.index': page,
+			// 'pager.size': this.table.pager.pageSize,
+			// ...this.filterService.filter
+			// 'providerType': this.selected,
+			// 'statusProvider': this.selectedStatus,
+			...this.filterService.filter
+		});
+
+		this.invoiceService.getTotal(httpParams).subscribe(
 				data => {
 					console.log(data['result']);
 					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
@@ -419,7 +466,56 @@ export class InvoiceListComponent implements OnInit {
 	}
 
 	exportDetailAsXLSX(): void {
-		this.invoiceService.getDetail().subscribe(
+
+		let startDate = this.filterService.filter['startDate'];
+		let closedDate = this.filterService.filter['closedDate'];
+
+		if ( startDate === undefined || startDate === null ) {
+			delete this.filterService.filter['startDate'];
+		} else if (startDate['formatted'] !== undefined &&
+			startDate['formatted'] !== null ) {
+				console.log(this.filterService.filter['startDate']);
+				console.log(startDate['formatted'] + 'T00:00:00Z');
+				delete this.filterService.filter['startDate'];
+				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00Z');
+		}
+
+		if ( closedDate === undefined || closedDate === null ) {
+			delete this.filterService.filter['closedDate'];
+		} else if (closedDate['formatted'] !== undefined &&
+				closedDate['formatted'] !== null ) {
+			console.log(this.filterService.filter['closedDate']);
+			console.log(closedDate['formatted'] + 'T00:00:00Z');
+			delete this.filterService.filter['closedDate'];
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
+		}
+
+		if (this.filterService.filter['statusInvoice'] === undefined) {
+			delete this.filterService.filter['statusInvoice'];
+		}
+
+		if (this.filterService.filter['typeProvider'] === undefined) {
+			delete this.filterService.filter['typeProvider'];
+		}
+
+		if (this.filterService.filter['nitName'] === undefined) {
+			delete this.filterService.filter['nitName'];
+		}
+
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00Z');
+		let httpParams = BaseService.jsonToHttpParams({
+			// sort: this.table.sort,
+			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
+			// 			'createdAt, providerType(id, nameProviderType), statusProvider(id, name))',
+			// 'pager.index': page,
+			// 'pager.size': this.table.pager.pageSize,
+			// ...this.filterService.filter
+			// 'providerType': this.selected,
+			// 'statusProvider': this.selectedStatus,
+			...this.filterService.filter
+		});
+
+		this.invoiceService.getDetail(httpParams).subscribe(
 				data => {
 					console.log(data['result']);
 					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
