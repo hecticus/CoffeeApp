@@ -79,7 +79,7 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @Column(columnDefinition = "datetime", nullable = false)
     private ZonedDateTime startDate;
 
