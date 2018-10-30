@@ -169,13 +169,17 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
         try {
             byte[] pageBytes = getPageBytesFromString(zplTextToPrint);
             printerConnection.write(pageBytes);
+
         } catch (ConnectionException e) {
             e.printStackTrace();
             toast("ConnectionException: " + e.getMessage());
             //setStatus(e.getMessage(), Color.RED);
         } finally {
             disconnect();
+            //todo brayan print
+            finish();
         }
+
     }
 
     @DebugLog

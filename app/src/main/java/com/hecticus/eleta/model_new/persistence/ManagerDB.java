@@ -599,7 +599,7 @@ public class ManagerDB {
 
     private static String parseDateZH(String fecha){
 
-        SimpleDateFormat sd1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat sd1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date dt = null;
         try {
             dt = sd1.parse(fecha);
@@ -615,7 +615,6 @@ public class ManagerDB {
     @DebugLog
     public static List<Invoice> getAllInvoicesByType(int providerType, String date) {
 
-        Log.d("DEBUG shami", date);
 
         return Realm.getDefaultInstance()
                 .where(Invoice.class)

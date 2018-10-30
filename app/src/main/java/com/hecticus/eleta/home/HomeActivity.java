@@ -198,7 +198,11 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
     @DebugLog
     public void syncPartial() {
+        hideProgress();
         Toast.makeText(this, "!Sincronización de manera parcial!", Toast.LENGTH_LONG).show();
+        Intent reloadAllTabsIntent = new Intent();
+        reloadAllTabsIntent.putExtra("reloadThreeTabs", true);
+        onNewIntent(reloadAllTabsIntent);
     }
 
     @DebugLog

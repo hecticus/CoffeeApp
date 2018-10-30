@@ -1,6 +1,7 @@
 package com.hecticus.eleta.model_new;
 
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -110,6 +111,9 @@ public class SyncManager {
 
     @DebugLog
     public void startSync() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         syncProviders();
     }
 
@@ -230,14 +234,22 @@ public class SyncManager {
                             if(logDataBase(new Gson().toJson(currentProviderToSync),"errorCatch Sync en endPoint (/provider) por post... "+ e.toString())!=-1){
                                 Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                currentProviderToSync.deleteFromRealm();
+                                Provider provider = realm
+                                        .where(Provider.class)
+                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
+                                        .findFirst();
+                                provider.deleteFromRealm();
                                 realm.commitTransaction();
                             }
                         } else {
                             if(logDataBase(new Gson().toJson(currentProviderToSync),"errorCatch Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+ e.toString())!=-1){
                                 Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                currentProviderToSync.deleteFromRealm();
+                                Provider provider = realm
+                                        .where(Provider.class)
+                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
+                                        .findFirst();
+                                provider.deleteFromRealm();
                                 realm.commitTransaction();
                             }
                         }
@@ -245,18 +257,34 @@ public class SyncManager {
                 } else {
                     isSyncParcial = true;
                     if(operationName.equals("createProviderSync")){
-                        if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider) por post... "+ response.errorBody()) !=-1){
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.beginTransaction();
-                            currentProviderToSync.deleteFromRealm();
-                            realm.commitTransaction();
+                        try {
+                            if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider) por post... "+ response.errorBody().string()) !=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                Provider provider = realm
+                                        .where(Provider.class)
+                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
+                                        .findFirst();
+                                provider.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     } else {
-                        if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+response.errorBody())!=-1){
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.beginTransaction();
-                            currentProviderToSync.deleteFromRealm();
-                            realm.commitTransaction();
+                        try {
+                            if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+response.errorBody().string())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                Provider provider = realm
+                                        .where(Provider.class)
+                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
+                                        .findFirst();
+                                provider.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                     syncNextPendingProvider();
@@ -292,8 +320,8 @@ public class SyncManager {
             public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
                 isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                if(operationName.equals("createProviderSync")){
-                    if(logDataBase(new Gson().toJson(currentProviderToSync),"errorFatal Sync en endPoint (/provider) por post... " +t.toString())!=-1){
+                /*if(operationName.equals("createProviderSync")){
+                    if(*/logDataBase(new Gson().toJson(currentProviderToSync),"errorFatal Sync en endPoint (/provider) por post... " +t.toString());/*!=-1){
                         Realm realm = Realm.getDefaultInstance();
                         realm.beginTransaction();
                         currentProviderToSync.deleteFromRealm();
@@ -307,7 +335,7 @@ public class SyncManager {
                         currentProviderToSync.deleteFromRealm();
                         realm.commitTransaction();
                     }
-                }
+                }*/
                 syncNextPendingProvider();
             }
         });
@@ -531,7 +559,11 @@ public class SyncManager {
                             if(logDataBase(new Gson().toJson(invoice),"error catch Sync en endPoint (/invoice2) por post... " + e.toString())!=-1){
                                 Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                firstInvoicePost.deleteFromRealm();
+                                Invoice invoiceInRealm = realm
+                                        .where(Invoice.class)
+                                        .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
+                                        .findFirst();
+                                invoiceInRealm.deleteFromRealm();
                                 realm.commitTransaction();
                             }
                             ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
@@ -539,11 +571,19 @@ public class SyncManager {
                         }
                     } else {
                         isSyncParcial = true;
-                        if(logDataBase(new Gson().toJson(invoice),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice2) por post... " + response.errorBody())!=-1){
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.beginTransaction();
-                            firstInvoicePost.deleteFromRealm();
-                            realm.commitTransaction();
+                        try {
+                            if(logDataBase(new Gson().toJson(invoice),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice2) por post... " + response.errorBody().string())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                Invoice invoiceInRealm = realm
+                                        .where(Invoice.class)
+                                        .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
+                                        .findFirst();
+                                invoiceInRealm.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                         saveNextInvoice();
 
@@ -554,12 +594,12 @@ public class SyncManager {
                 public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
                     isSyncParcial = true;
                     ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                    if(logDataBase(new Gson().toJson(invoice),"errorFatal Sync en endPoint (/invoice2) por post... " +t.toString())!=-1){
+                    /*if(*/logDataBase(new Gson().toJson(invoice),"errorFatal Sync en endPoint (/invoice2) por post... " +t.toString());/*!=-1){
                         Realm realm = Realm.getDefaultInstance();
                         realm.beginTransaction();
                         firstInvoicePost.deleteFromRealm();
                         realm.commitTransaction();
-                    }
+                    }*/
                     saveNextInvoice();
 
                 }
@@ -645,17 +685,27 @@ public class SyncManager {
                         if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"err catch Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +e.toString())!=-1){
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            firstProvider.deleteFromRealm();
+                            Provider provider = realm.where(Provider.class)
+                                    .equalTo("idProvider", firstProvider.getIdProvider())
+                                    .findFirst();
+                            provider.deleteFromRealm();
                             realm.commitTransaction();
                         }
                     }
                 } else {
                     isSyncParcial = true;
-                    if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"error ResponseCode()="+ response.code()+"Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +response.errorBody())!=-1){
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        firstProvider.deleteFromRealm();
-                        realm.commitTransaction();
+                    try {
+                        if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"error ResponseCode()="+ response.code()+"Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +response.errorBody().string())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            Provider provider = realm.where(Provider.class)
+                                    .equalTo("idProvider", firstProvider.getIdProvider())
+                                    .findFirst();
+                            provider.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     deleteNextProvider();
                     //Todo indicar que el proveedor no pudo ser eliminado xq posee invoice abierto
@@ -668,12 +718,12 @@ public class SyncManager {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"errorFatal Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +t.toString())!=-1){
+                /*if(*/logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"errorFatal Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +t.toString());/*!=-1){
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
                     firstProvider.deleteFromRealm();
                     realm.commitTransaction();
-                }
+                }*/
                 deleteNextProvider();
             }
         });
@@ -747,18 +797,28 @@ public class SyncManager {
                         if(logDataBase(new Gson().toJson(invoiceDetail),"error catch Sync en endPoint (/invoiceDetail) por post... " +e.toString())!=-1){
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            firstInvoiceDetails.deleteFromRealm();
+                            InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
+                                    .equalTo("localId", firstInvoiceDetails.getLocalId())
+                                    .findFirst();
+                            invoiceDetails.deleteFromRealm();
                             realm.commitTransaction();
                         }
                     }
 
                 } else {
                     isSyncParcial = true;
-                    if(logDataBase(new Gson().toJson(invoiceDetail),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por post... " + response.errorBody())!=-1){
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        firstInvoiceDetails.deleteFromRealm();
-                        realm.commitTransaction();
+                    try {
+                        if(logDataBase(new Gson().toJson(invoiceDetail),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por post... " + response.errorBody().string())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
+                                    .equalTo("localId", firstInvoiceDetails.getLocalId())
+                                    .findFirst();
+                            invoiceDetails.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     addNextInvoiceDetails();
                 }
@@ -770,12 +830,12 @@ public class SyncManager {
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                if(logDataBase(new Gson().toJson(invoiceDetail),"errorFatal Sync en endPoint (/invoiceDetail) por post... " +t.toString())!=-1){
+                /*if(*/logDataBase(new Gson().toJson(invoiceDetail),"errorFatal Sync en endPoint (/invoiceDetail) por post... " +t.toString());/*!=-1){
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
                     firstInvoiceDetails.deleteFromRealm();
                     realm.commitTransaction();
-                }
+                }*/
                 addNextInvoiceDetails();
             }
         });
@@ -852,7 +912,10 @@ public class SyncManager {
                             if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"errorFatal Sync en endPoint (/invoice/"+firstInvoice.getInvoiceId()+") por delete... "+e.toString())!=-1){
                                 Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                firstInvoice.deleteFromRealm();
+                                Invoice invoice = realm.where(Invoice.class)
+                                        .equalTo("id", firstInvoice.getInvoiceId())
+                                        .findFirst();
+                                invoice.deleteFromRealm();
                                 realm.commitTransaction();
                             }
                             ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
@@ -860,12 +923,19 @@ public class SyncManager {
 
                     } else {
                         isSyncParcial = true;
-                        if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"
-                                                                                                +firstInvoice.getInvoiceId()+") por delete... " +response.errorBody())!=-1){
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.beginTransaction();
-                            firstInvoice.deleteFromRealm();
-                            realm.commitTransaction();
+                        try {
+                            if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"
+                                                                                                    +firstInvoice.getInvoiceId()+") por delete... " +response.errorBody().string())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                Invoice invoice = realm.where(Invoice.class)
+                                        .equalTo("id", firstInvoice.getInvoiceId())
+                                        .findFirst();
+                                invoice.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                         deleteNextInvoice();
                     }
@@ -876,12 +946,12 @@ public class SyncManager {
                 public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
                     isSyncParcial = true;
                     ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                    if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"errorFatal Sync en endPoint (/invoice/"+firstInvoice.getInvoiceId()+") por delete... " +t.toString())!=-1){
+                    /*if(*/logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"errorFatal Sync en endPoint (/invoice/"+firstInvoice.getInvoiceId()+") por delete... " +t.toString());/*!=-1){
                         Realm realm = Realm.getDefaultInstance();
                         realm.beginTransaction();
                         firstInvoice.deleteFromRealm();
                         realm.commitTransaction();
-                    }
+                    }*/
                     deleteNextInvoice();
                 }
             });
@@ -969,7 +1039,10 @@ public class SyncManager {
                         if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error catch Sync en endPoint (/invoiceDetail) por put... " + e.toString())!=-1){
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            firstInvoiceDetails.deleteFromRealm();
+                            InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
+                                    .equalTo("id", firstInvoiceDetails.getId())
+                                    .findFirst();
+                            invoiceDetails.deleteFromRealm();
                             realm.commitTransaction();
                         }
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
@@ -977,11 +1050,18 @@ public class SyncManager {
                     }
                 } else {
                     isSyncParcial = true;
-                    if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por put... " + response.errorBody())!=-1){
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        firstInvoiceDetails.deleteFromRealm();
-                        realm.commitTransaction();
+                    try {
+                        if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por put... " + response.errorBody().string())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
+                                    .equalTo("id", firstInvoiceDetails.getId())
+                                    .findFirst();
+                            invoiceDetails.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     editNextInvoiceDetails();
                     /*Log.d("DETAILS", "--->editNextInvoiceDetails Sync onError. Response:" + response);
@@ -997,12 +1077,12 @@ public class SyncManager {
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"errorFatal Sync en endPoint (/invoiceDetail) por put... " + t.toString())!=-1){
+                /*if(*/logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"errorFatal Sync en endPoint (/invoiceDetail) por put... " + t.toString());/*!=-1){
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
                     firstInvoiceDetails.deleteFromRealm();
                     realm.commitTransaction();
-                }
+                }*/
                 editNextInvoiceDetails();
             }
         });
@@ -1080,7 +1160,10 @@ public class SyncManager {
                             if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error catch Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " +e.toString())!=-1){
                                 Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                firstOfDetails.deleteFromRealm();
+                                InvoiceDetails invoiceDetail = realm.where(InvoiceDetails.class)
+                                        .equalTo("id", firstOfDetails.getId())
+                                        .findFirst();
+                                invoiceDetail.deleteFromRealm();
                                 realm.commitTransaction();
                             }
                             ErrorHandling.errorCodeInServerResponseProcessing(e);
@@ -1088,11 +1171,18 @@ public class SyncManager {
                         }
                     } else {
                         isSyncParcial = true;
-                        if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " + response.errorBody())!=-1){
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.beginTransaction();
-                            firstOfDetails.deleteFromRealm();
-                            realm.commitTransaction();
+                        try {
+                            if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " + response.errorBody().string())!=-1){
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                InvoiceDetails invoiceDetail = realm.where(InvoiceDetails.class)
+                                        .equalTo("id", firstOfDetails.getId())
+                                        .findFirst();
+                                invoiceDetail.deleteFromRealm();
+                                realm.commitTransaction();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                         deleteNextOfDay();
                     }
@@ -1104,12 +1194,12 @@ public class SyncManager {
             public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
                 isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"errorFatal Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " +t.toString())!=-1){
+                /*if(*/logDataBase(new Gson().toJson(firstOfDetails.getId()),"errorFatal Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " +t.toString());/*!=-1){
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
                     firstOfDetails.deleteFromRealm();
                     realm.commitTransaction();
-                }
+                }*/
                 deleteNextOfDay();
             }
         });
@@ -1181,18 +1271,30 @@ public class SyncManager {
                         if(logDataBase(new Gson().toJson(invoice1),"error catch Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+") por put... " +e.toString())!=-1){
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
+                            Invoice invoice = realm.where(Invoice.class)
+                                    .equalTo("id", firstInvoiceClosed.getInvoiceId())
+                                    .findFirst();
+                            invoice.deleteFromRealm();
                             firstInvoiceClosed.deleteFromRealm();
                             realm.commitTransaction();
                         }
                     }
                 } else {
                     isSyncParcial = true;
-                    if(logDataBase(new Gson().toJson(invoice1),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+
-                                                                                                                ") por put... " +response.errorBody())!=-1){
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        firstInvoiceClosed.deleteFromRealm();
-                        realm.commitTransaction();
+                    try {
+                        if(logDataBase(new Gson().toJson(invoice1),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+
+                                                                                                                    ") por put... " +response.errorBody().string())!=-1){
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            Invoice invoice = realm.where(Invoice.class)
+                                    .equalTo("id", firstInvoiceClosed.getInvoiceId())
+                                    .findFirst();
+                            invoice.deleteFromRealm();
+                            firstInvoiceClosed.deleteFromRealm();
+                            realm.commitTransaction();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     deleteNextCloseInvoice();
                 }
@@ -1203,12 +1305,12 @@ public class SyncManager {
             public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
                 isSyncParcial = true;
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
-                if(logDataBase(new Gson().toJson(invoice1),"errorFatal Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+") por put... " +t.toString())!=-1){
+                /*if(*/logDataBase(new Gson().toJson(invoice1),"errorFatal Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+") por put... " +t.toString());/*!=-1){
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
                     firstInvoiceClosed.deleteFromRealm();
                     realm.commitTransaction();
-                }
+                }*/
                 deleteNextCloseInvoice();
             }
         });

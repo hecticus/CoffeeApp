@@ -116,6 +116,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     private List<Purity> listAux;
     private PurchaseDetailsContract.Actions mPresenter;
     private EditListAdapter puritiesAdapter;
+    boolean isAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
         ButterKnife.bind(this);
 
-        boolean isAdd = getIntent().getBooleanExtra("isAdd", false);
+        isAdd = getIntent().getBooleanExtra("isAdd", false);
         boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
         boolean invoiceHasOfflineOperation = getIntent().getBooleanExtra("invoiceHasOfflineOperation", false);
 
@@ -384,6 +385,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
     public void showDialogConfirmation() {
         ConfirmDialogFragment dialog = new ConfirmDialogFragment();
         Bundle args = new Bundle();
+        args.putBoolean("isAdd", isAdd);
         args.putInt("providerType", Constants.TYPE_SELLER);
         args.putString("provider", providerEditText.getText());
         args.putString("store", storeSpinner.getSelectedItem().getItemReadableDescription());

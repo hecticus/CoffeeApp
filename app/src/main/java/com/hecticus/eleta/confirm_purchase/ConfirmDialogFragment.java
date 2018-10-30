@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.hecticus.eleta.R;
@@ -76,11 +77,16 @@ public class ConfirmDialogFragment extends DialogFragment {
     @BindView(R.id.custom_doble_text_view_observation)
     CustomDobleTextView observationDobleTextView;
 
+
+    @BindView(R.id.dialog_save_add_another)
+    Button buttonAddAnother;
+
     private AcceptConfirmInterface mCallback;
     private DoubleTextViewListAdapter mAdapter;
 
     private int providerType = Constants.TYPE_HARVESTER;
 
+    private Boolean isAdd = false;
     private String provider = null;
     private String farm = null;
     private String lot = null;
@@ -110,6 +116,7 @@ public class ConfirmDialogFragment extends DialogFragment {
             builder.setMessage("Confirmar compra");
         }
 
+        isAdd = getArguments().getBoolean("isAdd", false);
         provider = getArguments().getString("provider", "");
         farm = getArguments().getString("farm", "");
         lot = getArguments().getString("lot", "");
@@ -151,6 +158,9 @@ public class ConfirmDialogFragment extends DialogFragment {
     }
 
     private void initViews() {
+        if(!isAdd){
+            buttonAddAnother.setVisibility(View.GONE);
+        }
         setUpRecyclerView();
         initString();
     }

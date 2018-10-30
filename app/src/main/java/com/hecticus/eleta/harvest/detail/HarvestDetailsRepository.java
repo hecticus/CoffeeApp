@@ -193,8 +193,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
 
 
-        /*Gson g = new Gson();
-        LogDataBase.d("DEBUG con lot", g.toJson(new InvoiceDetail(invoiceDetail)));*/
+        Gson g = new Gson();
+        Log.d("DEBUG con nueva fecha", g.toJson(new InvoiceDetail(invoiceDetail)));
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog

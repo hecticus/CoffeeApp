@@ -107,6 +107,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     private EditListAdapter mAdapter;
     private List<ItemType> listAux;
 
+    boolean isAdd = false;
+
     @DebugLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
         ButterKnife.bind(this);
 
-        boolean isAdd = getIntent().getBooleanExtra("isAdd", false);
+        isAdd = getIntent().getBooleanExtra("isAdd", false);
         boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
 
         List<InvoiceDetails> details = new ArrayList<>();// = null;
@@ -368,6 +370,7 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void showDialogConfirmation() {
         Bundle args = new Bundle();
+        args.putBoolean("isAdd", isAdd);
         args.putInt("providerType", Constants.TYPE_HARVESTER);
         args.putString("provider", harvesterEditText.getText());
         args.putString("farm", farmSpinner.getSelectedItem().getItemReadableDescription());

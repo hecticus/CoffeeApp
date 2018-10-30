@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -52,4 +53,10 @@ public class PrintPreviewActivity extends AppCompatActivity {
         finish();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }
