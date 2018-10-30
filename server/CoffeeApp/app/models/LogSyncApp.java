@@ -15,13 +15,13 @@ public class LogSyncApp extends  AbstractEntity {
     @Constraints.Required
     @JoinColumn( nullable = false)
     @ManyToOne
-    User user;
+    protected User user;
 
     @DbJson
-    JsonNode content;
+    protected JsonNode content;
 
     @Lob
-    String description;
+    protected String description;
 
     public User getUser() {
         return user;
