@@ -43,12 +43,12 @@ public class InvoiceDetails extends Controller {
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            /*JsonNode dateStart = json.findValue("start");
+            JsonNode dateStart = json.findValue("start");
             if(dateStart == null)
                 return Response.requiredParameter("Requiere fecha de inicio de Detalle");
 
             ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")); */
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
 
@@ -79,10 +79,22 @@ public class InvoiceDetails extends Controller {
             if(json== null)
                 return Response.requiredJson();
 
+            System.out.println(json);
+
             Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
+
             if (form.hasErrors()){
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
             }
+
+            JsonNode dateStart = json.findValue("start");
+            if(dateStart == null)
+                return Response.requiredParameter("Requiere fecha de inicio de Detalle");
+
+            ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+
+
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
             if (invoiceDetail.getLot() != null ){
@@ -124,6 +136,7 @@ public class InvoiceDetails extends Controller {
             }
 
             invoiceDetail.setId(id);
+            invoiceDetail.setStartDate(startTime);
             invoiceDetail.update();
 
             return  Response.createdEntity(Json.toJson(invoiceDetail));

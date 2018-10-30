@@ -77,7 +77,7 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(precision = 12, scale = 2)
     private BigDecimal totalInvoiceDetail;
 
-    @Constraints.Required
+
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
     @Column(columnDefinition = "datetime", nullable = false)
