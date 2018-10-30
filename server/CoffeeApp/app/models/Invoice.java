@@ -165,12 +165,17 @@ public class Invoice extends AbstractEntity{
         if(providerType != 0L)
             expressionList.eq("provider.providerType.id", providerType);
 
-        if(startDate != null && closeDate != null) {
-            expressionList.between("startDate", startDate, closeDate);
+        if(startDate != null && closeDate != null) {;
+            expressionList
+                    .and()
+                    .ge("startDate", startDate)
+                        .or()
+                            .isNull("closedDate")
+                            .le("closedDate", closeDate);
         } else if(startDate != null) {
             expressionList.ge("startDate", startDate);
         } else if(closeDate != null) {
-            expressionList.le("closeDate", closeDate);
+            expressionList.le("closedDate", closeDate);
         }
 
         if(nitName != null){
@@ -275,13 +280,13 @@ public class Invoice extends AbstractEntity{
 
         if(status != 0L)
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
-
         if(startDate != null && closeDate != null) {
-            sql += "        AND id.start_date BETWEEN '"+ startDate +"' AND '" + closeDate + "'\n";
+            sql += "        AND id.start_date >=  '"+startDate +"'\n" +
+                   "        AND ( id.closed_date <= '"+ closeDate +"' OR id.closed_date is null) \n";
         } else if(startDate != null) {
             sql += "        AND id.start_date >=  '"+startDate +"'\n";
         } else if(closeDate != null) {
-            sql += "        AND id.start_date <= '"+ closeDate +"'\n";
+            sql += "        AND id.closed_date <= '"+ closeDate +"' OR id.closed_date is null) \n";
         }
 
         sql +=  "GROUP BY id.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider,\n" +
@@ -328,11 +333,12 @@ public class Invoice extends AbstractEntity{
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
 
         if(startDate != null && closeDate != null) {
-            sql += "        AND i.start_date BETWEEN '"+ startDate +"' AND '" + closeDate + "'\n";
+            sql += "        AND i.start_date >=  '"+startDate +"'\n"+
+                   "        AND ( i.closed_date <= '"+ closeDate +"' OR i.closed_date is null) \n";
         } else if(startDate != null) {
             sql += "        AND i.start_date >=  '"+ startDate + "'\n";
         } else if(closeDate != null) {
-            sql += "        AND i.start_date <= '" + closeDate + "'\n";
+            sql += "        AND ( i.closed_date <= '" + closeDate + "' OR i.closed_date is null) \n";
         }
 
         sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider\n" +
