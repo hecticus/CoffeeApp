@@ -35,7 +35,6 @@ public class Provider extends AbstractEntity{
     @Column(nullable = false, length = 60)
     private String nameProvider;
 
-    @Constraints.Required
     @Constraints.MaxLength(60)
     @Column(nullable = false,length = 60)
     private String addressProvider;
