@@ -36,7 +36,7 @@ public class LogSyncApps extends Controller {
             if (form.hasErrors())
                 return controllers.utils.Response.invalidParameter(form.errorsAsJson());
 
-            LogSyncApp logSyncApp = form.get();
+            LogSyncApp logSyncApp = Json.fromJson(json, LogSyncApp.class);
 
             logSyncApp.save();
             return  Response.createdEntity(Json.toJson(logSyncApp));
