@@ -275,6 +275,8 @@ public class Response {
             if (eRoot instanceof MySQLIntegrityConstraintViolationException)
                 return constraintViolation((MySQLIntegrityConstraintViolationException) eRoot);
         }
-        return Response.internalServerErrorLF();
+        //return Response.internalServerErrorLF();
+        return Response.createdEntity(Json.toJson(e));
+
     }
 }
