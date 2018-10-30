@@ -1,8 +1,8 @@
 package security.models;
 
 import com.avaje.ebean.Ebean;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
+import controllers.parsers.jsonParser.CustomDateTimeDeserializer;
+import controllers.parsers.jsonParser.CustomDateTimeSerializer;
 import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
