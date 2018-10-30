@@ -24,6 +24,7 @@ import security.authorization.CoffeAppsecurity;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -226,6 +227,9 @@ public class Invoices extends Controller {
         for (JsonNode item : itemtypes) {
 
             InvoiceDetail invoiceDetail = Json.fromJson(item, InvoiceDetail.class);
+            ZonedDateTime startTime =  ZonedDateTime.parse (item.get("start").asText(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            invoiceDetail.setStartDate(startTime);
 
             if (option) {
                 // Harvest -- true
