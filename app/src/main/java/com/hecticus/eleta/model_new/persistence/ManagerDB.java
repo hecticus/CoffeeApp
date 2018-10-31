@@ -390,6 +390,24 @@ public class ManagerDB {
     }
 
     @DebugLog
+    public static boolean saveDetailOfInvoice(final InvoiceDetails invoiceDetails) {
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.insertOrUpdate(invoiceDetails);
+                }
+            });
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+        realm.close();
+        return true;
+    }
+
+    @DebugLog
     public static List<Farm> getAllFarms() {
         return Realm.getDefaultInstance().where(Farm.class).findAllSorted("name");
     }

@@ -5,6 +5,7 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -772,12 +773,17 @@ public class SyncManager {
                         Realm realm = Realm.getDefaultInstance();
 
                         try {
+                            JSONObject json = new JSONObject(response.body().string());
+                            Log.d("DEBUG add details", "json " + json);
+                            int id = (int) json.getJSONObject("result").getLong("id");
+
                             InvoiceDetails invoice = realm.where(InvoiceDetails.class)
                                     .equalTo("localId", firstInvoiceDetails.getLocalId())
                                     .findFirst();
                             if (invoice != null) {
                                 realm.beginTransaction();
                                 try {
+                                    invoice.setId(id);
                                     invoice.setAddOffline(false);
                                     realm.insertOrUpdate(invoice);
                                 } catch (Exception e) {

@@ -73,7 +73,8 @@ public class InvoiceDetail {
         this.purities = new ArrayList<>();
         try {
             for (int i = 0; i < invoiceDetails.getDetailPurities().size(); i++) {
-                purities.add(new PurityPost(invoiceDetails.getDetailPurities().get(i).getId(),
+
+                purities.add(new PurityPost(invoiceDetails.getDetailPurities().get(i).getPurityId(),
                         invoiceDetails.getDetailPurities().get(i).getRateValue()));
             }
         }catch (Exception e){

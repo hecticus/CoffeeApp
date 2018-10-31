@@ -391,6 +391,9 @@ public class PurchaseDetailsPresenter implements PurchaseDetailsContract.Actions
                                 if(!purities.get(i).getWeightString().equals("")) {
                                     listPurity.add(new InvoiceDetailPurity(purities.get(i).getId(),
                                             purities.get(i).getWeightString(), purities.get(i).getPurityPostLocalId()));
+                                    Log.d("DEbug Brayan", new Gson().toJson(new InvoiceDetailPurity(purities.get(i).getId(),
+                                            purities.get(i).getWeightString(), purities.get(i).getPurityPostLocalId())));
+                                    Log.d("DEbug Brayan","purities"+ new Gson().toJson(purities.get(i)));
                                 }
                             }catch (Exception e){
                                 Log.e("DARIO", "exploto catch"+ e.toString());

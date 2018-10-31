@@ -110,7 +110,6 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                         if (response.isSuccessful() && response.body() != null) {
 
                             ManagerDB.saveNewInvoicesByType(Constants.TYPE_HARVESTER, response.body().getResult());
-
                             List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_HARVESTER, Util.getCurrentDateLocal());
 
                             if (invoiceList != null) {

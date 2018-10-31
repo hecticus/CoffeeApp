@@ -97,8 +97,8 @@ public class Util {
                 Integer.parseInt(startDate.substring(8,10)),
                 Integer.parseInt(startDate.substring(11,13)),
                 Integer.parseInt(startDate.substring(14,16)),
-                Integer.parseInt(startDate.substring(17,19)),
-                DateTimeZone.forID("UTC"));
+                Integer.parseInt(startDate.substring(17,19)));//,
+                /*DateTimeZone.forID("UTC"))*/
 
         SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Log.d("TIMEZONEjjjjyyy","Hora server:"+ sdfMadrid.format(fecha.toDate()));

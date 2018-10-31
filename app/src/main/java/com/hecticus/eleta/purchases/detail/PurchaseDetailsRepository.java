@@ -176,8 +176,8 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
 
     private void endPoint(InvoiceDetails invoiceDetail){
         Call<CreateInvoiceResponse> call;
-        /*Gson g = new Gson();
-        LogDataBase.d("DEBUG invoiceDetails", g.toJson(new InvoiceDetail(invoiceDetail)));*/
+        Gson g = new Gson();
+        Log.d("DEBUG invoiceDetails", g.toJson(new InvoiceDetail(invoiceDetail)));
         call = invoiceApi.updateInvoiceDetailNewEndpoint(invoiceDetail.getId(), new InvoiceDetail(invoiceDetail));
         call.enqueue(new Callback<CreateInvoiceResponse>() {
             @DebugLog
