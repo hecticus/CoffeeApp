@@ -46,7 +46,7 @@ public class Invoice extends AbstractEntity{
     private ZonedDateTime startDate;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
 
@@ -111,6 +111,7 @@ public class Invoice extends AbstractEntity{
 
     public static Invoice findById(Long id){
         return finder.byId(id);
+//        return finder.query().where().eq("id", id).findUnique();
     }
 
     public static List<Invoice> getOpenseByProviderId(Long id_provider, String dateStart){

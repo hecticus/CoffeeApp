@@ -99,7 +99,7 @@ create table invoice_details (
   name_delivered                varchar(100) not null,
   freight                       tinyint(1) default 0 not null,
   note                          text,
-  start_date                    datetime,
+  start_date                    datetime not null,
   closed_date                   datetime,
   deleted                       tinyint(1) default 0 not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,

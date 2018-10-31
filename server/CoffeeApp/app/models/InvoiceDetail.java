@@ -77,14 +77,14 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(precision = 12, scale = 2)
     private BigDecimal totalInvoiceDetail;
 
-
+    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @Column(columnDefinition = "datetime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
+    @Column(columnDefinition = "datetime", nullable = false)
     private ZonedDateTime startDate;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
 
@@ -232,7 +232,8 @@ public class  InvoiceDetail  extends AbstractEntity{
    
     //Metodos Creados
     public static InvoiceDetail findById(Long id){
-        return finder.byId(id);
+//        return finder.byId(id);
+        return finder.query().where().eq("id", id).findUnique();
     }
 
     public static List<InvoiceDetail> findByProviderId(Long id){
