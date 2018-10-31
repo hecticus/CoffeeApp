@@ -61,11 +61,13 @@ public class Invoices extends Controller {
             if(json== null)
                 return badRequest("Expecting Json data");
 
-            Form<Invoice> form = formFactory.form(Invoice.class).bind(json);
-            if (form.hasErrors())
-                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
+            Invoice invoice = Json.fromJson(json, Invoice.class);
 
-            Invoice invoice = form.get();
+            if (Provider.findById(invoice.getProvider().getId()) == null ||
+                    Provider.findById(invoice.getProvider().getId()).getStatusProvider().getId().intValue() == 42  ){
+                return Response.requiredParameter("Proveedor Inactivo");
+            }
+
             invoice.setId(id);
             invoice.update();
             return Response.updatedEntity(Json.toJson(invoice));
