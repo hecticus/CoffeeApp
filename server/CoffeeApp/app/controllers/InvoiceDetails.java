@@ -106,7 +106,6 @@ public class InvoiceDetails extends Controller {
             }
 
             invoiceDetail.setId(id);
-            invoiceDetail.setStartDate(startTime);
             invoiceDetail.update();
 
             return  Response.createdEntity(Json.toJson(invoiceDetail));
@@ -141,7 +140,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-        @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
@@ -167,8 +166,8 @@ public class InvoiceDetails extends Controller {
             }
 
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, propertiesCollection.getPathProperties(collection), sort,
-                                                                invoice, itemType, lot,store, nameReceived, nameDelivered,
-                                                                startTime, status, deleted);
+                    invoice, itemType, lot,store, nameReceived, nameDelivered,
+                    startTime, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
