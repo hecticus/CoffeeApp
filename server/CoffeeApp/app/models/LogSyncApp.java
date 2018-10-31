@@ -18,7 +18,7 @@ public class LogSyncApp extends  AbstractEntity {
     User user;
 
     @DbJson
-    public String content;
+    JsonNode content;
 
     @Lob
     String description;
@@ -31,11 +31,11 @@ public class LogSyncApp extends  AbstractEntity {
         this.user = user;
     }
 
-    public String getContent() {
+    public JsonNode getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(JsonNode content) {
         this.content = content;
     }
 
