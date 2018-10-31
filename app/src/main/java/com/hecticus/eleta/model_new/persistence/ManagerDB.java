@@ -1416,7 +1416,7 @@ public class ManagerDB {
                     //todo lo mismo q new invoice
                     if (type == Constants.TYPE_SELLER) {
                         for (InvoiceDetailPurity invoiceDetailPurity : invoiceDetails.getDetailPurities()) {
-                            //LogDataBase.d("DEBUG", "--->Saving InvoiceDetailPurity (saveNewInvoice): " +  invoiceDetailPurity);
+                            Log.d("DEBUG", "brayan new InvoiceDetailsPurity " +  invoiceDetailPurity);
                             //InvoiceDetails invoiceDetailsLocal = realm.where(InvoiceDetails.class).equalTo("localId", invoiceDetails.getLocalId()).findFirst();
                             if (invoiceDetails.getId()==-1) {
                                 try {
@@ -1458,19 +1458,21 @@ public class ManagerDB {
                                     realm.insertOrUpdate(invoiceDetailPurityNew);
                                 }
                             } else {
-                                /*try {
+                                try {
                                     invoiceDetailPurity.setRateValue(invoiceDetailPurity.getRateValue());
+                                    Log.d("DEBUG", "brayan new" +  invoiceDetailPurity.getRateValue());
                                     realm.insertOrUpdate(invoiceDetailPurity);
                                 } catch (Exception e) {
-                                    InvoiceDetailPurity invoiceDetailPurityNew = new InvoiceDetailPurity();
+                                    Log.d("DEBUG", "brayan new" +  e.toString());
+                                    /*InvoiceDetailPurity invoiceDetailPurityNew = new InvoiceDetailPurity();
                                     invoiceDetailPurityNew.setDetailId(invoiceDetails.getWholeId());
                                     invoiceDetailPurityNew.setRateValue(invoiceDetailPurity.getRateValue());
                                     invoiceDetailPurityNew.setLocalId(invoiceDetailPurityNew.getId() + "-" + invoiceDetailPurityNew.getDetailId());
                                     invoiceDetailPurityNew.setPurityId(invoiceDetailPurity.getPurityId());
                                     //invoiceDetailPurityNew.setPurityPostLocalId(nextPurityPostId);
                                     invoiceDetailPurityNew.setLocalId(invoiceDetails.getWholeId() + "-" + invoiceDetailPurityNew.getPurityId());
-                                    realm.insertOrUpdate(invoiceDetailPurityNew);
-                                }*/
+                                    realm.insertOrUpdate(invoiceDetailPurityNew);*/
+                                }
                             }
                         }
                     }
