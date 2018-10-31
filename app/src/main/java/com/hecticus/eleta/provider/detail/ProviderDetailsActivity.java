@@ -32,6 +32,7 @@ import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.StatusProvider;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.providers.ProviderType;
+import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.FileUtils;
@@ -270,8 +271,8 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
         //maybeModifiedProvider.setProviderType();
 
         if(dniEditText.getText().trim().isEmpty()) {
-            int numero = (int) (Math.random() * 99) + 1;
-            maybeModifiedProvider.setIdentificationDocProvider(numero + Util.parseDateDni(Calendar.getInstance().getTime()));
+            //int numero = (int) (Math.random() * 99) + 1;
+            maybeModifiedProvider.setIdentificationDocProvider(SessionManager.getUserId(ProviderDetailsActivity.this)+ Util.parseDateDni(Calendar.getInstance().getTime()) /*+numero*/);
         }else{
             maybeModifiedProvider.setIdentificationDocProvider(dniEditText.getText().trim());
         }
