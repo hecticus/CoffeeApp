@@ -242,7 +242,7 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
                                               Long invoice, Long itemType, Long lot, Long store, String nameReceived,
-                                              String nameDelivered, ZonedDateTime startDate, Long status, boolean delete){
+                                              String nameDelivered, String startDate, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -268,7 +268,7 @@ public class  InvoiceDetail  extends AbstractEntity{
             expressionList.startsWith("nameDelivered", nameDelivered);
 
         if(startDate != null)
-            expressionList.ge("createdAt", startDate );
+            expressionList.ge("startDate", startDate );
 
         if(delete)
             expressionList.setIncludeSoftDeletes();

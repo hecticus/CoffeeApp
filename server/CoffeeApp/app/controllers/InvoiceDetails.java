@@ -158,16 +158,9 @@ public class InvoiceDetails extends Controller {
                           String nameDelivered, String startDate, Long status, boolean deleted){
         try {
 
-            ZonedDateTime startTime = null;
-
-            if (startDate != null){
-                startTime =  ZonedDateTime.parse (startDate,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
-            }
-
             ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, propertiesCollection.getPathProperties(collection), sort,
                     invoice, itemType, lot,store, nameReceived, nameDelivered,
-                    startTime, status, deleted);
+                    startDate, status, deleted);
 
             return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
