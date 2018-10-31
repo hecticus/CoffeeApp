@@ -1,13 +1,9 @@
 package security.models;
 
 import com.avaje.ebean.Ebean;
-import controllers.parsers.jsonParser.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.CustomDateTimeSerializer;
 import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -39,8 +35,6 @@ public class SecurityPin extends AbstractEntity {
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime expiration;
 

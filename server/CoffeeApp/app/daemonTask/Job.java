@@ -1,10 +1,6 @@
 package daemonTask;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.CustomDateTimeSerializer;
 import io.ebean.Finder;
 import models.status.StatusJob;
 import multimedia.models.BaseModel;
@@ -23,20 +19,15 @@ import java.time.ZonedDateTime;
 @Table(name="job")
 public class Job extends BaseModel {
 
-//    Sun Jan 01 2017 00:00:00 GMT-0400
-
     private String description;
 
     @ManyToOne
-//    @JsonBackReference
     private StatusJob statusJob;
 
     private Time closeTime;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
 
