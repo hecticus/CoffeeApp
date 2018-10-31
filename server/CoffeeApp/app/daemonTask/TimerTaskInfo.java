@@ -13,9 +13,6 @@ public class TimerTaskInfo {
     private int periodTime = 86400000;
     private int delayTime = 50000;
 
-
-
-
     public TimerTaskInfo(ZonedDateTime timeUpdate, Timer originTimer) {
         this.status = true;
         this.timeUpdate = timeUpdate;
