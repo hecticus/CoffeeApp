@@ -150,8 +150,14 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     protected void onResume() {
         super.onResume();
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+        if (page != null && page instanceof HarvestsListFragment) {
+            ((HarvestsListFragment) page).refreshList();
+        }
         if (page != null && page instanceof ProvidersListFragment) {
             ((ProvidersListFragment) page).refreshList();
+        }
+        if (page != null && page instanceof PurchasesListFragment) {
+            ((PurchasesListFragment) page).refreshList();
         }
     }
 

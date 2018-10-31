@@ -272,7 +272,7 @@ public class ProviderDetailsActivity extends BaseActivity implements ProviderDet
 
         if(dniEditText.getText().trim().isEmpty()) {
             //int numero = (int) (Math.random() * 99) + 1;
-            maybeModifiedProvider.setIdentificationDocProvider(SessionManager.getUserId(ProviderDetailsActivity.this)+ Util.parseDateDni(Calendar.getInstance().getTime()) /*+numero*/);
+            maybeModifiedProvider.setIdentificationDocProvider(SessionManager.getUserId(ProviderDetailsActivity.this)+"-"+ Util.parseDateDni(Calendar.getInstance().getTime()) /*+numero*/);
         }else{
             maybeModifiedProvider.setIdentificationDocProvider(dniEditText.getText().trim());
         }
