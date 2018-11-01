@@ -12,32 +12,6 @@ import { BaseService } from '../../core/base.service';
 	selector: 'app-invoice-detail-read',
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
-		<!--<h2 class="title">Reportes</h2>
-
-		<div class="filter row">
-			<div class="field">
-				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-			</div>
-			<div class="container-button-filter">
-				<button class="btn-icon" title="Search" type="button" (click)="manejo($event)">
-					<i class="material-icons">search</i>
-				</button>
-			</div>
-		</div>
-
-		<div class="tool-bar both-side">
-			<div class="right row">
-				<button class="btn-icon" type="button" (click)="create()">
-					<i class="material-icons">add</i>
-				</button>
-				<button class="btn-icon" type="button">
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
-					<i class="material-icons">delete</i>
-				</button>
-			</div>
-		</div>
-		-->
-
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
 			<table  mat-table [dataSource]="invoices" class="table mat-elevation-z8">
@@ -69,6 +43,13 @@ import { BaseService } from '../../core/base.service';
 				<ng-container matColumnDef="lot.nameLot">
 					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Lote</th>
 					<td mat-cell *matCellDef="let invoiceDetail"> {{invoiceDetail.lot?.nameLot || '-'}} </td>
+					<td mat-footer-cell *matFooterCellDef></td>
+				</ng-container>
+
+				<!-- Position FechaInvoiceDetail-->
+				<ng-container matColumnDef="startDate">
+					<th class="table-header" mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Apertura</th>
+					<td mat-cell *matCellDef="let invoiceDetail"> {{ invoiceDetail.startDate || '-'}}</td>
 					<td mat-footer-cell *matFooterCellDef><strong>Total </strong></td>
 				</ng-container>
 
@@ -146,7 +127,7 @@ export class InvoiceDetailListComponent implements OnInit {
 	totall: number;
 	// Order Columns Display
 	columnsToDisplay = ['itemType.nameItemType',
-	'lot.nameLot', 'store.nameStore', 'priceItemTypeByLot',
+	'lot.nameLot', 'store.nameStore', 'startDate', 'priceItemTypeByLot',
 	'costItemType', 'amountInvoiceDetail', 'nameReceived',
 	'nameDelivered', 'totalInvoiceDetail' ];
 

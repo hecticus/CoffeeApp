@@ -46,7 +46,7 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Fecha de Creación</span>
-						<span class="output">{{ invoice.createdAt || '-'}}</span>
+						<span class="output">{{ invoice.startDate || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
