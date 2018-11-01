@@ -41,7 +41,11 @@ public interface ProviderRetrofitInterface {
 
     //listo
     @GET("provider")
-    Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("") String name);
+    Call<ProvidersListResponse> searchProviders(@Query("providerType") int providerType, @Query("nameProvider") String name);
+
+    //listo
+    @GET("provider")
+    Call<ProvidersListResponse> getProviderNit(@Query("nitProvider") String name);
 
     //listo
     @GET("provider")

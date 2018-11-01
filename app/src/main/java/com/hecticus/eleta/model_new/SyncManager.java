@@ -1,14 +1,19 @@
 package com.hecticus.eleta.model_new;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.hecticus.eleta.R;
 import com.hecticus.eleta.home.HomeActivity;
 import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
@@ -33,6 +38,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -237,7 +243,7 @@ public class SyncManager {
                                 realm.beginTransaction();
                                 Provider provider = realm
                                         .where(Provider.class)
-                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
+                                        .equalTo("unixtime", currentProviderToSync.getUnixtime())
                                         .findFirst();
                                 provider.deleteFromRealm();
                                 realm.commitTransaction();
@@ -248,7 +254,7 @@ public class SyncManager {
                                 realm.beginTransaction();
                                 Provider provider = realm
                                         .where(Provider.class)
-                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
+                                        .equalTo("unixtime", currentProviderToSync.getUnixtime())
                                         .findFirst();
                                 provider.deleteFromRealm();
                                 realm.commitTransaction();
@@ -256,39 +262,43 @@ public class SyncManager {
                         }
                     }
                 } else {
-                    isSyncParcial = true;
-                    if(operationName.equals("createProviderSync")){
-                        try {
-                            if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider) por post... "+ response.errorBody().string()) !=-1){
-                                Realm realm = Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                Provider provider = realm
-                                        .where(Provider.class)
-                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
-                                        .findFirst();
-                                provider.deleteFromRealm();
-                                realm.commitTransaction();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    if(response.code() == 409){
+                        getProvider(currentProviderToSync);
                     } else {
-                        try {
-                            if(logDataBase(new Gson().toJson(currentProviderToSync),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+response.errorBody().string())!=-1){
-                                Realm realm = Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                Provider provider = realm
-                                        .where(Provider.class)
-                                        .equalTo("idProvider", currentProviderToSync.getIdProvider())
-                                        .findFirst();
-                                provider.deleteFromRealm();
-                                realm.commitTransaction();
+                        isSyncParcial = true;
+                        if (operationName.equals("createProviderSync")) {
+                            try {
+                                if (logDataBase(new Gson().toJson(currentProviderToSync), "error ResponseCode()=" + response.code() + " Sync en endPoint (/provider) por post... " + response.errorBody().string()) != -1) {
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    Provider provider = realm
+                                            .where(Provider.class)
+                                            .equalTo("unixtime", currentProviderToSync.getUnixtime())
+                                            .findFirst();
+                                    provider.deleteFromRealm();
+                                    realm.commitTransaction();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } else {
+                            try {
+                                if (logDataBase(new Gson().toJson(currentProviderToSync), "error ResponseCode()=" + response.code() + " Sync en endPoint (/provider/" + currentProviderToSync.getIdProvider() + ") por put... " + response.errorBody().string()) != -1) {
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    Provider provider = realm
+                                            .where(Provider.class)
+                                            .equalTo("unixtime", currentProviderToSync.getUnixtime())
+                                            .findFirst();
+                                    provider.deleteFromRealm();
+                                    realm.commitTransaction();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        syncNextPendingProvider();
                     }
-                    syncNextPendingProvider();
                     /*//todo como manejar errores aca si no es success
                     LogDataBase.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
                     HomeActivity.INSTANCE.syncFailed("deleteOfDaySync errorResponse: " + response);*/
@@ -1400,9 +1410,146 @@ public class SyncManager {
 
     }
 
+    @DebugLog
+    private void getProvider(final Provider currentProvider) {
+
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        MediaType jsonType = MediaType.parse("application/json; charset=utf-8");
+
+        //RequestBody body = RequestBody.create(jsonType,new Gson().toJson(new LogDataBase(user, json, description)));
+        Request request = new Request.Builder()
+                .url(Constants.BASE_URL+"provider?nitProvider="+currentProvider.getIdentificationDocProvider())
+                //.post(body)
+                .build();
+
+        okhttp3.Response response = null;
+        int code = -1;
+        try {
+            //--------------------------------------------------------------------------------------
+            response = client.newCall(request).execute();
+            //--------------------------------------------------------------------------------------
+
+            if (response != null) {
+                if(response.isSuccessful()){
+                    JSONObject json = new JSONObject(response.body().string());
+                    Type founderListType = new TypeToken<ArrayList<Provider>>() {}.getType();
+                    List<Provider> providers = new Gson().fromJson(json.getJSONArray("result").toString(), founderListType);
+                    final Provider providerServer = providers.get(0);
+
+                    String typeProvider;
+                    String doc;
+                    if(currentProvider.getProviderType().getIdProviderType() == 1 || currentProvider.getIdProviderType()==1){
+                        typeProvider = "proveedor ";
+                        doc= "RUC";
+                    } else {
+                        typeProvider = "cosechador ";
+                        doc= "DNI";
+                    }
+                    String msj = "Se ha intentando sincronizar al " + typeProvider + currentProvider.getFullNameProvider() + " con el "+doc+": "+ currentProvider.getIdentificationDocProvider()
+                            + ", dicho "+doc+" ya existe en el servidor con el nombre: "+ providerServer.getFullNameProvider() +"\n\n"
+                            + "¿Desea reemplazar los datos del servidor?";
 
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.INSTANCE);
+                    builder.setCancelable(false);
+                    builder.setTitle("Importante");
+                    builder.setMessage(msj);
+                    builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            currentProvider.setIdProvider(providerServer.getIdProvider());
+                            updateProviderRequest(currentProvider);
+                            syncNextPendingProvider();
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //syncNextPendingProvider();
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            Provider provider = realm
+                                    .where(Provider.class)
+                                    .equalTo("unixtime", currentProvider.getUnixtime())
+                                    .findFirst();
+                            provider.deleteFromRealm();
+                            realm.commitTransaction();
+                            syncNextPendingProvider();
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.show();
+                }
+                response.body().close(); //ToDo check this line
+            }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return ;
+
+    }
+
+    @DebugLog
+    public void updateProviderRequest(final Provider providerParam) {
+
+            Call<ProviderCreationResponse> call = providersApi.updateProviderData(providerParam.getIdProvider(),providerParam);
+
+            call.enqueue(new Callback<ProviderCreationResponse>() {
+                @DebugLog
+                @Override
+                public void onResponse(@NonNull Call<ProviderCreationResponse> call,
+                                       @NonNull Response<ProviderCreationResponse> response) {
+
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            Provider provider = realm
+                                    .where(Provider.class)
+                                    .equalTo("unixtime", providerParam.getUnixtime())
+                                    .findFirst();
+                            provider.deleteFromRealm();
+                            realm.commitTransaction();
+
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    providerParam.setAddOffline(false);
+                                    providerParam.setEditOffline(false);
+                                    realm.insertOrUpdate(providerParam);
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            ErrorHandling.errorCodeInServerResponseProcessing(e);
+                            logDataBase(new Gson().toJson(providerParam),"error catch Sync en endPoint (/provider/"+providerParam.getIdProvider()+") por put... " +e.toString());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            logDataBase(new Gson().toJson(providerParam),"error ResponseCode()="+ response.code()+" Sync en endPoint (/provider/"+providerParam.getIdProvider()+
+                                    ") por put... " +response.errorBody().string());
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+
+                @DebugLog
+                @Override
+                public void onFailure(@NonNull Call<ProviderCreationResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                    ErrorHandling.syncErrorCodeWebServiceFailed(t);
+                    logDataBase(new Gson().toJson(providerParam),"errorFatal Sync en endPoint (/provider/"+providerParam.getIdProvider()+") por put... " +t.toString());
+                }
+            });
+    }
 
 }
 

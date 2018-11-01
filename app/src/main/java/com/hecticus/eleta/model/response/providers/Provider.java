@@ -20,6 +20,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
+
 public class Provider extends RealmObject implements BaseModel, JsonSerializer<Provider> {
 
     // Important: Negative ids are used for local storage (before sync). Starting with -1.
