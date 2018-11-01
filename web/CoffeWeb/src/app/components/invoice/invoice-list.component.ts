@@ -36,7 +36,7 @@ const moment =  _moment;
 
 			<div class="button1">
 				<div class="buttons">
-					<button class="b1" (click)="openModal(template)">
+					<button class="b1 fa fa-twitter fa-5x" (click)="openModal(template)">
 						<i class="material-icons">lock</i>
 					</button>
 					<button (click)="exportTotalAsXLSX()">
@@ -170,6 +170,7 @@ const moment =  _moment;
 				</div>
 			</div>
 		</ng-template>
+
 
 	`,
 	providers: [

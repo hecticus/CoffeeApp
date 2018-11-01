@@ -288,3 +288,29 @@ element.style {
     font-size: 0;
     display: inline;
 }
+
+
+/* .fa {
+    padding: 20px;
+  }
+  
+  #twitterText,
+  #facebookText,
+  #instagramText {
+    display: none;
+  }
+  
+  .fa-twitter:hover ~ #twitterText {
+    display: block;
+  }
+  
+  .fa-facebook:hover ~ #facebookText {
+    display: block;
+  }
+  
+  .fa-instagram:hover ~ #instagramText {
+    display: block;
+  }
+  <p id="twitterText">Twitter</p>
+  <p id="facebookText">Facebook</p>
+  <p id="instagramText">Instagram</p> */
