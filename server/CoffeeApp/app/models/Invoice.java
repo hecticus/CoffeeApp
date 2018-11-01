@@ -167,16 +167,16 @@ public class Invoice extends AbstractEntity{
             expressionList.eq("provider.providerType.id", providerType);
 
         if(startDate != null && closeDate != null) {;
-            expressionList
-                    .and()
-                    .ge("startDate", startDate)
-                        .or()
-                            .isNull("closedDate")
-                            .le("closedDate", closeDate);
+            expressionList.between("startDate", startDate, closeDate);
+//                    .and()
+//                    .ge("startDate", startDate)
+//                        .or()
+//                            .isNull("closedDate")
+//                            .le("closedDate", closeDate);
         } else if(startDate != null) {
             expressionList.ge("startDate", startDate);
         } else if(closeDate != null) {
-            expressionList.le("closedDate", closeDate);
+            expressionList.le("startDate", closeDate);
         }
 
         if(nitName != null){
@@ -282,8 +282,9 @@ public class Invoice extends AbstractEntity{
         if(status != 0L)
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
         if(startDate != null && closeDate != null) {
-            sql += "        AND id.start_date >=  '"+startDate +"'\n" +
-                   "        AND ( id.closed_date <= '"+ closeDate +"' OR id.closed_date is null) \n";
+            sql += "        AND ( id.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
+//                    "        AND id.start_date >=  '"+startDate +"'\n" +
+//                   "        AND ( id.closed_date <= '"+ closeDate +"' OR id.closed_date is null) \n";
         } else if(startDate != null) {
             sql += "        AND id.start_date >=  '"+startDate +"'\n";
         } else if(closeDate != null) {
@@ -306,7 +307,6 @@ public class Invoice extends AbstractEntity{
 
         String sql = "SELECT \n" +
                 "    DATE_FORMAT(i.start_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
-//                "    DATE_FORMAT(i.closed_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Cierre',\n" +
                 "    p.nit_provider AS 'Identificación del Proveedor',\n" +
                 "    p.name_provider AS 'Nombre del Proveedor',\n" +
                 "    SUM(id.amount_invoice_detail) AS Peso,\n" +
@@ -334,8 +334,13 @@ public class Invoice extends AbstractEntity{
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
 
         if(startDate != null && closeDate != null) {
-            sql += "        AND i.start_date >=  '"+startDate +"'\n"+
-                   "        AND ( i.closed_date <= '"+ closeDate +"' OR i.closed_date is null) \n";
+            sql += "        AND ( i.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
+//            if(startDate == closeDate){
+//                sql += "        AND ( i.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
+//            }else {
+//                sql += "        AND i.start_date = '"+ startDate + "'\n";
+//            }
+//                   "        AND ( i.closed_date <= '"+ closeDate +"' OR i.closed_date is null) \n";
         } else if(startDate != null) {
             sql += "        AND i.start_date >=  '"+ startDate + "'\n";
         } else if(closeDate != null) {
