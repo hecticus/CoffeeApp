@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.base.BaseEditableModel;
 import com.hecticus.eleta.model.response.item.ItemType;
@@ -74,14 +75,18 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
         genericItemViewHolder.getValueEditText().setEnabled(canEdit);
 
         if (canEdit) {
+            Log.d("DEBUG1110000", new Gson().toJson(list));
             genericItemViewHolder.getValueEditText().addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
                 }
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    Log.d("DEBUG1111111", new Gson().toJson(list));
                     list.get(position).setInputValue(charSequence + "");
+                    Log.d("DEBUG11112222", new Gson().toJson(list));
                 }
 
                 @Override
@@ -102,19 +107,24 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
     }
 
     @DebugLog
-    public void showNewDataSet(List<? extends BaseEditableModel> listParam) {
+    public void showNewDataSet(List<? extends BaseEditableModel> listParam, Boolean control) {
         list = listParam;
-        notifyDataSetChanged();
-    }
-
-    @DebugLog
-    public void showAddAnother(List<? extends BaseEditableModel> listParam) {
-        list = listParam;
-        for(int i= 0; i<list.size(); i++){
-            list.get(i).setInputValue("");
+        if(control){
+            for(int i = 0; i<list.size(); i++){
+                list.get(i).setInputValue("");
+            }
         }
         notifyDataSetChanged();
     }
+
+    /*@DebugLog
+    public void showAddAnother(List<? extends BaseEditableModel> listParam) {
+        list = new ArrayList<>(listParam);
+        for(int i = 0; i<list.size(); i++){
+            list.get(i).setInputValue("");
+        }
+        notifyDataSetChanged();
+    }*/
 
     @DebugLog
     public List<? extends BaseEditableModel> getValues() {

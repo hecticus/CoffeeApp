@@ -552,13 +552,11 @@ public class SyncManager {
                                     .findFirst();
 
                             try {
-
                                 if (invoiceInRealm != null) {
                                     realm.beginTransaction();
                                     invoiceInRealm.deleteFromRealm();
                                     realm.commitTransaction();
                                 }
-
                                 ManagerDB.findAndDeleteLocalInvoicePost(firstInvoicePost);
 
                             } finally {
@@ -574,7 +572,9 @@ public class SyncManager {
                                         .where(Invoice.class)
                                         .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                         .findFirst();
-                                invoiceInRealm.deleteFromRealm();
+                                if (invoiceInRealm != null) {
+                                    invoiceInRealm.deleteFromRealm();
+                                }
                                 realm.commitTransaction();
                             }
                             ErrorHandling.syncErrorCodeInServerResponseProcessing(e);

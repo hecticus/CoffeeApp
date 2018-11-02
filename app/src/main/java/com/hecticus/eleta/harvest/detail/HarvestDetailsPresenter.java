@@ -58,9 +58,6 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
         isAdd = isAddParam;
         canEdit = canEditParam;
         currentProvider = provider;
-        Log.d("BUG", "--->currentProvider onCreate: " + currentProvider);
-        /*if(InternetManager.isConnected(context))
-            details.get(0).setItemType(ManagerDB.getItemTypeById(details.get(0).getItemTypeId()));*/
         currentDetailsList = details;
     }
 
@@ -104,8 +101,6 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     @DebugLog
     @Override
     public void onSaveChanges(Lot selectedLot, List<ItemType> items, String observations) {
-        /*Gson g = new Gson();
-        /*LogDataBase.d("DEBUG spiner lot2", g.toJson(selectedLot));*/
         mView.showWorkingIndicator();
 
         if (currentProvider == null) {
@@ -173,7 +168,6 @@ public class HarvestDetailsPresenter implements HarvestDetailsContract.Actions {
     public InvoicePost getChanges(final Lot lotId, final List<ItemType> itemsTypesList, final String observations) {
         /*Gson g = new Gson();
         LogDataBase.d("DEBUG spiner lot1", g.toJson(lotId));*/
-        //todo no edita
         InvoicePost invoicePostWithChanges = null;
 
         if (currentDetailsList == null || currentDetailsList.size() <= 0)

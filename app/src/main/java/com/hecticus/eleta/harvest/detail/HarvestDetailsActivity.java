@@ -307,7 +307,8 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
     @Override
     public void updateItems(List<ItemType> itemTypeList) {
         //todo brayan
-        listAux = itemTypeList;
+        listAux = new ArrayList<>(itemTypeList);
+        //listAux = itemTypeList;
 
         if(!getIntent().getBooleanExtra("isAdd", false)) {
             List<ItemType> itemTypeListAux = new ArrayList<>();
@@ -318,11 +319,11 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
             }
             if (itemTypeListAux != null && itemTypeListAux.size() % 2 != 0)
                 observationsEditText.setBackground();
-            mAdapter.showNewDataSet(itemTypeListAux);
+            mAdapter.showNewDataSet(itemTypeListAux, false);
         } else{
             if (itemTypeList != null && itemTypeList.size() % 2 != 0)
                 observationsEditText.setBackground();
-            mAdapter.showNewDataSet(itemTypeList);
+            mAdapter.showNewDataSet(itemTypeList, false);
         }
 
     }
@@ -393,7 +394,10 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
 
     @Override
     public void addAnother() {
-        mAdapter.showAddAnother(listAux);
+        mAdapter = new EditListAdapter(true, false, true);
+        itemsRecyclerView.setAdapter(mAdapter);
+        mAdapter.showNewDataSet(listAux, true);
+        //mAdapter.showAddAnother(listAux);
         observationsEditText.setText("");
     }
 

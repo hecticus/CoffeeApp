@@ -326,7 +326,7 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
             dispatcherEditText.setBackground();
         }
 
-        puritiesAdapter.showNewDataSet(puritiesList);
+        puritiesAdapter.showNewDataSet(puritiesList, false);
     }
 
     @Override
@@ -373,8 +373,8 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
 
     @Override
     public void addAnother() {
-        //todo brayan
-        puritiesAdapter.showAddAnother(listAux);
+        //todo brayan revisar
+        puritiesAdapter.showNewDataSet(listAux, true);
         amountEditText.setText("");
         dispatcherEditText.setText("");
         observationsEditText.setText("");
@@ -404,7 +404,6 @@ public class PurchaseDetailsActivity extends BaseActivity implements PurchaseDet
             }
         }
         args.putSerializable("descriptions", (Serializable) descriptionAndValueModelList);
-
         dialog.setArguments(args);
         dialog.show(getSupportFragmentManager(), "confirm");
     }

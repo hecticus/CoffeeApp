@@ -178,7 +178,7 @@ public class ProviderDetailsRepository implements ProviderDetailsContract.Reposi
                                 onCreateError(mPresenter.context.getString(R.string.error_during_operation));
                             }
                         } else {
-                            Log.d("DETAILS", "--->erroooorrrrr:" + response.errorBody().string());
+                            //Log.d("DETAILS", "--->erroooorrrrr:" + response.errorBody().string());
                             JSONObject errorBody = new JSONObject(response.errorBody().string());
                             String errorMessage = errorBody.getString("message");
                             if(errorMessage.equals("Constrain violation: Duplicate entry '"+providerParam.getIdentificationDocProvider()+"' for key 'uq_providers_nit_provider'")){ //rut existe
