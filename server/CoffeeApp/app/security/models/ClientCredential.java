@@ -1,13 +1,10 @@
 package security.models;
 
-import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.ebean.Finder;
 import play.data.validation.Constraints;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by nisa on 06/10/17.
@@ -17,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "auth_client_credential")
-public class ClientCredential extends AbstractEntity {
+public class ClientCredential extends BaseModel {
 
     @Constraints.Required
     @Constraints.MaxLength(50)
@@ -47,7 +44,6 @@ public class ClientCredential extends AbstractEntity {
     @Column(columnDefinition = "text")
     private String authCallbackUri;
 
-    @Column(columnDefinition = "text")
     private String description;
 
     private static Finder<Long, ClientCredential> finder = new Finder<>(ClientCredential.class);
@@ -69,18 +65,14 @@ public class ClientCredential extends AbstractEntity {
     }
 
     public static ClientCredential findByClientIdSecret(String clientId, String clientSecret){
-        return finder
-                .query()
-                .where()
+        return finder.query().where()
                 .eq("clientId", clientId)
                 .eq("clientSecret", clientSecret)
                 .findUnique();
     }
 
     public static ClientCredential findByClientId(String clientId){
-        return finder
-                .query()
-                .where()
+        return finder.query().where()
                 .eq("clientId", clientId)
                 .findUnique();
     }

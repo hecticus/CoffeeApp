@@ -2,14 +2,15 @@ package security.authorization;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.typesafe.config.Config;
+import play.Configuration;
+import security.models.AuthGroup;
+import security.models.AuthRole;
 import security.models.AuthUser;
-import security.models.Group;
-import security.models.Permission;
-import security.models.Role;
+import security.models.AuthPermission;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by nisa on 26/10/17.
@@ -20,104 +21,127 @@ import java.util.List;
 @Singleton
 public class OnLoadRBAC {
 
+    private final Configuration config;
+
     @Inject
-    public OnLoadRBAC(Config config) {
+    public OnLoadRBAC(Configuration config) {
+        this.config = config;
+
         System.out.println("*** Loading control access tables...");
-        Group.deleteAll();
-        Role.deleteAll();
-        AuthUser.deleteAll();
-        Permission.deleteAll();
-        buildRolesManyPermission(config);
-        buildGroupsManyRoles(config);
-//        buildGroupsManyUser(config);
+
+        System.out.println("*** Loading control access tables... - truncate group, role and permission table");
+        AuthGroup.deleteAll();
+        AuthRole.deleteAll();
+        AuthPermission.deleteAll();
+
+        System.out.println("*** Loading control access tables... - permissions");
+        loadPermissions(config.getConfig("rbac.roles_permissions"));
+
+        System.out.println("*** Loading control access tables... - authRoles");
+        loadRoles(config.getConfig("rbac.roles_permissions"));
+
+        System.out.println("*** Loading control access tables... - authGroups");
+        loadGroups(config.getConfig("rbac.groups_roles"));
+
+        System.out.println("*** Loading control access tables... - users");
+        loadUsers(config.getConfig("rbac.groups_users"));
+
         System.out.println("*** Complete control access tables...");
     }
 
-    private void buildGroupsManyRoles(Config config){
-        config.getObject("play.rbac.groups").forEach((k,v)->{
-            //System.out.println(k);
-            Group group = Group.findByName(k);
-            if(group == null){
-                group = new Group();
-                group.setName(k);
-                group.setRoles(buildRoles(config.getStringList("play.rbac.groups." + k)));
-                group.insert();
-            }else{
-                group.setRoles(buildRoles(config.getStringList("play.rbac.groups." + k)));
-                group.update();
-            }
-        });
-    }
+    private void loadPermissions(Configuration config) {
+        Set<String> permissionKeys = new HashSet<>();
 
-    private List<Role> buildRoles(List<String> roleKeys){
-        List<Role> roles = new ArrayList<>();
-        for(Object roleKey : roleKeys) {
-            Role role = Role.findByName(roleKey.toString());
-            if(role == null) {
-                role = new Role();
-                role.setName(roleKey.toString());
-                role.insert();
-            }
-            roles.add(role);
+        for(String roleKey : config.subKeys()) {
+            permissionKeys.addAll(config.getStringList(roleKey));
         }
-        return roles;
-    }
 
-    private void buildRolesManyPermission(Config config){
-        config.getObject("play.rbac.roles").forEach((k,v)->{
-            //System.out.println("key : " + k + " value : " + v);
-            System.out.println(k);
-            Role role = Role.findByName(k);
-            if(role == null){
-                role = new Role();
-                role.setName(k);
-                role.setPermissions(buildPermissions(config.getStringList("play.rbac.roles." + k)));
-                role.insert();
-            }else{
-                role.setPermissions(buildPermissions(config.getStringList("play.rbac.roles." + k)));
-                role.update();
+        for(String permissionKey : permissionKeys) {
+            AuthPermission authPermission = AuthPermission.findByName(permissionKey);
+            if(authPermission == null){
+                authPermission = new AuthPermission();
+                authPermission.setName(permissionKey);
+                authPermission.insert();
             }
-        });
-    }
-
-    private List<Permission> buildPermissions(List<String> permissionKeys){
-        List<Permission> permissions = new ArrayList<>();
-        for(Object permissionKey : permissionKeys) {
-            //System.out.println(permissionKey);
-            Permission permission = Permission.findByName(permissionKey.toString());
-            if(permission == null){
-                permission = new Permission();
-                permission.setName(permissionKey.toString());
-                permission.insert();
-            }
-            permissions.add(permission);
         }
-        return permissions;
     }
 
-    private void buildGroupsManyUser(Config config){
-        config.getObject("play.rbac.groupUser").forEach((k,v)->{
-            Group group = Group.findByName(k);
-            if(group == null){
-                group = new Group();
-                group.setName(k);
-                group.setAuthUsers(buildAuthUser(config.getStringList("play.rbac.groupUser." + k)));
-                group.insert();
+    private void loadRoles(Configuration config){
+        for(String roleKey : config.subKeys()) {
+            AuthRole authRole = AuthRole.findByName(roleKey);
+
+            if(authRole == null){
+                authRole = new AuthRole();
+                authRole.setName(roleKey);
+                List<AuthPermission> authPermissions = AuthPermission.findAllByName(config.getStringList(roleKey));
+                authRole.setAuthPermissions(authPermissions);
+                authRole.insert();
+
             }else{
-                group.setAuthUsers(buildAuthUser(config.getStringList("play.rbac.groupUser." + k)));
-                group.update();
+                List<AuthPermission> authPermissions = authRole.getAuthPermissions();
+                int size = authPermissions.size();
+
+                for(String permissionKey : config.getStringList(roleKey)) {
+                    AuthPermission authPermission = AuthPermission.findByNameRoleId(permissionKey, authRole.getId());
+                    if(authPermission == null){
+                        authPermission = new AuthPermission();
+                        authPermission.setName(permissionKey);
+                        authPermissions.add(authPermission);
+                    }
+                }
+
+                if(size < authPermissions.size()) {
+                    authRole.setAuthPermissions(authPermissions);
+                    authRole.update();
+                }
             }
-        });
+        }
     }
 
+    private void loadGroups(Configuration config){
+        for(String groupKey : config.subKeys()) {
+            AuthGroup authGroup = AuthGroup.findByName(groupKey);
 
+            if(authGroup == null){
+                authGroup = new AuthGroup();
+                authGroup.setName(groupKey);
+                List<AuthRole> authRoles = AuthRole.findAllByName(config.getStringList(groupKey));
+                authGroup.setAuthRoles(authRoles);
+                authGroup.insert();
 
-    private List<AuthUser> buildAuthUser(List<String> authUserKeys){
-        List<AuthUser> users = new ArrayList<>();
-        for(Object authUserKey : authUserKeys) {
-            AuthUser user = AuthUser.findByName(authUserKey.toString());
-            users.add(user);
+            }else{
+                List<AuthRole> authRoles = authGroup.getAuthRoles();
+                int size = authRoles.size();
+
+                for(String roleKey : config.getStringList(groupKey)) {
+                    AuthRole authRole = AuthRole.findByNameGroupId(roleKey, authGroup.getId());
+                    if(authRole == null){
+                        authRole = new AuthRole();
+                        authRole.setName(roleKey);
+                        authRoles.add(authRole);
+                    }
+                }
+
+                if(size < authRoles.size()) {
+                    authGroup.setAuthRoles(authRoles);
+                    authGroup.update();
+                }
+            }
         }
-        return users;
+    }
+
+    private void loadUsers(Configuration config){
+        for(String groupKey : config.subKeys()) {
+
+            for(String userKey : config.getStringList(groupKey)) {
+                AuthUser authUser = AuthUser.findByEmail(userKey);
+
+                if(authUser != null && authUser.getAuthGroup() == null) {
+                    AuthGroup authGroup = AuthGroup.findByName(groupKey);
+                    authUser.setAuthGroup(authGroup);
+                    authUser.update();
+                }
+            }
+        }
     }
 }

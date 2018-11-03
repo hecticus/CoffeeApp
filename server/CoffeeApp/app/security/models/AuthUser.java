@@ -1,12 +1,9 @@
 package security.models;
 
-import com.avaje.ebean.annotation.UpdatedTimestamp;
+import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import io.ebean.Ebean;
-import io.ebean.Finder;
-import io.ebean.annotation.SoftDelete;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -18,74 +15,46 @@ import java.util.List;
  * Created by nisa on 02/11/17.
  */
 @Entity
-public class AuthUser extends AbstractEntity{
+@JsonIgnoreProperties({"recoverPassword"})
+public class AuthUser extends BaseModel {
 
-    @Constraints.MaxLength(50)
-    @Constraints.Required
-    @Column(length = 50, unique = true, nullable = false, updatable = false)
-    protected String username;
+    /*@Constraints.MaxLength(100)
+    @Column(length = 100, unique = true, nullable = false, updatable = false)
+    protected String username;*/
 
     @Constraints.Email
     @Constraints.Required
-    @Constraints.MaxLength(50)
-    @Column(length = 50, unique = true, nullable = false)
+    @Constraints.MaxLength(100)
+    @Column(length = 100, unique = true, nullable = false)
     protected String email;
 
     @Constraints.Required
     @Column(columnDefinition = "text", nullable = false) //TODO cambiar a BLOB
     protected String password;
 
-    @SoftDelete
-    private boolean deleted;
+    @Constraints.Required
+    @Column(columnDefinition = "tinyint default 0", nullable = false, insertable = false)
+    protected Boolean archived = false;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    @UpdatedTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX") // , timezone = "UTC"
+    @Column(columnDefinition = "datetime")
     protected ZonedDateTime lastLogin;
 
-    @OneToOne(mappedBy = "authUser", cascade = CascadeType.ALL)
-    @JsonIgnore
-    protected SecurityPin SecurityPin;
+    @ManyToOne
+    protected AuthGroup authGroup;
 
-    @ManyToMany
-    protected List<Role> roles;
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    protected List<AuthRole> authRoles;
 
-    @ManyToMany
-    protected List<Group> groups;
-
-    @OneToMany(mappedBy = "authUser", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "authUser", cascade = CascadeType.REMOVE)
     @JsonIgnore
     protected List<SecurityToken> securityTokens;
 
-
-    public static final Finder<Long, AuthUser> finder = new Finder<>(AuthUser.class);
+    private static Finder<Long, AuthUser> finder = new Finder<>(AuthUser.class);
 
     public static AuthUser findById(Long id){
         return finder.byId(id);
-    }
-
-    public static void deleteAll(){
-        List<AuthUser> authUsers = finder.all();
-        if( authUsers != null && !authUsers.isEmpty())
-            Ebean.deleteAll(authUsers);
-    }
-
-    public boolean isStatusDelete() {
-        return deleted;
-    }
-
-    public void setStatusDelete(boolean statusDelete) {
-        this.deleted = statusDelete;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public static AuthUser findByEmail(String email){
@@ -93,14 +62,6 @@ public class AuthUser extends AbstractEntity{
                 .query()
                 .where()
                 .eq("email", email)
-                .findUnique();
-    }
-
-    public static AuthUser findByName(String name){
-        return finder
-                .query()
-                .where()
-                .eq("username", name)
                 .findUnique();
     }
 
@@ -119,12 +80,6 @@ public class AuthUser extends AbstractEntity{
             Ebean.delete(entity);
     }
 
-    public static void delete(List<Long> ids) {
-        List<AuthUser> entities = finder.query().where().idIn(ids).findList();
-        if(!entities.isEmpty())
-            Ebean.deleteAll(entities);
-    }
-
     public String getEmail() {
         return email;
     }
@@ -141,6 +96,14 @@ public class AuthUser extends AbstractEntity{
         this.password = password;
     }
 
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
+
     public ZonedDateTime getLastLogin() {
         return lastLogin;
     }
@@ -149,28 +112,20 @@ public class AuthUser extends AbstractEntity{
         this.lastLogin = lastLogin;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public List<AuthRole> getAuthRoles() {
+        return authRoles;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setAuthRoles(List<AuthRole> authRoles) {
+        this.authRoles = authRoles;
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public AuthGroup getAuthGroup() {
+        return authGroup;
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public security.models.SecurityPin getSecurityPin() {
-        return SecurityPin;
-    }
-
-    public void setSecurityPin(security.models.SecurityPin securityPin) {
-        SecurityPin = securityPin;
+    public void setAuthGroup(AuthGroup authGroup) {
+        this.authGroup = authGroup;
     }
 
     public List<SecurityToken> getSecurityTokens() {
@@ -180,7 +135,4 @@ public class AuthUser extends AbstractEntity{
     public void setSecurityTokens(List<SecurityToken> securityTokens) {
         this.securityTokens = securityTokens;
     }
-
-
 }
-

@@ -1,4 +1,4 @@
-package security.authentication.oauth2;
+package security.authentication;
 
 import play.libs.Json;
 import play.mvc.Result;
@@ -9,10 +9,11 @@ import static play.mvc.Results.internalServerError;
 /**
  * Created by nisa on 18/10/17.
  *
- * reference: https://tools.ietf.org/html/rfc6749#section-5.2
- * reference: https://tools.ietf.org/html/rfc6750#section-3.1
+ * reference:
+ * https://tools.ietf.org/html/rfc6749#section-5.2
+ * https://tools.ietf.org/html/rfc6750#section-3.1
  */
-public class Response {
+public class ResponseAuth {
 
     public static class AccessTokenErrorResponse {
         public String error;
@@ -37,35 +38,24 @@ public class Response {
     /*
     * badRequest 400
     */
-    public static Result invalidRequest(){
+    public static Result invalidRequest(String description){
         AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
         accessTokenErrorResponse.error = "invalid_request";
+        accessTokenErrorResponse.error_description = description;
         return badRequest(Json.toJson(accessTokenErrorResponse));
     }
 
-    public static Result invalidRequest(String parameter){
-        AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
-        accessTokenErrorResponse.error = "invalid_request";
-        accessTokenErrorResponse.error_description = "'" + parameter +"'";
-        return badRequest(Json.toJson(accessTokenErrorResponse));
-    }
-
-    public static Result invalidClient(){
+    public static Result invalidClient(String description){
         AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
         accessTokenErrorResponse.error = "invalid_client";
+        accessTokenErrorResponse.error_description = description;
         return unauthorized(Json.toJson(accessTokenErrorResponse));
     }
 
-    public static Result invalidGrant(){
+    public static Result invalidGrant(String description){
         AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
         accessTokenErrorResponse.error = "invalid_grant";
-        return badRequest(Json.toJson(accessTokenErrorResponse));
-    }
-
-    public static Result invalidGrant(String error_description){
-        AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
-        accessTokenErrorResponse.error = "invalid_grant";
-        accessTokenErrorResponse.error = error_description;
+        accessTokenErrorResponse.error_description = description;
         return badRequest(Json.toJson(accessTokenErrorResponse));
     }
 
@@ -78,6 +68,7 @@ public class Response {
     public static Result unsupportedGrantType(){
         AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
         accessTokenErrorResponse.error = "unsupported_grant_type";
+        accessTokenErrorResponse.error_description = "The authorization grant_type is not supported.";
         return badRequest(Json.toJson(accessTokenErrorResponse));
     }
 
@@ -90,14 +81,17 @@ public class Response {
     /*
     * unauthorized 401
     */
-    /*public static Result invalidClient(){
-        AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
-        accessTokenErrorResponse.error = "invalid_client";
-        return unauthorized(Json.toJson(accessTokenErrorResponse));
-    }*/
+    // reference: https://tools.ietf.org/html/rfc6750#page-9
     public static Result invalidToken(){
         AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
         accessTokenErrorResponse.error = "invalid_token";
+        accessTokenErrorResponse.error_description = "Token invalid.";
+        return unauthorized(Json.toJson(accessTokenErrorResponse));
+    }
+    public static Result expiredToken(){
+        AccessTokenErrorResponse accessTokenErrorResponse = new AccessTokenErrorResponse();
+        accessTokenErrorResponse.error = "expired_token";
+        accessTokenErrorResponse.error_description = "The token expired.";
         return unauthorized(Json.toJson(accessTokenErrorResponse));
     }
 
@@ -113,9 +107,6 @@ public class Response {
     /*
     * internalServerError 500
     */
-    public static Result internalServerErrorLF(){
-        return internalServerError(("Oops!"));
-    }
     public static Result internalServerErrorLF(String message){
         return internalServerError("Oops!: " + message);
     }
