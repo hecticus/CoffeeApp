@@ -21,17 +21,18 @@ GET     /assets/*file                       controllers.Assets.versioned(path="/
 ###############################################################################
 #·······                     Authentication                         ··········#
 ###############################################################################
-POST    /oauth/token                                                            security.authentication.oauth2.PasswordGrant.token()
-POST    /oauth/revokeToken                                                      security.authentication.oauth2.PasswordGrant.revokeToken()
-#POST    /oauth/auth                                                            security.authentication.oauth2.ImplicitGrant.auth()
-
+POST    /oauth/token                                    security.authentication.PasswordGrant.token()
+POST    /oauth/revoke                                   security.authentication.RevokeToken.revoke()
+POST    /oauth/revokeUseless                            security.authentication.RevokeToken.deleteUseless()
+POST    /oauth/revokeAll                                security.authentication.RevokeToken.deleteAll()
 
 ###############################################################################
-#·······                UpdatePasswordManager                       ··········#
+#···········                Auth                                ··············#
 ###############################################################################
-#POST    /users/recoverPassword                                                  security.authentication.updatePassword.UpdatePasswordManager.recoverPassword()
-#POST    /users/resetPassword                                                    security.authentication.updatePassword.UpdatePasswordManager.resetPassword()
-#
+GET     /authGroups                                     controllers.authControllers.AuthGroups.findAll(pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /authPermissions                                controllers.authControllers.AuthPermissions.findAll(authUserId: Long, pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+GET     /authRoles                                      controllers.authControllers.AuthRoles.findAll(pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
+
 
 ###############################################################################
 #·······                     User                                   ··········#
@@ -45,24 +46,6 @@ GET     /user/email/:email                                                      
 GET     /user/authUser/:authUserId                                              controllers.Users.findByAuthUser(authUserId: java.lang.Long)
 PATCH   /user/:id/password                                                      controllers.Users.updatePassword(id: Long)
 POST    /oauth/changepassword                                                   controllers.Users.changePassword()
-
-###############################################################################
-#·······                     Roles                                  ··········#
-###############################################################################
-GET     /roles                                                                   security.controllers.Roles.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, deleted: Boolean ?= false )
-GET     /roles/:id                                                               security.controllers.Roles.findById(id : Long)
-POST    /roles                                                                   security.controllers.Roles.create()
-PUT     /roles/:id                                                               security.controllers.Roles.update(id : Long)
-DELETE  /roles/:id                                                               security.controllers.Roles.delete(id : Long)
-
-###############################################################################
-#·······                     Group                                  ··········#
-###############################################################################
-GET     /group                                                                   security.controllers.Groups.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, deleted: Boolean ?= false )
-GET     /group/:id                                                               security.controllers.Groups.findById(id : Long)
-POST    /group                                                                   security.controllers.Groups.create()
-PUT     /group/:id                                                               security.controllers.Groups.update(id : Long)
-DELETE  /group/:id                                                               security.controllers.Groups.delete(id : Long)
 
 ###############################################################################
 #·······                        Farm                                ··········#

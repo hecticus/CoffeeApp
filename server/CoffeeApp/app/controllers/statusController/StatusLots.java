@@ -10,7 +10,7 @@ import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import models.status.StatusLot;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 public class StatusLots {
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
@@ -20,7 +20,7 @@ public class StatusLots {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);

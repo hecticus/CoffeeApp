@@ -7,25 +7,21 @@ import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Multimedia;
 import models.Provider;
-import models.ProviderType;
 
 import models.status.StatusProvider;
-import multimedia.MultimediaUtils;
 import multimedia.models.MultimediaCDN;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 
-import static sun.security.krb5.Confounder.longValue;
 
 /**
  * Created by sm21 on 10/05/18.
@@ -36,7 +32,7 @@ public class Providers extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -69,7 +65,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -102,7 +98,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try{
             if (!Invoice.invoicesByProviderId(id).isEmpty()){
@@ -121,7 +117,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -135,7 +131,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Provider.findById(id)));
@@ -144,7 +140,7 @@ public class Providers extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String sort, String name,  Long idProviderType,
                            String identificationDocProvider, String addressProvider,

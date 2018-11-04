@@ -15,7 +15,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 import java.time.ZonedDateTime;
@@ -32,7 +32,7 @@ public class InvoiceDetails extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -59,7 +59,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -115,7 +115,7 @@ public class InvoiceDetails extends Controller {
 
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(InvoiceDetail.findById(id));
@@ -125,7 +125,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes( ) {
         try {
             JsonNode json = request().body().asJson();
@@ -140,7 +140,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
@@ -152,7 +152,7 @@ public class InvoiceDetails extends Controller {
 
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long invoice, Long itemType, Long lot, Long store, String nameReceived,
                           String nameDelivered, String startDate, Long status, boolean deleted){

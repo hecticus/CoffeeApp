@@ -18,7 +18,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -33,7 +33,7 @@ public class Purities extends Controller{
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result preCreate() {
         try {
             return Response.foundEntity(Json.toJson(new Purity()));
@@ -42,7 +42,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -62,7 +62,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -83,7 +83,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Purity.findById(id));
@@ -93,7 +93,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -108,7 +108,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Purity.findById(id)));
@@ -117,7 +117,7 @@ public class Purities extends Controller{
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll(Integer index, Integer size, String collection, String sort, String name, boolean deleted){
         try {
             ListPagerCollection listPager = Purity.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, deleted);

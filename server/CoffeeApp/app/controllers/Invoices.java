@@ -19,7 +19,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -37,7 +37,7 @@ public class Invoices extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public    Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -54,7 +54,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -76,7 +76,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result delete(Long id) {
         try{
             List<InvoiceDetail> ids = InvoiceDetail.findByProviderId(id);
@@ -88,7 +88,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -103,7 +103,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Invoice.findById(id)));
@@ -112,7 +112,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result closeInvoice() {
         try {
             TimeClosed.closeInvoice();
@@ -122,7 +122,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public   Result findAll( Integer pageIndex, Integer pageSize,  String collection,
                              String sort, Long id_provider, Long providerType,  String startDate,
                              String endDate, Long status ,boolean deleted,  String nitName){
@@ -140,7 +140,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result createTotalReport() {
         try {
             ListPagerCollection listPager = Invoice.createTotalReport();
@@ -151,7 +151,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result createDetailReport(Integer pageIndex, Integer pageSize,  String collection,
                                       String sort, Long id_provider, Long id_providertype,  String startDate,
                                       String endDate, Long status ,boolean deleted,  String nitName) {
@@ -167,7 +167,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result createReport(  Integer pageIndex, Integer pageSize,  String collection,
                                   String sort, Long id_provider, Long id_providertype,  String startDate,
                                   String endDate, Long status ,boolean deleted,  String nitName) {
@@ -183,7 +183,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result buyHarvestsAndCoffe( ){
         try{
 
@@ -308,7 +308,7 @@ public class Invoices extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result createReceipt(Long idInvoice)  {
         Invoice invoice = Invoice.findById(idInvoice);
         ObjectNode response = Json.newObject();

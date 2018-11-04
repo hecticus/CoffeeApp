@@ -16,7 +16,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public class InvoiceDetailPurities  extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public  Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -50,7 +50,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -72,7 +72,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(InvoiceDetail.findById(id));
@@ -82,7 +82,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-        @CoffeAppsecurity
+        @HSecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -97,7 +97,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             InvoiceDetailPurity invoiceDetailPurity = InvoiceDetailPurity.findById(id);
@@ -107,7 +107,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long purity, Long invoiceDetail, boolean deleted){
         try {

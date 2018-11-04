@@ -20,7 +20,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import security.authentication.updatePassword.UpdatePasswordManager;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 import security.models.AuthUser;
 
 import javax.inject.Inject;
@@ -41,7 +41,7 @@ public class Users extends Controller {
     }
 
     @Transactional
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -70,7 +70,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long idUser) {
         try {
             JsonNode request = request().body().asJson();
@@ -90,7 +90,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findByEmail(String email) {
         try {
             User user = User.findByEmail(email);
@@ -103,7 +103,7 @@ public class Users extends Controller {
 
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findByAuthUser(Long authUserId) {
         try {
             User user = User.findByAuthUserId(authUserId);
@@ -114,7 +114,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result updatePassword(Long id) {
         try {
             JsonNode request = request().body().asJson();
@@ -135,7 +135,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try {
             Ebean.delete(User.findById(id).getAuthUser());
@@ -146,7 +146,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             User user = User.findById(id);
@@ -156,7 +156,7 @@ public class Users extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, String firstName, String lastName, boolean deleted){
         try {

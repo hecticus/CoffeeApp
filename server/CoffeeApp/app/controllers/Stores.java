@@ -15,7 +15,7 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -31,7 +31,7 @@ public class Stores {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try {
             JsonNode json = request().body().asJson();
@@ -50,7 +50,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             JsonNode json = request().body().asJson();
@@ -71,7 +71,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(Store.findById(id));
@@ -81,7 +81,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -96,7 +96,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             return Response.foundEntity(Json.toJson(Store.findById(id)));
@@ -105,7 +105,7 @@ public class Stores {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, Long status, boolean deleted){
         try {

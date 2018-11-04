@@ -16,7 +16,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class Multimedias extends Controller {
     @Inject
     private FormFactory formFactory;
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result createProviderProfile() {
         try {
             JsonNode request = request().body().asJson();
@@ -66,7 +66,7 @@ public class Multimedias extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result createProviderProfile(Long id) {
         try {
 
@@ -107,7 +107,7 @@ public class Multimedias extends Controller {
     }
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             Multimedia multimedia = Multimedia.findById(id);
@@ -143,7 +143,7 @@ public class Multimedias extends Controller {
     }
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         Ebean.beginTransaction();
         try {
@@ -158,7 +158,7 @@ public class Multimedias extends Controller {
     }
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             JsonNode request = request().body().asJson();
@@ -174,7 +174,7 @@ public class Multimedias extends Controller {
     }
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             Multimedia  multimedia = Multimedia.findById(id);
@@ -185,7 +185,7 @@ public class Multimedias extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll() {
         try {
             List<Multimedia> multimedias = Multimedia.findAll();
@@ -196,7 +196,7 @@ public class Multimedias extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deleteUselessObjectsToContainer(){
         try {
             List<String> objectsNamesCDN = rackspaceCloudFiles.getObjectNames();

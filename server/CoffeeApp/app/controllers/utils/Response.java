@@ -51,6 +51,25 @@ public class Response{
         return ok(buildExtendResponse("Successful search", result));
     }
 
+    public static Result foundEntity(Object object){
+        return ok(buildExtendResponse("Successful search", Json.toJson(object)));
+    }
+
+    public static Result foundEntity(PagedList pagedList){
+        ObjectNode pager = Json.newObject();
+        pager.put("totalEntitiesPerPage", pagedList.getList().size());
+        pager.put("totalEntities", pagedList.getTotalCount());
+        pager.put("pageIndex", pagedList.getPageIndex());
+        pager.put("pageSize", pagedList.getPageSize());
+        pager.put("pages", pagedList.getTotalPageCount());
+        pager.put("startIndex", 0);
+        pager.put("endIndex", pagedList.getTotalPageCount() - 1);
+
+        JsonNode jsonEntities = Json.toJson(pagedList.getList());
+
+        return ok(buildExtendResponse("Successful search", jsonEntities, pager));
+    }
+
     public static Result foundEntity(PagedList pagedList, PathProperties pathProperties){
         ObjectNode pager = Json.newObject();
         //modificando

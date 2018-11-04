@@ -8,7 +8,7 @@ import io.ebean.text.PathProperties;
 import models.status.StatusInvoice;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 public class StatusInvoices extends Controller {
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
@@ -18,7 +18,7 @@ public class StatusInvoices extends Controller {
         propertiesCollection.putPropertiesCollection("m", "(*)");
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);

@@ -14,7 +14,7 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public class ProviderTypes {
     private static controllers.responseUtils.PropertiesCollection propertiesCollection = new controllers.responseUtils.PropertiesCollection();
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try{
             JsonNode json = request().body().asJson();
@@ -63,7 +63,7 @@ public class ProviderTypes {
     }
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try{
             JsonNode json = request().body().asJson();
@@ -83,7 +83,7 @@ public class ProviderTypes {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try{
             Ebean.delete(ProviderType.findById(id));
@@ -93,7 +93,7 @@ public class ProviderTypes {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             Ebean.delete(ProviderType.finder.query().findList());
@@ -103,7 +103,7 @@ public class ProviderTypes {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             ProviderType providerType = ProviderType.findById(id);
@@ -113,7 +113,7 @@ public class ProviderTypes {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String sort, String name, boolean deleted){
         try {

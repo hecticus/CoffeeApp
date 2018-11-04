@@ -15,7 +15,7 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authorization.CoffeAppsecurity;
+import security.authorization.HSecurity;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ public class Farms extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -49,7 +49,7 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result update(Long id) {
         try {
             JsonNode request = request().body().asJson();
@@ -70,7 +70,7 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result delete(Long id) {
         try {
             Ebean.delete(Farm.findById(id));
@@ -80,7 +80,7 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -95,7 +95,7 @@ public class Farms extends Controller {
         }
     }
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findById(Long id) {
         try {
             Farm farm = Farm.findById(id);
@@ -106,7 +106,7 @@ public class Farms extends Controller {
     }
 
 
-    @CoffeAppsecurity
+    @HSecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String name, String sort, Long status, boolean deleted){
         try {
