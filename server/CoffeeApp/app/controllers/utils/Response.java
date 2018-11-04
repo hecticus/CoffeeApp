@@ -172,6 +172,19 @@ public class Response{
         return invalidParameter(attribute);
     }
 
+    /*
+     * unauthorized 401
+     */
+    public static Result badCredentials(){
+        return unauthorized(buildExtendResponse("Authorization has been refused for those credentials"));
+    }
+    public static Result badCredentials(String message){
+        return unauthorized(buildExtendResponse("Authorization has been refused for those credentials: " + message));
+    }
+    public static Result badCredentials(String message, JsonNode result){
+        return unauthorized(buildExtendResponse("Authorization has been refused for those credentials: " + message, result));
+    }
+
 
     /*
     * notFound 404

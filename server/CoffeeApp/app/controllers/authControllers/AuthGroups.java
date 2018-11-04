@@ -5,11 +5,12 @@ import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
+import play.mvc.Controller;
 import play.mvc.Result;
 import security.authorization.HSecurity;
 import security.models.AuthGroup;
 
-public class AuthGroups {
+public class AuthGroups extends Controller {
     @HSecurity
     public Result findAll(Pager pager, String sort, String collection) {
         try {
