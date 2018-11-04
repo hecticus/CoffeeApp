@@ -67,7 +67,7 @@ public class User extends AbstractEntity {
     @JsonIgnore
     protected RecoverPassword recoverPassword;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE)
     protected Multimedia multimediaProfile;
 
     protected static Finder<Long, User> finder = new Finder<>(User.class);

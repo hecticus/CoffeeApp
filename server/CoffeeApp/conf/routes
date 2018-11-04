@@ -34,18 +34,18 @@ GET     /authPermissions                                controllers.authControll
 GET     /authRoles                                      controllers.authControllers.AuthRoles.findAll(pager: controllers.parsers.queryStringBindable.Pager, sort: String ?= null, collection: String ?= null)
 
 
-###############################################################################
-#·······                     User                                   ··········#
-###############################################################################
-GET     /user                                                                   controllers.Users.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, firstName: String ?= null, lastName: String ?= null,  deleted: Boolean ?= false )
-GET     /user/:id                                                               controllers.Users.findById(id : Long)
-POST    /user                                                                   controllers.Users.create()
-PUT     /user/:id                                                               controllers.Users.update(id : Long)
-DELETE  /user/:id                                                               controllers.Users.delete(id : Long)
-GET     /user/email/:email                                                      controllers.Users.findByEmail(email: String)
-GET     /user/authUser/:authUserId                                              controllers.Users.findByAuthUser(authUserId: java.lang.Long)
-PATCH   /user/:id/password                                                      controllers.Users.updatePassword(id: Long)
-POST    /oauth/changepassword                                                   controllers.Users.changePassword()
+################################################################################
+##·······                     User                                   ··········#
+################################################################################
+#GET     /user                                                                   controllers.Users.findAll( pageindex: Integer ?= null, pagesize: Integer ?= null, collection: String ?= null, sort: String ?= null, name: String ?= null, firstName: String ?= null, lastName: String ?= null,  deleted: Boolean ?= false )
+#GET     /user/:id                                                               controllers.Users.findById(id : Long)
+#POST    /user                                                                   controllers.Users.create()
+#PUT     /user/:id                                                               controllers.Users.update(id : Long)
+#DELETE  /user/:id                                                               controllers.Users.delete(id : Long)
+#GET     /user/email/:email                                                      controllers.Users.findByEmail(email: String)
+#GET     /user/authUser/:authUserId                                              controllers.Users.findByAuthUser(authUserId: java.lang.Long)
+#PATCH   /user/:id/password                                                      controllers.Users.updatePassword(id: Long)
+#POST    /oauth/changepassword                                                   controllers.Users.changePassword()
 
 ###############################################################################
 #·······                        Farm                                ··········#

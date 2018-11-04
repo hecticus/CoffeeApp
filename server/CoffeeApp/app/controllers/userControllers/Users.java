@@ -1,9 +1,10 @@
 package controllers.userControllers;
 
-import com.avaje.ebean.text.PathProperties;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
+import io.ebean.text.PathProperties;
 import models.userModels.User;
 import play.libs.Json;
 import play.mvc.Controller;

@@ -7,7 +7,8 @@ import java.util.*;
 public class InvoiceDaemon {
 
     public InvoiceDaemon() {
-        changesStatus();
+        System.out.println("jojojoojojjojj");
+//        changesStatus();
     }
 
     public void changesStatus(){

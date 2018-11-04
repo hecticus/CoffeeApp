@@ -4,6 +4,7 @@ import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.ebean.annotation.SoftDelete;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
@@ -35,6 +36,9 @@ public class AuthUser extends BaseModel {
     @Constraints.Required
     @Column(columnDefinition = "tinyint default 0", nullable = false, insertable = false)
     protected Boolean archived = false;
+
+    @SoftDelete
+    private boolean deleted;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX") // , timezone = "UTC"
@@ -126,6 +130,14 @@ public class AuthUser extends BaseModel {
 
     public void setAuthGroup(AuthGroup authGroup) {
         this.authGroup = authGroup;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public List<SecurityToken> getSecurityTokens() {

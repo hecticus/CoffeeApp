@@ -1,19 +1,25 @@
-
 INSERT INTO `auth_user` ( id , username, email, password, deleted) VALUES
-(100,'fmadriz','rmadriz@grupoeleta.com','12345', 0),
+(100,'fmadriz','fmadriz@grupoeleta.com','12345', 0),
 (101,'marwin','marwin.campos@hecticus.com','12345', 0),
 (102,'cubilla','lcubilla@cafedeeleta.com','prueba', 0),
 (103,'baldia','tdeobaldia@cafedeeleta.com','thania$2602', 0),
 (104,'cervantes','mcervantes@cafedeeleta.com','miguel$2602', 0),
 (105,'rmadriz','rmadriz@grupoeleta.com','bourbon', 0);
 
-INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
+/*(100,'fmadriz','rmadriz@grupoeleta.com','12345', 0),
+(101,'marwin','marwin.campos@hecticus.com','12345', 0),
+(102,'cubilla','lcubilla@cafedeeleta.com','prueba', 0),
+(103,'baldia','tdeobaldia@cafedeeleta.com','thania$2602', 0),
+(104,'cervantes','mcervantes@cafedeeleta.com','miguel$2602', 0),
+(105,'rmadriz','rmadriz@grupoeleta.com','bourbon', 0);*/
+
+/*INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
 (100,100,'Madriz','Eleta','Panama','1234567', 0),
 (101,101,'Marwin','Campos','Caracas','2515151', 0);
 (102,102,'Cubilla','Eleta','Caracas','2515151', 0);
 (103,103,'Marwin','Campos','Caracas','2515151', 0);
 (104,104,'Cervantes','Eleta','Caracas','2515151', 0);
-(105,105,'rmadriz','Eleta','Caracas','2515151', 0);
+(105,105,'rmadriz','Eleta','Caracas','2515151', 0);*/
 
 INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id) VALUES
 (100,7),
@@ -156,13 +162,13 @@ INSERT INTO `auth_client_credential` (id, client_id, name) VALUES
 (1,'web_site',    'web site'),
 (2,'android_app', 'android app');
 
-INSERT INTO `auth_user` ( id , username, email, password, deleted) VALUES
-(100,'fmadriz','fmadriz@grupoeleta.com','12345', 0),
-(101,'marwin','marwin.campos@hecticus.com','12345', 0),
-(102,'cubilla','lcubilla@cafedeeleta.com','prueba', 0),
-(103,'baldia','tdeobaldia@cafedeeleta.com','thania$2602', 0),
-(104,'cervantes','mcervantes@cafedeeleta.com','miguel$2602', 0),
-(105,'rmadriz','rmadriz@grupoeleta.com','bourbon', 0);
+INSERT INTO `auth_user` ( id , email, password, deleted) VALUES
+(100, 'rmadriz@grupoeleta.com','12345', 0),
+(101, 'marwin.campos@hecticus.com','12345', 0),
+(102, 'lcubilla@cafedeeleta.com','prueba', 0),
+(103, 'tdeobaldia@cafedeeleta.com','thania$2602', 0),
+(104, 'mcervantes@cafedeeleta.com','miguel$2602', 0),
+(105, 'rrmadriz@grupoeleta.com','bourbon', 0);
 
 INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, deleted) VALUES
 (100,100,'Madriz','Eleta','Panama','1234567', 0),
@@ -172,25 +178,7 @@ INSERT INTO `user` ( id, auth_user_id, first_name, last_name, address, phone, de
 (104,104,'Cervantes','Eleta','Caracas','2515151', 0),
 (105,105,'rmadriz','Eleta','Caracas','2515151', 0);
 
-INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id) VALUES
-(100,7),
-(100,8),
-(100,9),
-(101,7),
-(101,8),
-(101,9),
-(102,7),
-(102,8),
-(102,9),
-(103,7),
-(103,8),
-(103,9),
-(104,7),
-(104,8),
-(104,9),
-(105,7),
-(105,8),
-(105,9);
+
 
 INSERT INTO `auth_permission_auth_role` (`auth_permission_id`,`auth_role_id`) VALUES
 (169,45),
@@ -519,7 +507,7 @@ TRUNCATE `auth_role_auth_group`;
 
 TRUNCATE `auth_client_credential`;
 
-TRUNCATE `auth_user_auth_group`;
+-- TRUNCATE `auth_user_auth_group`;
 
 TRUNCATE `auth_user_auth_role`;
 

@@ -3,16 +3,58 @@
 
 # --- !Ups
 
+create table auth_group (
+  id                            bigint auto_increment not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  name                          varchar(50) not null,
+  description                   varchar(255),
+  constraint uq_auth_group_name unique (name),
+  constraint pk_auth_group primary key (id)
+);
+
+create table auth_permission (
+  id                            bigint auto_increment not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  name                          varchar(100) not null,
+  description                   varchar(255),
+  constraint uq_auth_permission_name unique (name),
+  constraint pk_auth_permission primary key (id)
+);
+
+create table auth_permission_auth_role (
+  auth_permission_id            bigint not null,
+  auth_role_id                  bigint not null,
+  constraint pk_auth_permission_auth_role primary key (auth_permission_id,auth_role_id)
+);
+
+create table auth_role (
+  id                            bigint auto_increment not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  name                          varchar(50) not null,
+  description                   varchar(255),
+  constraint uq_auth_role_name unique (name),
+  constraint pk_auth_role primary key (id)
+);
+
+create table auth_role_auth_group (
+  auth_role_id                  bigint not null,
+  auth_group_id                 bigint not null,
+  constraint pk_auth_role_auth_group primary key (auth_role_id,auth_group_id)
+);
+
 create table auth_user (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  username                      varchar(50) not null,
-  email                         varchar(50) not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  email                         varchar(100) not null,
   password                      text not null,
-  last_login                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  archived                      tinyint default 0 not null,
+  last_login                    datetime,
+  auth_group_id                 bigint,
   deleted                       tinyint(1) default 0 not null,
-  constraint uq_auth_user_username unique (username),
   constraint uq_auth_user_email unique (email),
   constraint pk_auth_user primary key (id)
 );
@@ -23,16 +65,10 @@ create table auth_user_auth_role (
   constraint pk_auth_user_auth_role primary key (auth_user_id,auth_role_id)
 );
 
-create table auth_user_auth_group (
-  auth_user_id                  bigint not null,
-  auth_group_id                 bigint not null,
-  constraint pk_auth_user_auth_group primary key (auth_user_id,auth_group_id)
-);
-
 create table auth_client_credential (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   client_id                     varchar(50) not null,
   client_secret                 varchar(100),
   name                          varchar(100) not null,
@@ -40,7 +76,7 @@ create table auth_client_credential (
   home_page_url                 text,
   privacy_policy_url            text,
   auth_callback_uri             text,
-  description                   text,
+  description                   varchar(255),
   constraint uq_auth_client_credential_client_id unique (client_id),
   constraint pk_auth_client_credential primary key (id)
 );
@@ -62,16 +98,6 @@ create table farms (
   updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
   constraint uq_farms_name_farm unique (name_farm),
   constraint pk_farms primary key (id)
-);
-
-create table auth_group (
-  id                            bigint auto_increment not null,
-  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  name                          varchar(50) not null,
-  description                   varchar(255),
-  constraint uq_auth_group_name unique (name),
-  constraint pk_auth_group primary key (id)
 );
 
 create table invoices (
@@ -196,22 +222,6 @@ create table multimedia_cdn (
   constraint pk_multimedia_cdn primary key (id)
 );
 
-create table auth_permission (
-  id                            bigint auto_increment not null,
-  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  name                          varchar(100) not null,
-  description                   text,
-  constraint uq_auth_permission_name unique (name),
-  constraint pk_auth_permission primary key (id)
-);
-
-create table auth_permission_auth_role (
-  auth_permission_id            bigint not null,
-  auth_role_id                  bigint not null,
-  constraint pk_auth_permission_auth_role primary key (auth_permission_id,auth_role_id)
-);
-
 create table providers (
   id                            bigint auto_increment not null,
   provider_type_id              bigint not null,
@@ -252,6 +262,18 @@ create table purities (
   constraint pk_purities primary key (id)
 );
 
+create table user_recover_pass (
+  id                            bigint auto_increment not null,
+  user_id                       bigint not null,
+  pin                           varchar(50) not null,
+  expiration                    datetime,
+  deleted                       tinyint(1) default 0 not null,
+  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+  constraint uq_user_recover_pass_user_id unique (user_id),
+  constraint pk_user_recover_pass primary key (id)
+);
+
 create table multimedia_rescale_cdn (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -266,40 +288,15 @@ create table multimedia_rescale_cdn (
   constraint pk_multimedia_rescale_cdn primary key (id)
 );
 
-create table auth_role (
-  id                            bigint auto_increment not null,
-  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  name                          varchar(50) not null,
-  description                   varchar(255),
-  constraint uq_auth_role_name unique (name),
-  constraint pk_auth_role primary key (id)
-);
-
-create table auth_role_auth_group (
-  auth_role_id                  bigint not null,
-  auth_group_id                 bigint not null,
-  constraint pk_auth_role_auth_group primary key (auth_role_id,auth_group_id)
-);
-
-create table auth_pin (
-  id                            bigint auto_increment not null,
-  created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  auth_user_id                  bigint not null,
-  pin                           varchar(50) not null,
-  tries                         integer,
-  expiration                    datetime,
-  constraint uq_auth_pin_auth_user_id unique (auth_user_id),
-  constraint pk_auth_pin primary key (id)
-);
-
 create table auth_token (
   id                            bigint auto_increment not null,
   created_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   token                         text not null,
+  type                          varchar(20) not null,
+  refresh_token_id              bigint,
   auth_user_id                  bigint not null,
+  constraint uq_auth_token_refresh_token_id unique (refresh_token_id),
   constraint pk_auth_token primary key (id)
 );
 
@@ -353,17 +350,26 @@ create table user (
   constraint pk_user primary key (id)
 );
 
+alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_permission foreign key (auth_permission_id) references auth_permission (id) on delete restrict on update restrict;
+create index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role (auth_permission_id);
+
+alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
+create index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role (auth_role_id);
+
+alter table auth_role_auth_group add constraint fk_auth_role_auth_group_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
+create index ix_auth_role_auth_group_auth_role on auth_role_auth_group (auth_role_id);
+
+alter table auth_role_auth_group add constraint fk_auth_role_auth_group_auth_group foreign key (auth_group_id) references auth_group (id) on delete restrict on update restrict;
+create index ix_auth_role_auth_group_auth_group on auth_role_auth_group (auth_group_id);
+
+alter table auth_user add constraint fk_auth_user_auth_group_id foreign key (auth_group_id) references auth_group (id) on delete restrict on update restrict;
+create index ix_auth_user_auth_group_id on auth_user (auth_group_id);
+
 alter table auth_user_auth_role add constraint fk_auth_user_auth_role_auth_user foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 create index ix_auth_user_auth_role_auth_user on auth_user_auth_role (auth_user_id);
 
 alter table auth_user_auth_role add constraint fk_auth_user_auth_role_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
 create index ix_auth_user_auth_role_auth_role on auth_user_auth_role (auth_role_id);
-
-alter table auth_user_auth_group add constraint fk_auth_user_auth_group_auth_user foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
-create index ix_auth_user_auth_group_auth_user on auth_user_auth_group (auth_user_id);
-
-alter table auth_user_auth_group add constraint fk_auth_user_auth_group_auth_group foreign key (auth_group_id) references auth_group (id) on delete restrict on update restrict;
-create index ix_auth_user_auth_group_auth_group on auth_user_auth_group (auth_group_id);
 
 alter table farms add constraint fk_farms_status_farm_id foreign key (status_farm_id) references status (id) on delete restrict on update restrict;
 create index ix_farms_status_farm_id on farms (status_farm_id);
@@ -412,12 +418,6 @@ create index ix_lots_status_lot_id on lots (status_lot_id);
 
 alter table multimedia add constraint fk_multimedia_multimedia_cdn_id foreign key (multimedia_cdn_id) references multimedia_cdn (id) on delete restrict on update restrict;
 
-alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_permission foreign key (auth_permission_id) references auth_permission (id) on delete restrict on update restrict;
-create index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role (auth_permission_id);
-
-alter table auth_permission_auth_role add constraint fk_auth_permission_auth_role_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
-create index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role (auth_role_id);
-
 alter table providers add constraint fk_providers_provider_type_id foreign key (provider_type_id) references provider_type (id) on delete restrict on update restrict;
 create index ix_providers_provider_type_id on providers (provider_type_id);
 
@@ -426,16 +426,12 @@ create index ix_providers_status_provider_id on providers (status_provider_id);
 
 alter table providers add constraint fk_providers_multimedia_profile_id foreign key (multimedia_profile_id) references multimedia (id) on delete restrict on update restrict;
 
+alter table user_recover_pass add constraint fk_user_recover_pass_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+
 alter table multimedia_rescale_cdn add constraint fk_multimedia_rescale_cdn_multimedia_id foreign key (multimedia_id) references multimedia_cdn (id) on delete restrict on update restrict;
 create index ix_multimedia_rescale_cdn_multimedia_id on multimedia_rescale_cdn (multimedia_id);
 
-alter table auth_role_auth_group add constraint fk_auth_role_auth_group_auth_role foreign key (auth_role_id) references auth_role (id) on delete restrict on update restrict;
-create index ix_auth_role_auth_group_auth_role on auth_role_auth_group (auth_role_id);
-
-alter table auth_role_auth_group add constraint fk_auth_role_auth_group_auth_group foreign key (auth_group_id) references auth_group (id) on delete restrict on update restrict;
-create index ix_auth_role_auth_group_auth_group on auth_role_auth_group (auth_group_id);
-
-alter table auth_pin add constraint fk_auth_pin_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
+alter table auth_token add constraint fk_auth_token_refresh_token_id foreign key (refresh_token_id) references auth_token (id) on delete restrict on update restrict;
 
 alter table auth_token add constraint fk_auth_token_auth_user_id foreign key (auth_user_id) references auth_user (id) on delete restrict on update restrict;
 create index ix_auth_token_auth_user_id on auth_token (auth_user_id);
@@ -448,17 +444,26 @@ alter table user add constraint fk_user_auth_user_id foreign key (auth_user_id) 
 
 # --- !Downs
 
+alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_permission;
+drop index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role;
+
+alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_role;
+drop index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role;
+
+alter table auth_role_auth_group drop foreign key fk_auth_role_auth_group_auth_role;
+drop index ix_auth_role_auth_group_auth_role on auth_role_auth_group;
+
+alter table auth_role_auth_group drop foreign key fk_auth_role_auth_group_auth_group;
+drop index ix_auth_role_auth_group_auth_group on auth_role_auth_group;
+
+alter table auth_user drop foreign key fk_auth_user_auth_group_id;
+drop index ix_auth_user_auth_group_id on auth_user;
+
 alter table auth_user_auth_role drop foreign key fk_auth_user_auth_role_auth_user;
 drop index ix_auth_user_auth_role_auth_user on auth_user_auth_role;
 
 alter table auth_user_auth_role drop foreign key fk_auth_user_auth_role_auth_role;
 drop index ix_auth_user_auth_role_auth_role on auth_user_auth_role;
-
-alter table auth_user_auth_group drop foreign key fk_auth_user_auth_group_auth_user;
-drop index ix_auth_user_auth_group_auth_user on auth_user_auth_group;
-
-alter table auth_user_auth_group drop foreign key fk_auth_user_auth_group_auth_group;
-drop index ix_auth_user_auth_group_auth_group on auth_user_auth_group;
 
 alter table farms drop foreign key fk_farms_status_farm_id;
 drop index ix_farms_status_farm_id on farms;
@@ -507,12 +512,6 @@ drop index ix_lots_status_lot_id on lots;
 
 alter table multimedia drop foreign key fk_multimedia_multimedia_cdn_id;
 
-alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_permission;
-drop index ix_auth_permission_auth_role_auth_permission on auth_permission_auth_role;
-
-alter table auth_permission_auth_role drop foreign key fk_auth_permission_auth_role_auth_role;
-drop index ix_auth_permission_auth_role_auth_role on auth_permission_auth_role;
-
 alter table providers drop foreign key fk_providers_provider_type_id;
 drop index ix_providers_provider_type_id on providers;
 
@@ -521,16 +520,12 @@ drop index ix_providers_status_provider_id on providers;
 
 alter table providers drop foreign key fk_providers_multimedia_profile_id;
 
+alter table user_recover_pass drop foreign key fk_user_recover_pass_user_id;
+
 alter table multimedia_rescale_cdn drop foreign key fk_multimedia_rescale_cdn_multimedia_id;
 drop index ix_multimedia_rescale_cdn_multimedia_id on multimedia_rescale_cdn;
 
-alter table auth_role_auth_group drop foreign key fk_auth_role_auth_group_auth_role;
-drop index ix_auth_role_auth_group_auth_role on auth_role_auth_group;
-
-alter table auth_role_auth_group drop foreign key fk_auth_role_auth_group_auth_group;
-drop index ix_auth_role_auth_group_auth_group on auth_role_auth_group;
-
-alter table auth_pin drop foreign key fk_auth_pin_auth_user_id;
+alter table auth_token drop foreign key fk_auth_token_refresh_token_id;
 
 alter table auth_token drop foreign key fk_auth_token_auth_user_id;
 drop index ix_auth_token_auth_user_id on auth_token;
@@ -540,19 +535,25 @@ drop index ix_stores_status_store_id on stores;
 
 alter table user drop foreign key fk_user_auth_user_id;
 
+drop table if exists auth_group;
+
+drop table if exists auth_permission;
+
+drop table if exists auth_permission_auth_role;
+
+drop table if exists auth_role;
+
+drop table if exists auth_role_auth_group;
+
 drop table if exists auth_user;
 
 drop table if exists auth_user_auth_role;
-
-drop table if exists auth_user_auth_group;
 
 drop table if exists auth_client_credential;
 
 drop table if exists config;
 
 drop table if exists farms;
-
-drop table if exists auth_group;
 
 drop table if exists invoices;
 
@@ -572,23 +573,15 @@ drop table if exists multimedia;
 
 drop table if exists multimedia_cdn;
 
-drop table if exists auth_permission;
-
-drop table if exists auth_permission_auth_role;
-
 drop table if exists providers;
 
 drop table if exists provider_type;
 
 drop table if exists purities;
 
+drop table if exists user_recover_pass;
+
 drop table if exists multimedia_rescale_cdn;
-
-drop table if exists auth_role;
-
-drop table if exists auth_role_auth_group;
-
-drop table if exists auth_pin;
 
 drop table if exists auth_token;
 
