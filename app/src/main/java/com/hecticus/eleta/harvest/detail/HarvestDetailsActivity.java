@@ -397,7 +397,6 @@ public class HarvestDetailsActivity extends BaseActivity implements HarvestDetai
         mAdapter = new EditListAdapter(true, false, true);
         itemsRecyclerView.setAdapter(mAdapter);
         mAdapter.showNewDataSet(listAux, true);
-        //mAdapter.showAddAnother(listAux);
         observationsEditText.setText("");
     }
 

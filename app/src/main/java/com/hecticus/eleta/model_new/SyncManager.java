@@ -173,8 +173,10 @@ public class SyncManager {
         final Integer oldLocalProviderId;
 
         if (currentProviderToSync.getIdProvider() != null && currentProviderToSync.getIdProvider() < 0) {
+            Log.d("DEBUG", "oldLocalProviderId" + currentProviderToSync.getIdProvider());
+            Log.d("DEBUG", "oldLocalProviderId invoice" + new Gson().toJson(currentProviderToSync));
             oldLocalProviderId = currentProviderToSync.getIdProvider();
-            currentProviderToSync.setIdProvider(null);
+            //currentProviderToSync.setIdProvider(null);
         } else {
             oldLocalProviderId = null;
         }
@@ -217,8 +219,11 @@ public class SyncManager {
                         } finally {
                             realm.close();
                             syncNextPendingProvider();
-                            if (oldLocalProviderId != null)
+                            if (oldLocalProviderId != null){
+                                Log.d("DEBUG", "oldlocalproviderid" + oldLocalProviderId + "newproviderid"+ newProviderId);
                                 updateProviderIdInInvoices(oldLocalProviderId, newProviderId);
+
+                            }
                             /*try {
                                 if (currentProviderToSync.getMultimediaProfile().getMultimediaCDN().getUrl() != null){
                                     syncProviderPhoto(currentProviderToSync);
@@ -524,7 +529,7 @@ public class SyncManager {
         Call<CreateInvoiceResponse> call;
         //if (firstInvoicePost.getInvoiceId() == -1) {
             final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
-
+            Log.d("DEBUG", "oldLocalProviderId" +new Gson().toJson(invoice));
             call = invoiceApi.newInvoiceDetail(invoice);
             call.enqueue(new Callback<CreateInvoiceResponse>() {
                 @Override
