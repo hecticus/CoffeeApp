@@ -165,8 +165,6 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
     @Override
     public boolean isCurrentClosedInvoice() {//3 = a factura cerrada
-        /*Gson g= new Gson();
-        LogDataBase.d("DEBUGGGGGGGG", g.toJson(currentInvoice));*/
         try {
             return currentInvoice.getStatusInvo().equals("Cerrada");//false; //<-currentInvoice.getInvoiceStatus() == 3;todo nose
         }catch (Exception e){
@@ -231,11 +229,14 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
         mView.showWorkingIndicator();
         //CloseInvoicePost closePost = new CloseInvoicePost(currentInvoice.getInvoiceId(), Util.getTomorrowDate());
         Invoice invoice = ManagerDB.getInvoiceById(currentInvoice.getInvoiceId());
+        if(invoice.getInvoiceId()==-1){
+            invoice = ManagerDB.getInvoiceByIdLocal(currentInvoice.getLocalId());
+        }
         ManagerDB.updateStatusInvoice(invoice);
-        com.hecticus.eleta.model_new.Invoice invoice1
+        /*com.hecticus.eleta.model_new.Invoice invoice1
                 = new com.hecticus.eleta.model_new.Invoice(invoice,
                 invoice.getProvider(),
-                new StatusInvoice(12, false, "Cerrada", null));
+                new StatusInvoice(12, false, "Cerrada", null));*/
         mRepository.closeInvoiceRequest(invoice);
     }
 
