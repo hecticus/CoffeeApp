@@ -124,9 +124,12 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
 
                 Log.d("BUG", "--->Provider of invoice to request HOD: " + currentInvoice.getProvider());
                 if (currentInvoice.getProvider() == null) {
+                    Log.d("BRAYAN", "1");
                     if (currentInvoice.getProviderId() == -1) {
+                        Log.d("BRAYAN", "2");
                         currentInvoice.setProvider(mRepository.getProviderByIdentificationDoc(currentInvoice.getIdentificationDocProvider()));
                     } else {
+                        Log.d("BRAYAN", "3");
                         Provider provider = mRepository.getProviderById(currentInvoice.getProviderId());
                         Log.d("TEST", "--->getProviderId " + currentInvoice.getProviderId() + " - getIdentificationDocProvider:" + currentInvoice.getIdentificationDocProvider());
                         Log.d("TEST", "--->provider: " + provider);
@@ -134,7 +137,7 @@ public class InvoicesOfDayListPresenter implements InvoicesOfDayListContract.Act
                         currentInvoice.setProvider(provider);
                     }
                 }
-
+                //todo brayan
                 if (currentInvoice.getProvider() != null) {
                     try {
                         mView.initHeader(currentInvoice.getProvider().getMediaBase64(), currentInvoice.getProvider().getFullNameProvider(), currentInvoice.getProvider().getMultimediaProfile().getMultimediaCDN().getUrl());//getPhotoProvider());

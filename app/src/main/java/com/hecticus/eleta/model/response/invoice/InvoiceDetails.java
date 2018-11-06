@@ -469,7 +469,6 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     public String getReadableHeader() {
         String response = " ";
         if (startDate != null) {
-            Log.d("DEBUG shami", "ReadableHeader" + startDate);
             try{
                 response = Util.parseDateZH(startDate, "yyyy-MM-dd");
             }catch (Exception e){
@@ -484,7 +483,6 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
     public String getReadableFirstInfo() {
         String response = " ";
         if (startDate != null) {
-            Log.d("DEBUG shami", "ReadableFirstInfo" + startDate);
             try {
                 response = Util.parseDateZH(startDate, "HH:mm:ss");
             }catch (Exception e){

@@ -260,8 +260,6 @@ public class Util {
                 0);
 
         SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-        Log.d("TimeZone currentDate", "....... brayan init"+sdfMadrid.format(calendar.getTime()));
         return sdfMadrid.format(calendar.getTime());
     }
 
@@ -281,8 +279,6 @@ public class Util {
                 59);
 
         SimpleDateFormat sdfMadrid = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-        Log.d("TimeZone currentDate", "....... brayan finish"+sdfMadrid.format(calendar.getTime()));
 
         return sdfMadrid.format(calendar.getTime());
     }

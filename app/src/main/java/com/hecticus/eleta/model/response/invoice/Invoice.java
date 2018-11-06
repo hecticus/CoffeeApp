@@ -91,6 +91,7 @@ public class Invoice extends RealmObject implements BaseModel, JsonSerializer<In
         invoiceStatus = new StatusInvoice(11, false, "Abierta", null);
         invoiceStartDate = invoicePost.getStartDate();
         //invoiceClosedDate = invoicePost.getStartDate();
+        localId = invoicePost.getInvoicePostLocalId();
         invoiceTotal = invoicePost.getTotal();
         type = invoicePost.getType();
         providerName = invoicePost.getProviderName();

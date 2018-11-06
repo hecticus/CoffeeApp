@@ -276,9 +276,8 @@ public class ManagerDB {
         ArrayList<InvoiceDetails> finalInvoiceDetailsList = new ArrayList<>(invoiceDetailsList);
 
         List<InvoiceDetails> deletedInvoiceDetailsList = Realm.getDefaultInstance().where(InvoiceDetails.class).equalTo("deleteOffline", true).equalTo("invoiceId", idInvoice).findAllSorted("startDate");
-        Log.d("DEBUG", "control for delete"+ deletedInvoiceDetailsList.size());
+
         for (InvoiceDetails invoiceDetails : deletedInvoiceDetailsList) {
-            Log.d("DEBUG111", "control for delete"+ deletedInvoiceDetailsList.size());
             if (invoiceDetails.getId() > -1) {
                 int ind = invoiceDetails.indexByIdIn(finalInvoiceDetailsList);
                 if (ind != -1) {
@@ -586,17 +585,12 @@ public class ManagerDB {
                         }
                         invoice.setStatusInvo(invoice.getInvoiceStatus().getName());
 
-
-
-                        Log.d("DEBUG shamuel", "hp mmm"+invoice.getInvoiceStartDate());
-                        Log.d("DEBUG shamuel2", "hp mmm"+parseDateZH(invoice.getInvoiceStartDate()));
                         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         invoice.setDate(parseDateZH(invoice.getInvoiceStartDate()/*.split(" ")[0]*/));
 
 
 
                         //invoice.setDate(invoice.getInvoiceStartDate().split(" ")[0]);
-                        Log.d("DEBUG shamuel", "hp mmm"+invoice.getInvoiceStartDate().split(" ")[0]);
                         invoice.setId2(invoice.getInvoiceId() + "-" + invoice.getLocalId());
                         //invoice.setInvoiceStartDate(Util.parseDateTimeZone(invoice.getInvoiceStartDate()));
                         realm.insertOrUpdate(invoice);
@@ -1279,6 +1273,11 @@ public class ManagerDB {
     public static Invoice getInvoiceById(int id) {
         return Realm.getDefaultInstance().where(Invoice.class).equalTo("id", id).findFirst();
     }
+
+    /*@DebugLog
+    public static Invoice getInvoiceById2(String id) {
+        return Realm.getDefaultInstance().where(Invoice.class).equalTo("id2", id).findFirst();
+    }*/
 
     @DebugLog
     public static Invoice getInvoiceByIdLocal(int id) {

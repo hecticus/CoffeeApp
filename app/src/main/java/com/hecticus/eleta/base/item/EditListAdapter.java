@@ -75,7 +75,6 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
         genericItemViewHolder.getValueEditText().setEnabled(canEdit);
 
         if (canEdit) {
-            Log.d("DEBUG1110000", new Gson().toJson(list));
             genericItemViewHolder.getValueEditText().addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -84,9 +83,8 @@ public class EditListAdapter extends RecyclerView.Adapter<EditItemViewHolder> {
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    Log.d("DEBUG1111111", new Gson().toJson(list));
+
                     list.get(position).setInputValue(charSequence + "");
-                    Log.d("DEBUG11112222", new Gson().toJson(list));
                 }
 
                 @Override
