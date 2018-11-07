@@ -133,7 +133,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
+                Invoice invoice = new Invoice(invoicePost, invoicePost.getProviderId()); //ManagerDB.getProviderById(invoicePost.getProviderId()));
                 Log.d("DEBUG invoice", new Gson().toJson(invoice));
                 call = invoiceApi.newInvoiceDetail(invoice);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {

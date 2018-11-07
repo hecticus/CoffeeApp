@@ -32,6 +32,7 @@ import com.hecticus.eleta.model_new.retrofit_interface.ProviderRetrofitInterface
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.ErrorHandling;
 import com.hecticus.eleta.util.FileUtils;
+import com.hecticus.eleta.util.TimeHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,7 +162,13 @@ public class SyncManager {
     @DebugLog
     private void syncNextPendingProvider() {
         if (providersList.size() <= 0) {
-            syncInvoices();
+            TimeHandler timeHandler = new TimeHandler(4000, new TimeHandler.OnTimeComplete() {
+                @Override
+                public void onFinishTime() {
+                    syncInvoices();
+                }
+            });
+            timeHandler.start();
             return;
         }
 
@@ -186,6 +193,7 @@ public class SyncManager {
 
         if (isAdding) {
             operationName = "createProviderSync";
+            currentProviderToSync.setIdProvider(null);
             currentProviderToSync.setProviderType(new ProviderType(currentProviderToSync.getIdProviderType()));
             call = providersApi.createProvider(currentProviderToSync);
         } else {
@@ -528,7 +536,7 @@ public class SyncManager {
         //if (firstInvoicePost.getInvoiceId() == -1) {
 
             final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(
-                    firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId())); //todo error con provider
+                    firstInvoicePost, firstInvoicePost.getProviderId()); //todo error con provider
             call = invoiceApi.newInvoiceDetail(invoice);
             call.enqueue(new Callback<CreateInvoiceResponse>() {
                 @Override

@@ -126,7 +126,7 @@ public class PurchaseDetailsRepository implements PurchaseDetailsContract.Reposi
         } else {
             Call<CreateInvoiceResponse> call;
             if (isAdd) {
-                Invoice invoice = new Invoice(invoicePost, ManagerDB.getProviderById(invoicePost.getProviderId()));
+                Invoice invoice = new Invoice(invoicePost, invoicePost.getProviderId()); //ManagerDB.getProviderById(invoicePost.getProviderId()));
                 call = invoiceApi.newInvoiceDetail(invoice);
                 call.enqueue(new Callback<CreateInvoiceResponse>() {
                     @DebugLog
