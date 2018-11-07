@@ -1,6 +1,6 @@
 package controllers.userControllers.recoverPassword;
 
-import com.avaje.ebean.Ebean;
+import io.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.Response;
 import models.userModels.RecoverPassword;

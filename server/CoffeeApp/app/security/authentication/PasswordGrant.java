@@ -1,6 +1,6 @@
 package security.authentication;
 
-import com.avaje.ebean.Ebean;
+import io.ebean.Ebean;
 import io.jsonwebtoken.ExpiredJwtException;
 import play.mvc.Controller;
 import play.mvc.Result;

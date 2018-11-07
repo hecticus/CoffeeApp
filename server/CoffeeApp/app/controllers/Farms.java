@@ -1,15 +1,11 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
-import controllers.utils.NsExceptionsUtils;
-import controllers.utils.Response;
+import controllers.utils.*;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import models.Farm;
-import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.ResponseCollection;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -34,16 +30,16 @@ public class Farms extends Controller {
         try {
             JsonNode request = request().body().asJson();
             if (request == null)
-                return Response.requiredJson();
+                return ResponseN.requiredJson();
 
             Form<Farm> form = formFactory.form(Farm.class).bind(request);
             if (form.hasErrors())
-                return Response.invalidParameter(form.errorsAsJson());
+                return ResponseN.invalidParameter(form.errorsAsJson());
 
             Farm farm = form.get();
             farm.insert();
 
-            return Response.createdEntity(Json.toJson(farm));
+            return ResponseN.createdEntity(Json.toJson(farm));
         } catch (Exception e) {
             return NsExceptionsUtils.create(e);
         }
@@ -54,17 +50,17 @@ public class Farms extends Controller {
         try {
             JsonNode request = request().body().asJson();
             if (request == null)
-                return Response.requiredJson();
+                return ResponseN.requiredJson();
 
             Form<Farm> form = formFactory.form(Farm.class).bind(request);
             if (form.hasErrors())
-                return Response.invalidParameter(form.errorsAsJson());
+                return ResponseN.invalidParameter(form.errorsAsJson());
 
             Farm farm = Json.fromJson(request, Farm.class);
             farm.setId(id);
             farm.update();
 
-            return Response.updatedEntity(Json.toJson(farm));
+            return ResponseN.updatedEntity(Json.toJson(farm));
         } catch (Exception e) {
             return NsExceptionsUtils.update(e);
         }
@@ -74,7 +70,7 @@ public class Farms extends Controller {
     public Result delete(Long id) {
         try {
             Ebean.delete(Farm.findById(id));
-            return Response.deletedEntity();
+            return ResponseN.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
@@ -85,11 +81,11 @@ public class Farms extends Controller {
         try {
             JsonNode json = request().body().asJson();
             if (json == null)
-                return Response.requiredJson();
+                return ResponseN.requiredJson();
 
             Ebean.deleteAll(Farm.class, JsonUtils.toArrayLong(json, "ids"));
 
-            return Response.deletedEntity();
+            return ResponseN.deletedEntity();
         } catch (Exception e) {
             return NsExceptionsUtils.delete(e);
         }
@@ -99,24 +95,43 @@ public class Farms extends Controller {
     public Result findById(Long id) {
         try {
             Farm farm = Farm.findById(id);
-            return Response.foundEntity(Json.toJson(farm));
+            return ResponseN.foundEntity(Json.toJson(farm));
         } catch (Exception e) {
             return NsExceptionsUtils.find(e);
         }
     }
 
 
-    @HSecurity
+//    @HSecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String name, String sort, Long status, boolean deleted){
         try {
-            ListPagerCollection listPager = Farm.findAll(index, size, propertiesCollection.getPathProperties(collection),
+//            ListPagerCollection listPager = Farm.findAll(index, size, propertiesCollection.getPathProperties(collection),
+            PagedList pagedList = Farm.findAll(index, size, propertiesCollection.getPathProperties(collection),
                                                             name,  sort, status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            return ResponseN.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtilsN.find(e);
         }
     }
-
 }
+
+
+//        url
+//        https:localhost:9000
+//        https:localhost:9000
+//        urll
+//        http://localhost:9000
+//        http://localhost:9000
+//        user
+//        shamuel.manrrique@hecticus.com
+//        shamuel.manrrique@hecticus.com
+//        password
+//        root
+//        root
+//        web
+//        web_site
+//        web_site
+//        secret
+//        hola
