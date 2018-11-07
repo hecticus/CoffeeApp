@@ -80,7 +80,6 @@ public class SyncManager {
     private List<InvoiceDetails> invoiceDetailsDelete;
     private List<InvoiceDetails> invoiceDetailsEdit;
     private List<InvoiceDetails> invoiceDetailsAdd;
-    private Realm realm = Realm.getDefaultInstance();
 
     private boolean somethingHasBeenSynced = false;
 
@@ -88,7 +87,6 @@ public class SyncManager {
 
     @DebugLog
     public SyncManager() {
-        realm = Realm.getDefaultInstance();
         if (providersApi == null) {
             Gson gson = new GsonBuilder()
                     .setLenient()
@@ -132,24 +130,24 @@ public class SyncManager {
         providersList = new ArrayList<>();
 
         List<Provider> providersAux =
-                realm.where(Provider.class)
+                Realm.getDefaultInstance().where(Provider.class)
                         .equalTo("deleteOffline", false)
                         .equalTo("addOffline", true)
                         .findAllSorted("unixtime");
 
         if (providersAux != null) {
-            providersList.addAll(realm.copyFromRealm(providersAux));
+            providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providersAux));
         }
 
         providersAux =
-                realm.where(Provider.class)
+                Realm.getDefaultInstance().where(Provider.class)
                         .equalTo("deleteOffline", false)
                         .equalTo("addOffline", false)
                         .equalTo("editOffline", true)
                         .findAllSorted("unixtime");
 
         if (providersAux != null) {
-            providersList.addAll(realm.copyFromRealm(providersAux));
+            providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providersAux));
         }
 
         if (providersList.isEmpty()) {
@@ -174,8 +172,6 @@ public class SyncManager {
         final Integer oldLocalProviderId;
 
         if (currentProviderToSync.getIdProvider() != null && currentProviderToSync.getIdProvider() < 0) {
-            Log.d("DEBUG", "oldLocalProviderId" + currentProviderToSync.getIdProvider());
-            Log.d("DEBUG", "oldLocalProviderId invoice" + new Gson().toJson(currentProviderToSync));
             oldLocalProviderId = currentProviderToSync.getIdProvider();
             //currentProviderToSync.setIdProvider(null);
         } else {
@@ -208,14 +204,16 @@ public class SyncManager {
 
                         Integer newProviderId = null;
 
-                        //Realm realm = Realm.getDefaultInstance();
+                        Realm realm = Realm.getDefaultInstance();
                         try {
                             newProviderId = response.body().getProvider().getIdProvider();
                             realm.beginTransaction();
-                            currentProviderToSync.setIdProvider(newProviderId);
+                            /*currentProviderToSync.setIdProvider(newProviderId);
                             currentProviderToSync.setAddOffline(false);
                             currentProviderToSync.setEditOffline(false);
-                            realm.insertOrUpdate(currentProviderToSync);
+                            realm.insertOrUpdate(currentProviderToSync);*/
+                            //currentProviderToSync.deleteFromRealm();
+                            realm.insertOrUpdate(response.body().getProvider());
                             realm.commitTransaction();
                         } finally {
                             realm.close();
@@ -245,7 +243,7 @@ public class SyncManager {
                         ErrorHandling.errorCodeInServerResponseProcessing(e);
                         if(operationName.equals("createProviderSync")){
                             if(logDataBase(new Gson().toJson(currentProviderToSync),"errorCatch Sync en endPoint (/provider) por post... "+ e.toString())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 Provider provider = realm
                                         .where(Provider.class)
@@ -256,7 +254,7 @@ public class SyncManager {
                             }
                         } else {
                             if(logDataBase(new Gson().toJson(currentProviderToSync),"errorCatch Sync en endPoint (/provider/"+currentProviderToSync.getIdProvider()+") por put... "+ e.toString())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 Provider provider = realm
                                         .where(Provider.class)
@@ -275,7 +273,7 @@ public class SyncManager {
                         if (operationName.equals("createProviderSync")) {
                             try {
                                 if (logDataBase(new Gson().toJson(currentProviderToSync), "error ResponseCode()=" + response.code() + " Sync en endPoint (/provider) por post... " + response.errorBody().string()) != -1) {
-                                    //Realm realm = Realm.getDefaultInstance();
+                                    Realm realm = Realm.getDefaultInstance();
                                     realm.beginTransaction();
                                     Provider provider = realm
                                             .where(Provider.class)
@@ -290,7 +288,7 @@ public class SyncManager {
                         } else {
                             try {
                                 if (logDataBase(new Gson().toJson(currentProviderToSync), "error ResponseCode()=" + response.code() + " Sync en endPoint (/provider/" + currentProviderToSync.getIdProvider() + ") por put... " + response.errorBody().string()) != -1) {
-                                    //Realm realm = Realm.getDefaultInstance();
+                                    Realm realm = Realm.getDefaultInstance();
                                     realm.beginTransaction();
                                     Provider provider = realm
                                             .where(Provider.class)
@@ -398,7 +396,7 @@ public class SyncManager {
 
                         //onImageUpdateSuccess(response.body().getUploadedImageUrl());
 
-                        //Realm realm = Realm.getDefaultInstance();
+                        Realm realm = Realm.getDefaultInstance();
                         try {
                             realm.beginTransaction();
 
@@ -465,9 +463,9 @@ public class SyncManager {
             Log.d("BUG", "--->updateProviderIdInInvoices not needed: " + newProviderId);
         } else {
 
-            //Realm realm = Realm.getDefaultInstance();
+            Realm realm = Realm.getDefaultInstance();
 
-            final RealmResults<Invoice> existingInvoices = realm.where(Invoice.class)
+            final RealmResults<Invoice> existingInvoices = Realm.getDefaultInstance().where(Invoice.class)
                     .equalTo("providerId", oldLocalProviderId)
                     .findAll();
             realm.executeTransaction(new Realm.Transaction() {
@@ -530,7 +528,7 @@ public class SyncManager {
         //if (firstInvoicePost.getInvoiceId() == -1) {
 
             final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(
-                    firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId()));
+                    firstInvoicePost, ManagerDB.getProviderById(firstInvoicePost.getProviderId())); //todo error con provider
             call = invoiceApi.newInvoiceDetail(invoice);
             call.enqueue(new Callback<CreateInvoiceResponse>() {
                 @Override
@@ -540,7 +538,7 @@ public class SyncManager {
                     if (response.isSuccessful() && response.body() != null) {
                         try {
 
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
 
                             List<Invoice> invoiceList1 = realm.where(Invoice.class).findAll();
                             Log.d("DETAILS", "--->" + invoiceList1);
@@ -576,7 +574,7 @@ public class SyncManager {
                             Log.e("DEBUG exploto catch", "exploto catch"+e.toString());
                             isSyncParcial = true;
                             if(logDataBase(new Gson().toJson(invoice),"error catch Sync en endPoint (/invoice2) por post... " + e.toString())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 Invoice invoiceInRealm = realm
                                         .where(Invoice.class)
@@ -594,7 +592,7 @@ public class SyncManager {
                         isSyncParcial = true;
                         try {
                             if(logDataBase(new Gson().toJson(invoice),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice2) por post... " + response.errorBody().string())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 Invoice invoiceInRealm = realm
                                         .where(Invoice.class)
@@ -641,12 +639,12 @@ public class SyncManager {
     @DebugLog
     public void syncDeletedProvider() {
         providersList = new ArrayList<>();
-        List<Provider> providers = realm
+        List<Provider> providers = Realm.getDefaultInstance()
                 .where(Provider.class)
                 .equalTo("deleteOffline", true)
                 .findAllSorted("unixtime");
         if (providers != null) {
-            providersList.addAll(realm.copyFromRealm(providers));
+            providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providers));
         }
         if (providersList.size() <= 0) {
             syncAddInvoiceDetails();
@@ -678,10 +676,10 @@ public class SyncManager {
                 if (response.isSuccessful() && response.body()!=null) {
                     try {
 
-                        //Realm realm = Realm.getDefaultInstance();
+                        Realm realm = Realm.getDefaultInstance();
                         try {
 
-                            Provider provider = realm.where(Provider.class)
+                            Provider provider = Realm.getDefaultInstance().where(Provider.class)
                                     .equalTo("idProvider", firstProvider.getIdProvider())
                                     .findFirst();
 
@@ -704,9 +702,9 @@ public class SyncManager {
                         isSyncParcial = true;
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
                         if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"err catch Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +e.toString())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            Provider provider = realm.where(Provider.class)
+                            Provider provider = Realm.getDefaultInstance().where(Provider.class)
                                     .equalTo("idProvider", firstProvider.getIdProvider())
                                     .findFirst();
                             provider.deleteFromRealm();
@@ -717,9 +715,9 @@ public class SyncManager {
                     isSyncParcial = true;
                     try {
                         if(logDataBase(new Gson().toJson(firstProvider.getIdProvider()),"error ResponseCode()="+ response.code()+"Sync en endPoint (/provider/"+firstProvider.getIdProvider()+") por delete... " +response.errorBody().string())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            Provider provider = realm.where(Provider.class)
+                            Provider provider = Realm.getDefaultInstance().where(Provider.class)
                                     .equalTo("idProvider", firstProvider.getIdProvider())
                                     .findFirst();
                             provider.deleteFromRealm();
@@ -753,12 +751,12 @@ public class SyncManager {
     @DebugLog
     public void syncAddInvoiceDetails() {
         invoiceDetailsAdd = new ArrayList<>();
-        List<InvoiceDetails> invoiceDetailsList = realm
+        List<InvoiceDetails> invoiceDetailsList = Realm.getDefaultInstance()
                 .where(InvoiceDetails.class)
                 .equalTo("addOffline", true)
                 .findAllSorted("startDate");
         if (invoiceDetailsList != null) {
-            invoiceDetailsAdd.addAll(realm.copyFromRealm(invoiceDetailsList));
+            invoiceDetailsAdd.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList));
         }
         if (invoiceDetailsAdd.size() <= 0) {
             syncEditInvoiceDetail();
@@ -790,14 +788,14 @@ public class SyncManager {
 
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        //Realm realm = Realm.getDefaultInstance();
+                        Realm realm = Realm.getDefaultInstance();
 
                         try {
                             JSONObject json = new JSONObject(response.body().string());
                             Log.d("DEBUG add details", "json " + json);
                             int id = (int) json.getJSONObject("result").getLong("id");
 
-                            InvoiceDetails invoice = realm.where(InvoiceDetails.class)
+                            InvoiceDetails invoice = Realm.getDefaultInstance().where(InvoiceDetails.class)
                                     .equalTo("localId", firstInvoiceDetails.getLocalId())
                                     .findFirst();
                             if (invoice != null) {
@@ -821,7 +819,7 @@ public class SyncManager {
                         isSyncParcial = true;
                         ErrorHandling.errorCodeInServerResponseProcessing(e);
                         if(logDataBase(new Gson().toJson(invoiceDetail),"error catch Sync en endPoint (/invoiceDetail) por post... " +e.toString())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
                                     .equalTo("localId", firstInvoiceDetails.getLocalId())
@@ -835,7 +833,7 @@ public class SyncManager {
                     isSyncParcial = true;
                     try {
                         if(logDataBase(new Gson().toJson(invoiceDetail),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por post... " + response.errorBody().string())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
                                     .equalTo("localId", firstInvoiceDetails.getLocalId())
@@ -871,9 +869,9 @@ public class SyncManager {
     @DebugLog
     public void syncDeletedInvoice() {
         invoiceList = new ArrayList<>();
-        List<Invoice> invoices = realm.where(Invoice.class).equalTo("deleteOffline", true).findAllSorted("invoiceStartDate");
+        List<Invoice> invoices = Realm.getDefaultInstance().where(Invoice.class).equalTo("deleteOffline", true).findAllSorted("invoiceStartDate");
         if (invoices != null) {
-            invoiceList.addAll(realm.copyFromRealm(invoices));
+            invoiceList.addAll(Realm.getDefaultInstance().copyFromRealm(invoices));
         }
         if (invoiceList.size() <= 0) {
             syncCloseIncoice();
@@ -911,7 +909,7 @@ public class SyncManager {
 
                     if(response.isSuccessful() && response.body()!=null){
                         try {
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
 
                             try {
                                 Invoice invoice = realm.where(Invoice.class)
@@ -936,7 +934,7 @@ public class SyncManager {
                         }catch (Exception e) {
                             isSyncParcial = true;
                             if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"errorFatal Sync en endPoint (/invoice/"+firstInvoice.getInvoiceId()+") por delete... "+e.toString())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 Invoice invoice = realm.where(Invoice.class)
                                         .equalTo("id", firstInvoice.getInvoiceId())
@@ -952,7 +950,7 @@ public class SyncManager {
                         try {
                             if(logDataBase(new Gson().toJson(firstInvoice.getInvoiceId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"
                                                                                                     +firstInvoice.getInvoiceId()+") por delete... " +response.errorBody().string())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 Invoice invoice = realm.where(Invoice.class)
                                         .equalTo("id", firstInvoice.getInvoiceId())
@@ -1007,14 +1005,14 @@ public class SyncManager {
     @DebugLog
     public void syncEditInvoiceDetail() {
         invoiceDetailsEdit = new ArrayList<>();
-        List<InvoiceDetails> invoiceDetailsList = realm
+        List<InvoiceDetails> invoiceDetailsList = Realm.getDefaultInstance()
                 .where(InvoiceDetails.class)
                 .equalTo("editOffline", true)
                 .findAllSorted("startDate");
 
 
         if (invoiceDetailsList != null) {
-            invoiceDetailsEdit.addAll(realm.copyFromRealm(invoiceDetailsList));
+            invoiceDetailsEdit.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList));
         }
         if (invoiceDetailsEdit.size() <= 0) {
             syncDeletedOfDay();
@@ -1046,7 +1044,7 @@ public class SyncManager {
                     try {
 
 
-                        //Realm realm = Realm.getDefaultInstance();
+                        Realm realm = Realm.getDefaultInstance();
                         try {
                             realm.executeTransaction(new Realm.Transaction() {
                                 @Override
@@ -1063,7 +1061,7 @@ public class SyncManager {
                     } catch (Exception e) {
                         isSyncParcial = true;
                         if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error catch Sync en endPoint (/invoiceDetail) por put... " + e.toString())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
                                     .equalTo("id", firstInvoiceDetails.getId())
@@ -1078,7 +1076,7 @@ public class SyncManager {
                     isSyncParcial = true;
                     try {
                         if(logDataBase(new Gson().toJson(new InvoiceDetail(firstInvoiceDetails)),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail) por put... " + response.errorBody().string())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             InvoiceDetails invoiceDetails = realm.where(InvoiceDetails.class)
                                     .equalTo("id", firstInvoiceDetails.getId())
@@ -1119,13 +1117,13 @@ public class SyncManager {
     public void syncDeletedOfDay() {
         invoiceDetailsDelete = new ArrayList<>();
 
-        List<InvoiceDetails> ofDays = realm
+        List<InvoiceDetails> ofDays = Realm.getDefaultInstance()
                 .where(InvoiceDetails.class)
                 .equalTo("deleteOffline", true)
                 .findAllSorted("startDate");
 
         if (ofDays != null) {
-            invoiceDetailsDelete.addAll(realm.copyFromRealm(ofDays));
+            invoiceDetailsDelete.addAll(Realm.getDefaultInstance().copyFromRealm(ofDays));
         }
         if (invoiceDetailsDelete.size() <= 0) {
             syncDeletedInvoice();
@@ -1158,9 +1156,9 @@ public class SyncManager {
                     if (response.isSuccessful() && response.body() != null) {
                         try {
 
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             try {
-                                InvoiceDetails invoiceDetail = realm.where(InvoiceDetails.class)
+                                InvoiceDetails invoiceDetail = Realm.getDefaultInstance().where(InvoiceDetails.class)
                                         .equalTo("id", firstOfDetails.getId())
                                         .findFirst();
                                 if (invoiceDetail != null) {
@@ -1184,9 +1182,9 @@ public class SyncManager {
                         } catch (Exception e) {
                             isSyncParcial = true;
                             if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error catch Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " +e.toString())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                InvoiceDetails invoiceDetail = realm.where(InvoiceDetails.class)
+                                InvoiceDetails invoiceDetail = Realm.getDefaultInstance().where(InvoiceDetails.class)
                                         .equalTo("id", firstOfDetails.getId())
                                         .findFirst();
                                 invoiceDetail.deleteFromRealm();
@@ -1199,9 +1197,9 @@ public class SyncManager {
                         isSyncParcial = true;
                         try {
                             if(logDataBase(new Gson().toJson(firstOfDetails.getId()),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoiceDetail/"+firstOfDetails.getId()+") por delete... " + response.errorBody().string())!=-1){
-                                //Realm realm = Realm.getDefaultInstance();
+                                Realm realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
-                                InvoiceDetails invoiceDetail = realm.where(InvoiceDetails.class)
+                                InvoiceDetails invoiceDetail = Realm.getDefaultInstance().where(InvoiceDetails.class)
                                         .equalTo("id", firstOfDetails.getId())
                                         .findFirst();
                                 invoiceDetail.deleteFromRealm();
@@ -1237,14 +1235,14 @@ public class SyncManager {
 
         Log.e("debug","BRAYAN222"+ "6" + "entro a closed");
 
-        List<Invoice> invoiceForClosed = realm
+        List<Invoice> invoiceForClosed = Realm.getDefaultInstance()
                 .where(Invoice.class)
                 .equalTo("isClosed", true)
                 .findAllSorted("invoiceStartDate");
 
         Log.e("debug","BRAYAN222"+ "7" + invoiceForClosed.size());
         if (invoiceForClosed != null) {
-            invoiceClosed.addAll(realm.copyFromRealm(invoiceForClosed));
+            invoiceClosed.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceForClosed));
         }
 
         if (invoiceClosed.isEmpty()) {
@@ -1285,7 +1283,7 @@ public class SyncManager {
 
                 if(response.isSuccessful() && response.body() != null){
                     try {
-                        //Realm realm = Realm.getDefaultInstance();
+                        Realm realm = Realm.getDefaultInstance();
                         try {
                             realm.beginTransaction();
                             firstInvoiceClosed.setClosed(false);
@@ -1300,7 +1298,7 @@ public class SyncManager {
                         isSyncParcial = true;
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
                         if(logDataBase(new Gson().toJson(invoice1),"error catch Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+") por put... " +e.toString())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             Invoice invoice = realm.where(Invoice.class)
                                     .equalTo("id", firstInvoiceClosed.getInvoiceId())
@@ -1315,7 +1313,7 @@ public class SyncManager {
                     try {
                         if(logDataBase(new Gson().toJson(invoice1),"error ResponseCode()="+ response.code()+" Sync en endPoint (/invoice/"+firstInvoiceClosed.getInvoiceId()+
                                                                                                                     ") por put... " +response.errorBody().string())!=-1){
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             Invoice invoice = realm.where(Invoice.class)
                                     .equalTo("id", firstInvoiceClosed.getInvoiceId())
@@ -1473,15 +1471,21 @@ public class SyncManager {
                     builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            updateProviderIdInInvoices(currentProvider.getIdProvider(), providerServer.getIdProvider());
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
                             currentProvider.setIdProvider(providerServer.getIdProvider());
+                            realm.insertOrUpdate(currentProvider);
+                            realm.commitTransaction();
                             updateProviderRequest(currentProvider);
+
                             syncNextPendingProvider();
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             Provider provider = realm
                                     .where(Provider.class)
@@ -1528,9 +1532,9 @@ public class SyncManager {
 
                     if (response.isSuccessful() && response.body() != null) {
                         try {
-                            //Realm realm = Realm.getDefaultInstance();
+                            Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            final Provider provider = realm
+                            final Provider provider = Realm.getDefaultInstance()
                                     .where(Provider.class)
                                     .equalTo("unixtime", providerParam.getUnixtime())
                                     .findFirst();
