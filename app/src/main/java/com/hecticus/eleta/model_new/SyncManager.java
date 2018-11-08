@@ -162,7 +162,7 @@ public class SyncManager {
     @DebugLog
     private void syncNextPendingProvider() {
         if (providersList.size() <= 0) {
-            TimeHandler timeHandler = new TimeHandler(5000, new TimeHandler.OnTimeComplete() {
+            TimeHandler timeHandler = new TimeHandler(7000, new TimeHandler.OnTimeComplete() {
                 @Override
                 public void onFinishTime() {
                     syncInvoices();
@@ -313,31 +313,7 @@ public class SyncManager {
                         }
                         syncNextPendingProvider();
                     }
-                    /*//todo como manejar errores aca si no es success
-                    LogDataBase.d("DETAILS", "--->Fail deleteOfDaySync:" + response);
-                    HomeActivity.INSTANCE.syncFailed("deleteOfDaySync errorResponse: " + response);*/
-                    //LogDataBase.d("DETAILS", "--->Fail (" + code + ") " + operationName + ":" + response);
-
-                    /*if (response.code() == 409) { //todo revisar
-                        if (errorMessage != null && errorMessage.equals("registered [fullNameProvider]")) {
-                            HomeActivity.INSTANCE.syncFailed("No se pudo " + (isAdding ? "crear" : "modificar") + " el "
-                                    + (currentProviderToSync.isHarvester() ? "cosechador" : "proveedor") + " " + currentProviderToSync.getFullNameProvider()
-                                    + ". El nombre " + currentProviderToSync.getFullNameProvider() + " ya está registrado\nRespuesta: " + errorMessage);
-                        } else {
-                            HomeActivity.INSTANCE.syncFailed("No se pudo " + (isAdding ? "crear" : "modificar") + " el "
-                                    + (currentProviderToSync.isHarvester() ? "cosechador" : "proveedor") + " " + currentProviderToSync.getFullNameProvider()
-                                    + ". El " + (currentProviderToSync.isHarvester() ? "DNI" : "RUC") + " " + currentProviderToSync.getIdentificationDocProvider()
-                                    + " ya está registrado\nRespuesta: " + errorMessage);
-                        }
-                    } else if (response.code() == 412) {
-                        HomeActivity.INSTANCE.syncFailed("No se pudo " + (isAdding ? "crear" : "modificar") + " el "
-                                + (currentProviderToSync.isHarvester() ? "cosechador" : "proveedor") + " " + currentProviderToSync.getFullNameProvider()
-                                + " porque falta un atributo. \nRespuesta: " + errorMessage);
-                    } else {
-                        HomeActivity.INSTANCE.syncFailed(operationName + " errorResponse: " + response);
-                    }*/
                 }
-
             }
 
             @DebugLog
@@ -487,6 +463,7 @@ public class SyncManager {
 
                         if (invoice.getProvider() != null) {
                             invoice.getProvider().setIdProvider(newProviderId);
+                            realm.insertOrUpdate(invoice);
                         }
                     }
                 }
@@ -501,6 +478,7 @@ public class SyncManager {
                 public void execute(Realm realm) {
                     for (InvoicePost invoicePost : existingInvoicePosts) {
                         invoicePost.setProviderId(newProviderId);
+                        realm.insertOrUpdate(invoicePost);
                     }
                 }
             });
@@ -599,6 +577,13 @@ public class SyncManager {
                                         .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                         .findFirst();
                                 if (invoiceInRealm != null) {
+                                    List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
+                                            invoiceInRealm.getInvoiceId(),
+                                            invoiceInRealm.getLocalId(),
+                                            invoice.getBuyOption());
+                                    for(InvoiceDetails invoiceDetail : detailsList){
+                                        invoiceDetail.deleteFromRealm();
+                                    }
                                     invoiceInRealm.deleteFromRealm();
                                 }
                                 realm.commitTransaction();
@@ -616,7 +601,16 @@ public class SyncManager {
                                         .where(Invoice.class)
                                         .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                         .findFirst();
-                                invoiceInRealm.deleteFromRealm();
+                                if (invoiceInRealm != null) {
+                                    List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
+                                            invoiceInRealm.getInvoiceId(),
+                                            invoiceInRealm.getLocalId(),
+                                            invoice.getBuyOption());
+                                    for(InvoiceDetails invoiceDetail : detailsList){
+                                        invoiceDetail.deleteFromRealm();
+                                    }
+                                    invoiceInRealm.deleteFromRealm();
+                                }
                                 realm.commitTransaction();
                             }
                         } catch (IOException e) {
@@ -1498,7 +1492,6 @@ public class SyncManager {
                             realm.insertOrUpdate(currentProvider);
                             realm.commitTransaction();
                             updateProviderRequest(currentProvider);
-
                             syncNextPendingProvider();
                         }
                     });

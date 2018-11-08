@@ -2116,6 +2116,8 @@ public class ManagerDB {
         return true;
     }
 
+
+
     @DebugLog
     public static boolean deleteInvoiceDetails(final int remoteInvoiceDetailId, final int localInvoiceDetailId) {
 
@@ -2127,7 +2129,6 @@ public class ManagerDB {
         //InvoiceDetails invoiceInRealm1;
 
         if (remoteInvoiceDetailId != -1) {
-            Log.d("DEBUG", "Policia1");
             invoiceInRealm = realm
                     .where(InvoiceDetails.class)
                     .equalTo("id", remoteInvoiceDetailId)
@@ -2136,7 +2137,6 @@ public class ManagerDB {
             isOnline = true;
 
         } else {
-            Log.d("DEBUG", "Policia2");
             invoiceInRealm = realm
                     .where(InvoiceDetails.class)
                     .equalTo("localId", localInvoiceDetailId)
@@ -2146,7 +2146,6 @@ public class ManagerDB {
         }
         if (invoiceInRealm != null) {
             if(isOnline){
-                Log.d("DEBUG", "Policia3");
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
                     @Override
@@ -2158,7 +2157,6 @@ public class ManagerDB {
                     }
                 });
             }else{
-                Log.d("DEBUG", "Policia4");
                 realm.executeTransaction(new Realm.Transaction() {
                     @DebugLog
                     @Override
@@ -2170,7 +2168,6 @@ public class ManagerDB {
                 });
             }
         }
-        Log.d("DEBUG", "Policia5" + deleted[0]);
         return deleted[0];
     }
 
