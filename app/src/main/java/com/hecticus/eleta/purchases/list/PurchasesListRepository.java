@@ -110,6 +110,9 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                             ManagerDB.saveNewInvoicesByType(Constants.TYPE_SELLER, response.body().getResult());
 
                             List<Invoice> invoiceList = ManagerDB.getAllInvoicesByType(Constants.TYPE_SELLER, Util.getCurrentDateLocal());
+                            for(Invoice invoice : response.body().getResult()){
+                                getDetails2(invoice.getInvoiceId());
+                            }
                             if (invoiceList != null) {
                                 mPresenter.handleSuccessfulPurchasesRequest(invoiceList);
                             } else {
@@ -134,6 +137,35 @@ public class PurchasesListRepository implements PurchasesListContract.Repository
                 }
             });
         }
+    }
+
+    private void getDetails2(final int invoiceId){
+        Call<InvoiceDetailsResponse> call = invoiceApi.getInvoiceDetails(invoiceId);
+
+        call.enqueue(new Callback<InvoiceDetailsResponse>() {
+            @DebugLog
+            @Override
+            public void onResponse(@NonNull Call<InvoiceDetailsResponse> call,
+                                   @NonNull Response<InvoiceDetailsResponse> response) {
+
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        ManagerDB.saveDetailsOfInvoice(response.body().getListInvoiceDetails());
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ErrorHandling.errorCodeInServerResponseProcessing(e);
+                    }
+            }
+
+            @DebugLog
+            @Override
+            public void onFailure(@NonNull Call<InvoiceDetailsResponse> call, @NonNull Throwable t) {
+                ErrorHandling.syncErrorCodeWebServiceFailed(t);
+            }
+        });
     }
 
     @DebugLog

@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.model.request.invoice.ItemPost;
 import com.hecticus.eleta.model.response.StatusInvoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.ProviderType;
@@ -518,6 +519,7 @@ public class SyncManager {
 
             final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(
                     firstInvoicePost, firstInvoicePost.getProviderId()); //todo error con provider
+        Log.d("DEBUG invoice", "sync"+ new Gson().toJson(invoice));
             call = invoiceApi.newInvoiceDetail(invoice);
             call.enqueue(new Callback<CreateInvoiceResponse>() {
                 @Override
@@ -577,13 +579,6 @@ public class SyncManager {
                                         .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                         .findFirst();
                                 if (invoiceInRealm != null) {
-                                    List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                                            invoiceInRealm.getInvoiceId(),
-                                            invoiceInRealm.getLocalId(),
-                                            invoice.getBuyOption());
-                                    for(InvoiceDetails invoiceDetail : detailsList){
-                                        invoiceDetail.deleteFromRealm();
-                                    }
                                     invoiceInRealm.deleteFromRealm();
                                 }
                                 realm.commitTransaction();
@@ -602,13 +597,6 @@ public class SyncManager {
                                         .equalTo("id2", firstInvoicePost.getInvoiceLocalId())
                                         .findFirst();
                                 if (invoiceInRealm != null) {
-                                    List<InvoiceDetails> detailsList = ManagerDB.getAllDetailsOfInvoiceByIdUnsorted(
-                                            invoiceInRealm.getInvoiceId(),
-                                            invoiceInRealm.getLocalId(),
-                                            invoice.getBuyOption());
-                                    for(InvoiceDetails invoiceDetail : detailsList){
-                                        invoiceDetail.deleteFromRealm();
-                                    }
                                     invoiceInRealm.deleteFromRealm();
                                 }
                                 realm.commitTransaction();
@@ -1366,6 +1354,15 @@ public class SyncManager {
             FileUtils.clearTempImages();
         } catch (Exception e) {
         }
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<ItemPost> results = realm.where(ItemPost.class).findAll();
+        realm.beginTransaction();
+        results.deleteAllFromRealm();
+        realm.commitTransaction();
+        RealmResults<InvoiceDetails> results1 = realm.where(InvoiceDetails.class).findAll();
+        realm.beginTransaction();
+        results1.deleteAllFromRealm();
+        realm.commitTransaction();
         if (isSyncParcial) {
                 HomeActivity.INSTANCE.syncPartial();
         } else {
