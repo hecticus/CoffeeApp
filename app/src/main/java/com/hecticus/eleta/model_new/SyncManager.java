@@ -162,7 +162,7 @@ public class SyncManager {
     @DebugLog
     private void syncNextPendingProvider() {
         if (providersList.size() <= 0) {
-            TimeHandler timeHandler = new TimeHandler(4000, new TimeHandler.OnTimeComplete() {
+            TimeHandler timeHandler = new TimeHandler(5000, new TimeHandler.OnTimeComplete() {
                 @Override
                 public void onFinishTime() {
                     syncInvoices();
@@ -190,6 +190,7 @@ public class SyncManager {
 
         final boolean isAdding = currentProviderToSync.isAddOffline();
         final String operationName;
+        final int idLocal = currentProviderToSync.getIdProvider();
 
         if (isAdding) {
             operationName = "createProviderSync";
@@ -275,6 +276,7 @@ public class SyncManager {
                     }
                 } else {
                     if(response.code() == 409){
+                        currentProviderToSync.setIdProvider(idLocal);
                         getProvider(currentProviderToSync);
                     } else {
                         isSyncParcial = true;
@@ -467,6 +469,7 @@ public class SyncManager {
 
     @DebugLog
     private void updateProviderIdInInvoices(Integer oldLocalProviderId, final Integer newProviderId) {
+        Log.d("DEBUG", "BRAYANPROVIDER old"+ oldLocalProviderId +" new "+ newProviderId);
         if (newProviderId == null || newProviderId.equals(oldLocalProviderId)) {
             Log.d("BUG", "--->updateProviderIdInInvoices not needed: " + newProviderId);
         } else {
@@ -568,10 +571,17 @@ public class SyncManager {
                                         invoiceInRealm.setAddOffline(false);
                                         invoiceInRealm.setClosed(true);
                                         invoiceInRealm.setStatusInvo("Cerrada");
+                                        realm.insertOrUpdate(invoiceInRealm);
+                                    }else{
+                                        invoiceInRealm.deleteFromRealm();
                                     }
-                                    realm.insertOrUpdate(invoiceInRealm);
+
                                     realm.commitTransaction();
-                                }
+                                }/*else {
+                                    realm.beginTransaction();
+                                    invoiceInRealm.deleteFromRealm();
+                                    realm.commitTransaction();
+                                }*/
                                 ManagerDB.findAndDeleteLocalInvoicePost(firstInvoicePost);
 
                             } finally {
@@ -1363,7 +1373,7 @@ public class SyncManager {
         } catch (Exception e) {
         }
         if (isSyncParcial) {
-            HomeActivity.INSTANCE.syncPartial();
+                HomeActivity.INSTANCE.syncPartial();
         } else {
             HomeActivity.INSTANCE.syncSuccessful(failedImageUploads);
         }
@@ -1483,6 +1493,8 @@ public class SyncManager {
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
                             currentProvider.setIdProvider(providerServer.getIdProvider());
+                            currentProvider.setEditOffline(false);
+                            currentProvider.setAddOffline(false);
                             realm.insertOrUpdate(currentProvider);
                             realm.commitTransaction();
                             updateProviderRequest(currentProvider);
@@ -1501,13 +1513,13 @@ public class SyncManager {
                                     .findFirst();
                             provider.deleteFromRealm();
                             realm.commitTransaction();
-                            //todo posible borrar
                             realm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
                                     realm.insertOrUpdate(providerServer);
                                 }
                             });
+                            updateProviderIdInInvoices(currentProvider.getIdProvider(), providerServer.getIdProvider());
                             syncNextPendingProvider();
                             dialog.dismiss();
                         }
