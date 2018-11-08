@@ -102,7 +102,7 @@ public class Farms extends Controller {
     }
 
 
-//    @HSecurity
+    @HSecurity
     public Result findAll( Integer index, Integer size, String collection,
                            String name, String sort, Long status, boolean deleted){
         try {

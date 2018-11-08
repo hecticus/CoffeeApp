@@ -1,7 +1,7 @@
 package security.authorization;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import play.Configuration;
+import com.typesafe.config.Config;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -25,7 +25,7 @@ public class HecticusSecurity extends Action<HSecurity> {
     private static Boolean enabled;
 
     @Inject
-    HecticusSecurity(Configuration config){
+    HecticusSecurity(Config config){
         enabled = config.getBoolean("authorization.enabled");
     }
 
@@ -40,6 +40,7 @@ public class HecticusSecurity extends Action<HSecurity> {
         */
         try {
             String accessToken = getTokenFromHeader(ctx);
+            System.out.println(enabled);
 
             if (enabled) { // if enable = true then validate permission
                 if (accessToken == null)

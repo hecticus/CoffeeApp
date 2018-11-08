@@ -9,7 +9,7 @@ import play.libs.mailer.MailerClient;
 import security.SecurityUtils;
 import security.models.AuthUser;
 import org.apache.commons.mail.EmailException;
-import play.Configuration;
+import com.typesafe.config.Config;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -43,12 +43,12 @@ public class RecoverPasswords extends Controller {
     MailerClient mailerClient;
 
     @Inject
-    RecoverPasswords(Configuration config){
-        Configuration configRecoverPass = config.getConfig("recoverpass.pin");
+    RecoverPasswords(Config config){
+        Config configRecoverPass = config.getConfig("recoverpass.pin");
         Pin.length = configRecoverPass.getInt("length");
         Pin.expiresIn = configRecoverPass.getInt("expiresIn");
 
-        Configuration configMailer = config.getConfig("play.mailer");
+        Config configMailer = config.getConfig("play.mailer");
         Mailer.issuer = configMailer.getString("issuer");
         Mailer.email = configMailer.getString("user");
     }
