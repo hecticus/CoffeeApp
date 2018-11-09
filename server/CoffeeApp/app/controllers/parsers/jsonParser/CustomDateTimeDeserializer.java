@@ -1,4 +1,4 @@
-package controllers.parsers.jsonParser.CustomDeserializer;
+package controllers.parsers.jsonParser;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -9,8 +9,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CustomDateTimeDeserializer extends JsonDeserializer<ZonedDateTime> {
+
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX");
+
     @Override
     public ZonedDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        return ZonedDateTime.parse(p.getText(),  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+        return ZonedDateTime.parse(p.getText(), DATETIME_FORMATTER);
     }
 }

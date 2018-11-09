@@ -40,8 +40,6 @@ public class Purity extends AbstractEntity{
     }
 
     //Setter and Getter
-
-
     public String getNamePurity() {
         return namePurity;
     }

@@ -1,12 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.parsers.queryStringBindable.DateTimeRange;
 import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
 import models.*;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
@@ -17,7 +15,6 @@ import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import scala.reflect.internal.Trees;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
@@ -35,11 +32,6 @@ public class InvoiceDetails extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public InvoiceDetails(){
-        propertiesCollection.putPropertiesCollection("s", "(*)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
     @CoffeAppsecurity
     public Result create() {
         try {
@@ -47,19 +39,7 @@ public class InvoiceDetails extends Controller {
             if(json== null)
                 return Response.requiredJson();
 
-            Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
-            if (form.hasErrors())
-                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-
-            JsonNode dateStart = json.findValue("start");
-            if(dateStart == null)
-                return Response.requiredParameter("Requiere fecha de inicio de Detalle");
-
-            ZonedDateTime startTime =  ZonedDateTime.parse (dateStart.asText(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
-
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
-
 
             if (invoiceDetail.getLot() != null ){
                 Lot lot = Lot.findById(invoiceDetail.getLot().getId());
@@ -72,7 +52,6 @@ public class InvoiceDetails extends Controller {
                     return Response.requiredParameter("costItemType");
             }
 
-            invoiceDetail.setStartDate(startTime);
             invoiceDetail.save();
             return  Response.createdEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
@@ -86,11 +65,6 @@ public class InvoiceDetails extends Controller {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
-
-            Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
-            if (form.hasErrors()){
-                return controllers.utils.Response.invalidParameter(form.errorsAsJson());
-            }
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
             if (invoiceDetail.getLot() != null ){
@@ -166,7 +140,7 @@ public class InvoiceDetails extends Controller {
         }
     }
 
-        @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result findById(Long id) {
         try {
             InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
@@ -184,19 +158,11 @@ public class InvoiceDetails extends Controller {
                           String nameDelivered, String startDate, Long status, boolean deleted){
         try {
 
-            ZonedDateTime startTime = null;
+            ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, propertiesCollection.getPathProperties(collection), sort,
+                    invoice, itemType, lot,store, nameReceived, nameDelivered,
+                    startDate, status, deleted);
 
-            if (startDate != null){
-                startTime =  ZonedDateTime.parse (startDate,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
-            }
-
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, pathProperties, sort,
-                                                                invoice, itemType, lot,store, nameReceived, nameDelivered,
-                                                                startTime, status, deleted);
-
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

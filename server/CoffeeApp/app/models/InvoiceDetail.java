@@ -1,10 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import controllers.parsers.jsonParser.CustomDeserializer.CustomDateTimeDeserializer;
-import controllers.parsers.jsonParser.customSerializer.CustomDateTimeSerializer;
 import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.Formula;
@@ -28,8 +24,8 @@ import java.util.List;
 public class  InvoiceDetail  extends AbstractEntity{
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
+    @Constraints.Required
+    @JoinColumn(nullable = false)
     private Invoice invoice;
 
     @ManyToOne
@@ -38,13 +34,9 @@ public class  InvoiceDetail  extends AbstractEntity{
     private ItemType itemType;
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
     private Lot lot;
 
     @ManyToOne
-//    @Constraints.Required
-//    @JoinColumn(nullable = false)
     private Store store;
 
     @Constraints.Min(0)
@@ -77,13 +69,6 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(columnDefinition = "text")
     private String note;
 
-//    @Formula(select = "(" +
-//            "SELECT ((i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) - (SELECT SUM(p.total_discount_purity) FROM invoicesdetails_purities p WHERE p.deleted = 0 AND p.invoice_detail_id = ${ta}.id ))" +
-//            "FROM invoice_details i " +
-//            "WHERE i.deleted = 0 AND i.id = ${ta}.id" +
-//            ")")
-//    private BigDecimal totalInvoiceDetail;
-
     @Formula(select = "(" +
                 "SELECT (i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type)" +
                 "FROM invoice_details i " +
@@ -92,19 +77,14 @@ public class  InvoiceDetail  extends AbstractEntity{
     @Column(precision = 12, scale = 2)
     private BigDecimal totalInvoiceDetail;
 
-
-    //    @Constraints.Required
+    @Constraints.Required
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(columnDefinition = "datetime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
+    @Column(columnDefinition = "datetime", nullable = false)
     private ZonedDateTime startDate;
 
     @Formats.DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ssX", timezone = "UTC")
     @Column(columnDefinition = "datetime")
     private ZonedDateTime closedDate;
 
@@ -252,7 +232,8 @@ public class  InvoiceDetail  extends AbstractEntity{
    
     //Metodos Creados
     public static InvoiceDetail findById(Long id){
-        return finder.byId(id);
+//        return finder.byId(id);
+        return finder.query().where().eq("id", id).findUnique();
     }
 
     public static List<InvoiceDetail> findByProviderId(Long id){
@@ -262,7 +243,7 @@ public class  InvoiceDetail  extends AbstractEntity{
 
     public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties, String sort,
                                               Long invoice, Long itemType, Long lot, Long store, String nameReceived,
-                                              String nameDelivered, ZonedDateTime startDate, Long status, boolean delete){
+                                              String nameDelivered, String startDate, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -288,7 +269,7 @@ public class  InvoiceDetail  extends AbstractEntity{
             expressionList.startsWith("nameDelivered", nameDelivered);
 
         if(startDate != null)
-            expressionList.ge("createdAt", startDate );
+            expressionList.ge("startDate", startDate );
 
         if(delete)
             expressionList.setIncludeSoftDeletes();

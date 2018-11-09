@@ -18,6 +18,9 @@ export class InvoiceDetail extends BaseModel {
 	note: string;
 	statusInvoiceDetail: string;
 	invoiceDetailPurity: InvoiceDetailPurity[];
+	startDate: String;
+	closedDate: string;
+
 
 
 }

@@ -6,7 +6,6 @@ import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
 import models.Farm;
 import controllers.responseUtils.ExceptionsUtils;
 import controllers.responseUtils.PropertiesCollection;
@@ -30,12 +29,7 @@ public class Farms extends Controller {
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
-    public Farms(){
-        propertiesCollection.putPropertiesCollection("s", "(idFarm, NameFarm)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result create() {
         try {
             JsonNode request = request().body().asJson();
@@ -55,7 +49,7 @@ public class Farms extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result update(Long id) {
         try {
             JsonNode request = request().body().asJson();
@@ -76,7 +70,7 @@ public class Farms extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result delete(Long id) {
         try {
             Ebean.delete(Farm.findById(id));
@@ -86,7 +80,7 @@ public class Farms extends Controller {
         }
     }
 
-//    @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();
@@ -116,10 +110,10 @@ public class Farms extends Controller {
     public Result findAll( Integer index, Integer size, String collection,
                            String name, String sort, Long status, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Farm.findAll(index, size, pathProperties, name,  sort, status, deleted);
+            ListPagerCollection listPager = Farm.findAll(index, size, propertiesCollection.getPathProperties(collection),
+                                                            name,  sort, status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

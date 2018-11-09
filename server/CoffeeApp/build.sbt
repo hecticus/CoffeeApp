@@ -15,6 +15,8 @@ libraryDependencies ++= Seq(
   ehcache,
   ws,
   javaJdbc,
+  "com.typesafe.play" %% "play-json" % "2.6.0",
+  "com.typesafe.play" %% "anorm" % "2.5.1",
   "org.avaje" % "ebean" % "2.7.3",
   "javax.persistence" % "persistence-api" % "1.0.2",
   "mysql" % "mysql-connector-java" % "5.1.38",

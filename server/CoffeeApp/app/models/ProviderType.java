@@ -24,8 +24,6 @@ public class ProviderType  extends AbstractEntity {
     @Column(nullable = false, unique = true, length = 60)
     private String nameProviderType;
 
-//    @OneToMany(mappedBy = "providerType", cascade = CascadeType.ALL)
-//    @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "providerType", cascade= CascadeType.ALL)
     private List<Provider> providers;

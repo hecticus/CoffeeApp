@@ -1,4 +1,4 @@
-package controllers.parsers.jsonParser.customSerializer;
+package controllers.parsers.jsonParser;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

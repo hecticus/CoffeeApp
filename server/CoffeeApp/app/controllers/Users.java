@@ -160,9 +160,8 @@ public class Users extends Controller {
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, String firstName, String lastName, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = User.findAll(index, size, pathProperties, sort, name, firstName, lastName, deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            ListPagerCollection listPager = User.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, firstName, lastName, deleted);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

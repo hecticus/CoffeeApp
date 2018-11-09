@@ -8,7 +8,6 @@ import controllers.utils.JsonUtils;
 import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
 import models.InvoiceDetail;
 import models.InvoiceDetailPurity;
 import controllers.responseUtils.Response;
@@ -112,10 +111,10 @@ public class InvoiceDetailPurities  extends Controller {
     public Result findAll(Integer pageIndex, Integer pageSize, String collection, String sort,
                           Long purity, Long invoiceDetail, boolean deleted){
         try {
-            PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = InvoiceDetailPurity.findAll(pageIndex, pageSize, pathProperties, sort,
-                                                purity, invoiceDetail, deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            ListPagerCollection listPager = InvoiceDetailPurity.findAll(pageIndex, pageSize,
+                                                                propertiesCollection.getPathProperties(collection), sort,
+                                                                purity, invoiceDetail, deleted);
+            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

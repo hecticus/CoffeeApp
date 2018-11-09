@@ -23,7 +23,7 @@ import {
 	MatNativeDateModule,
 	MatIconModule,
 	} from '@angular/material';
-
+	import { MyDatePickerModule } from 'mydatepicker';
 
 @NgModule({
 	imports: [
@@ -40,6 +40,7 @@ import {
 		MatDatepickerModule,
 		MatNativeDateModule,
 		MatIconModule,
+		MyDatePickerModule,
 
 		UtilsModule,
 		InvoiceRoutingModule,
