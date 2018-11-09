@@ -167,6 +167,7 @@ public class HarvestsListRepository implements HarvestsListContract.Repository {
                 ErrorHandling.syncErrorCodeWebServiceFailed(t);
             }
         });
+        call.cancel();
     }
 
     @DebugLog
