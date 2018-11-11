@@ -1,4 +1,4 @@
-package security.authorization;
+package security.schedulingTasks.loadRBACtablesOnStart;
 
 import com.google.inject.AbstractModule;
 
@@ -8,10 +8,10 @@ import com.google.inject.AbstractModule;
  * reference: https://www.playframework.com/documentation/2.5.x/ScalaDependencyInjection
  *
  */
-public class OnStartModule extends AbstractModule {
+public class LoadRBACModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(OnLoadRBAC.class).asEagerSingleton();
+        bind(LoadRBAC.class).asEagerSingleton();
     }
 }

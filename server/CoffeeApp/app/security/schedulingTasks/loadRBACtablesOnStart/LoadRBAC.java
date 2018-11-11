@@ -1,8 +1,8 @@
-package security.authorization;
+package security.schedulingTasks.loadRBACtablesOnStart;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.typesafe.config.Config;
+import play.Configuration;
 import security.models.AuthGroup;
 import security.models.AuthRole;
 import security.models.AuthUser;
@@ -12,20 +12,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-*
+/**
  * Created by nisa on 26/10/17.
  *
  * reference: https://www.playframework.com/documentation/2.5.x/ScalaDependencyInjection
  *
-
-
+ */
 @Singleton
-public class OnLoadRBAC {
+public class LoadRBAC {
 
-    private final Config config;
+    private final Configuration config;
 
     @Inject
-    public OnLoadRBAC(Config config) {
+    public LoadRBAC(Configuration config) {
         this.config = config;
 
         System.out.println("*** Loading control access tables...");
@@ -50,7 +49,7 @@ public class OnLoadRBAC {
         System.out.println("*** Complete control access tables...");
     }
 
-    private void loadPermissions(Config config) {
+    private void loadPermissions(Configuration config) {
         Set<String> permissionKeys = new HashSet<>();
 
         for(String roleKey : config.subKeys()) {
@@ -67,7 +66,7 @@ public class OnLoadRBAC {
         }
     }
 
-    private void loadRoles(Config config){
+    private void loadRoles(Configuration config){
         for(String roleKey : config.subKeys()) {
             AuthRole authRole = AuthRole.findByName(roleKey);
 
@@ -99,7 +98,7 @@ public class OnLoadRBAC {
         }
     }
 
-    private void loadGroups(Config config){
+    private void loadGroups(Configuration config){
         for(String groupKey : config.subKeys()) {
             AuthGroup authGroup = AuthGroup.findByName(groupKey);
 
@@ -131,8 +130,8 @@ public class OnLoadRBAC {
         }
     }
 
-    private void loadUsers(Config config){
-        for(String groupKey : config..subKeys()) {
+    private void loadUsers(Configuration config){
+        for(String groupKey : config.subKeys()) {
 
             for(String userKey : config.getStringList(groupKey)) {
                 AuthUser authUser = AuthUser.findByEmail(userKey);
@@ -146,4 +145,3 @@ public class OnLoadRBAC {
         }
     }
 }
-
