@@ -499,7 +499,8 @@ INSERT INTO `auth_user` ( id , email, password, deleted) VALUES
 (104, 'mcervantes@cafedeeleta.com','miguel$2602', 0),
 (105, 'rrmadriz@grupoeleta.com','bourbon', 0),
 (106, 'brayan.mendoza@hecticus.com','12345', 0),
-(107, 'admin@admin.com','admin', 0);
+(107, 'shamuel.manrrique@hecticus.com','12345', 0),
+(108, 'admin@admin.com','admin', 0);
 
 # --- !Downs
 
@@ -522,8 +523,6 @@ TRUNCATE `auth_permission_auth_role`;
 TRUNCATE `auth_role_auth_group`;
 
 TRUNCATE `auth_client_credential`;
-
-TRUNCATE `auth_user_auth_group`;
 
 TRUNCATE `auth_user_auth_role`;
 

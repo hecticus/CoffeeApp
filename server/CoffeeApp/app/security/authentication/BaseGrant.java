@@ -29,6 +29,7 @@ public class BaseGrant {
         //ConfigFactory.load(classLoader,"conf/application.conf");
 
         secret = config.getString("play.http.secret.key");
+        System.out.println("######################3"+ secret);
         authJWT = new AuthJWT(secret);
 
         Config configToken = config.getConfig("token");

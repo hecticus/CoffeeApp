@@ -44,7 +44,7 @@ public class LoadRBAC {
     private void loadData(Config config){
         // Load roles and permission
         config.getObject("play.rbac.roles_permissions").forEach((k,v) -> {
-            System.out.println("key : " + k + " value : " + v);
+//            System.out.println("key : " + k + " value : " + v);
             AuthRole authRole = AuthRole.findByName(k);
             if(authRole == null){
                 authRole = new AuthRole();
@@ -58,7 +58,7 @@ public class LoadRBAC {
         });
 
         config.getObject("play.rbac.groups_roles").forEach((k,v) -> {
-            System.out.println("key : " + k + " value : " + v);
+//            System.out.println("key : " + k + " value : " + v);
             AuthGroup authGroup = AuthGroup.findByName(k);
             if(authGroup == null){
                 authGroup = new AuthGroup();
@@ -73,10 +73,9 @@ public class LoadRBAC {
 
 
         config.getObject("play.rbac.groups_users").forEach( (k,v) -> {
-            System.out.println("key : " + k + " value : " + v);
+//            System.out.println("key : " + k + " value : " + v);
             AuthGroup authGroup = AuthGroup.findByName(k);
             authGroup.setAuthUsers(loadUsers(config.getStringList("play.rbac.groups_users." + k), k));
-            System.out.println("#################################################");
             authGroup.save();
 
         });
@@ -124,7 +123,6 @@ public class LoadRBAC {
         users.forEach( user -> {
             AuthUser authUser = AuthUser.findByEmail(user);
             if(authUser != null && authUser.getAuthGroup() == null) {
-                System.out.println("sSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs");
                 AuthGroup authGroup = AuthGroup.findByName(group);
                 authUser.setAuthGroup(authGroup);
                 authUser.update();
