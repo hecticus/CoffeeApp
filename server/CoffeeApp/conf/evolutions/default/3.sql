@@ -41,7 +41,7 @@ INSERT INTO `auth_user_auth_group` ( auth_user_id, auth_group_id) VALUES
 (105,8),
 (105,9);
 
-# --- !Ups
+
 
 INSERT INTO `auth_permission` ( id, name) VALUES
 (169, 'controllers.InvoiceDetails.findAll'),
@@ -485,6 +485,22 @@ INSERT INTO `auth_role_auth_group` ( auth_role_id, auth_group_id) VALUES
 (66,7),
 (66,9);
 
+# --- !Ups
+
+INSERT INTO `auth_client_credential` (id, client_id, name) VALUES
+(1,'web_site',    'web site'),
+(2,'android_app', 'android app');
+
+INSERT INTO `auth_user` ( id , email, password, deleted) VALUES
+(100, 'rmadriz@grupoeleta.com','12345', 0),
+(101, 'marwin.campos@hecticus.com','12345', 0),
+(102, 'lcubilla@cafedeeleta.com','prueba', 0),
+(103, 'tdeobaldia@cafedeeleta.com','thania$2602', 0),
+(104, 'mcervantes@cafedeeleta.com','miguel$2602', 0),
+(105, 'rrmadriz@grupoeleta.com','bourbon', 0),
+(106, 'brayan.mendoza@hecticus.com','12345', 0),
+(107, 'admin@admin.com','admin', 0);
+
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -507,7 +523,7 @@ TRUNCATE `auth_role_auth_group`;
 
 TRUNCATE `auth_client_credential`;
 
--- TRUNCATE `auth_user_auth_group`;
+TRUNCATE `auth_user_auth_group`;
 
 TRUNCATE `auth_user_auth_role`;
 
