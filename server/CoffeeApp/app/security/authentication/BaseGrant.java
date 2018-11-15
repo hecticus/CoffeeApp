@@ -33,7 +33,9 @@ public class BaseGrant {
         authJWT = new AuthJWT(secret);
 
         Config configToken = config.getConfig("token");
+        System.out.println("######################3"+ configToken);
         issuer = configToken.getString("issuer");
+        System.out.println("######################3"+ issuer);
         expiresInAccessToken = configToken.getLong("access.ttlMillis");
         expiresInRefreshToken = configToken.getLong("refresh.ttlMillis");
     }
