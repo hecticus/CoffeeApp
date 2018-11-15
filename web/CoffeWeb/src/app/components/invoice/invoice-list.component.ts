@@ -36,13 +36,13 @@ const moment =  _moment;
 
 			<div class="button1">
 				<div class="buttons">
-					<button class="b1 fa fa-twitter fa-5x" (click)="openModal(template)">
+					<button class="b1 fa fa-twitter fa-5x" title="Cerrar Facturas" (click)="openModal(template)">
 						<i class="material-icons">lock</i>
 					</button>
-					<button (click)="exportTotalAsXLSX()">
+					<button (click)="exportTotalAsXLSX()"  title="Reporte Total">
 						<i  class="material-icons">receipt</i>
 					</button>
-					<button (click)="exportDetailAsXLSX()">
+					<button (click)="exportDetailAsXLSX()" title="Reporte Detallado">
 						<i class="material-icons">description</i>
 					</button>
 				</div>
