@@ -3,15 +3,14 @@
 	padding: 5px 10px;
 }
 .breadcrumb-item a {
-	font-size: 12px;
 	color: #333;
 	text-decoration: none;
 }
 .breadcrumb-item span{
-	font-size: 10px;
-	padding: 0 10px;
+	font-size: 8px;
+	padding: 0 10px;	
 }
 .breadcrumb-item:hover a,
 .breadcrumb-item:last-child a {
-	color: #656666;
+	color: #0099cc;
 }
