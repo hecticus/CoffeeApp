@@ -20,29 +20,20 @@ export const invoiceRoutes: Routes = [
 				path: '',
 				pathMatch: 'full',
 				component: InvoiceListComponent,
-				data: {
-					breadcrumb: undefined
-				}
+
 			}, {
 				path: 'create',
 				component: InvoiceCreateComponent,
-				data: {
-					breadcrumb: undefined
-				}
+
 			}, {
 				path: ':invoiceId',
 				component: InvoiceReadComponent,
-				data: {
-					breadcrumb: undefined
-				},
+
 				children: [
 					{
 						path: 'update',
 						component: InvoiceUpdateComponent,
-						data: {
-							breadcrumb: 'update',
-							icon: 'edit'
-						}
+
 					}, {
 						path: '',
 						pathMatch: 'full',
