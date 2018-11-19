@@ -169,7 +169,7 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
     public void closedInvoice() {
         mAdapter.setShowActions(false);
         makePurchaseButtom.setVisibility(View.INVISIBLE);
-        printInvoiceButton.setVisibility(View.VISIBLE);
+        //printInvoiceButton.setVisibility(View.VISIBLE);
     }
 
     @DebugLog
@@ -234,9 +234,9 @@ public class PurchasesOfDayListActivity extends BaseActivity implements Invoices
 
         if (mPresenter.isCurrentClosedInvoice()) {
             makePurchaseButtom.setVisibility(View.INVISIBLE);
-        }else{
+        }/*else{
             printInvoiceButton.setVisibility(View.INVISIBLE);
-        }
+        }*/
 
         initString();
     }
