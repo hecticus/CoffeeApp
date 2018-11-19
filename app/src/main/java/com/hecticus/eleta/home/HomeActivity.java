@@ -43,7 +43,8 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 public class HomeActivity extends AppCompatActivity implements HomeContract.View {
-
+//estas sobre la version que permite imprimir en cualquier momento del proceso de cosechas
+    
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
@@ -62,11 +63,11 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         setContentView(R.layout.activity_logged_in);
         Realm.init(getApplicationContext());
         final RealmConfiguration configuration = new RealmConfiguration.Builder()
-                                                        /*.name("coffeeleta.realm")
+                                                        .name("coffeeleta.realm")
                                                         .schemaVersion(Constants.VERSION_DB_PROD)
-                                                        //.migration(new Migrations())*/
-                                                        .name("coffeeletadev.realm")
-                                                        .schemaVersion(Constants.VERSION_DB_DEV)
+                                                        //.migration(new Migrations())
+                                                        /*.name("coffeeletadev.realm")
+                                                        .schemaVersion(Constants.VERSION_DB_DEV)*/
                                                         .build();
         Realm.setDefaultConfiguration(configuration);
 
