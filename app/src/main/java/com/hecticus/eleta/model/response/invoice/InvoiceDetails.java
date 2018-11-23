@@ -472,7 +472,10 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
             try{
                 response = Util.parseDateZH(startDate, "yyyy-MM-dd");
             }catch (Exception e){
-                response = Util.parseDateZH2(startDate, "yyyy-MM-dd");
+                try{
+                    response = Util.parseDateZH2(startDate, "yyyy-MM-dd");
+                }catch (Exception e1){
+                }
             }
             //initDateTime();
         }
@@ -486,7 +489,10 @@ public class InvoiceDetails extends RealmObject implements JsonSerializer<Invoic
             try {
                 response = Util.parseDateZH(startDate, "HH:mm:ss");
             }catch (Exception e){
-                response = Util.parseDateZH2(startDate, "HH:mm:ss");
+                try{
+                    response = Util.parseDateZH2(startDate, "HH:mm:ss");
+                }catch (Exception e1){
+                }
             }
             //initDateTime();
         }

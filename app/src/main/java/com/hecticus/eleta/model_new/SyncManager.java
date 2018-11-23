@@ -191,7 +191,7 @@ public class SyncManager {
 
         final boolean isAdding = currentProviderToSync.isAddOffline();
         final String operationName;
-        final int idLocal = currentProviderToSync.getIdProvider();
+        final Integer idLocal = currentProviderToSync.getIdProvider();
 
         if (isAdding) {
             operationName = "createProviderSync";
