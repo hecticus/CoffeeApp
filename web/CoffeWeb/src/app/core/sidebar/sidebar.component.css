@@ -52,11 +52,11 @@ header #logo{
 }
 
 .item.selected {
-	color: hsl(195, 100%, 40%);
+	color: hsl(180, 1%, 83%);
 }
 
 .item:hover{
-	background-color: #f2f2f2;
+	background-color: #c5bfbf8d;
 }
 
 .nav-tab{
