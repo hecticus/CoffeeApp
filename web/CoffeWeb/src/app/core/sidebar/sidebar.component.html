@@ -27,7 +27,9 @@
             <div class="item header" (click)="selection.toggle(NAV_USERS)" [ngClass]="{'expanded': selection.isSelected(NAV_USERS), 
                     'selected': dataMenuItem == 'userClients' || dataMenuItem == 'userEmployees' || dataMenuItem == 'userGenerics'}">
                 <span>Users</span>
+                <!-- <i class="material-icons"> keyboard_arrow_down</i> -->
                 <i class="material-icons">keyboard_arrow_right</i>
+                <!--<i  class="material-icons">receipt</i> -->
             </div>
             <div class="nav-tab">
                 <div class="item" data-menu-item="userClients" [ngClass]="{'selected': dataMenuItem == 'userClients'}" (click)="select($event)" routerLink="#">Client Users</div>
