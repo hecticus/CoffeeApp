@@ -14,10 +14,10 @@ import { NotificationService } from '../../core/utils/notification/notification.
 		<h3 class="title">Detalles del Lote</h3>
 		<div class="tool-bar both-side">
 			<div class="right row">
-				<button class="btn-icon" title="Update" type="button" (click)="update()">
+				<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
 					<i class="material-icons">edit</i>
 				</button>
-				<button class="btn-icon" title="Delete" type="button" (click)="openModal(template)">
+				<button class="btn-icon" title="Eliminar" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
