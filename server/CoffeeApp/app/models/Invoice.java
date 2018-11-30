@@ -166,13 +166,8 @@ public class Invoice extends AbstractEntity{
         if(providerType != 0L)
             expressionList.eq("provider.providerType.id", providerType);
 
-        if(startDate != null && closeDate != null) {;
+        if(startDate != null && closeDate != null) {
             expressionList.between("startDate", startDate, closeDate);
-//                    .and()
-//                    .ge("startDate", startDate)
-//                        .or()
-//                            .isNull("closedDate")
-//                            .le("closedDate", closeDate);
         } else if(startDate != null) {
             expressionList.ge("startDate", startDate);
         } else if(closeDate != null) {
