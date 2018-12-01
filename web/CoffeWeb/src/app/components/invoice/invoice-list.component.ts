@@ -413,6 +413,21 @@ export class InvoiceListComponent implements OnInit {
 		let startDate = this.filterService.filter['startDate'];
 		let closedDate = this.filterService.filter['closedDate'];
 
+
+
+
+
+
+
+		if ( closedDate === undefined || closedDate === null ) {
+			delete this.filterService.filter['closedDate'];
+		} else if (closedDate['formatted'] !== undefined &&
+				closedDate['formatted'] !== null ) {
+			console.log(this.filterService.filter['closedDate']);
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
+			delete this.filterService.filter['closedDate'];
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
+
 		if ( startDate === undefined || startDate === null ) {
 			delete this.filterService.filter['startDate'];
 		} else if (startDate['formatted'] !== undefined &&
@@ -427,14 +442,14 @@ export class InvoiceListComponent implements OnInit {
 
 
 
-		if ( closedDate === undefined || closedDate === null ) {
-			delete this.filterService.filter['closedDate'];
-		} else if (closedDate['formatted'] !== undefined &&
-				closedDate['formatted'] !== null ) {
-			console.log(this.filterService.filter['closedDate']);
-			console.log(closedDate['formatted'] + 'T23:59:00Z');
-			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
+		// if ( closedDate === undefined || closedDate === null ) {
+		// 	delete this.filterService.filter['closedDate'];
+		// } else if (closedDate['formatted'] !== undefined &&
+		// 		closedDate['formatted'] !== null ) {
+		// 	console.log(this.filterService.filter['closedDate']);
+		// 	console.log(closedDate['formatted'] + 'T23:59:00Z');
+		// 	delete this.filterService.filter['closedDate'];
+		// 	this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
