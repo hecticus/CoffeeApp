@@ -60,8 +60,8 @@ const moment =  _moment;
 			<!--EndDate-->
 			<div class="date2">
 				<my-date-picker [options]="myDatePickerOptions"
-					[(ngModel)]="filterService.filter['closedDate']"
-					(change)="filterService.put('closedDate',
+					[(ngModel)]="filterService.filter['endDate']"
+					(change)="filterService.put('endDate',
 					$event.target.value)">
 				</my-date-picker>
 			</div>
@@ -282,7 +282,7 @@ export class InvoiceListComponent implements OnInit {
 
 	list(page = 0) {
 		let startDate = this.filterService.filter['startDate'];
-		let closedDate = this.filterService.filter['closedDate'];
+		let closedDate = this.filterService.filter['endDate'];
 
 		if ( startDate === undefined || startDate === null ) {
 			delete this.filterService.filter['startDate'];
@@ -295,13 +295,13 @@ export class InvoiceListComponent implements OnInit {
 		}
 
 		if ( closedDate === undefined || closedDate === null ) {
-			delete this.filterService.filter['closedDate'];
+			delete this.filterService.filter['endDate'];
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
-			console.log(this.filterService.filter['closedDate']);
+			console.log(this.filterService.filter['endDate']);
 			console.log(closedDate['formatted'] + 'T23:59:99Z');
-			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:99Z');
+			delete this.filterService.filter['endDate'];
+			this.filterService.put('endDate', closedDate['formatted'] + 'T23:59:99Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
