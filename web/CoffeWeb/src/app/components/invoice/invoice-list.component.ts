@@ -423,14 +423,18 @@ export class InvoiceListComponent implements OnInit {
 				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00Z');
 		}
 
+
+
+
+
 		if ( closedDate === undefined || closedDate === null ) {
-			delete this.filterService.filter['endDate'];
+			delete this.filterService.filter['closedDate'];
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
-			console.log(this.filterService.filter['endDate']);
-			console.log(closedDate['formatted'] + 'T:00:00Z');
+			console.log(this.filterService.filter['closedDate']);
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
 			delete this.filterService.filter['closedDate'];
-			this.filterService.put('endDate', closedDate['formatted'] + 'T00:00:00Z');
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
