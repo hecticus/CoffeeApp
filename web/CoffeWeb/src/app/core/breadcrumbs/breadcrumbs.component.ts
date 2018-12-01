@@ -1,5 +1,5 @@
-import { ActivatedRoute, Router, NavigationEnd, Params, PRIMARY_OUTLET } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd, Params, PRIMARY_OUTLET } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 interface IBreadcrumb {
@@ -27,12 +27,15 @@ export class BreadcrumbsComponent implements OnInit {
 
 	ngOnInit() {
 		this.breadcrumbs = this.getBreadcrumbs(this.activatedRoute);
-		this.router.events.pipe(
-			filter((event) => event instanceof NavigationEnd))
+
+		this.router.events
+			.pipe(
+				filter((event) => event instanceof NavigationEnd)
+			)
 			.subscribe((event) => {
 				this.breadcrumbs = this.getBreadcrumbs(this.activatedRoute);
 			});
-		}
+	}
 
 	private getBreadcrumbs(route: ActivatedRoute): IBreadcrumb[] {
 		const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
@@ -56,8 +59,8 @@ export class BreadcrumbsComponent implements OnInit {
 			}
 			route = route.firstChild;
 		}
+
 		// we should never get here, but just in case
 		return breadcrumbs;
 	}
-
 }

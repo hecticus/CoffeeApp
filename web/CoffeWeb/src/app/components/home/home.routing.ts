@@ -17,29 +17,18 @@ const homeRoutes: Routes = [
 				path: '',
 				redirectTo: '/admin/invoices',
 				pathMatch: 'full',
-				// component: InvoiceListComponent,
 				data: {
 					breadcrumb: '',
-					icon: ''
+					icon: '',
+					expectedRoles: ['super', 'employee']
 				}
 			},
-			// , {
-			// 	path: 'providers',
-			// 	loadChildren: 'src/app/components/provider/provider.module#ProviderModule'
-			// }, {
-			// 	path: 'lots',
-			// 	loadChildren: 'src/app/components/lot/lot.module#LotModule'
-			// }, {
-			// 	path: 'invoices',
-			// 	loadChildren: 'src/app/components/invoice/invoice.module#InvoiceModule'
-			// }
 			...providerRoutes,
 			...lotRoutes,
 			...invoiceRoutes,
 		],
 		data: {
-			breadcrumb: 'home',
-			icon: 'home'
+			breadcrumb: 'home'
 		},
 	},
 ];

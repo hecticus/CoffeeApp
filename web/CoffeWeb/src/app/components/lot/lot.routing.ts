@@ -11,8 +11,7 @@ export const lotRoutes: Routes = [
 		path: 'lots',
 		component: LotComponent,
 		data: {
-			breadcrumb: 'lots',
-			icon: 'list'
+			breadcrumb: 'Lotes'
 		},
 		children: [
 			{
@@ -20,19 +19,19 @@ export const lotRoutes: Routes = [
 				pathMatch: 'full',
 				component: LotListComponent,
 				data: {
-					breadcrumb: undefined
+					expectedRoles: ['super', 'employee']
 				}
 			}, {
 				path: 'create',
 				component: LotCreateComponent,
 				data: {
-					breadcrumb: undefined
+					breadcrumb: 'Crear'
 				}
 			}, {
 				path: ':lotId',
 				component: LotComponent,
 				data: {
-					breadcrumb: undefined
+					breadcrumb: 'Detalle'
 				},
 				children: [
 					{
@@ -43,8 +42,7 @@ export const lotRoutes: Routes = [
 						path: 'update',
 						component: LotUpdateComponent,
 						data: {
-							breadcrumb: 'update',
-							icon: 'edit'
+							breadcrumb: 'Actualizar'
 						}
 					}
 				]

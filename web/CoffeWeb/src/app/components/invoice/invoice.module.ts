@@ -24,6 +24,7 @@ import {
 	MatIconModule,
 	} from '@angular/material';
 	import { MyDatePickerModule } from 'mydatepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
 	imports: [
@@ -41,6 +42,8 @@ import {
 		MatNativeDateModule,
 		MatIconModule,
 		MyDatePickerModule,
+		ModalModule.forRoot(),
+
 
 		UtilsModule,
 		InvoiceRoutingModule,

@@ -1,17 +1,22 @@
-.breadcrumb{
+.breadcrumbs{
 	display: flex;
-	padding: 5px 10px;
+	padding: 7px 15px;
+
+	
 }
+
 .breadcrumb-item a {
-	font-size: 12px;
 	color: #333;
 	text-decoration: none;
+	color: white;
 }
+
 .breadcrumb-item span{
-	font-size: 10px;
-	padding: 0 10px;
+	font-size: 18px;
+	padding: 0 10px;	
 }
+
 .breadcrumb-item:hover a,
 .breadcrumb-item:last-child a {
-	color: #656666;
+	color: #ebebeb;
 }

@@ -36,13 +36,13 @@ const moment =  _moment;
 
 			<div class="button1">
 				<div class="buttons">
-					<button class="b1 fa fa-twitter fa-5x" (click)="openModal(template)">
+					<button class="b1 fa fa-twitter fa-5x" title="Cerrar Facturas" (click)="openModal(template)">
 						<i class="material-icons">lock</i>
 					</button>
-					<button (click)="exportTotalAsXLSX()">
+					<button (click)="exportTotalAsXLSX()"  title="Reporte Total">
 						<i  class="material-icons">receipt</i>
 					</button>
-					<button (click)="exportDetailAsXLSX()">
+					<button (click)="exportDetailAsXLSX()" title="Reporte Detallado">
 						<i class="material-icons">description</i>
 					</button>
 				</div>
@@ -299,9 +299,9 @@ export class InvoiceListComponent implements OnInit {
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
 			console.log(this.filterService.filter['closedDate']);
-			console.log(closedDate['formatted'] + 'T00:00:00Z');
+			console.log(closedDate['formatted'] + 'T23:59:99Z');
 			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:99Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
