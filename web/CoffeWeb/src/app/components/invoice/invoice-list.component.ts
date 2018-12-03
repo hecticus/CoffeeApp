@@ -45,7 +45,7 @@ const moment =  _moment;
 					<button (click)="exportDetailAsXLSX()" title="Reporte Detallado">
 						<i class="material-icons">description</i>
 					</button>
-					<button (click)="exportDetailAsXLSX()" title="Pago de proveedores">
+					<button (click)="exportPagosAsXLSX()" title="Pago de proveedores">
 						<i class="material-icons">account_balance_wallet</i>
 					</button>
 				</div>
@@ -507,6 +507,56 @@ export class InvoiceListComponent implements OnInit {
 		});
 
 		this.invoiceService.getDetail(httpParams).subscribe(
+				data => {
+					console.log(data['result']);
+					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
+				}
+		);
+	}
+
+	exportPagosAsXLSX(): void {
+
+		let startDate = this.filterService.filter['startDate'];
+		let closedDate = this.filterService.filter['closedDate'];
+
+		if ( startDate === undefined || startDate === null ) {
+			delete this.filterService.filter['startDate'];
+		} else if (startDate['formatted'] !== undefined &&
+			startDate['formatted'] !== null ) {
+				console.log(this.filterService.filter['startDate']);
+				console.log(startDate['formatted'] + 'T00:00:00Z');
+				delete this.filterService.filter['startDate'];
+				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00Z');
+		}
+
+		if ( closedDate === undefined || closedDate === null ) {
+			delete this.filterService.filter['closedDate'];
+		} else if (closedDate['formatted'] !== undefined &&
+				closedDate['formatted'] !== null ) {
+			console.log(this.filterService.filter['closedDate']);
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
+			delete this.filterService.filter['closedDate'];
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
+		}
+
+		if (this.filterService.filter['statusInvoice'] === undefined) {
+			delete this.filterService.filter['statusInvoice'];
+		}
+
+		if (this.filterService.filter['typeProvider'] === undefined) {
+			delete this.filterService.filter['typeProvider'];
+		}
+
+		if (this.filterService.filter['nitName'] === undefined) {
+			delete this.filterService.filter['nitName'];
+		}
+
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00Z');
+		let httpParams = BaseService.jsonToHttpParams({
+			...this.filterService.filter
+		});
+
+		this.invoiceService.getPagos(httpParams).subscribe(
 				data => {
 					console.log(data['result']);
 					this.excelService.exportAsExcelFile(data['result'], 'Reporte');

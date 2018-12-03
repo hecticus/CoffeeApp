@@ -319,8 +319,51 @@ public class Invoice extends AbstractEntity{
                 "        AND id.invoice_id = i.id\n" +
                 "        AND s.id = i.status_invoice_id\n";
 
+
+
+        if(nitName != null)
+            sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
+
+        if(status != 0L)
+            sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
+
         if(providerType != 0L)
-                sql += "        AND pt.id = "+ providerType + "\n";
+            sql += "        AND pt.id = "+ providerType + "\n";
+
+        if(startDate != null && closeDate != null) {
+            sql += "        AND ( i.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
+        } else if(startDate != null) {
+            sql += "        AND i.start_date >=  '"+ startDate + "'\n";
+        } else if(closeDate != null) {
+            sql += "        AND ( i.closed_date <= '" + closeDate + "' OR i.closed_date is null) \n";
+        }
+
+        sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider\n" +
+                "ORDER BY p.name_provider, i.start_date ASC";
+
+        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
+
+        return new ListPagerCollection(sqlRows);
+    }
+
+    public static ListPagerCollection createPagos(Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
+                                                   String sort, Long id_provider, Long providerType,  String startDate,
+                                                   String closeDate, Long status ,boolean delete, String nitName){
+
+        String sql = "SELECT \n" +
+                "    p.nit_provider as 'Identificación del Proveedor',\n" +
+                "    p.name_provider as 'Nombre del Proveedor',\n" +
+                "    SUM( i.amount_invoice_detail) as 'Monto Total a Pagar',\n" +
+                "    SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) as 'Total de la Factura'\n" +
+                "FROM ((CoffeeApp.providers AS p\n" +
+                " INNER JOIN  CoffeeApp.invoices AS c ON c.provider_id = p.id)\n" +
+                " INNER JOIN  CoffeeApp.invoice_details as i ON i.invoice_id = c.id)\n" +
+                "WHERE i.deleted = 0 \n" +
+                "        AND c.deleted = 0 \n" +
+                "        AND p.deleted = 0 \n";
+
+        if(providerType != 0L)
+            sql += "        AND p.provider_type_id = "+ providerType + "\n";
 
         if(nitName != null)
             sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
@@ -330,20 +373,16 @@ public class Invoice extends AbstractEntity{
 
         if(startDate != null && closeDate != null) {
             sql += "        AND ( i.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
-//            if(startDate == closeDate){
-//                sql += "        AND ( i.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
-//            }else {
-//                sql += "        AND i.start_date = '"+ startDate + "'\n";
-//            }
-//                   "        AND ( i.closed_date <= '"+ closeDate +"' OR i.closed_date is null) \n";
         } else if(startDate != null) {
             sql += "        AND i.start_date >=  '"+ startDate + "'\n";
         } else if(closeDate != null) {
             sql += "        AND ( i.closed_date <= '" + closeDate + "' OR i.closed_date is null) \n";
         }
 
-        sql += " GROUP BY i.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider\n" +
-                "ORDER BY p.name_provider, i.start_date ASC";
+        sql += "GROUP BY \n" +
+                "    p.name_provider,\n" +
+                "    p.nit_provider\n"+
+                "ORDER BY p.name_provider ASC;";
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 
