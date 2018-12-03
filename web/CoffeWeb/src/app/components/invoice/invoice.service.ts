@@ -57,7 +57,7 @@ export class InvoiceService {
 	}
 
 	getPagos(params: HttpParams = new HttpParams()): Observable<any> {
-		return this.http.get<any>(InvoiceService.BASE_URL + '/pagos', {params: params});
+		return this.http.get<any>(InvoiceService.BASE_URL + '/createPagos', {params: params});
 	}
 
 	getLot(invoice: Invoice): FormGroup {
