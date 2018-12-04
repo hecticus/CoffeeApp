@@ -242,8 +242,7 @@ public class Invoice extends AbstractEntity{
         String sql = "SELECT \n" +
                 "    p.nit_provider AS 'Identificación del Proveedor',\n" +
                 "    p.name_provider AS 'Nombre del Proveedor',\n" +
-                "    DATE_FORMAT(id.start_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
-                "    -- i.closed_date AS 'Fecha de Cierre',\n" +
+                "    DATE_FORMAT( i.start_date, '%d/%m/%Y') AS 'Fecha de Apertura',\n" +
                 "    i.id AS 'Numero de Recibo',\n" +
                 "    id.price_item_type_by_lot AS 'Costo de Cafe',\n" +
                 "    id.cost_item_type AS 'Precio del Cafe',\n" +
@@ -278,8 +277,6 @@ public class Invoice extends AbstractEntity{
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
         if(startDate != null && closeDate != null) {
             sql += "        AND ( id.start_date between '" + startDate +"' AND '"+ closeDate +"')\n";
-//                    "        AND id.start_date >=  '"+startDate +"'\n" +
-//                   "        AND ( id.closed_date <= '"+ closeDate +"' OR id.closed_date is null) \n";
         } else if(startDate != null) {
             sql += "        AND id.start_date >=  '"+startDate +"'\n";
         } else if(closeDate != null) {
@@ -301,7 +298,7 @@ public class Invoice extends AbstractEntity{
                                                    String closeDate, Long status ,boolean delete, String nitName){
 
         String sql = "SELECT \n" +
-                "    DATE_FORMAT(i.start_date, '%d/%m/%Y %H:%i:%s') AS 'Fecha de Apertura',\n" +
+                "    DATE_FORMAT( i.start_date, '%d/%m/%Y') AS 'Fecha de Apertura',\n" +
                 "    p.nit_provider AS 'Identificación del Proveedor',\n" +
                 "    p.name_provider AS 'Nombre del Proveedor',\n" +
                 "    SUM(id.amount_invoice_detail) AS Peso,\n" +
@@ -316,10 +313,9 @@ public class Invoice extends AbstractEntity{
                 "    i.provider_id = p.id\n" +
                 "        AND p.provider_type_id = pt.id\n" +
                 "        AND i.deleted = 0\n" +
+                "        AND id.deleted = 0\n" +
                 "        AND id.invoice_id = i.id\n" +
                 "        AND s.id = i.status_invoice_id\n";
-
-
 
         if(nitName != null)
             sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
@@ -351,16 +347,25 @@ public class Invoice extends AbstractEntity{
                                                    String closeDate, Long status ,boolean delete, String nitName){
 
         String sql = "SELECT \n" +
+                "    Min(DATE_FORMAT(c.start_date, '%d/%m/%Y')) as 'Fecha de Primera Cosecha',\n" +
+                "    Max(DATE_FORMAT(c.start_date, '%d/%m/%Y')) as 'Fecha de Ultima Cosecha',\n" +
                 "    p.nit_provider as 'Identificación del Proveedor',\n" +
                 "    p.name_provider as 'Nombre del Proveedor',\n" +
-                "    SUM( i.amount_invoice_detail) as 'Monto Total a Pagar',\n" +
-                "    SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) as 'Total de la Factura'\n" +
-                "FROM ((CoffeeApp.providers AS p\n" +
-                " INNER JOIN  CoffeeApp.invoices AS c ON c.provider_id = p.id)\n" +
-                " INNER JOIN  CoffeeApp.invoice_details as i ON i.invoice_id = c.id)\n" +
-                "WHERE i.deleted = 0 \n" +
-                "        AND c.deleted = 0 \n" +
-                "        AND p.deleted = 0 \n";
+                "    SUM( i.amount_invoice_detail) as 'Monto total Cosechado',\n" +
+                "    SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) as 'Monto Total a Pagar'\n" +
+                "FROM\n" +
+                "    CoffeeApp.invoices AS c,\n" +
+                "    CoffeeApp.providers AS p,\n" +
+                "    CoffeeApp.status AS s,\n" +
+                "    CoffeeApp.provider_type as t,\n" +
+                "    CoffeeApp.invoice_details as i\n" +
+                "WHERE\n" +
+                "    c.provider_id = p.id\n" +
+                "    AND c.status_invoice_id = s.id\n" +
+                "    AND p.provider_type_id = t.id\n" +
+                "    AND i.deleted = 0 \n" +
+                "    AND i.invoice_id = c.id\n";
+
 
         if(providerType != 0L)
             sql += "        AND p.provider_type_id = "+ providerType + "\n";
@@ -379,10 +384,12 @@ public class Invoice extends AbstractEntity{
             sql += "        AND ( i.closed_date <= '" + closeDate + "' OR i.closed_date is null) \n";
         }
 
-        sql += "GROUP BY \n" +
-                "    p.name_provider,\n" +
-                "    p.nit_provider\n"+
-                "ORDER BY p.name_provider ASC;";
+        sql += "GROUP BY  +\n" +
+                "      p.name_provider,\n" +
+                "      p.nit_provider\n" +
+                "ORDER BY" +
+                "      p.nit_provider ASC,\n" +
+                "      p.nit_provider ASC;";
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 

@@ -163,10 +163,11 @@ export class InvoiceDetailListComponent implements OnInit {
 		});
 		console.log(this.total);
 
+
 		this.invoiceDetailService.getAll(hhtpParams).subscribe(
 			data => {
 				this.invoices.data = data['result'];
-				console.log(' ------------------------------------------ ');
+				console.log(' --------------------hkgjgkjgjgjjjjjjjjjg---------------------- ');
 				console.log(this.invoices);
 		});
 

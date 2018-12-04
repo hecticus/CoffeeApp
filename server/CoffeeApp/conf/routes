@@ -151,7 +151,6 @@ PUT     /multimedias/:id                                                        
 POST    /multimedias/delete                                                     controllers.Multimedias.deletes()
 POST    /multimedias/deleteUselessObjectsToContainer                            controllers.Multimedias.deleteUselessObjectsToContainer()
 
-
 ################################################################################
 ##·······                          Provider                          ··········#
 ################################################################################
