@@ -22,7 +22,6 @@ const appRoutes: Routes = [
 	}
 ];
 
-// export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
 @NgModule({
 	imports: [
 		RouterModule.forRoot(appRoutes)

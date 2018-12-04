@@ -36,14 +36,17 @@ const moment =  _moment;
 
 			<div class="button1">
 				<div class="buttons">
-					<button class="b1 fa fa-twitter fa-5x" (click)="openModal(template)">
+					<button class="b1 fa fa-twitter fa-5x" title="Cerrar Facturas" (click)="openModal(template)">
 						<i class="material-icons">lock</i>
 					</button>
-					<button (click)="exportTotalAsXLSX()">
+					<button (click)="exportTotalAsXLSX()"  title="Reporte Total">
 						<i  class="material-icons">receipt</i>
 					</button>
-					<button (click)="exportDetailAsXLSX()">
+					<button (click)="exportDetailAsXLSX()" title="Reporte Detallado">
 						<i class="material-icons">description</i>
+					</button>
+					<button (click)="exportPagosAsXLSX()" title="Pago de proveedores">
+						<i class="material-icons">account_balance_wallet</i>
 					</button>
 				</div>
 			</div>
@@ -60,8 +63,8 @@ const moment =  _moment;
 			<!--EndDate-->
 			<div class="date2">
 				<my-date-picker [options]="myDatePickerOptions"
-					[(ngModel)]="filterService.filter['closedDate']"
-					(change)="filterService.put('closedDate',
+					[(ngModel)]="filterService.filter['endDate']"
+					(change)="filterService.put('endDate',
 					$event.target.value)">
 				</my-date-picker>
 			</div>
@@ -192,11 +195,7 @@ export class InvoiceListComponent implements OnInit {
 	status: Status;
 	pager: Pager;
 	provider: Provider;
-	// let currentTime = new Date();
 
-	// let month = currentTime.getMonth() + 1;
-	// let day = currentTime.getDate();
-	// let year = currentTime.getFullYear();
 	minDate = new Date(2018, 0, 4);
 	maxDate = new Date();
 
@@ -207,7 +206,6 @@ export class InvoiceListComponent implements OnInit {
 	columnsToDisplay = ['select',  'provider.providerType.nameProviderType',
 	'statusInvoice.name', 'provider.nameProvider', 'startDate', 'totalInvoice'];
 
-	// 'invoice.provider.nameProvider'
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
@@ -217,9 +215,6 @@ export class InvoiceListComponent implements OnInit {
 
 	// Defione Selection
 	selection = new SelectionModel<Invoice>(true, []);
-	// const initialSelection = [];
-	// const allowMultiSelect = true;
-	// selection = new SelectionModel<Provider>(allowMultiSelect, initialSelection);
 
 	myDatePickerOptions: IMyDpOptions = {
 		// other options...
@@ -282,7 +277,7 @@ export class InvoiceListComponent implements OnInit {
 
 	list(page = 0) {
 		let startDate = this.filterService.filter['startDate'];
-		let closedDate = this.filterService.filter['closedDate'];
+		let closedDate = this.filterService.filter['endDate'];
 
 		if ( startDate === undefined || startDate === null ) {
 			delete this.filterService.filter['startDate'];
@@ -295,13 +290,13 @@ export class InvoiceListComponent implements OnInit {
 		}
 
 		if ( closedDate === undefined || closedDate === null ) {
-			delete this.filterService.filter['closedDate'];
+			delete this.filterService.filter['endDate'];
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
-			console.log(this.filterService.filter['closedDate']);
-			console.log(closedDate['formatted'] + 'T00:00:00Z');
-			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
+			console.log(this.filterService.filter['endDate']);
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
+			delete this.filterService.filter['endDate'];
+			this.filterService.put('endDate', closedDate['formatted'] + 'T23:59:00Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
@@ -316,7 +311,6 @@ export class InvoiceListComponent implements OnInit {
 			delete this.filterService.filter['nitName'];
 		}
 
-		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00Z');
 		let httpParams = BaseService.jsonToHttpParams({
 			// sort: this.table.sort,
 			// collection: 'id, nameProvider, nitProvider, addressProvider, emailProvider, contactNameProvider, numberProvider,' +
@@ -388,10 +382,6 @@ export class InvoiceListComponent implements OnInit {
 	decline(): void {
 		this.modalRef.hide();
 	}
-	// change(date: Date) {
-	// 	console.log("id");
-	// 	this.filterService.put('nitName', moment(date).format('YYYY-MM-DD') + 'T00:00:00Z');
-	// }
 
 	exportAsXLSX(): void {
 
@@ -428,9 +418,9 @@ export class InvoiceListComponent implements OnInit {
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
 			console.log(this.filterService.filter['closedDate']);
-			console.log(closedDate['formatted'] + 'T00:00:00Z');
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
 			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
@@ -486,9 +476,9 @@ export class InvoiceListComponent implements OnInit {
 		} else if (closedDate['formatted'] !== undefined &&
 				closedDate['formatted'] !== null ) {
 			console.log(this.filterService.filter['closedDate']);
-			console.log(closedDate['formatted'] + 'T00:00:00Z');
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
 			delete this.filterService.filter['closedDate'];
-			this.filterService.put('closedDate', closedDate['formatted'] + 'T00:00:00Z');
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
 		}
 
 		if (this.filterService.filter['statusInvoice'] === undefined) {
@@ -517,6 +507,56 @@ export class InvoiceListComponent implements OnInit {
 		});
 
 		this.invoiceService.getDetail(httpParams).subscribe(
+				data => {
+					console.log(data['result']);
+					this.excelService.exportAsExcelFile(data['result'], 'Reporte');
+				}
+		);
+	}
+
+	exportPagosAsXLSX(): void {
+
+		let startDate = this.filterService.filter['startDate'];
+		let closedDate = this.filterService.filter['closedDate'];
+
+		if ( startDate === undefined || startDate === null ) {
+			delete this.filterService.filter['startDate'];
+		} else if (startDate['formatted'] !== undefined &&
+			startDate['formatted'] !== null ) {
+				console.log(this.filterService.filter['startDate']);
+				console.log(startDate['formatted'] + 'T00:00:00Z');
+				delete this.filterService.filter['startDate'];
+				this.filterService.put('startDate', startDate['formatted'] + 'T00:00:00Z');
+		}
+
+		if ( closedDate === undefined || closedDate === null ) {
+			delete this.filterService.filter['closedDate'];
+		} else if (closedDate['formatted'] !== undefined &&
+				closedDate['formatted'] !== null ) {
+			console.log(this.filterService.filter['closedDate']);
+			console.log(closedDate['formatted'] + 'T23:59:00Z');
+			delete this.filterService.filter['closedDate'];
+			this.filterService.put('closedDate', closedDate['formatted'] + 'T23:59:00Z');
+		}
+
+		if (this.filterService.filter['statusInvoice'] === undefined) {
+			delete this.filterService.filter['statusInvoice'];
+		}
+
+		if (this.filterService.filter['typeProvider'] === undefined) {
+			delete this.filterService.filter['typeProvider'];
+		}
+
+		if (this.filterService.filter['nitName'] === undefined) {
+			delete this.filterService.filter['nitName'];
+		}
+
+		// console.log(moment(this.date).format('YYYY-MM-DD') + 'T00:00:00Z');
+		let httpParams = BaseService.jsonToHttpParams({
+			...this.filterService.filter
+		});
+
+		this.invoiceService.getPagos(httpParams).subscribe(
 				data => {
 					console.log(data['result']);
 					this.excelService.exportAsExcelFile(data['result'], 'Reporte');

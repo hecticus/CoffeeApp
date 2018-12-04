@@ -1,25 +1,32 @@
 import { Invoice } from '../../core/models/invoice';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { InvoiceService } from './invoice.service';
 import { Location } from '@angular/common';
 import { Status } from '../../core/models/status';
 import { StatusInvoiceService } from '../status/status-invoice.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { NotificationService } from 'src/app/core/utils/notification/notification.service';
 
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<h3 class="title">Detalles del Reporte</h3>
-		<!--<div class="tool-bar both-side">
+		<div class="tool-bar both-side">
+			<!--<div class="right row">
+					<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
+						<i class="material-icons">edit</i>
+					</button>
+					<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false">
+						<i class="material-icons">delete</i>
+					</button>
+			</div>-->
 			<div class="right row">
-				<button class="btn-icon" title="Update" type="button" (click)="update()">
-					<i class="material-icons">edit</i>
-				</button>
-				<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false">
+				<button class="btn-icon" title="Eliminar Factura" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
-		</div>-->
+		</div>
 
 		<div class="answer">
 			<div class="fieldset">
@@ -61,28 +68,27 @@ import { StatusInvoiceService } from '../status/status-invoice.service';
 			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
 
 		</div>
-<!--
-		<app-modal [(closed)]="confirmDelete">
-			<ng-template modalContentDirective>
-				<div class="dialog-content">
-					<div class="dialog-title" >Confirmation</div>
-					<div class="dialog-message">Are you sure you want to delete this record?</div>
-					<div class="dialog-options">
-						<button class="btn-text red" type="button" (click)="confirmDelete = true">
-							<div class="text">No</div>
-						</button>
-						<button class="btn-text green" type="button" (click)="delete(); confirmDelete = true">
-							<div class="text">Yes</div>
-						</button>
-					</div>
+
+		<ng-template #template>
+			<div class="modal-body text-center">
+				<div class="dialog-title">Confirmación </div>
+				<div class="dialog-message">¿Estas seguro que quieres eliminar esta factura?</div>
+				<div class="dialog-options">
+					<button class="btn-text green" type="button" (click)="delete()">
+						<div class="text">Si</div>
+					</button>
+					<button class="btn-text red" type="button" (click)="decline()" >
+						<div class="text">No</div>
+					</button>
 				</div>
-			</ng-template>
-		</app-modal>-->
+			</div>
+		</ng-template>
 
 	`
 })
 
 export class InvoiceReadComponent implements OnInit {
+	modalRef: BsModalRef;
 	confirmDelete = true;
 	status: Status;
 	invoice = new Invoice();
@@ -94,7 +100,8 @@ export class InvoiceReadComponent implements OnInit {
 		private invoiceService: InvoiceService,
 		private statusInvoiceService: StatusInvoiceService,
 		private location: Location,
-
+		private modalService: BsModalService,
+		private notificationService: NotificationService,
 	) { }
 
 	ngOnInit() {
@@ -110,17 +117,28 @@ export class InvoiceReadComponent implements OnInit {
 		console.log(this.invoice);
 	}
 
+	openModal(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+	}
+	decline(): void {
+		this.modalRef.hide();
+	}
+
 	update() {
 		console.log(this.activatedRoute);
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
 	}
 
 	delete(this) {
-		this.lotService.delete(this.lot.id).subscribe( any => {
+		this.invoiceService.delete(this.idInvoice).subscribe( any => {
+			this.notificationService.sucessDelete('Factura');
 			let url = this.location.path();
+			this.modalRef.hide();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
-			} // }, err => this.notificationService.error(err));
-		);
+		}, err =>  {
+			this.notificationService.error(err);
+			this.modalRef.hide();
+		});
 	}
 }
 

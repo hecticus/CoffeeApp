@@ -11,28 +11,24 @@ export const providerRoutes: Routes = [
 		path: 'providers',
 		component: ProviderComponent,
 		data: {
-			breadcrumb: 'providers',
-			icon: 'list'
+			breadcrumb: 'Proveedores',
 		},
 		children: [
 			{
 				path: '',
 				pathMatch: 'full',
-				component: ProviderListComponent,
-				data: {
-					breadcrumb: undefined
-				}
+				component: ProviderListComponent
 			}, {
 				path: 'create',
 				component:  ProviderCreateComponent,
 				data: {
-					breadcrumb: undefined
+					breadcrumb: 'Crear'
 				}
 			}, {
 				path: ':providerId',
 				component:  ProviderComponent,
 				data: {
-					breadcrumb: undefined
+					breadcrumb: 'Detalle'
 				},
 				children: [
 					{
@@ -43,7 +39,7 @@ export const providerRoutes: Routes = [
 						path: 'update',
 						component:  ProviderUpdateComponent,
 						data: {
-							breadcrumb: 'update'
+							breadcrumb: 'Actualizar'
 						}
 					}
 				]

@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by sm21 on 10/05/18.
  *
- * "EEE, d MMM yyyy HH:mm:ss Z" OJOJOJOJOJOJOJOJOJOJ aNGULAR
+ *
  */
 public class Invoices extends Controller {
 
@@ -182,6 +182,23 @@ public class Invoices extends Controller {
             return Response.internalServerErrorLF();
         }
     }
+
+    @CoffeAppsecurity
+    public  Result createPagos(  Integer pageIndex, Integer pageSize,  String collection,
+                                  String sort, Long id_provider, Long id_providertype,  String startDate,
+                                  String endDate, Long status ,boolean deleted,  String nitName) {
+        try {
+            ListPagerCollection listPager = Invoice.createPagos(pageIndex, pageSize,
+                    propertiesCollection.getPathProperties(collection),
+                    sort, id_provider, id_providertype, startDate,
+                    endDate, status, deleted, nitName);
+
+            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
+        }catch(Exception e){
+            return Response.internalServerErrorLF();
+        }
+    }
+
 
     @CoffeAppsecurity
     public  Result buyHarvestsAndCoffe( ){
