@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,9 +43,13 @@ public class PrintPreviewActivity extends AppCompatActivity {
     @DebugLog
     @OnClick(R.id.printButton)
     protected void connect() {
-        Intent BTIntent = new Intent(getApplicationContext(), BluetoothDevicesListActivity.class);
-        BTIntent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, textToPrint);
-        this.startActivityForResult(BTIntent, BluetoothDevicesListActivity.REQUEST_CONNECT_BT);
+        if(Util.getPrinterConnection() == null || Util.getSelectedPrinter() == null || Util.getmZebraPrinter() == null) {
+            Intent BTIntent = new Intent(getApplicationContext(), BluetoothDevicesListActivity.class);
+            BTIntent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, textToPrint);
+            this.startActivityForResult(BTIntent, BluetoothDevicesListActivity.REQUEST_CONNECT_BT);
+        } else {
+            Util.printBluetooth(PrintPreviewActivity.this, textToPrint);
+        }
     }
 
     @DebugLog

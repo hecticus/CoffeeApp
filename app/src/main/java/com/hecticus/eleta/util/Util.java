@@ -1,6 +1,8 @@
 package com.hecticus.eleta.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -8,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -21,6 +24,15 @@ import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetailsResponse;
 import com.hecticus.eleta.model.response.invoice.ReceiptResponse;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.print.BluetoothDevicesListActivity;
+import com.zebra.sdk.comm.BluetoothConnection;
+import com.zebra.sdk.comm.Connection;
+import com.zebra.sdk.comm.ConnectionException;
+import com.zebra.sdk.printer.PrinterLanguage;
+import com.zebra.sdk.printer.ZebraPrinter;
+import com.zebra.sdk.printer.ZebraPrinterFactory;
+import com.zebra.sdk.printer.ZebraPrinterLanguageUnknownException;
+import com.zebra.sdk.printer.discovery.DiscoveredPrinterBluetooth;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -51,6 +63,9 @@ import io.realm.RealmObject;
 public class Util {
 
     public static Gson gson = null;
+    private static ZebraPrinter mZebraPrinter = null;
+    private static Connection printerConnection = null;
+    private static DiscoveredPrinterBluetooth selectedPrinter = null;
 
     @DebugLog
     public static Gson getGson() throws ClassNotFoundException {
@@ -548,4 +563,127 @@ public class Util {
         Format formatter = new SimpleDateFormat("hh:mm a");
         return formatter.format(fecha);
     }
+
+    public static ZebraPrinter getmZebraPrinter() {
+        return mZebraPrinter;
+    }
+
+    public static void setmZebraPrinter(ZebraPrinter mZebraPrinter1) {
+        mZebraPrinter = mZebraPrinter1;
+    }
+
+    public static Connection getPrinterConnection() {
+        return printerConnection;
+    }
+
+    public static void setPrinterConnection(Connection printerConnection1) {
+        printerConnection = printerConnection1;
+    }
+
+    public static DiscoveredPrinterBluetooth getSelectedPrinter() {
+        return selectedPrinter;
+    }
+
+    public static void setSelectedPrinter(DiscoveredPrinterBluetooth selectedPrinter1) {
+        selectedPrinter = selectedPrinter1;
+    }
+
+    public static void printBluetooth(Context context, String zplTextToPrint){
+        mZebraPrinter = getConnectedPrinter(context, zplTextToPrint);
+        if (mZebraPrinter != null) {
+            sentTextToPrinter(context, zplTextToPrint);
+        } else {
+            disconnect(context, zplTextToPrint);
+        }
+    }
+
+    private static ZebraPrinter getConnectedPrinter(Context context, String zplTextToPrint) {
+        printerConnection = null;
+
+        printerConnection = new BluetoothConnection(selectedPrinter.address);
+
+        ZebraPrinter printer = null;
+
+        if (printerConnection.isConnected()) {
+            try {
+                printer = ZebraPrinterFactory.getInstance(printerConnection);
+                PrinterLanguage pl = printer.getPrinterControlLanguage();
+                toast(context, "Printer Language " + pl);
+            } catch (ConnectionException e) {
+                e.printStackTrace();
+                toast(context,"code 101: Unknown Printer Language!");
+                printer = null;
+                disconnect(context, zplTextToPrint);
+            } catch (ZebraPrinterLanguageUnknownException e) {
+                e.printStackTrace();
+                toast(context,"code 102: Unknown Printer Language");
+                printer = null;
+                disconnect(context, zplTextToPrint);
+            }
+        }
+
+        return printer;
+    }
+
+    private static void sentTextToPrinter(Context context, String zplTextToPrint) {
+        try {
+            byte[] pageBytes = getPageBytesFromString(zplTextToPrint);
+            printerConnection.write(pageBytes);
+
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+            toast(context,"code 103: ConnectionException: " + e.getMessage());
+            disconnect(context, zplTextToPrint);
+            //setStatus(e.getMessage(), Color.RED);
+        }
+
+    }
+
+    private static void toast(final Context context, final String message) {
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @DebugLog
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private static void disconnect(Context context, String zplTextToPrint) {
+        try {
+            if (Util.getPrinterConnection() != null) {
+                Util.getPrinterConnection().close();
+            }
+        }catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+        setPrinterConnection(null);
+        setmZebraPrinter(null);
+        setSelectedPrinter(null);
+        Intent BTIntent = new Intent(context, BluetoothDevicesListActivity.class);
+        BTIntent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, zplTextToPrint);
+        ((Activity) context).startActivityForResult(BTIntent, BluetoothDevicesListActivity.REQUEST_CONNECT_BT);
+        toast(context, "Perdió comunicación con la impresora, conectarla nuevamente.");
+    }
+
+    @DebugLog
+    private static byte[] getPageBytesFromString(String textParam) throws ConnectionException {
+        PrinterLanguage printerLanguage = mZebraPrinter.getPrinterControlLanguage();
+
+        String start = "^XA^FO10,10^AD^FH^FD";
+        String end = "^FS^XZ";
+        String toPrint = start + textParam + end;
+        byte[] pageBytes;
+
+        if (printerLanguage == PrinterLanguage.ZPL) {
+
+            pageBytes = toPrint.getBytes();
+
+        } else {
+            throw new ConnectionException("code 104: Printer must use ZPL language");
+        }
+
+        return pageBytes;
+    }
+
 }

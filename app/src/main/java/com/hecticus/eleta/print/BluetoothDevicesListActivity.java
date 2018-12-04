@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.Util;
 import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
@@ -42,9 +43,9 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
     @BindView(R.id.bluetooth_devices_list_view)
     ListView listView;
 
-    private ZebraPrinter mZebraPrinter;
+    /*private ZebraPrinter mZebraPrinter;
     private Connection printerConnection;
-    private DiscoveredPrinterBluetooth selectedPrinter;
+    private DiscoveredPrinterBluetooth selectedPrinter;*/
 
     private String zplTextToPrint;
 
@@ -104,8 +105,8 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
 
     @DebugLog
     private void connectAndPrint() {
-        mZebraPrinter = getConnectedPrinter();
-        if (mZebraPrinter != null) {
+        Util.setmZebraPrinter(getConnectedPrinter());
+        if (Util.getmZebraPrinter() != null) {
             sentTextToPrinter();
         } else {
             disconnect();
@@ -114,15 +115,15 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
 
     @DebugLog
     private ZebraPrinter getConnectedPrinter() {
-        toast(BluetoothDevicesListActivity.this.getString(R.string.connecting_to) + selectedPrinter.friendlyName);
+        toast(BluetoothDevicesListActivity.this.getString(R.string.connecting_to) + Util.getSelectedPrinter().friendlyName);
 
-        printerConnection = null;
+        Util.setPrinterConnection(null);
 
-        printerConnection = new BluetoothConnection(selectedPrinter.address);
+        Util.setPrinterConnection(new BluetoothConnection(Util.getSelectedPrinter().address));
         //SettingsHelper.saveBluetoothAddress(this, getMacAddressFieldText());
 
         try {
-            printerConnection.open();
+           Util.getPrinterConnection().open();
             toast("Connected");
         } catch (ConnectionException e) {
             toast("Communication Error! Disconnecting");
@@ -131,9 +132,9 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
 
         ZebraPrinter printer = null;
 
-        if (printerConnection.isConnected()) {
+        if (Util.getPrinterConnection().isConnected()) {
             try {
-                printer = ZebraPrinterFactory.getInstance(printerConnection);
+                printer = ZebraPrinterFactory.getInstance(Util.getPrinterConnection());
                 PrinterLanguage pl = printer.getPrinterControlLanguage();
                 toast("Printer Language " + pl);
             } catch (ConnectionException e) {
@@ -155,8 +156,8 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
     @DebugLog
     public void disconnect() {
         try {
-            if (printerConnection != null) {
-                printerConnection.close();
+            if (Util.getPrinterConnection() != null) {
+                Util.getPrinterConnection().close();
             }
         } catch (ConnectionException e) {
             e.printStackTrace();
@@ -168,14 +169,14 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
     private void sentTextToPrinter() {
         try {
             byte[] pageBytes = getPageBytesFromString(zplTextToPrint);
-            printerConnection.write(pageBytes);
+            Util.getPrinterConnection().write(pageBytes);
 
         } catch (ConnectionException e) {
             e.printStackTrace();
             toast("ConnectionException: " + e.getMessage());
             //setStatus(e.getMessage(), Color.RED);
         } finally {
-            disconnect();
+            //disconnect();
             //todo brayan print
             finish();
         }
@@ -184,7 +185,7 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
 
     @DebugLog
     private byte[] getPageBytesFromString(String textParam) throws ConnectionException {
-        PrinterLanguage printerLanguage = mZebraPrinter.getPrinterControlLanguage();
+        PrinterLanguage printerLanguage = Util.getmZebraPrinter().getPrinterControlLanguage();
 
 
         String start = "^XA^FO10,10^AD^FH^FD";
@@ -224,7 +225,7 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
         final String printerFriendlyDescription =
                 ((DiscoveredPrinterBluetooth) discoveredPrinter).friendlyName + " [" + discoveredPrinter.address + "]";
 
-        selectedPrinter = (DiscoveredPrinterBluetooth) discoveredPrinter;
+        Util.setSelectedPrinter((DiscoveredPrinterBluetooth) discoveredPrinter);
         mArrayAdapter.add(printerFriendlyDescription);
 
         BluetoothDevicesListActivity.this.runOnUiThread(new Runnable() {
