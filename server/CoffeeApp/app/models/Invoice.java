@@ -351,7 +351,7 @@ public class Invoice extends AbstractEntity{
                 "    Max(DATE_FORMAT(c.start_date, '%d/%m/%Y')) as 'Fecha de Ultima Cosecha',\n" +
                 "    p.nit_provider as 'Identificación del Proveedor',\n" +
                 "    p.name_provider as 'Nombre del Proveedor',\n" +
-                "    SUM( i.amount_invoice_detail) as 'Monto total Cosechado',\n" +
+                "    SUM( i.amount_invoice_detail) as 'Peso total Cosechado',\n" +
                 "    SUM( i.amount_invoice_detail * i.price_item_type_by_lot + i.amount_invoice_detail * i.cost_item_type) as 'Monto Total a Pagar'\n" +
                 "FROM\n" +
                 "    CoffeeApp.invoices AS c,\n" +
