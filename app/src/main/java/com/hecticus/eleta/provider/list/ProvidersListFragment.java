@@ -201,32 +201,18 @@ public class ProvidersListFragment extends BaseFragment implements ProvidersList
             intent.putExtra("isForProviderCreation", false);
             intent.putExtra("canEdit", true);
             intent.putExtra("isHarvester", selectedProvider.isHarvester());
-            /*LogDataBase.d("DEBUG intent", Util.getGson().toJson(selectedProvider));
-            intent.putExtra("provider", Util.getGson().toJson(selectedProvider));*/
-
-
-
             boolean control = ManagerDB.isProviderOffline(selectedProvider);
-            //LogDataBase.d("DEBUG details", "control" + control);
             intent.putExtra("control", control);
-            Log.d("DEBUG", "policia control " + control );
             if(InternetManager.isConnected(getActivity()) && !control){
-                Log.d("DEBUG", "policia 1");
                 intent.putExtra("provider", Util.getGson().toJson(selectedProvider));
             }else {
-                Log.d("DEBUG", "policia 2");
                 if(selectedProvider.getIdProvider()!=-1) {
-                    Log.d("DEBUG", "policia 3");
                     intent.putExtra("provider", selectedProvider.getIdProvider());
                 }
                 else {
-                    Log.d("DEBUG", "policia 4");
                     intent.putExtra("providerLocal", selectedProvider.getIdentificationDocProvider());
                 }
             }
-
-
-
             //intent.putExtra("provider", selectedProvider.getIdProvider());
             startActivity(intent);
         } catch (ClassNotFoundException e) {

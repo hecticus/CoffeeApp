@@ -301,6 +301,12 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Toast.makeText(HomeActivity.this, "se cerro la app", Toast.LENGTH_SHORT).show();
+    }
+
     @DebugLog
     @Override
     protected void onNewIntent(Intent intent) {
@@ -361,5 +367,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         if (intent.getBooleanExtra("invalidToken", false)) {
             goToLoginActivity();
         }
+
+
     }
 }
