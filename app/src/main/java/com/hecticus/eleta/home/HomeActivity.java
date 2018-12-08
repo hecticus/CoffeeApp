@@ -260,6 +260,10 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             new RealmBackup(HomeActivity.this).backup();
             return true;
         }
+        /*if (id == R.id.action_import_data) {
+            new RealmBackup(HomeActivity.this).restore();
+            return true;
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

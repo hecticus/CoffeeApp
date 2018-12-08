@@ -66,7 +66,7 @@ public class RealmBackup {
         realm.close();
     }
 
-    /*public void restore() {
+    public void restore() {
         checkStoragePermissions(activity);
         //Restore
         String restoreFilePath = EXPORT_REALM_PATH + "/" + EXPORT_REALM_FILE_NAME;
@@ -75,7 +75,7 @@ public class RealmBackup {
 
         copyBundledRealmFile(restoreFilePath, IMPORT_REALM_FILE_NAME);
         Log.d(TAG, "Data restore is done");
-    }*/
+    }
 
     private String copyBundledRealmFile(String oldFilePath, String outFileName) {
         try {
