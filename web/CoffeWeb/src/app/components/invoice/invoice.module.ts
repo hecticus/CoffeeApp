@@ -1,3 +1,4 @@
+import { PurchaseCreateComponent } from './purchase-created.component';
 import { ExcelService } from './../../core/utils/excel/excel.service';
 import { CommonModule } from '@angular/common';
 import { FilterService } from './../../core/utils/filter/filter.service';
@@ -25,6 +26,7 @@ import {
 	} from '@angular/material';
 	import { MyDatePickerModule } from 'mydatepicker';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { HarvestCreateComponent } from './harvest-create.component';
 
 @NgModule({
 	imports: [
@@ -56,6 +58,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 		InvoiceListComponent,
 		InvoiceUpdateComponent,
 		InvoiceReadComponent,
+		HarvestCreateComponent,
+		PurchaseCreateComponent
 	],
 	exports: [
 		InvoiceComponent,
@@ -63,6 +67,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 		InvoiceListComponent,
 		InvoiceUpdateComponent,
 		InvoiceReadComponent,
+		HarvestCreateComponent,
+		PurchaseCreateComponent
 	],
 	providers: [
 		InvoiceService,

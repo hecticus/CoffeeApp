@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Operacion } from 'src/app/core/models/Operacion';
 
 @Component({
 	template: `
@@ -9,21 +10,28 @@ import { Component, OnInit } from '@angular/core';
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
 							<mat-select [(value)]="selected">
-							  	<mat-option  *ngFor="let f of provType" [value]="f.nameProviderType" >
-									{{f.nameProviderType}}
+							  	<mat-option  *ngFor="let o of operacion" [value]="o.name" >
+									{{o.name}}
 								</mat-option>
 							</mat-select>
-						<mat-label><b>Tipo de Proveedor</b></mat-label>
+						<mat-label><b>Tipo de Operacion</b></mat-label>
 					  </mat-form-field>
 					</div>
 				</div>
 			</fieldset>
-			<!--<app-cosechador-create *ngIf= "selected == 'Cosechador'"></app-cosechador-create>
-			<app-vendedor-create *ngIf= "selected == 'Vendedor'"></app-vendedor-create>-->
+			<!---->
+			<app-harvest-create *ngIf= "selected == 'Nueva Cosecha'"></app-harvest-create>
+			<app-purchase-create *ngIf= "selected == 'Nueva Compra'"></app-purchase-create>
 			`,
 	styleUrls: ['./invoice.component.css']
 })
 export class InvoiceCreateComponent implements OnInit {
+	selected = '';
+
+	operacion: Operacion [] = [
+		{ id: 1, name: 'Nueva Cosecha' },
+		{ id: 2, name: 'Nueva Compra' }
+	];
 
 	constructor() { }
 
