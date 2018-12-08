@@ -6,6 +6,8 @@
 
     <string name="action_logout">Logout</string>
     <string name="action_sync">Sync</string>
+    <string name="action_export_data">Export data</string>
+    <string name="provider_authority">com.jofelchez.myandroidpos.exportdatabase</string>
 
     <string name="email">Email</string>
     <string name="password">Password</string>

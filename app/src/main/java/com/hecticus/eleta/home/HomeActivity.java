@@ -1,8 +1,10 @@
 package com.hecticus.eleta.home;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,8 @@ import com.hecticus.eleta.model_new.persistence.Migrations;
 import com.hecticus.eleta.provider.list.ProvidersListFragment;
 import com.hecticus.eleta.purchases.list.PurchasesListFragment;
 import com.hecticus.eleta.util.Constants;
+import com.hecticus.eleta.util.RealmBackup;
+import com.hecticus.eleta.util.Util;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -66,7 +70,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                                                         /*.name("coffeeleta.realm")
                                                         .schemaVersion(Constants.VERSION_DB_PROD)*/
                                                         //.migration(new Migrations())
-                                                        .name("coffeeletadev.realm")
+                                                        .name("coffeEleta.realm")//
                                                         .schemaVersion(Constants.VERSION_DB_DEV)
                                                         .build();
         Realm.setDefaultConfiguration(configuration);
@@ -250,6 +254,12 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             }
             return true;
         }
+        if (id == R.id.action_export_data) {
+                Log.d("DEBUG BD", getDatabasePath("coffeEleta").toString());
+                // todo backup
+            new RealmBackup(HomeActivity.this).backup();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -367,7 +377,12 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         if (intent.getBooleanExtra("invalidToken", false)) {
             goToLoginActivity();
         }
-
-
     }
+
+
+
+
+
+
+
 }

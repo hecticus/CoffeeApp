@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
@@ -94,6 +95,9 @@ public class SyncManager {
                     .setLenient()
                     .create();
             OkHttpClient httpClient = new OkHttpClient.Builder()
+                    .connectTimeout(20000, TimeUnit.SECONDS)
+                    .readTimeout(20000, TimeUnit.SECONDS)
+                    .writeTimeout(20000, TimeUnit.SECONDS)
                     .addInterceptor(
                             new Interceptor() {
                                 @Override
@@ -231,21 +235,7 @@ public class SyncManager {
                             if (oldLocalProviderId != null){
                                 Log.d("DEBUG", "oldlocalproviderid" + oldLocalProviderId + "newproviderid"+ newProviderId);
                                 updateProviderIdInInvoices(oldLocalProviderId, newProviderId);
-
                             }
-                            /*try {
-                                if (currentProviderToSync.getMultimediaProfile().getMultimediaCDN().getUrl() != null){
-                                    syncProviderPhoto(currentProviderToSync);
-                                    syncNextPendingProvider();
-                                }
-                                else
-                                    syncNextPendingProvider();
-                            }catch (Exception e){
-                                ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
-                                syncNextPendingProvider();
-                            }*/
-
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -274,6 +264,8 @@ public class SyncManager {
                                 realm.commitTransaction();
                             }
                         }
+                    }finally {
+                        syncNextPendingProvider();
                     }
                 } else {
                     if(response.code() == 409){
@@ -566,7 +558,7 @@ public class SyncManager {
 
                             } finally {
                                 realm.close();
-                                saveNextInvoice();
+                                //saveNextInvoice();
                             }
                         } catch (Exception e) {
                             Log.e("DEBUG exploto catch", "exploto catch"+e.toString());
@@ -585,6 +577,8 @@ public class SyncManager {
                             }
                             ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
                             e.printStackTrace();
+                        }finally {
+                            saveNextInvoice();
                         }
                     } else {
                         isSyncParcial = true;
@@ -611,6 +605,7 @@ public class SyncManager {
 
                 @Override
                 public void onFailure(Call<CreateInvoiceResponse> call, Throwable t) {
+                    Log.d("DEBUG", "exploto esta verga, en invoice2");
                     isSyncParcial = true;
                     ErrorHandling.syncErrorCodeWebServiceFailed(t);
                     /*if(*/logDataBase(new Gson().toJson(invoice),"errorFatal Sync en endPoint (/invoice2) por post... " +t.toString());/*!=-1){
@@ -696,7 +691,7 @@ public class SyncManager {
 
                         } finally {
                             realm.close();
-                            deleteNextProvider();
+                            //deleteNextProvider();
                         }
                     } catch (Exception e) {
                         isSyncParcial = true;
@@ -710,6 +705,8 @@ public class SyncManager {
                             provider.deleteFromRealm();
                             realm.commitTransaction();
                         }
+                    } finally {
+                        deleteNextProvider();
                     }
                 } else {
                     isSyncParcial = true;
@@ -813,7 +810,7 @@ public class SyncManager {
                             }
                         } finally {
                             realm.close();
-                            addNextInvoiceDetails();
+                            //addNextInvoiceDetails();
                         }
                     }catch (Exception e) {
                         isSyncParcial = true;
@@ -827,8 +824,9 @@ public class SyncManager {
                             invoiceDetails.deleteFromRealm();
                             realm.commitTransaction();
                         }
+                    } finally {
+                        addNextInvoiceDetails();
                     }
-
                 } else {
                     isSyncParcial = true;
                     try {
@@ -929,7 +927,7 @@ public class SyncManager {
                                 }
                             } finally {
                                 realm.close();
-                                deleteNextInvoice();
+                                //deleteNextInvoice();
                             }
                         }catch (Exception e) {
                             isSyncParcial = true;
@@ -943,6 +941,8 @@ public class SyncManager {
                                 realm.commitTransaction();
                             }
                             ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
+                        } finally {
+                            deleteNextInvoice();
                         }
 
                     } else {
@@ -1056,7 +1056,7 @@ public class SyncManager {
                             });
                         } finally {
                             realm.close();
-                            editNextInvoiceDetails();
+                            //editNextInvoiceDetails();
                         }
                     } catch (Exception e) {
                         isSyncParcial = true;
@@ -1071,6 +1071,8 @@ public class SyncManager {
                         }
                         ErrorHandling.syncErrorCodeInServerResponseProcessing(e);
                         e.printStackTrace();
+                    }finally {
+                        editNextInvoiceDetails();
                     }
                 } else {
                     isSyncParcial = true;
@@ -1176,7 +1178,7 @@ public class SyncManager {
 
                             } finally {
                                 realm.close();
-                                deleteNextOfDay();
+                                //deleteNextOfDay();
                             }
 
                         } catch (Exception e) {
@@ -1192,6 +1194,8 @@ public class SyncManager {
                             }
                             ErrorHandling.errorCodeInServerResponseProcessing(e);
 
+                        }finally {
+                            deleteNextOfDay();
                         }
                     } else {
                         isSyncParcial = true;
@@ -1291,7 +1295,7 @@ public class SyncManager {
                             realm.commitTransaction();
                         } finally {
                             realm.close();
-                            nextClosedInvoice();
+                            //nextClosedInvoice();
                         }
 
                     } catch (Exception e) {
@@ -1307,6 +1311,8 @@ public class SyncManager {
                             firstInvoiceClosed.deleteFromRealm();
                             realm.commitTransaction();
                         }
+                    }finally {
+                        nextClosedInvoice();
                     }
                 } else {
                     isSyncParcial = true;
@@ -1319,7 +1325,7 @@ public class SyncManager {
                                     .equalTo("id", firstInvoiceClosed.getInvoiceId())
                                     .findFirst();
                             invoice.deleteFromRealm();
-                            firstInvoiceClosed.deleteFromRealm();
+                            //firstInvoiceClosed.deleteFromRealm();
                             realm.commitTransaction();
                         }
                     } catch (IOException e) {

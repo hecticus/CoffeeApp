@@ -4,6 +4,8 @@
     <string name="RUC">RUC</string>
     <string name="action_logout">Cerrar sesión</string>
     <string name="action_sync">Sincronizar</string>
+    <string name="action_export_data">Exportar datos</string>
+    <string name="provider_authority">com.jofelchez.myandroidpos.exportdatabase</string>
 
     <string name="bluetooth_not_supported">¡Bluetooth no soportado!</string>
     <string name="camera">Cámara</string>
