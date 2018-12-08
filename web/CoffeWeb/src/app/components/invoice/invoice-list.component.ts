@@ -100,6 +100,19 @@ const moment =  _moment;
 			</div>
 		</div>
 
+		<div class="tool-bar both-side">
+			<div class="right row">
+				<button class="btn-icon"  title="Crear Factura" type="button" (click)="create()">
+					<i class="material-icons">add</i>
+				</button>
+				<!-- <button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button"
+				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
+					<i class="material-icons">delete</i>
+				</button> -->
+			</div>
+		</div>
+
 		<!--Table -->
 		<div class="mat-elevation-z8" >
 			<!-- Definition table -->
@@ -144,7 +157,7 @@ const moment =  _moment;
 				<!-- Position  openDateInvoice -->
 				<ng-container matColumnDef="startDate">
 					<th class="table-header" mat-header-cell *matHeaderCellDef  mat-sort-header>Fecha de Apertura</th>
-						<td mat-cell *matCellDef="let invoice"> {{invoice.startDate || '-'}} </td>
+						<td mat-cell *matCellDef="let invoice"> {{invoice.startDate | date:'yyyy-MM-dd' || '-'}} </td>
 				</ng-container>
 
 				<!-- Position totalInvoice -->
