@@ -5,7 +5,6 @@ import { Operacion } from 'src/app/core/models/Operacion';
 	template: `
 	<h2 class="title">Crear Factura</h2>
 			<fieldset>
-				<legend><span>Datos de la Factura</span></legend>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -14,7 +13,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 									{{o.name}}
 								</mat-option>
 							</mat-select>
-						<mat-label><b>Tipo de Operacion</b></mat-label>
+						<mat-label><b>Tipo de Factura</b></mat-label>
 					  </mat-form-field>
 					</div>
 				</div>
@@ -22,6 +21,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 			<!---->
 			<app-harvest-create *ngIf= "selected == 'Nueva Cosecha'"></app-harvest-create>
 			<app-purchase-create *ngIf= "selected == 'Nueva Compra'"></app-purchase-create>
+			<app-harvest-create></app-harvest-create>
 			`,
 	styleUrls: ['./invoice.component.css']
 })

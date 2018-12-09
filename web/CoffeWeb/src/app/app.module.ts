@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ItemTypeComponent } from './components/item-type/item-type.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgModule } from '@angular/core';
 import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
@@ -24,13 +23,10 @@ import { DatePickerModule } from './core/utils/custom-date-adapter.component';
 @NgModule({
 declarations: [
 	AppComponent,
-	// ImportCore
-
 	TableComponent,
 	TableColumnDirective,
 
 	ProviderTypeComponent,
-	ItemTypeComponent,
 	StoreComponent,
 	UnitComponent,
 

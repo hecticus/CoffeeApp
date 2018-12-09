@@ -1,3 +1,4 @@
+import { ItemTypeModule } from './../item-type/item-type.module';
 import { InvoiceModule } from '../invoice/invoice.module';
 import { ProviderModule } from '../provider/provider.module';
 import { HomeRoutingModule } from './home.routing';
@@ -24,6 +25,7 @@ import { LotModule } from '../lot/lot.module';
 		InvoiceModule,
 		ProviderModule,
 		LotModule,
+		ItemTypeModule,
 		HomeRoutingModule,
 
 	],

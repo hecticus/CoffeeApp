@@ -106,19 +106,16 @@ export class LotCreateComponent implements OnInit  {
 	ngOnInit () {
 
 		this.form = this.lotService.getFormGroupLot(new Lot());
-		console.log(this.form);
+
 		this.farService.getAll().subscribe(
 			data => {
 				this.farms = data['result'];
-				console.log(this.farms);
 			}
 		);
 
 		this.statusLotService.getAll().subscribe(
 			data => {
 				this.status = data['result'];
-				console.log(this.status);
-				console.log('bbb');
 			}
 		);
 	}
