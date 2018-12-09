@@ -193,10 +193,10 @@ export class ProviderListComponent implements OnInit {
 	}
 
 	filter() {
-		// this.providerService.getAll().subscribe(
-		// 	data => {
-		// 		this.dataSource.data = data['result'];
-		// });
+		this.providerService.getAll().subscribe(
+			data => {
+				this.dataSource.data = data['result'];
+		});
 
 		let httpParams = BaseService.jsonToHttpParams({
 			collection: 'id,nameProviderType'

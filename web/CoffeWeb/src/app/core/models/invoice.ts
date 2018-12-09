@@ -1,3 +1,4 @@
+import { ItemType } from './item-type';
 import { Provider } from './provider';
 import { BaseModel } from './base-model';
 import { Status } from './status';
@@ -11,4 +12,5 @@ export class Invoice extends BaseModel {
 	invoiceDetails: InvoiceDetail [];
 	startDate: string;
 	closedDate: string;
+	buyOption: boolean;
 }
