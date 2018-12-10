@@ -1,3 +1,4 @@
+import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ItemTypeService } from './../item-type/item-type.service';
 import { Lot } from './../../core/models/lot';
 import { LotService } from './../lot/lot.service';
@@ -5,14 +6,11 @@ import { InvoiceService } from './invoice.service';
 import { ItemType } from './../../core/models/item-type';
 import { Farm } from './../../core/models/farm';
 import { FarmService } from './../farm/farm.service';
-import { MatTableDataSource } from '@angular/material';
+import { Location } from '@angular/common';
 import { Component, OnInit, Provider } from '@angular/core';
 import { Operacion } from 'src/app/core/models/Operacion';
 import { ProviderService } from '../provider/provider.service';
-import { ProviderTypeService } from '../provider-type/provider-type.service';
-import { StatusProviderService } from '../status/status-provider.service';
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { BaseService } from 'src/app/core/base.service';
 import { FormGroup, FormArray } from '@angular/forms';
 import { Invoice } from 'src/app/core/models/invoice';
@@ -50,8 +48,7 @@ import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 					<mat-option *ngIf="it." [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
 					-->
 
-
-				<div formArrayName="itemTypes">
+				<div formArrayName="itemtypes">
 					<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of  itemTypesForms.controls;
 						let i=index" [formGroupName]="i">
 
@@ -63,6 +60,19 @@ import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 									</mat-select>
 									<mat-label><b>Granja</b></mat-label>
 								</mat-form-field>
+							</div>
+						</div>
+
+
+						<div class="wrap-fields">
+							<div class="field form-field">
+								<mat-form-field class="example-full-width">
+									<mat-select required [formControl]="item.controls['lot']">
+										<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+									</mat-select>
+									<mat-label><b>Lote</b></mat-label>
+								</mat-form-field>
+								<app-validator [control]="item.controls['lot']"></app-validator>
 							</div>
 						</div>
 
@@ -106,6 +116,10 @@ import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 				</div>
 
 			</fieldset>
+
+			<div class="options row">
+				<button mat-raised-button class="btn-text" type="submit" >Guardar</button>
+			</div>
 		</form>
 	`
 })
@@ -130,8 +144,8 @@ export class HarvestCreateComponent implements OnInit {
 		public filterService: FilterService,
 		public itemTypeService: ItemTypeService,
 		private lotService: LotService,
-		private router: Router,
-		private activatedRoute: ActivatedRoute,
+		private location: Location,
+		private notificationService: NotificationService,
 	) { }
 
 	ngOnInit() {
@@ -157,12 +171,12 @@ export class HarvestCreateComponent implements OnInit {
 				}
 		);
 
-		// let httpParamsItem = BaseService.jsonToHttpParams({
-		// 	collection: 'id, providerType(id), nameItemType',
-		// 	'providerType': 2
-		// });
+		let httpParamsItem = BaseService.jsonToHttpParams({
+			collection: 'id, providerType(id), nameItemType',
+			'providerType': 2
+		});
 
-		this.itemTypeService.getAll().subscribe(
+		this.itemTypeService.getAll(httpParamsItem).subscribe(
 				data => {
 					this.itemType = data['result'];
 					console.log(this.itemType);
@@ -183,7 +197,7 @@ export class HarvestCreateComponent implements OnInit {
 	}
 
 	get itemTypesForms() {
-		return this.form.get('itemTypes') as FormArray;
+		return this.form.get('itemtypes') as FormArray;
 	}
 
 	deleteItemType(i) {
@@ -194,5 +208,15 @@ export class HarvestCreateComponent implements OnInit {
 		this.itemTypesForms.push(this.invoiceService.initItemHarvest(new InvoiceDetail));
 	}
 
+	create() {
+		console.log(this.form);
+		this.invoiceService.newHarvestPurchase(<Invoice> this.form.value)
+			.subscribe(invoices => {
+				this.notificationService.sucessInsert('Invoice');
+				this.location.back();
+			}, err =>  {
+				this.notificationService.error(err);
+		});
+	}
 
 }

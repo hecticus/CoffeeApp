@@ -23,15 +23,19 @@ export class InvoiceService {
 		private fb: FormBuilder
 	) { }
 
-	create(lot: Lot): Observable<Lot> {
-		return this.http.post<any>(InvoiceService.BASE_URL, lot);
+	create(invoice: Invoice): Observable<Invoice> {
+		return this.http.post<any>(InvoiceService.BASE_URL, invoice);
 	}
 
-	update(lot: Lot): Observable<Lot> {
-		return this.http.put<any>(InvoiceService.BASE_URL + '/' + lot.id, lot);
+	newHarvestPurchase(invoice: Invoice): Observable<Invoice> {
+		return this.http.post<any>(InvoiceService.BASE_URL + '2', invoice);
 	}
 
-	close(ids: {'ids': number[]}): Observable<Lot> {
+	update(invoice: Invoice): Observable<Invoice> {
+		return this.http.put<any>(InvoiceService.BASE_URL + '/' + invoice.id, invoice);
+	}
+
+	close(ids: {'ids': number[]}): Observable<Invoice> {
 		return this.http.post<any>(InvoiceService.BASE_URL + '/close', ids );
 	}
 
@@ -95,12 +99,11 @@ export class InvoiceService {
 
 	getHarvestCreate(invoice: Invoice): FormGroup {
 		return this.fb.group({
-			id: new FormControl(invoice.id),
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
-			buyOpttion: new FormControl(false),
-			startDate: new FormControl(),
+			buyOption: new FormControl(false),
+			// startDate: new FormControl(),
 			// itemTypes: this.fb.array([])
-			itemTypes: this.fb.array([
+			itemtypes: this.fb.array([
 				this.initItemHarvest(new InvoiceDetail()),
 				])
 		});

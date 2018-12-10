@@ -21,7 +21,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 			<!---->
 			<app-harvest-create *ngIf= "selected == 'Nueva Cosecha'"></app-harvest-create>
 			<app-purchase-create *ngIf= "selected == 'Nueva Compra'"></app-purchase-create>
-			<app-harvest-create></app-harvest-create>
+			<app-purchase-create></app-purchase-create>
 			`,
 	styleUrls: ['./invoice.component.css']
 })
