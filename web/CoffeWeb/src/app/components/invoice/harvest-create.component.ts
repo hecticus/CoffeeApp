@@ -132,11 +132,6 @@ export class HarvestCreateComponent implements OnInit {
 	lots: Lot[];
 	auxFarm = 0;
 
-	operacion: Operacion [] = [
-		{ id: 1, name: 'Nueva Cosecha' },
-		{ id: 2, name: 'Nueva Compra' }
-	];
-
 	constructor(
 		private providerService: ProviderService,
 		private farmService: FarmService,
