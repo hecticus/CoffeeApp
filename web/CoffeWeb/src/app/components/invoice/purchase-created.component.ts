@@ -1,3 +1,5 @@
+import { StoreService } from './../store/store.service';
+import { Store } from './../../core/models/store';
 import { Component, OnInit } from '@angular/core';
 import { NotificationService } from './../../core/utils/notification/notification.service';
 import { ItemTypeService } from './../item-type/item-type.service';
@@ -28,7 +30,7 @@ import { Provider } from '@angular/compiler/src/core';
 export class PurchaseCreateComponent implements OnInit {
 
 	cosecheros: Provider[];
-	farms: Farm[];
+	stores: Store[];
 	form: FormGroup;
 	itemType: ItemType[];
 	lots: Lot[];
@@ -36,10 +38,10 @@ export class PurchaseCreateComponent implements OnInit {
 
 	constructor(
 		private providerService: ProviderService,
-		private farmService: FarmService,
+		private storeService: StoreService,
 		private invoiceService: InvoiceService,
-		public filterService: FilterService,
-		public itemTypeService: ItemTypeService,
+		public 	filterService: FilterService,
+		public 	itemTypeService: ItemTypeService,
 		private lotService: LotService,
 		private location: Location,
 		private notificationService: NotificationService,
@@ -77,7 +79,7 @@ export class PurchaseCreateComponent implements OnInit {
 	begins() {
 		let httpParams = BaseService.jsonToHttpParams({
 			collection: 'id, nameProvider, nitProvider',
-			'providerType': 2,
+			'providerType': 1,
 			'statusProvider': 41
 		});
 
@@ -87,19 +89,19 @@ export class PurchaseCreateComponent implements OnInit {
 			}
 		);
 
-		let httpParamsFarm = BaseService.jsonToHttpParams({
+		let httpParamsStore = BaseService.jsonToHttpParams({
 			collection: 'id, nameFarm',
 		});
 
-		this.farmService.getAll(httpParamsFarm).subscribe(
+		this.storeService.getAll().subscribe(
 				data => {
-					this.farms = data['result'];
+					this.stores = data['result'];
 				}
 		);
 
 		let httpParamsItem = BaseService.jsonToHttpParams({
 			collection: 'id, providerType(id), nameItemType',
-			'providerType': 2
+			'providerType': 1
 		});
 
 		this.itemTypeService.getAll(httpParamsItem).subscribe(

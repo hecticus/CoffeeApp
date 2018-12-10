@@ -98,10 +98,14 @@ export class InvoiceService {
 	}
 
 	getHarvestCreate(invoice: Invoice): FormGroup {
+		let today = new Date();
+		let start = today.getDate().toString + 'T00:00:00Z';
+		console.log(today);
+		console.log(start);
 		return this.fb.group({
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
-			buyOption: new FormControl(false),
-			// startDate: new FormControl(),
+			buyOption: new FormControl(true),
+			startDate: new FormControl(),
 			// itemTypes: this.fb.array([])
 			itemtypes: this.fb.array([
 				this.initItemHarvest(new InvoiceDetail()),
@@ -119,7 +123,7 @@ export class InvoiceService {
 			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
 			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.required, Validators.maxLength(50)]),
-			priceItemTypeByLot:  new FormControl(invoiceDetail.priceItemTypeByLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
+			// priceItemTypeByLot:  new FormControl(invoiceDetail.priceItemTypeByLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 		});
 	}
 

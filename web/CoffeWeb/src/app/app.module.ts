@@ -11,7 +11,6 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgModule } from '@angular/core';
 import { ProviderTypeComponent } from './components/provider-type/provider-type.component';
 import { RouterModule } from '@angular/router';
-import { StoreComponent } from './components/store/store.component';
 import { TableColumnDirective } from './core/table/tableColumnDirective';
 import { TableComponent } from './core/table/table.component';
 import { UnitComponent } from './components/unit/unit.component';
@@ -27,7 +26,6 @@ declarations: [
 	TableColumnDirective,
 
 	ProviderTypeComponent,
-	StoreComponent,
 	UnitComponent,
 
 ],
