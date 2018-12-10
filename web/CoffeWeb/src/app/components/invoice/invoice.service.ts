@@ -85,19 +85,19 @@ export class InvoiceService {
 		});
 	}
 
-	addHarvest() {
+	addPurchase() {
 		// add detail to the list
 		const control = <FormArray>this.fb.control['itemTypes'];
 		control.push(this.initItemHarvest(new InvoiceDetail()));
 	}
 
-	removeHarvest(i: number) {
+	removePurchase(i: number) {
 		// remove detail from the list
 		const control = <FormArray>this.fb.control['itemTypes'];
 		control.removeAt(i);
 	}
 
-	getHarvestCreate(invoice: Invoice): FormGroup {
+	getPurchaseCreate(invoice: Invoice): FormGroup {
 		let today = new Date();
 		let start = today.getDate().toString + 'T00:00:00Z';
 		console.log(today);
@@ -129,11 +129,12 @@ export class InvoiceService {
 
 	getPurchaseCreate(invoice: Invoice): FormGroup {
 		return this.fb.group({
-			id: new FormControl(invoice.id),
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
 			buyOpttion: new FormControl(false),
 			startDate: new FormControl(),
-			itemTypes: this.fb.array([this.createItemPurchase(new InvoiceDetail())])
+			itemTypes: this.fb.array([
+				this.createItemPurchase(new InvoiceDetail())
+			])
 		});
 	}
 
