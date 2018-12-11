@@ -15,6 +15,7 @@ import { BaseService } from 'src/app/core/base.service';
 import { FormGroup, FormArray } from '@angular/forms';
 import { Invoice } from 'src/app/core/models/invoice';
 import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
+import { StatusStoreModule } from '../status/status-store.module';
 
 @Component({
 	selector: 'app-harvest-create',
@@ -144,6 +145,40 @@ export class HarvestCreateComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+
+		let today = new Date();
+		let isoDate = today.toISOString(); 
+		console.log(today);
+		console.log(isoDate);
+
+		this.started();
+		this.form = this.invoiceService.getHarvestCreate(new Invoice());
+	}
+
+	get itemTypesForms() {
+		return this.form.get('itemtypes') as FormArray;
+	}
+
+	deleteItemType(i) {
+		this.itemTypesForms.removeAt(i);
+	}
+
+	addItemType() {
+		this.itemTypesForms.push(this.invoiceService.initItemHarvest(new InvoiceDetail));
+	}
+
+	create() {
+		console.log(this.form);
+		this.invoiceService.newHarvestPurchase(<Invoice> this.form.value)
+			.subscribe(invoices => {
+				this.notificationService.sucessInsert('Invoice');
+				this.location.back();
+			}, err =>  {
+				this.notificationService.error(err);
+		});
+	}
+
+	started(){
 		let httpParams = BaseService.jsonToHttpParams({
 			collection: 'id, nameProvider, nitProvider',
 			'providerType': 2,
@@ -174,7 +209,6 @@ export class HarvestCreateComponent implements OnInit {
 		this.itemTypeService.getAll(httpParamsItem).subscribe(
 				data => {
 					this.itemType = data['result'];
-					console.log(this.itemType);
 				}
 		);
 
@@ -187,31 +221,6 @@ export class HarvestCreateComponent implements OnInit {
 					this.lots = data['result'];
 				}
 		);
-
-		this.form = this.invoiceService.getHarvestCreate(new Invoice());
-	}
-
-	get itemTypesForms() {
-		return this.form.get('itemtypes') as FormArray;
-	}
-
-	deleteItemType(i) {
-		this.itemTypesForms.removeAt(i);
-	}
-
-	addItemType() {
-		this.itemTypesForms.push(this.invoiceService.initItemHarvest(new InvoiceDetail));
-	}
-
-	create() {
-		console.log(this.form);
-		this.invoiceService.newHarvestPurchase(<Invoice> this.form.value)
-			.subscribe(invoices => {
-				this.notificationService.sucessInsert('Invoice');
-				this.location.back();
-			}, err =>  {
-				this.notificationService.error(err);
-		});
 	}
 
 }

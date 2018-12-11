@@ -75,16 +75,6 @@ export class InvoiceService {
 		});
 	}
 
-
-	initItemHarvest(invoiceDetail: InvoiceDetail): FormGroup {
-		return this.fb.group({
-			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
-			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
-			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
-			noteInvoiceDetail: new FormControl(invoiceDetail.note, [ Validators.maxLength(100)]),
-		});
-	}
-
 	addPurchase() {
 		// add detail to the list
 		const control = <FormArray>this.fb.control['itemTypes'];
@@ -97,11 +87,7 @@ export class InvoiceService {
 		control.removeAt(i);
 	}
 
-	getPurchaseCreate(invoice: Invoice): FormGroup {
-		let today = new Date();
-		let start = today.getDate().toString + 'T00:00:00Z';
-		console.log(today);
-		console.log(start);
+	getHarvestCreate(invoice: Invoice): FormGroup {
 		return this.fb.group({
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
 			buyOption: new FormControl(true),
@@ -113,7 +99,28 @@ export class InvoiceService {
 		});
 	}
 
-	createItemPurchase(invoiceDetail: InvoiceDetail): FormGroup {
+	initItemHarvest(invoiceDetail: InvoiceDetail): FormGroup {
+		return this.fb.group({
+			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
+			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
+			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
+			noteInvoiceDetail: new FormControl(invoiceDetail.note, [ Validators.maxLength(100)]),
+			startDate: new FormControl(this.dateTimeIso()),
+		});
+	}
+
+	getPurchaseCreate(invoice: Invoice): FormGroup {
+		return this.fb.group({
+			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
+			buyOpttion: new FormControl(false),
+			startDate: new FormControl(this.dateTimeIso()),
+			itemTypes: this.fb.array([
+				this.initItemPurchase(new InvoiceDetail())
+			])
+		});
+	}
+
+	initItemPurchase(invoiceDetail: InvoiceDetail): FormGroup {
 		return this.fb.group({
 			id: new FormControl(invoiceDetail.id),
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
@@ -123,21 +130,15 @@ export class InvoiceService {
 			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
 			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.required, Validators.maxLength(50)]),
+			startDate: new FormControl(this.dateTimeIso()),
 			// priceItemTypeByLot:  new FormControl(invoiceDetail.priceItemTypeByLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 		});
 	}
 
-	getPurchaseCreate(invoice: Invoice): FormGroup {
-		return this.fb.group({
-			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
-			buyOpttion: new FormControl(false),
-			startDate: new FormControl(),
-			itemTypes: this.fb.array([
-				this.createItemPurchase(new InvoiceDetail())
-			])
-		});
+	dateTimeIso(){
+		var today = new Date();
+		return today.toISOString(); 
 	}
-
 
 
 }
