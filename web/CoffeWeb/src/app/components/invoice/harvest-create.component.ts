@@ -145,12 +145,12 @@ export class HarvestCreateComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-
 		let today = new Date();
-		let isoDate = today.toISOString(); 
+		let isoDate = today.toISOString();
+		var aux = isoDate.split("."); 
 		console.log(today);
 		console.log(isoDate);
-
+		console.log(aux[0]+'Z');
 		this.started();
 		this.form = this.invoiceService.getHarvestCreate(new Invoice());
 	}
@@ -185,9 +185,12 @@ export class HarvestCreateComponent implements OnInit {
 			'statusProvider': 41
 		});
 
+		
 		this.providerService.getAll(httpParams).subscribe(
 			data => {
 				this.cosecheros = data['result'];
+				console.log(this.cosecheros);
+
 			}
 		);
 

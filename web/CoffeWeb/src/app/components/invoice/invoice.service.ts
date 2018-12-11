@@ -91,7 +91,7 @@ export class InvoiceService {
 		return this.fb.group({
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
 			buyOption: new FormControl(true),
-			startDate: new FormControl(),
+			startDate: new FormControl(this.dateTimeIso()),
 			// itemTypes: this.fb.array([])
 			itemtypes: this.fb.array([
 				this.initItemHarvest(new InvoiceDetail()),
@@ -105,7 +105,10 @@ export class InvoiceService {
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [ Validators.maxLength(100)]),
+			nameDelivered: new FormControl(""),
+			nameReceived: new FormControl(""),
 			startDate: new FormControl(this.dateTimeIso()),
+			// startDate: new FormControl(this.dateTimeIso()),
 		});
 	}
 
@@ -122,7 +125,6 @@ export class InvoiceService {
 
 	initItemPurchase(invoiceDetail: InvoiceDetail): FormGroup {
 		return this.fb.group({
-			id: new FormControl(invoiceDetail.id),
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
@@ -137,7 +139,9 @@ export class InvoiceService {
 
 	dateTimeIso(){
 		var today = new Date();
-		return today.toISOString(); 
+		let isoDate = today.toISOString();
+		var aux = isoDate.split("."); 
+		return aux[0]+'Z'; 
 	}
 
 
