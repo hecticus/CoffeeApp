@@ -115,7 +115,7 @@ export class InvoiceService {
 	getPurchaseCreate(invoice: Invoice): FormGroup {
 		return this.fb.group({
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
-			buyOpttion: new FormControl(false),
+			buyOption: new FormControl(false),
 			startDate: new FormControl(this.dateTimeIso()),
 			itemtypes: this.fb.array([
 				this.initItemPurchase(new InvoiceDetail())
@@ -129,8 +129,8 @@ export class InvoiceService {
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
 			price:  new FormControl(invoiceDetail.priceItemTypeByLot, [Validators.required, CustomValidators.numberRegex, CustomValidators.min(0)]),
-			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.maxLength(50)]),
-			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.maxLength(50)]),
+			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
+			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
 			purities: this.fb.array([

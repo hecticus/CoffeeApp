@@ -93,7 +93,7 @@ import { Provider } from '@angular/compiler/src/core';
 										<mat-select required [formControl]="p.controls['idPurity']">
 											<mat-option *ngFor="let p of purits" [value]="p.id">{{p.namePurity}}</mat-option>
 										</mat-select>
-										<mat-label><b>Acopio</b></mat-label>
+										<mat-label><b>Grano</b></mat-label>
 									</mat-form-field>
 									<app-validator [control]="p.controls['idPurity']"></app-validator>
 								</div>
@@ -102,7 +102,7 @@ import { Provider } from '@angular/compiler/src/core';
 							<div class="wrap-fields">
 								<div class="field form-field">
 									<mat-form-field class="example-full-width">
-										<input matInput required formControlName="valueRateInvoiceDetailPurity" placeholder="Cantidad" class="example-right-align">
+										<input matInput required formControlName="valueRateInvoiceDetailPurity" placeholder="Porcentaje" class="example-right-align">
 									</mat-form-field>
 									<app-validator [control]="p.controls['valueRateInvoiceDetailPurity']"></app-validator>
 								</div>
@@ -253,7 +253,6 @@ export class PurchaseCreateComponent implements OnInit {
 		this.itemTypeService.getAll(httpParamsItem).subscribe(
 				data => {
 					this.itemType = data['result'];
-					console.log(this.itemType);
 				}
 		);
 
@@ -261,9 +260,10 @@ export class PurchaseCreateComponent implements OnInit {
 			collection: 'id, namePurity'
 		});
 
-		this.lotService.getAll(httpParamsPurities).subscribe(
+		this.purityService.getAll(httpParamsPurities).subscribe(
 				data => {
 					this.purits = data['result'];
+					console.log(this.purits);
 				}
 		);
 

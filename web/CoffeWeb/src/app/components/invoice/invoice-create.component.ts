@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Operacion } from 'src/app/core/models/Operacion';
 
 @Component({
+	styleUrls: ['./invoice.component.css'],
 	template: `
 	<h2 class="title">Crear Factura</h2>
 			<fieldset>
@@ -21,9 +22,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 			<!---->
 			<app-harvest-create *ngIf= "selected == 'Nueva Cosecha'"></app-harvest-create>
 			<app-purchase-create *ngIf= "selected == 'Nueva Compra'"></app-purchase-create>
-			<app-purchase-create></app-purchase-create>
-			`,
-	styleUrls: ['./invoice.component.css']
+	`
 })
 export class InvoiceCreateComponent implements OnInit {
 	selected = '';
