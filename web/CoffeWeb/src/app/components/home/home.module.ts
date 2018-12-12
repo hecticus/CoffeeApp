@@ -1,3 +1,4 @@
+import { PurityModule } from './../purity/purity.module';
 import { StoreModule } from './../store/store.module';
 import { ItemTypeModule } from './../item-type/item-type.module';
 import { InvoiceModule } from '../invoice/invoice.module';
@@ -28,6 +29,7 @@ import { LotModule } from '../lot/lot.module';
 		LotModule,
 		ItemTypeModule,
 		StoreModule,
+		PurityModule,
 		HomeRoutingModule,
 
 	],

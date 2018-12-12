@@ -1,3 +1,5 @@
+import { Purities } from './../../core/models/purities';
+import { PurityService } from './../purity/purity.service';
 import { StoreService } from './../store/store.service';
 import { Store } from './../../core/models/store';
 import { Component, OnInit } from '@angular/core';
@@ -81,6 +83,36 @@ import { Provider } from '@angular/compiler/src/core';
 						</div>
 					</div>
 
+					<div formArrayName="purities">
+						<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let p of item.get('purities').controls;
+							let j=index" [formGroupName]="j">
+
+							<div class="wrap-fields">
+								<div class="field form-field">
+									<mat-form-field class="example-full-width">
+										<mat-select required [formControl]="p.controls['idPurity']">
+											<mat-option *ngFor="let p of purits" [value]="p.id">{{p.namePurity}}</mat-option>
+										</mat-select>
+										<mat-label><b>Acopio</b></mat-label>
+									</mat-form-field>
+									<app-validator [control]="p.controls['idPurity']"></app-validator>
+								</div>
+							</div>
+
+							<div class="wrap-fields">
+								<div class="field form-field">
+									<mat-form-field class="example-full-width">
+										<input matInput required formControlName="valueRateInvoiceDetailPurity" placeholder="Cantidad" class="example-right-align">
+									</mat-form-field>
+									<app-validator [control]="p.controls['valueRateInvoiceDetailPurity']"></app-validator>
+								</div>
+							</div>
+
+							<button (click)="deleteItemType(j)">Delete</button>
+						</div>
+						<button (click)="addItemType()">Añadir</button>
+					</div>
+
 					<div class="wrap-fields">
 						<div class="field">
 							<mat-form-field class="example-full-width">
@@ -112,12 +144,11 @@ import { Provider } from '@angular/compiler/src/core';
 
 					</div>
 
-					<button (click)="addItemType()">Add Phone Number</button>
+					<button (click)="addItemType()">Añadir</button>
 
 				</div>
 
-			<!--
- -->
+			<!-- -->
 
 		</fieldset>
 
@@ -135,7 +166,7 @@ export class PurchaseCreateComponent implements OnInit {
 	stores: Store[];
 	form: FormGroup;
 	itemType: ItemType[];
-	lots: Lot[];
+	purits: Purities[];
 	auxFarm = 0;
 
 	constructor(
@@ -147,6 +178,7 @@ export class PurchaseCreateComponent implements OnInit {
 		private lotService: LotService,
 		private location: Location,
 		private notificationService: NotificationService,
+		private purityService: PurityService,
 	) { }
 
 	ngOnInit() {
@@ -163,6 +195,18 @@ export class PurchaseCreateComponent implements OnInit {
 	}
 
 	addItemType() {
+		this.itemTypesForms.push(this.invoiceService.initItemPurchase(new InvoiceDetail));
+	}
+
+	// get puritiesForms() {
+	// 	return this.form.controls.get('purities') as FormArray;
+	// }
+
+	deletePurities(i) {
+		this.itemTypesForms.removeAt(i);
+	}
+
+	addPurities() {
 		this.itemTypesForms.push(this.invoiceService.initItemPurchase(new InvoiceDetail));
 	}
 
@@ -213,13 +257,13 @@ export class PurchaseCreateComponent implements OnInit {
 				}
 		);
 
-		let httpParamsLots = BaseService.jsonToHttpParams({
-			collection: 'id, farm(id), nameLot'
+		let httpParamsPurities = BaseService.jsonToHttpParams({
+			collection: 'id, namePurity'
 		});
 
-		this.lotService.getAll(httpParamsLots).subscribe(
+		this.lotService.getAll(httpParamsPurities).subscribe(
 				data => {
-					this.lots = data['result'];
+					this.purits = data['result'];
 				}
 		);
 

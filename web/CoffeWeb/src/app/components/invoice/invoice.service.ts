@@ -1,3 +1,4 @@
+import { Purities } from './../../core/models/purities';
 import { Farm } from './../../core/models/farm';
 import { InvoiceDetail } from './../../core/models/invoice-detail';
 import { ItemType } from './../../core/models/item-type';
@@ -108,7 +109,6 @@ export class InvoiceService {
 			nameDelivered: new FormControl(''),
 			nameReceived: new FormControl(''),
 			startDate: new FormControl(this.dateTimeIso()),
-			// startDate: new FormControl(this.dateTimeIso()),
 		});
 	}
 
@@ -133,16 +133,16 @@ export class InvoiceService {
 			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.maxLength(50)]),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
-			// purities: this.fb.array([
-			// 	this.initItemPurchase(new InvoiceDetail())
-			// ])
+			purities: this.fb.array([
+				this.initPurities(new Purities())
+			])
 		});
 	}
 
-	initPurities(invoiceDetail: InvoiceDetail): FormGroup {
+	initPurities(purities: Purities): FormGroup {
 		return this.fb.group({
-			idPurity: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
-			valueRateInvoiceDetailPurity: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
+			idPurity: new FormControl(purities.idPurity, Validators.required),
+			valueRateInvoiceDetailPurity: new FormControl( purities.valueRateInvoiceDetailPurity , Validators.required),
 		});
 	}
 
