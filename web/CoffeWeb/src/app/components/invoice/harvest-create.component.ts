@@ -22,6 +22,7 @@ import { StatusStoreModule } from '../status/status-store.module';
 	styleUrls: ['./invoice.component.css'],
 	template: `
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+
 			<fieldset>
 				<legend><span>Datos de la Factura</span></legend>
 				<div class="wrap-fields">
@@ -145,12 +146,6 @@ export class HarvestCreateComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		let today = new Date();
-		let isoDate = today.toISOString();
-		var aux = isoDate.split("."); 
-		console.log(today);
-		console.log(isoDate);
-		console.log(aux[0]+'Z');
 		this.started();
 		this.form = this.invoiceService.getHarvestCreate(new Invoice());
 	}
@@ -178,14 +173,13 @@ export class HarvestCreateComponent implements OnInit {
 		});
 	}
 
-	started(){
+	started() {
 		let httpParams = BaseService.jsonToHttpParams({
 			collection: 'id, nameProvider, nitProvider',
 			'providerType': 2,
 			'statusProvider': 41
 		});
 
-		
 		this.providerService.getAll(httpParams).subscribe(
 			data => {
 				this.cosecheros = data['result'];

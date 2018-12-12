@@ -105,8 +105,8 @@ export class InvoiceService {
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [ Validators.maxLength(100)]),
-			nameDelivered: new FormControl(""),
-			nameReceived: new FormControl(""),
+			nameDelivered: new FormControl(''),
+			nameReceived: new FormControl(''),
 			startDate: new FormControl(this.dateTimeIso()),
 			// startDate: new FormControl(this.dateTimeIso()),
 		});
@@ -117,7 +117,7 @@ export class InvoiceService {
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
 			buyOpttion: new FormControl(false),
 			startDate: new FormControl(this.dateTimeIso()),
-			itemTypes: this.fb.array([
+			itemtypes: this.fb.array([
 				this.initItemPurchase(new InvoiceDetail())
 			])
 		});
@@ -128,6 +128,7 @@ export class InvoiceService {
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
+			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
 			price:  new FormControl(invoiceDetail.priceItemTypeByLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
 			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
@@ -137,11 +138,11 @@ export class InvoiceService {
 		});
 	}
 
-	dateTimeIso(){
-		var today = new Date();
+	dateTimeIso() {
+		let today = new Date();
 		let isoDate = today.toISOString();
-		var aux = isoDate.split("."); 
-		return aux[0]+'Z'; 
+		let aux = isoDate.split('.');
+		return aux[0] + 'Z';
 	}
 
 

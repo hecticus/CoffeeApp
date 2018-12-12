@@ -35,33 +35,65 @@ import { Provider } from '@angular/compiler/src/core';
 				</div>
 			</div>
 
-
-			<!--<h3>new</h3> <button (click)="this.invoiceService.addHarvest()">Add Alias</button>
-				<div class="wrap-fields">
-				<div class="field form-field">
-					<mat-form-field class="example-full-width">
-						<input matInput formControlName="amountInvoiceDetail" placeholder="Cantidad" class="example-right-align">
-					</mat-form-field>
-					<app-validator [control]="form.controls['amountInvoiceDetail']"></app-validator>
-				</div>
-				</div>
-				<mat-option *ngIf="it." [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-				-->
-
 			<div formArrayName="itemtypes">
-				<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of  itemTypesForms.controls;
+				<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of itemTypesForms.controls;
 					let i=index" [formGroupName]="i">
 
 					<div class="wrap-fields">
 						<div class="field form-field">
 							<mat-form-field class="example-full-width">
 								<mat-select required [formControl]="item.controls['store']">
-									<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{f.nameStore}}</mat-option>
+									<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
 								</mat-select>
 								<mat-label><b>Acopio</b></mat-label>
 							</mat-form-field>
 						</div>
 					</div>
+
+					<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="example-full-width">
+								<mat-select required [formControl]="item.controls['lot']">
+									<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+								</mat-select>
+								<mat-label><b>Lote</b></mat-label>
+							</mat-form-field>
+							<app-validator [control]="item.controls['lot']"></app-validator>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="example-full-width">
+								<input matInput required formControlName="price" placeholder="Precio" class="example-right-align">
+							</mat-form-field>
+							<app-validator [control]="item.controls['price']"></app-validator>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="example-full-width">
+								<input matInput required formControlName="amountInvoiceDetail" placeholder="Peso" class="example-right-align">
+							</mat-form-field>
+							<app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
+						</div>
+					</div>
+
+
+
+
+					<button (click)="deleteItemType(i)">Delete</button>
+
+					</div>
+
+					<button (click)="addItemType()">Add Phone Number</button>
+
+				</div>
+
+			<!--
+
+
 
 					<div class="wrap-fields">
 						<div class="field form-field">
@@ -100,23 +132,8 @@ import { Provider } from '@angular/compiler/src/core';
 						</div>
 					</div>
 
-					<div class="wrap-fields">
-						<div class="field form-field">
-							<mat-form-field class="example-full-width">
-								<input matInput required formControlName="amountInvoiceDetail" placeholder="Peso" class="example-right-align">
-							</mat-form-field>
-							<app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
-						</div>
-					</div>
 
-					<div class="wrap-fields">
-						<div class="field form-field">
-							<mat-form-field class="example-full-width">
-								<input matInput required formControlName="price" placeholder="Precio" class="example-right-align">
-							</mat-form-field>
-							<app-validator [control]="item.controls['price']"></app-validator>
-						</div>
-					</div>
+
 					
 					<div class="wrap-fields">
 						<div class="field">
@@ -135,7 +152,7 @@ import { Provider } from '@angular/compiler/src/core';
 							<app-validator [control]="item.controls['nameDelivered']"></app-validator>
 						</div>
 					</div>
-					
+
 					<div class="wrap-fields">
 						<div class="field">
 							<mat-form-field class="example-full-width">
@@ -145,13 +162,7 @@ import { Provider } from '@angular/compiler/src/core';
 						</div>
 					</div>
 
-					<button (click)="deleteItemType(i)">Delete</button>
-
-				</div>
-
-				<button (click)="addItemType()">Add Phone Number</button>
-
-			</div>
+ -->
 
 		</fieldset>
 
@@ -160,12 +171,12 @@ import { Provider } from '@angular/compiler/src/core';
 		</div>
 	</form>
 	`
-	
+
 })
 
 export class PurchaseCreateComponent implements OnInit {
 
-	cosecheros: Provider[];
+	providers: Provider[];
 	stores: Store[];
 	form: FormGroup;
 	itemType: ItemType[];
@@ -185,7 +196,7 @@ export class PurchaseCreateComponent implements OnInit {
 
 	ngOnInit() {
 		this.begins();
-		this.form = this.invoiceService.getHarvestCreate(new Invoice());
+		this.form = this.invoiceService.getPurchaseCreate(new Invoice());
 	}
 
 	get itemTypesForms() {
@@ -197,7 +208,7 @@ export class PurchaseCreateComponent implements OnInit {
 	}
 
 	addItemType() {
-		this.itemTypesForms.push(this.invoiceService.initItemHarvest(new InvoiceDetail));
+		this.itemTypesForms.push(this.invoiceService.initItemPurchase(new InvoiceDetail));
 	}
 
 	create() {
@@ -221,7 +232,7 @@ export class PurchaseCreateComponent implements OnInit {
 
 		this.providerService.getAll(httpParams).subscribe(
 			data => {
-				this.cosecheros = data['result'];
+				this.providers = data['result'];
 			}
 		);
 
