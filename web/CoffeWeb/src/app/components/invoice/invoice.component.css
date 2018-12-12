@@ -314,3 +314,14 @@ element.style {
   <p id="twitterText">Twitter</p>
   <p id="facebookText">Facebook</p>
   <p id="instagramText">Instagram</p> */
+
+
+
+  /* ########################  CCS de HarvestCReate   ##########################################*/
+.create-width {
+    width: 50%;
+}
+
+.create1-width {
+    width: 25%;
+}

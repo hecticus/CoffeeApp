@@ -21,103 +21,88 @@ import { StatusStoreModule } from '../status/status-store.module';
 	selector: 'app-harvest-create',
 	styleUrls: ['./invoice.component.css'],
 	template: `
-		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+	<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
 
-			<fieldset>
-				<legend><span>Datos de la Factura</span></legend>
-				<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<mat-select required [formControl]="form.controls['provider']">
-								<mat-option *ngFor="let c of cosecheros" [value]="{id: c.id}">{{c.nameProvider}}</mat-option>
-							</mat-select>
-							<mat-label><b>Cosechador</b></mat-label>
-						</mat-form-field>
-						<app-validator [control]="form.controls['provider']"></app-validator>
-					</div>
-				</div>
+		<legend><span>Datos de la Factura</span></legend>
+		<div class="wrap-fields">
+			<div class="field form-field">
+				<mat-form-field class="create-width">
+					<mat-select required [formControl]="form.controls['provider']">
+						<mat-option *ngFor="let c of cosecheros" [value]="{id: c.id}">{{c.nameProvider}}</mat-option>
+					</mat-select>
+					<mat-label><b>Cosechador</b></mat-label>
+				</mat-form-field>
+				<app-validator [control]="form.controls['provider']"></app-validator>
+			</div>
+		</div>
 
+		<fieldset>
+				<!---->
 
-				<!--<h3>new</h3> <button (click)="this.invoiceService.addHarvest()">Add Alias</button>
+			<div formArrayName="itemtypes">
+				<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of  itemTypesForms.controls;
+					let i=index" [formGroupName]="i">
+
 					<div class="wrap-fields">
-					<div class="field form-field">
-						<mat-form-field class="example-full-width">
-							<input matInput formControlName="amountInvoiceDetail" placeholder="Cantidad" class="example-right-align">
-						</mat-form-field>
-						<app-validator [control]="form.controls['amountInvoiceDetail']"></app-validator>
-					</div>
-					</div>
-					<mat-option *ngIf="it." [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-					-->
-
-				<div formArrayName="itemtypes">
-					<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of  itemTypesForms.controls;
-						let i=index" [formGroupName]="i">
-
-						<div class="wrap-fields">
-							<div class="field form-field">
-								<mat-form-field class="example-full-width">
-									<mat-select required [formControl]="item.controls['itemType']">
-										<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
-									</mat-select>
-									<mat-label><b>Granja</b></mat-label>
-								</mat-form-field>
-							</div>
+						<div class="field form-field">
+							<mat-form-field class="create1-width">
+								<mat-select required [formControl]="item.controls['itemType']">
+									<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
+								</mat-select>
+								<mat-label><b>Granja</b></mat-label>
+							</mat-form-field>
 						</div>
-
-
-						<div class="wrap-fields">
-							<div class="field form-field">
-								<mat-form-field class="example-full-width">
-									<mat-select required [formControl]="item.controls['lot']">
-										<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
-									</mat-select>
-									<mat-label><b>Lote</b></mat-label>
-								</mat-form-field>
-								<app-validator [control]="item.controls['lot']"></app-validator>
-							</div>
-						</div>
-
-						<div class="wrap-fields">
-							<div class="field form-field">
-								<mat-form-field class="example-full-width">
-									<mat-select required [formControl]="item.controls['itemType']">
-										<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-
-									</mat-select>
-									<mat-label><b>Grano</b></mat-label>
-								</mat-form-field>
-								<app-validator [control]="item.controls['itemType']"></app-validator>
-							</div>
-						</div>
-
-						<div class="wrap-fields">
-							<div class="field form-field">
-								<mat-form-field class="example-full-width">
-									<input matInput required formControlName="amountInvoiceDetail" placeholder="Cantidad" class="example-right-align">
-								</mat-form-field>
-								<app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
-							</div>
-						</div>
-
-						<div class="wrap-fields">
-							<div class="field">
-								<mat-form-field class="example-full-width">
-									<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
-								</mat-form-field>
-								<app-validator [control]="item.controls['noteInvoiceDetail']"></app-validator>
-							</div>
-						</div>
-
-						<button (click)="deleteItemType(i)">Delete</button>
-
 					</div>
 
-					<button (click)="addItemType()">Add Phone Number</button>
 
+					<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="create1-width">
+								<mat-select required [formControl]="item.controls['lot']">
+									<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+								</mat-select>
+								<mat-label><b>Lote</b></mat-label>
+							</mat-form-field>
+							<app-validator [control]="item.controls['lot']"></app-validator>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="create1-width">
+								<mat-select required [formControl]="item.controls['itemType']">
+									<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+
+								</mat-select>
+								<mat-label><b>Grano</b></mat-label>
+							</mat-form-field>
+							<app-validator [control]="item.controls['itemType']"></app-validator>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div class="field form-field">
+							<mat-form-field class="create1-width">
+								<input matInput required formControlName="amountInvoiceDetail" placeholder="Cantidad" class="example-right-align">
+							</mat-form-field>
+							<app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
+						</div>
+					</div>
+
+					<div class="wrap-fields">
+						<div class="field">
+							<mat-form-field class="create1-width">
+								<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
+							</mat-form-field>
+							<app-validator [control]="item.controls['noteInvoiceDetail']"></app-validator>
+						</div>
+					</div>
+
+					<button (click)="deleteItemType(i)">Delete</button>
 				</div>
-
-			</fieldset>
+				<button (click)="addItemType()">Añadir Cosecha</button>
+			</div>
+		</fieldset>
 
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" >Guardar</button>

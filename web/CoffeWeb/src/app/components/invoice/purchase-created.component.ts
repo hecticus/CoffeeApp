@@ -83,6 +83,7 @@ import { Provider } from '@angular/compiler/src/core';
 						</div>
 					</div>
 
+					<h2>Añadir Pureza</h2>
 					<div formArrayName="purities">
 						<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let p of item.get('purities').controls;
 							let j=index" [formGroupName]="j">
@@ -110,7 +111,7 @@ import { Provider } from '@angular/compiler/src/core';
 
 							<button (click)="deleteItemType(j)">Delete</button>
 						</div>
-						<button (click)="addItemType()">Añadir</button>
+						<button (click)="addItemType()">Añadir Purity</button>
 					</div>
 
 					<div class="wrap-fields">
@@ -144,7 +145,7 @@ import { Provider } from '@angular/compiler/src/core';
 
 					</div>
 
-					<button (click)="addItemType()">Añadir</button>
+					<button (click)="addItemType()">Añadir Items</button>
 
 				</div>
 

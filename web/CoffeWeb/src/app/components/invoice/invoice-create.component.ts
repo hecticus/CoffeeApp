@@ -4,7 +4,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 @Component({
 	styleUrls: ['./invoice.component.css'],
 	template: `
-	<h2 class="title">Crear Factura</h2>
+	<h2 class="title"><span>Crear Factura</span></h2>
 			<fieldset>
 				<div class="wrap-fields">
 					<div class="field">
@@ -20,16 +20,16 @@ import { Operacion } from 'src/app/core/models/Operacion';
 				</div>
 			</fieldset>
 			<!---->
-			<app-harvest-create *ngIf= "selected == 'Nueva Cosecha'"></app-harvest-create>
-			<app-purchase-create *ngIf= "selected == 'Nueva Compra'"></app-purchase-create>
+			<app-harvest-create *ngIf= "selected == 'Cosecha'"></app-harvest-create>
+			<app-purchase-create *ngIf= "selected == 'Compra'"></app-purchase-create>
 	`
 })
 export class InvoiceCreateComponent implements OnInit {
 	selected = '';
 
 	operacion: Operacion [] = [
-		{ id: 1, name: 'Nueva Cosecha' },
-		{ id: 2, name: 'Nueva Compra' }
+		{ id: 1, name: 'Cosecha' },
+		{ id: 2, name: 'Compra' }
 	];
 
 	constructor() { }
