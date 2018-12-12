@@ -37,6 +37,9 @@ import { StatusStoreModule } from '../status/status-store.module';
 				</div>
 			</div>
 		</div>
+		<button (click)="addItemType()" title="Añadir Detalle a la Cosecha">
+		<i class="material-icons">add_shopping_cart</i>
+		</button>
 
 
 		<div class="conteiner">
@@ -96,15 +99,14 @@ import { StatusStoreModule } from '../status/status-store.module';
 						</div>
 					</div>
 
-					<button (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
-						<i class="material-icons">delete_sweep</i>
-					</button>
-				</div>
-				<button (click)="addItemType()" title="Añadir Detalle a la Cosecha">
-					<i class="material-icons">add_shopping_cart</i>
-				</button>
+				</div>				
 			</div>
 		</div>
+
+
+		<button (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
+		<i class="material-icons">delete_sweep</i>
+		</button>
 
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" >Guardar</button>
