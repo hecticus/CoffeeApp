@@ -47,18 +47,19 @@ import { Provider } from '@angular/compiler/src/core';
 								</mat-select>
 								<mat-label><b>Acopio</b></mat-label>
 							</mat-form-field>
+							<app-validator [control]="item.controls['store']"></app-validator>
 						</div>
 					</div>
 
 					<div class="wrap-fields">
 						<div class="field form-field">
 							<mat-form-field class="example-full-width">
-								<mat-select required [formControl]="item.controls['lot']">
-									<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+								<mat-select required [formControl]="item.controls['itemType']">
+									<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
 								</mat-select>
-								<mat-label><b>Lote</b></mat-label>
+								<mat-label><b>Tipo</b></mat-label>
 							</mat-form-field>
-							<app-validator [control]="item.controls['lot']"></app-validator>
+							<app-validator [control]="item.controls['itemType']"></app-validator>
 						</div>
 					</div>
 
@@ -80,61 +81,6 @@ import { Provider } from '@angular/compiler/src/core';
 						</div>
 					</div>
 
-
-
-
-					<button (click)="deleteItemType(i)">Delete</button>
-
-					</div>
-
-					<button (click)="addItemType()">Add Phone Number</button>
-
-				</div>
-
-			<!--
-
-
-
-					<div class="wrap-fields">
-						<div class="field form-field">
-							<mat-form-field class="example-full-width">
-								<mat-select required [formControl]="item.controls['itemType']">
-									<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
-								</mat-select>
-								<mat-label><b>Granja</b></mat-label>
-							</mat-form-field>
-						</div>
-					</div>
-
-
-					<div class="wrap-fields">
-						<div class="field form-field">
-							<mat-form-field class="example-full-width">
-								<mat-select required [formControl]="item.controls['lot']">
-									<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
-								</mat-select>
-								<mat-label><b>Lote</b></mat-label>
-							</mat-form-field>
-							<app-validator [control]="item.controls['lot']"></app-validator>
-						</div>
-					</div>
-
-					<div class="wrap-fields">
-						<div class="field form-field">
-							<mat-form-field class="example-full-width">
-								<mat-select required [formControl]="item.controls['itemType']">
-									<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-
-								</mat-select>
-								<mat-label><b>Grano</b></mat-label>
-							</mat-form-field>
-							<app-validator [control]="item.controls['itemType']"></app-validator>
-						</div>
-					</div>
-
-
-
-					
 					<div class="wrap-fields">
 						<div class="field">
 							<mat-form-field class="example-full-width">
@@ -162,6 +108,15 @@ import { Provider } from '@angular/compiler/src/core';
 						</div>
 					</div>
 
+					<button (click)="deleteItemType(i)">Delete</button>
+
+					</div>
+
+					<button (click)="addItemType()">Add Phone Number</button>
+
+				</div>
+
+			<!--
  -->
 
 		</fieldset>

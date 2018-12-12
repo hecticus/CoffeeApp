@@ -128,13 +128,21 @@ export class InvoiceService {
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
-			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
-			price:  new FormControl(invoiceDetail.priceItemTypeByLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
-			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
-			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
-			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.required, Validators.maxLength(50)]),
+			price:  new FormControl(invoiceDetail.priceItemTypeByLot, [Validators.required, CustomValidators.numberRegex, CustomValidators.min(0)]),
+			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.maxLength(50)]),
+			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.maxLength(50)]),
+			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
-			// priceItemTypeByLot:  new FormControl(invoiceDetail.priceItemTypeByLot, [CustomValidators.numberRegex, CustomValidators.min(0)]),
+			// purities: this.fb.array([
+			// 	this.initItemPurchase(new InvoiceDetail())
+			// ])
+		});
+	}
+
+	initPurities(invoiceDetail: InvoiceDetail): FormGroup {
+		return this.fb.group({
+			idPurity: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
+			valueRateInvoiceDetailPurity: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 		});
 	}
 
