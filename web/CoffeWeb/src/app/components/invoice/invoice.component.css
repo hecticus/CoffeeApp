@@ -325,3 +325,26 @@ element.style {
 .create1-width {
     width: 25%;
 }
+
+.example-radio-button {
+    margin: 5px;
+  }
+
+  .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #407cff;
+}  
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #407cff;
+}
+
+/* .fieldHarvest {
+    min-width: 200px;
+    flex: 2;
+} */
+
+.conteiner {
+    padding: 15px 0;
+    border-bottom: 2px solid #e0e0e0;
+    width: 30%;
+}
