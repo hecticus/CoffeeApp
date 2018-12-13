@@ -6,6 +6,7 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -76,6 +77,8 @@ public class SyncManager {
     private static Boolean isSyncParcial = false;
     private User user = new User(SessionManager.getUserId(HomeActivity.INSTANCE));
 
+    private ProgressBar progressBar;
+    private Integer countTotal = 0, countSuccess=0;
     private List<Provider> providersList;
     private List<InvoicePost> invoicePostList;
     private List<Invoice> invoiceList;
@@ -122,9 +125,127 @@ public class SyncManager {
 
 
     @DebugLog
-    public void startSync() {
+    public void startSync(ProgressBar progressBar) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        this.progressBar = progressBar;
+        List<Provider> providersList = new ArrayList<>();
+
+        List<Provider> providersAux =
+                Realm.getDefaultInstance().where(Provider.class)
+                        .equalTo("deleteOffline", false)
+                        .equalTo("addOffline", true)
+                        .findAllSorted("unixtime");
+
+        if (providersAux != null) {
+            providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providersAux));
+        }
+
+        providersAux =
+                Realm.getDefaultInstance().where(Provider.class)
+                        .equalTo("deleteOffline", false)
+                        .equalTo("addOffline", false)
+                        .equalTo("editOffline", true)
+                        .findAllSorted("unixtime");
+
+        if (providersAux != null) {
+            providersList.addAll(Realm.getDefaultInstance().copyFromRealm(providersAux));
+        }
+
+        List<InvoicePost> invoicePostList = new ArrayList<>();
+        invoicePostList.addAll(ManagerDB.getPendingInvoicePostsList(true));
+        invoicePostList.addAll(ManagerDB.getPendingInvoicePostsList(false));
+
+
+
+
+
+        List<Provider> providersListDelete = new ArrayList<>();
+        List<Provider> providers = Realm.getDefaultInstance()
+                .where(Provider.class)
+                .equalTo("deleteOffline", true)
+                .findAllSorted("unixtime");
+        if (providers != null) {
+            providersListDelete.addAll(Realm.getDefaultInstance().copyFromRealm(providers));
+        }
+
+
+
+
+
+        List<InvoiceDetails> invoiceDetailsAdd = new ArrayList<>();
+        List<InvoiceDetails> invoiceDetailsList1 = Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("addOffline", true)
+                .findAllSorted("startDate");
+        if (invoiceDetailsList1 != null) {
+            invoiceDetailsAdd.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList1));
+        }
+
+
+
+
+
+
+
+        List<Invoice> invoiceList = new ArrayList<>();
+        List<Invoice> invoices = Realm.getDefaultInstance().where(Invoice.class).equalTo("deleteOffline", true).findAllSorted("invoiceStartDate");
+        if (invoices != null) {
+            invoiceList.addAll(Realm.getDefaultInstance().copyFromRealm(invoices));
+        }
+
+
+
+        List<InvoiceDetails> invoiceDetailsEdit = new ArrayList<>();
+        List<InvoiceDetails> invoiceDetailsList = Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("editOffline", true)
+                .findAllSorted("startDate");
+        if (invoiceDetailsList != null) {
+            invoiceDetailsEdit.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceDetailsList));
+        }
+
+
+
+
+
+        List<InvoiceDetails> invoiceDetailsDelete = new ArrayList<>();
+
+        List<InvoiceDetails> ofDays = Realm.getDefaultInstance()
+                .where(InvoiceDetails.class)
+                .equalTo("deleteOffline", true)
+                .findAllSorted("startDate");
+
+        if (ofDays != null) {
+            invoiceDetailsDelete.addAll(Realm.getDefaultInstance().copyFromRealm(ofDays));
+        }
+
+
+
+
+
+        List<Invoice> invoiceClosed = new ArrayList<>();
+
+        List<Invoice> invoiceForClosed = Realm.getDefaultInstance()
+                .where(Invoice.class)
+                .equalTo("isClosed", true)
+                .findAllSorted("invoiceStartDate");
+
+        if (invoiceForClosed != null) {
+            invoiceClosed.addAll(Realm.getDefaultInstance().copyFromRealm(invoiceForClosed));
+        }
+
+
+
+
+        countTotal = providersList.size() + invoicePostList.size() + invoiceList.size() +
+                invoiceClosed.size() + invoiceDetailsDelete.size() +
+                invoiceDetailsEdit.size() + invoiceDetailsAdd.size() +providersListDelete.size();
+
+
+
+
 
         syncProviders();
     }
@@ -178,8 +299,9 @@ public class SyncManager {
         }
 
         final Provider currentProviderToSync = providersList.get(0);
-
         providersList.remove(currentProviderToSync);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         final Integer oldLocalProviderId;
 
@@ -504,6 +626,8 @@ public class SyncManager {
 
         final InvoicePost firstInvoicePost = invoicePostList.get(0);
         invoicePostList.remove(firstInvoicePost);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         somethingHasBeenSynced = true;
         Call<CreateInvoiceResponse> call;
@@ -658,6 +782,8 @@ public class SyncManager {
 
         final Provider firstProvider = providersList.get(0);
         providersList.remove(firstProvider);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         somethingHasBeenSynced = true;
 
@@ -771,6 +897,8 @@ public class SyncManager {
 
         final InvoiceDetails firstInvoiceDetails = invoiceDetailsAdd.get(0);
         invoiceDetailsAdd.remove(firstInvoiceDetails);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         somethingHasBeenSynced = true;
         final InvoiceDetail invoiceDetail = new InvoiceDetail(firstInvoiceDetails);
@@ -887,6 +1015,8 @@ public class SyncManager {
 
         final Invoice firstInvoice = invoiceList.get(0);
         invoiceList.remove(firstInvoice);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         if (firstInvoice.isAddOffline()) {
             Log.d("DETAILS", "--->deleteNextInvoice firstInvoice IGNORED (Created offline): " + firstInvoice);
@@ -955,7 +1085,11 @@ public class SyncManager {
                                 Invoice invoice = realm.where(Invoice.class)
                                         .equalTo("id", firstInvoice.getInvoiceId())
                                         .findFirst();
-                                invoice.deleteFromRealm();
+                                try {
+                                    invoice.deleteFromRealm();
+                                }catch (Exception e){
+
+                                }
                                 realm.commitTransaction();
                             }
                         } catch (IOException e) {
@@ -1030,6 +1164,8 @@ public class SyncManager {
 
         final InvoiceDetails firstInvoiceDetails = invoiceDetailsEdit.get(0);
         invoiceDetailsEdit.remove(firstInvoiceDetails);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
         somethingHasBeenSynced = true;
 
         Call<ResponseBody> call = invoiceApi.updateInvoiceDetail(firstInvoiceDetails.getId(), new InvoiceDetail(firstInvoiceDetails));
@@ -1146,6 +1282,8 @@ public class SyncManager {
 
         final InvoiceDetails firstOfDetails = invoiceDetailsDelete.get(0);
         invoiceDetailsDelete.remove(firstOfDetails);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         Call<InvoiceDetailsResponse> call = invoiceApi.deleteInvoiceDetail(firstOfDetails.getId());
 
@@ -1271,6 +1409,8 @@ public class SyncManager {
 
         final Invoice firstInvoiceClosed = invoiceClosed.get(0);
         invoiceClosed.remove(firstInvoiceClosed);
+        countSuccess++;
+        progressBar.setProgress(countSuccess*100/countTotal);
 
         final com.hecticus.eleta.model_new.Invoice invoice1
                 = new com.hecticus.eleta.model_new.Invoice(firstInvoiceClosed,

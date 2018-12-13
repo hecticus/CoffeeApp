@@ -1,6 +1,8 @@
 package com.hecticus.eleta.home;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -248,18 +251,21 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         if (id == R.id.action_sync) {
             if (InternetManager.isConnected(this)) {
                 showProgress();
-                new SyncManager().startSync();
+                new SyncManager().startSync(progressBar);
             } else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
             }
             return true;
         }
         if (id == R.id.action_export_data) {
-                Log.d("DEBUG BD", getDatabasePath("coffeEleta").toString());
-                // todo backup
             new RealmBackup(HomeActivity.this).backup();
             return true;
         }
+         //todo comentar
+        /*if (id == R.id.action_import_data) {
+            new RealmBackup(HomeActivity.this).restore();
+            return true;
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
