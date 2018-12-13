@@ -24,7 +24,7 @@ import { StatusStoreModule } from '../status/status-store.module';
 	<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
 
 		<legend><span>Datos de la Factura</span></legend>
-		<div class="fieldset">
+		<div >
 			<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="create-width">
@@ -35,16 +35,14 @@ import { StatusStoreModule } from '../status/status-store.module';
 					</mat-form-field>
 					<app-validator [control]="form.controls['provider']"></app-validator>
 				</div>
+
+				<button (click)="addItemType()" title="Añadir Detalle a la Cosecha">
+					<i class="material-icons">add_shopping_cart</i>
+				</button>
 			</div>
 		</div>
-		<button (click)="addItemType()" title="Añadir Detalle a la Cosecha">
-		<i class="material-icons">add_shopping_cart</i>
-		</button>
 
-
-		<div class="conteiner">
-				<!---->
-
+		<div class="conteiner"> <!---->
 			<div formArrayName="itemtypes">
 				<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of  itemTypesForms.controls;
 					let i=index" [formGroupName]="i">
@@ -98,8 +96,7 @@ import { StatusStoreModule } from '../status/status-store.module';
 							<app-validator [control]="item.controls['noteInvoiceDetail']"></app-validator>
 						</div>
 					</div>
-
-				</div>				
+				</div>
 			</div>
 		</div>
 

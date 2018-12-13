@@ -362,4 +362,5 @@ element.style {
     border-style: groove;
     border-color: threedface;
     border-image: initial;
+    width: 50%;
 }
