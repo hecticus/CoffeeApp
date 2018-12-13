@@ -205,6 +205,16 @@ public class SyncManager {
         } else {
             operationName = "editProviderSync";
             currentProviderToSync.setProviderType(new ProviderType(currentProviderToSync.getIdProviderType()));
+            Log.d("DEBUG", new Gson().toJson(currentProviderToSync));
+
+
+            if(currentProviderToSync.getIdProvider()==null){
+                currentProviderToSync.setIdProvider(1505);
+            }
+
+
+
+
             call = providersApi.updateProviderData(currentProviderToSync.getIdProvider(), currentProviderToSync);
         }
         call.enqueue(new Callback<ProviderCreationResponse>() {
@@ -509,8 +519,13 @@ public class SyncManager {
         Call<CreateInvoiceResponse> call;
         //if (firstInvoicePost.getInvoiceId() == -1) {
 
-            final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(
-                    firstInvoicePost, firstInvoicePost.getProviderId()); //todo error con provider
+        if(firstInvoicePost.getProviderId()==null) {
+            firstInvoicePost.setProviderId(1505);
+        }
+
+        final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(
+                firstInvoicePost, firstInvoicePost.getProviderId()); //todo error con provider
+
         Log.d("DEBUG invoice", "sync"+ new Gson().toJson(invoice));
             call = invoiceApi.newInvoiceDetail(invoice);
             call.enqueue(new Callback<CreateInvoiceResponse>() {
@@ -717,7 +732,11 @@ public class SyncManager {
                             Provider provider = Realm.getDefaultInstance().where(Provider.class)
                                     .equalTo("idProvider", firstProvider.getIdProvider())
                                     .findFirst();
-                            provider.deleteFromRealm();
+                            try{
+                                provider.deleteFromRealm();
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
                             realm.commitTransaction();
                         }
                     } catch (IOException e) {
@@ -1264,6 +1283,7 @@ public class SyncManager {
 
     @DebugLog
     public void nextClosedInvoice() {
+        Log.e("debug","BRAYAN" + "nextClosedInvoice" + invoiceClosed.size() );
         if (invoiceClosed.size() <= 0) {
             onSuccessfulSync();
             return;

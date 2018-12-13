@@ -26,7 +26,7 @@ public class Provider extends RealmObject implements BaseModel, JsonSerializer<P
     // Important: Negative ids are used for local storage (before sync). Starting with -1.
     @SerializedName("id")//("idProvider")
     @Expose
-    private Integer idProvider;
+    private Integer idProvider = -1;
 
     private long unixtime = -1;
 
