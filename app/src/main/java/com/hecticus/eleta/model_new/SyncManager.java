@@ -208,9 +208,9 @@ public class SyncManager {
             Log.d("DEBUG", new Gson().toJson(currentProviderToSync));
 
 
-            if(currentProviderToSync.getIdProvider()==null){
+            /*if(currentProviderToSync.getIdProvider()==null){
                 currentProviderToSync.setIdProvider(1505);
-            }
+            }*/
 
 
 
@@ -519,9 +519,9 @@ public class SyncManager {
         Call<CreateInvoiceResponse> call;
         //if (firstInvoicePost.getInvoiceId() == -1) {
 
-        if(firstInvoicePost.getProviderId()==null) {
+        /*if(firstInvoicePost.getProviderId()==null) {
             firstInvoicePost.setProviderId(1505);
-        }
+        }*/
 
         final com.hecticus.eleta.model_new.Invoice invoice = new com.hecticus.eleta.model_new.Invoice(
                 firstInvoicePost, firstInvoicePost.getProviderId()); //todo error con provider
@@ -1344,7 +1344,11 @@ public class SyncManager {
                             Invoice invoice = realm.where(Invoice.class)
                                     .equalTo("id", firstInvoiceClosed.getInvoiceId())
                                     .findFirst();
-                            invoice.deleteFromRealm();
+                            try{
+                                invoice.deleteFromRealm();
+                            } catch (Exception e){
+
+                            }
                             //firstInvoiceClosed.deleteFromRealm();
                             realm.commitTransaction();
                         }
