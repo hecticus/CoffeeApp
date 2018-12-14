@@ -43,13 +43,13 @@ public class PrintPreviewActivity extends AppCompatActivity {
     @DebugLog
     @OnClick(R.id.printButton)
     protected void connect() {
-        //if(Util.getPrinterConnection() == null || Util.getSelectedPrinter() == null || Util.getmZebraPrinter() == null) {
+        if(Util.getPrinterConnection() == null || Util.getSelectedPrinter() == null || Util.getmZebraPrinter() == null) {
             Intent BTIntent = new Intent(getApplicationContext(), BluetoothDevicesListActivity.class);
             BTIntent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, textToPrint);
             this.startActivityForResult(BTIntent, BluetoothDevicesListActivity.REQUEST_CONNECT_BT);
-        /*} else {
+        } else {
             Util.printBluetooth(PrintPreviewActivity.this, textToPrint);
-        }*/
+        }
     }
 
     @DebugLog

@@ -398,8 +398,8 @@ public class Util {
             // User(Operator) name
             text.append(context.getString(R.string.operator)).append(": ").append(SessionManager.getUserName(context)).append("\n\n");
 
-            text.append(String.format("%15s", " ")).append("Lote    ").append("Libras")
-                    .append("  ").append(String.format("%8s", "Precio")).append("   Monto\n");
+            text.append(String.format("%11s", " ")).append("Lote  ").append("Lbs")
+                    .append("  ").append(String.format("%9s", "Precio")).append("   Monto\n");
 
             for (InvoiceDetails detail : detailsResponse.getListInvoiceDetails()) {
                 String[] nameArray = detail.getItemType().getName().split(" ");
