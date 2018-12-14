@@ -9,10 +9,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.hecticus.eleta.model.request.invoice.InvoicePost;
+import com.hecticus.eleta.model.response.invoice.Invoice;
+import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
+import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -37,7 +45,7 @@ public class RealmBackup {
 
     public RealmBackup(Activity activity) {
         //this.realm = new DatabaseHandler(activity.getApplicationContext()).getRealmIstance();
-        this.realm = Realm.getDefaultInstance();
+        this.realm = realm;
         this.activity = activity;
     }
 
@@ -58,6 +66,130 @@ public class RealmBackup {
 
         // copy current realm to backup file
         realm.writeCopyTo(exportRealmFile);
+
+        /*String msg = "File exported to Path: " + EXPORT_REALM_PATH + "/" + EXPORT_REALM_FILE_NAME;
+        Toast.makeText(activity.getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        Log.d(TAG, msg);
+
+        realm.close();*/
+
+
+
+
+
+        List<Provider> providersList = new ArrayList<>();
+        List<Provider> providersAux =
+                realm.where(Provider.class)
+                        .equalTo("deleteOffline", false)
+                        .equalTo("addOffline", true)
+                        .findAllSorted("unixtime");
+        if (providersAux != null) {
+            providersList.addAll(realm.copyFromRealm(providersAux));
+        }
+        providersAux =
+                realm.where(Provider.class)
+                        .equalTo("deleteOffline", false)
+                        .equalTo("addOffline", false)
+                        .equalTo("editOffline", true)
+                        .findAllSorted("unixtime");
+        if (providersAux != null) {
+            providersList.addAll(realm.copyFromRealm(providersAux));
+        }
+        for(Provider provider : providersList){
+            realm.beginTransaction();
+            provider.deleteFromRealm();
+            realm.commitTransaction();
+        }
+
+        List<InvoicePost> invoicePostList = new ArrayList<>();
+        invoicePostList.addAll(ManagerDB.getPendingInvoicePostsList(true));
+        invoicePostList.addAll(ManagerDB.getPendingInvoicePostsList(false));
+
+        for(InvoicePost invoicePost : invoicePostList){
+            realm.beginTransaction();
+            invoicePost.deleteFromRealm();
+            realm.commitTransaction();
+        }
+
+        List<Provider> providersListDelete = new ArrayList<>();
+        List<Provider> providers = realm
+                .where(Provider.class)
+                .equalTo("deleteOffline", true)
+                .findAllSorted("unixtime");
+        if (providers != null) {
+            providersListDelete.addAll(realm.copyFromRealm(providers));
+        }
+
+        for(Provider provider : providersListDelete){
+            realm.beginTransaction();
+            provider.deleteFromRealm();
+            realm.commitTransaction();
+        }
+
+        List<InvoiceDetails> invoiceDetailsAdd = new ArrayList<>();
+        List<InvoiceDetails> invoiceDetailsList1 = realm
+                .where(InvoiceDetails.class)
+                .equalTo("addOffline", true)
+                .findAllSorted("startDate");
+        if (invoiceDetailsList1 != null) {
+            invoiceDetailsAdd.addAll(realm.copyFromRealm(invoiceDetailsList1));
+        }
+
+        for(InvoiceDetails invoiceDetails : invoiceDetailsAdd){
+            realm.beginTransaction();
+            invoiceDetails.deleteFromRealm();
+            realm.commitTransaction();
+        }
+        List<Invoice> invoiceList = new ArrayList<>();
+        List<Invoice> invoices = realm.where(Invoice.class).equalTo("deleteOffline", true).findAllSorted("invoiceStartDate");
+        if (invoices != null) {
+            invoiceList.addAll(realm.copyFromRealm(invoices));
+        }
+        for(Invoice invoice : invoiceList){
+            realm.beginTransaction();
+            invoice.deleteFromRealm();
+            realm.commitTransaction();
+        }
+        List<InvoiceDetails> invoiceDetailsEdit = new ArrayList<>();
+        List<InvoiceDetails> invoiceDetailsList = realm
+                .where(InvoiceDetails.class)
+                .equalTo("editOffline", true)
+                .findAllSorted("startDate");
+        if (invoiceDetailsList != null) {
+            invoiceDetailsEdit.addAll(realm.copyFromRealm(invoiceDetailsList));
+        }
+
+        for(InvoiceDetails invoiceDetails : invoiceDetailsEdit){
+            realm.beginTransaction();
+            invoiceDetails.deleteFromRealm();
+            realm.commitTransaction();
+        }
+        List<InvoiceDetails> invoiceDetailsDelete = new ArrayList<>();
+        List<InvoiceDetails> ofDays = realm
+                .where(InvoiceDetails.class)
+                .equalTo("deleteOffline", true)
+                .findAllSorted("startDate");
+        if (ofDays != null) {
+            invoiceDetailsDelete.addAll(realm.copyFromRealm(ofDays));
+        }
+        for(InvoiceDetails invoiceDetails : invoiceDetailsDelete){
+            realm.beginTransaction();
+            invoiceDetails.deleteFromRealm();
+            realm.commitTransaction();
+        }
+        List<Invoice> invoiceClosed = new ArrayList<>();
+        List<Invoice> invoiceForClosed = realm
+                .where(Invoice.class)
+                .equalTo("isClosed", true)
+                .findAllSorted("invoiceStartDate");
+        if (invoiceForClosed != null) {
+            invoiceClosed.addAll(realm.copyFromRealm(invoiceForClosed));
+        }
+        for(Invoice invoice : invoiceClosed){
+            realm.beginTransaction();
+            invoice.deleteFromRealm();
+            realm.commitTransaction();
+        }
 
         String msg = "File exported to Path: " + EXPORT_REALM_PATH + "/" + EXPORT_REALM_FILE_NAME;
         Toast.makeText(activity.getApplicationContext(), msg, Toast.LENGTH_LONG).show();

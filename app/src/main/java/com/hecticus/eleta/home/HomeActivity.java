@@ -259,6 +259,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         }
         if (id == R.id.action_export_data) {
             new RealmBackup(HomeActivity.this).backup();
+
             return true;
         }
          //todo comentar
