@@ -258,7 +258,12 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             return true;
         }
         if (id == R.id.action_export_data) {
-            new RealmBackup(HomeActivity.this).backup();
+            if (InternetManager.isConnected(this)) {
+                new RealmBackup(HomeActivity.this).backup();
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+            }
+
 
             return true;
         }
