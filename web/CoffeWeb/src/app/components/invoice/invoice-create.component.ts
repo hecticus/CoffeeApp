@@ -5,8 +5,8 @@ import { Operacion } from 'src/app/core/models/Operacion';
 	styleUrls: ['./invoice.component.css'],
 	template: `
 	<h2 class="title"><span>Crear Factura</span></h2>
-			<fieldset>
 			<!--
+			<fieldset>
 				<div class="wrap-fields">
 					<div class="field">
 						<mat-form-field  required class="example-full-width">
@@ -30,11 +30,12 @@ import { Operacion } from 'src/app/core/models/Operacion';
 
 			<app-harvest-create *ngIf= "action == 'Cosecha'"></app-harvest-create>
 			<app-purchase-create *ngIf= "action == 'Compra'"></app-purchase-create>
+			<app-purchase-create></app-purchase-create>
 	`
 })
 export class InvoiceCreateComponent implements OnInit {
 	selected = '';
-	action : string;
+	action: string;
 
 	operacion: Operacion [] = [
 		{ id: 1, name: 'Cosecha' },
