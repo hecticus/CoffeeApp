@@ -93,7 +93,6 @@ export class InvoiceService {
 			provider: new FormControl(invoice.provider ? invoice.provider.id : undefined),
 			buyOption: new FormControl(true),
 			startDate: new FormControl(this.dateTimeIso()),
-			// itemTypes: this.fb.array([])
 			itemtypes: this.fb.array([
 				this.initItemHarvest(new InvoiceDetail()),
 				])

@@ -1,3 +1,12 @@
+.container {
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-left: 0px;
+    padding-right: 50px;
+    max-width: 760px;
+}
+
+
 fieldset {
     display: block;
     margin-inline-start: 2px;
@@ -11,5 +20,40 @@ fieldset {
     border-style: groove;
     border-color: threedface;
     border-image: initial;
-    width: 50%;
+    width: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-width2 {
+    min-width: 220;
+    width: 95%;
+}
+.buttonStyle{
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-left: 20px;
+    padding: 3px;
+}
+
+.buttonStyle2{
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-left: 10px;
+}
+
+.material-icons {
+    font-size: 24px;
+    color: rgb(70, 70, 70);
+}
+
+legend {
+    display: block;
+    padding: 0;
+    font-size: 1.5rem;
+    line-height: inherit;
+    color: inherit;
+    white-space: normal;
 }

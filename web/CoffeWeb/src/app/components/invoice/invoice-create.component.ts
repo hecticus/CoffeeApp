@@ -5,22 +5,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 	styleUrls: ['./invoice.component.css'],
 	template: `
 	<h2 class="title"><span>Crear Factura</span></h2>
-			<!--
-			<fieldset>
-				<div class="wrap-fields">
-					<div class="field">
-						<mat-form-field  required class="example-full-width">
-							<mat-select [(value)]="selected">
-							  	<mat-option  *ngFor="let o of operacion" [value]="o.name" >
-									{{o.name}}
-								</mat-option>
-							</mat-select>
-						<mat-label><b>Tipo de Factura</b></mat-label>
-					  </mat-form-field>
-					</div>
-				</div>
-			</fieldset>
-			-->
+			<!-- -->
 
 			<mat-radio-group [(ngModel)]="action">
 				<mat-radio-button class="example-radio-button" class="example-radio-button" *ngFor="let season of operacion" [value]="season.name">
@@ -30,7 +15,7 @@ import { Operacion } from 'src/app/core/models/Operacion';
 
 			<app-harvest-create *ngIf= "action == 'Cosecha'"></app-harvest-create>
 			<app-purchase-create *ngIf= "action == 'Compra'"></app-purchase-create>
-			<app-purchase-create></app-purchase-create>
+			<app-harvest-create></app-harvest-create>
 	`
 })
 export class InvoiceCreateComponent implements OnInit {
