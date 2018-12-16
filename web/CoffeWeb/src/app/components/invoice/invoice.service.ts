@@ -1,11 +1,8 @@
 import { Purities } from './../../core/models/purities';
-import { Farm } from './../../core/models/farm';
 import { InvoiceDetail } from './../../core/models/invoice-detail';
-import { ItemType } from './../../core/models/item-type';
 import { Invoice } from '../../core/models/invoice';
 import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
-
 import { BaseService } from '../../core/base.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
@@ -74,18 +71,6 @@ export class InvoiceService {
 		provider: new FormControl(invoice.provider, Validators.required),
 		statusInvoice: new FormControl(invoice.statusInvoice, Validators.required),
 		});
-	}
-
-	addPurchase() {
-		// add detail to the list
-		const control = <FormArray>this.fb.control['itemTypes'];
-		control.push(this.initItemHarvest(new InvoiceDetail()));
-	}
-
-	removePurchase(i: number) {
-		// remove detail from the list
-		const control = <FormArray>this.fb.control['itemTypes'];
-		control.removeAt(i);
 	}
 
 	getHarvestCreate(invoice: Invoice): FormGroup {
