@@ -4,7 +4,7 @@
 
         <div class="wrap-fields">
             <div class="field form-field">
-                <mat-form-field class="example-full-width">
+                <mat-form-field class="full-width">
                     <mat-select required [formControl]="form.controls['provider']">
                         <mat-option *ngFor="let p of providers" [value]="{id: p.id}">{{p.nameProvider}}</mat-option>
                     </mat-select>
@@ -15,7 +15,7 @@
         </div>
 
         <div formArrayName="itemtypes">
-            <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of itemTypesForms.controls;
+            <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of form.get('itemtypes').controls;
             let i=index">
                 <fieldset>
                     <legend><h3>Detalle{{i+1}}: </h3></legend>
@@ -105,7 +105,7 @@
 
                         <div class="wrap-fields">
                             <div class="field">
-                                <mat-form-field class="example-full-width">
+                                <mat-form-field class="full-width">
                                     <input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
                                 </mat-form-field>
                                 <app-validator [control]="item.controls['noteInvoiceDetail']"></app-validator>
@@ -115,7 +115,6 @@
                 </fieldset>        
             </div>
         </div>
-
 
         <!-- -->
 

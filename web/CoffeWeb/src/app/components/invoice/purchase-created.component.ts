@@ -22,153 +22,8 @@ import { Provider } from '@angular/compiler/src/core';
 	selector: 'app-purchase-create',
 	styleUrls: ['./purchase.component.css'],
 	templateUrl: './pp.html'
-// 	 `
-// 	<div class= "container">
-//     <form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
-//         <legend><span>Datos de la Factura</span></legend>
-
-//         <div class="wrap-fields">
-//             <div class="field form-field">
-//                 <mat-form-field class="example-full-width">
-//                     <mat-select required [formControl]="form.controls['provider']">
-//                         <mat-option *ngFor="let p of providers" [value]="{id: p.id}">{{p.nameProvider}}</mat-option>
-//                     </mat-select>
-//                     <mat-label><b>Proveedor</b></mat-label>
-//                 </mat-form-field>
-//                 <app-validator [control]="form.controls['provider']"></app-validator>
-//             </div>
-//         </div>
-
-//         <div formArrayName="itemtypes">
-//             <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of itemTypesForms.controls;
-//                 let i=index">
-
-//                 <fieldset>
-//                 <legend><h3>Detalle{{i+1}}: </h3>
-                    
-//                     <div [formGroupName]="i">
-
-//                         <div class="wrap-fields">
-
-//                             <div class="field">
-//                                 <mat-form-field>
-//                                     <mat-select required [formControl]="item.controls['itemType']">
-//                                         <mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-//                                     </mat-select>
-//                                     <mat-label><b>Tipo</b></mat-label>
-//                                 </mat-form-field>
-//                                 <app-validator [control]="item.controls['itemType']"></app-validator>
-//                             </div>
-
-//                             <div class="field">
-//                                 <mat-form-field class="example-full-width">
-//                                     <input matInput required formControlName="price" placeholder="Precio" class="example-right-align">
-//                                 </mat-form-field>
-//                                 <app-validator [control]="item.controls['price']"></app-validator>
-//                             </div>
-
-                            
-
-//                         </div>
-
-//                     <div class="wrap-fields">
-//                         <div class="field form-field">
-//                             <mat-form-field class="example-full-width">
-//                                 <input matInput required formControlName="price" placeholder="Precio" class="example-right-align">
-//                             </mat-form-field>
-//                             <app-validator [control]="item.controls['price']"></app-validator>
-//                         </div>
-//                     </div>
-
-//                     <div class="wrap-fields">
-//                         <div class="field form-field">
-//                             <mat-form-field class="example-full-width">
-//                                 <input matInput required formControlName="amountInvoiceDetail" placeholder="Peso" class="example-right-align">
-//                             </mat-form-field>
-//                             <app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
-//                         </div>
-//                     </div>
-
-//                     <h2>Añadir Pureza</h2>
-//                     <div formArrayName="purities">
-//                         <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let p of item.get('purities').controls;
-//                             let j=index" [formGroupName]="j">
-
-//                             <div class="wrap-fields">
-//                                 <div class="field form-field">
-//                                     <mat-form-field class="example-full-width">
-//                                         <mat-select required [formControl]="p.controls['idPurity']">
-//                                             <mat-option *ngFor="let p of purits" [value]="p.id">{{p.namePurity}}</mat-option>
-//                                         </mat-select>
-//                                         <mat-label><b>Grano</b></mat-label>
-//                                     </mat-form-field>
-//                                     <app-validator [control]="p.controls['idPurity']"></app-validator>
-//                                 </div>
-//                             </div>
-
-//                             <div class="wrap-fields">
-//                                 <div class="field form-field">
-//                                     <mat-form-field class="example-full-width">
-//                                         <input matInput required formControlName="valueRateInvoiceDetailPurity" placeholder="Porcentaje" class="example-right-align">
-//                                     </mat-form-field>
-//                                     <app-validator [control]="p.controls['valueRateInvoiceDetailPurity']"></app-validator>
-//                                 </div>
-//                             </div>
-
-//                             <button (click)="deleteItemType(j)">Delete</button>
-//                         </div>
-//                         <button (click)="addItemType()">Añadir Purity</button>
-//                     </div>
-
-//                     <div class="wrap-fields">
-//                         <div class="field">
-//                             <mat-form-field class="example-full-width">
-//                                 <input matInput formControlName="nameReceived" placeholder="Recibido por">
-//                             </mat-form-field>
-//                             <app-validator [control]="item.controls['nameReceived']"></app-validator>
-//                         </div>
-//                     </div>
-
-//                     <div class="wrap-fields">
-//                         <div class="field">
-//                             <mat-form-field class="example-full-width">
-//                                 <input matInput formControlName="nameDelivered" placeholder="Entregado por">
-//                             </mat-form-field>
-//                             <app-validator [control]="item.controls['nameDelivered']"></app-validator>
-//                         </div>
-//                     </div>
-
-//                     <div class="wrap-fields">
-//                         <div class="field">
-//                             <mat-form-field class="example-full-width">
-//                                 <input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
-//                             </mat-form-field>
-//                             <app-validator [control]="item.controls['noteInvoiceDetail']"></app-validator>
-//                         </div>
-//                     </div>
-
-//                     <button (click)="deleteItemType(i)">Delete</button>
-
-                
-
-//                     <button (click)="addItemType()">Añadir Items</button>
-              
-              
-//                     </div>
-            
-//                 </fieldset>
-//              </div>
-//         </div>
-//         <!-- -->
-
-
-
-//     <div class="options row">
-//         <button mat-raised-button class="btn-text" type="submit" >Guardar</button>
-//     </div>
-// </form>
-// </div>
-// 	`
+	//  `
+	// `
 
 })
 
@@ -179,6 +34,7 @@ export class PurchaseCreateComponent implements OnInit {
 	form: FormGroup;
 	itemType: ItemType[];
 	purits: Purities[];
+	data: Invoice[];
 	auxFarm = 0;
 
 	constructor(
@@ -198,29 +54,43 @@ export class PurchaseCreateComponent implements OnInit {
 		this.form = this.invoiceService.getPurchaseCreate(new Invoice());
 	}
 
-	get itemTypesForms() {
-		return this.form.get('itemtypes') as FormArray;
+	addItemType() {
+		let control = <FormArray>this.form.controls.itemtypes;
+		control.push(this.invoiceService.initItemPurchase(new InvoiceDetail));
 	}
 
 	deleteItemType(i) {
-		this.itemTypesForms.removeAt(i);
-	}
-
-	addItemType() {
-		this.itemTypesForms.push(this.invoiceService.initItemPurchase(new InvoiceDetail));
-	}
-
-	// get puritiesForms() {
-	// 	return this.form.controls.get('purities') as FormArray;
-	// }
-
-	deletePurities(i) {
-		this.itemTypesForms.removeAt(i);
+		let control = <FormArray>this.form.controls.itemtypes;
+		control.removeAt(i);
 	}
 
 	addPurities() {
-		this.itemTypesForms.push(this.invoiceService.initPurities(new Purities));
+		this.invoiceService.initPurities(new Purities);
 	}
+
+	deletePurities(control, i) {
+		control.removeAt(i);
+	}
+
+	// setItems() {
+	// 	let control = <FormArray>this.form.controls.itemtypes;
+	// 	this.data.itemtypes.forEach(x => {
+	// 	  control.push(this.fb.group({ 
+	// 		company: x.company, 
+	// 		projects: this.setProjects(x) }))
+	// 	})
+	//   }
+	
+	//   setProjects(x) {
+	// 	let arr = new FormArray([])
+	// 	x.projects.forEach(y => {
+	// 	  arr.push(this.fb.group({ 
+	// 		projectName: y.projectName 
+	// 	  }))
+	// 	})
+	// 	return arr;
+	//   }
+
 
 	create() {
 		console.log(this.form);

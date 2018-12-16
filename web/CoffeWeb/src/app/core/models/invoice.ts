@@ -13,4 +13,5 @@ export class Invoice extends BaseModel {
 	startDate: string;
 	closedDate: string;
 	buyOption: boolean;
+	itemtypes: InvoiceDetail [];
 }
