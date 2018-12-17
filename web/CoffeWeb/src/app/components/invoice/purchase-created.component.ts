@@ -34,7 +34,7 @@ export class PurchaseCreateComponent implements OnInit {
 	form: FormGroup;
 	itemType: ItemType[];
 	purits: Purities[];
-	data: Invoice[];
+	invoices = new Invoice();
 	auxFarm = 0;
 
 	constructor(
@@ -51,12 +51,12 @@ export class PurchaseCreateComponent implements OnInit {
 
 	ngOnInit() {
 		this.begins();
-		this.form = this.invoiceService.getPurchaseCreate(new Invoice());
+		this.form = this.invoiceService.getPurchaseCreate(this.invoices);
 	}
 
 	addItemType() {
 		let control = <FormArray>this.form.controls.itemtypes;
-		control.push(this.invoiceService.initItemPurchase(new InvoiceDetail));
+		control.push(this.invoiceService.initItemPurchase(new InvoiceDetail()));
 	}
 
 	deleteItemType(i) {
@@ -64,43 +64,24 @@ export class PurchaseCreateComponent implements OnInit {
 		control.removeAt(i);
 	}
 
-	addPurities() {
-		this.invoiceService.initPurities(new Purities);
+	addPurities(control) {
+		control.push(this.invoiceService.initPurities(new Purities()));
 	}
 
-	deletePurities(control, i) {
-		control.removeAt(i);
+	deletePurities(control, j) {
+		control.removeAt(j);
 	}
-
-	// setItems() {
-	// 	let control = <FormArray>this.form.controls.itemtypes;
-	// 	this.data.itemtypes.forEach(x => {
-	// 	  control.push(this.fb.group({ 
-	// 		company: x.company, 
-	// 		projects: this.setProjects(x) }))
-	// 	})
-	//   }
-	
-	//   setProjects(x) {
-	// 	let arr = new FormArray([])
-	// 	x.projects.forEach(y => {
-	// 	  arr.push(this.fb.group({ 
-	// 		projectName: y.projectName 
-	// 	  }))
-	// 	})
-	// 	return arr;
-	//   }
-
 
 	create() {
-		console.log(this.form);
-		this.invoiceService.newHarvestPurchase(<Invoice> this.form.value)
+		if (!this.form.invalid) {
+			this.invoiceService.newHarvestPurchase(<Invoice> this.form.value)
 			.subscribe(invoices => {
 				this.notificationService.sucessInsert('Invoice');
 				this.location.back();
 			}, err =>  {
 				this.notificationService.error(err);
 		});
+		}
 	}
 
 

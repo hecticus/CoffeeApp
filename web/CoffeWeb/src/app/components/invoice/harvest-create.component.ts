@@ -91,7 +91,6 @@ import { StatusStoreModule } from '../status/status-store.module';
 								</div>
 							</div>
 						</div>
-
 					</fieldset>
 				</div>
 			</div>

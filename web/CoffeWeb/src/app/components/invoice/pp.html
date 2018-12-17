@@ -12,6 +12,9 @@
                 </mat-form-field>
                 <app-validator [control]="form.controls['provider']"></app-validator>
             </div>
+            <button class="buttonStyle" (click)="addItemType()" title="Añadir Detalle a la Cosecha">
+                <i class="material-icons">add_shopping_cart</i>
+            </button>
         </div>
 
         <div formArrayName="itemtypes">
@@ -39,6 +42,10 @@
                                 </mat-form-field>
                                 <app-validator [control]="item.controls['itemType']"></app-validator>
                             </div>
+
+                            <button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
+                                <i class="material-icons">delete_sweep</i>
+                            </button>
                         </div>  
 
                         <div class="wrap-fields">
@@ -54,6 +61,9 @@
                                 </mat-form-field>
                                 <app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
                             </div>
+                            <button class="buttonStyle" (click)="addPurities(item.controls.purities)" title="Añadir Pureza a la Cosecha">
+                                <i class="material-icons">add_shopping_cart</i>
+                            </button>    
                         </div>
 
                         <div formArrayName="purities">
@@ -64,24 +74,27 @@
                                         <div [formGroupName]="j">
                                             <div class="wrap-fields">
                                                 <div class="field">
-                                                    <mat-form-field class="example-full-width">
+                                                    <mat-form-field class="full-width">
                                                         <mat-select required [formControl]="p.controls['idPurity']">
                                                             <mat-option *ngFor="let p of purits" [value]="p.id">{{p.namePurity}}</mat-option>
                                                         </mat-select>
                                                         <mat-label><b>Grano</b></mat-label>
                                                     </mat-form-field>
                                                     <app-validator [control]="p.controls['idPurity']"></app-validator>
-                                                </div>                                       
+                                                </div>                       
+                                            </div>
+
+                                            <div class="wrap-fields">
                                                 <div class="field">
-                                                    <mat-form-field class="example-full-width">
+                                                    <mat-form-field class="full-width">
                                                         <input matInput required formControlName="valueRateInvoiceDetailPurity" placeholder="Porcentaje" class="example-right-align">
                                                     </mat-form-field>
                                                     <app-validator [control]="p.controls['valueRateInvoiceDetailPurity']"></app-validator>
-                                                </div>                                      
+                                                </div>  
+                                                <button class="buttonStyle2" (click)="deletePurities(item.controls.purities, j)" title="Eliminar Detalle a la Cosecha">
+                                                    <i class="material-icons">delete_sweep</i>
+                                                </button>  
                                             </div>
-                                            <button (click)="deletePurities(j)">Delete</button>
-                                            <button (click)="addPurities()">Añadir Purity</button>
-
                                         </div>                        
                                 </fieldset>    
                             </div>
