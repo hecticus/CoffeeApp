@@ -15,7 +15,6 @@ import { Operacion } from 'src/app/core/models/Operacion';
 
 			<app-harvest-create *ngIf= "action == 'Cosecha'"></app-harvest-create>
 			<app-purchase-create *ngIf= "action == 'Compra'"></app-purchase-create>
-			<app-purchase-create></app-purchase-create>
 	`
 })
 export class InvoiceCreateComponent implements OnInit {

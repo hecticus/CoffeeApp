@@ -12,6 +12,7 @@ import { NgModule } from '@angular/core';
 import { UtilsModule } from '../../core/utils/utils.module';
 import { InvoiceDetailService } from './invoice-detail.service';
 import { InvoiceDetailListComponent } from './invoice-detail-list.component';
+import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 
 
 @NgModule({
@@ -30,10 +31,12 @@ import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 	declarations: [
 		InvoiceDetailComponent,
 		InvoiceDetailListComponent,
+		InvoiceDetailReadComponent,
 	],
 	exports: [
 		InvoiceDetailComponent,
 		InvoiceDetailListComponent,
+		InvoiceDetailReadComponent,
 	],
 	providers: [
 		InvoiceDetailService,

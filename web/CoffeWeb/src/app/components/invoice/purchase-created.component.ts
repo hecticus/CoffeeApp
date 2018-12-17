@@ -21,9 +21,147 @@ import { Provider } from '@angular/compiler/src/core';
 @Component({
 	selector: 'app-purchase-create',
 	styleUrls: ['./purchase.component.css'],
-	templateUrl: './pp.html'
-	//  `
-	// `
+	template:
+	`
+	 <div class= "container">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+			<legend><span>Datos de la Factura</span></legend>
+
+			<div class="wrap-fields">
+				<div class="field form-field">
+					<mat-form-field class="full-width">
+						<mat-select required [formControl]="form.controls['provider']">
+							<mat-option *ngFor="let p of providers" [value]="{id: p.id}">{{p.nameProvider}}</mat-option>
+						</mat-select>
+						<mat-label><b>Proveedor</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['provider']"></app-validator>
+				</div>
+				<button class="buttonStyle" (click)="addItemType()" title="Añadir Detalle a la Cosecha">
+					<i class="material-icons">add_shopping_cart</i>
+				</button>
+			</div>
+
+			<div formArrayName="itemtypes">
+				<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let item of form.get('itemtypes').controls;
+				let i=index">
+					<fieldset>
+						<legend><h3>Detalle{{i+1}}: </h3></legend>
+						<div [formGroupName]="i">
+							<div class="wrap-fields">
+								<div class="field">
+									<mat-form-field>
+										<mat-select required [formControl]="item.controls['store']">
+											<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
+										</mat-select>
+										<mat-label><b>Acopio</b></mat-label>
+									</mat-form-field>
+									<app-validator [control]="item.controls['store']"></app-validator>
+								</div>
+								<div class="field">
+									<mat-form-field>
+										<mat-select required [formControl]="item.controls['itemType']">
+											<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+										</mat-select>
+										<mat-label><b>Tipo</b></mat-label>
+									</mat-form-field>
+									<app-validator [control]="item.controls['itemType']"></app-validator>
+								</div>
+
+								<button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
+									<i class="material-icons">delete_sweep</i>
+								</button>
+							</div>
+
+							<div class="wrap-fields">
+								<div class="field">
+									<mat-form-field class="example-full-width">
+										<input matInput required formControlName="price" placeholder="Precio" class="example-right-align">
+									</mat-form-field>
+									<app-validator [control]="item.controls['price']"></app-validator>
+								</div>
+								<div class="field form-field">
+									<mat-form-field class="example-full-width">
+										<input matInput required formControlName="amountInvoiceDetail" placeholder="Peso" class="example-right-align">
+									</mat-form-field>
+									<app-validator [control]="item.controls['amountInvoiceDetail']"></app-validator>
+								</div>
+								<button class="buttonStyle" (click)="addPurities(item.controls.purities)" title="Añadir Pureza a la Cosecha">
+									<i class="material-icons">add_shopping_cart</i>
+								</button>
+							</div>
+
+							<div formArrayName="purities">
+								<div style="margin-top:5px; margin-bottom:5px;" *ngFor="let p of item.get('purities').controls;
+								let j=index" >
+									<fieldset>
+										<legend><h4> Pureza{{j+1}}: </h4></legend>
+											<div [formGroupName]="j">
+												<div class="wrap-fields">
+													<div class="field">
+														<mat-form-field class="full-width">
+															<mat-select required [formControl]="p.controls['idPurity']">
+																<mat-option *ngFor="let p of purits" [value]="p.id">{{p.namePurity}}</mat-option>
+															</mat-select>
+															<mat-label><b>Grano</b></mat-label>
+														</mat-form-field>
+														<app-validator [control]="p.controls['idPurity']"></app-validator>
+													</div>
+												</div>
+
+												<div class="wrap-fields">
+													<div class="field">
+														<mat-form-field class="full-width">
+															<input matInput required formControlName="valueRateInvoiceDetailPurity" placeholder="Porcentaje" class="example-right-align">
+														</mat-form-field>
+														<app-validator [control]="p.controls['valueRateInvoiceDetailPurity']"></app-validator>
+													</div>
+													<button class="buttonStyle2" (click)="deletePurities(item.controls.purities, j)" title="Eliminar Detalle a la Cosecha">
+														<i class="material-icons">delete_sweep</i>
+													</button>
+												</div>
+											</div>
+									</fieldset>
+								</div>
+							</div>
+
+							<div class="wrap-fields">
+								<div class="field">
+									<mat-form-field class="example-full-width">
+										<input matInput formControlName="nameReceived" placeholder="Recibido por">
+									</mat-form-field>
+									<app-validator [control]="item.controls['nameReceived']"></app-validator>
+								</div>
+
+								<div class="field">
+									<mat-form-field>
+										<input matInput formControlName="nameDelivered" placeholder="Entregado por">
+									</mat-form-field>
+									<app-validator [control]="item.controls['nameDelivered']"></app-validator>
+								</div>
+							</div>
+
+							<div class="wrap-fields">
+								<div class="field">
+									<mat-form-field class="full-width">
+										<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
+									</mat-form-field>
+									<app-validator [control]="item.controls['noteInvoiceDetail']"></app-validator>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+
+			<!-- -->
+
+			<div class="options row">
+				<button mat-raised-button class="btn-text" type="submit" >Guardar</button>
+			</div>
+		</form>
+	</div>
+	`
 
 })
 
