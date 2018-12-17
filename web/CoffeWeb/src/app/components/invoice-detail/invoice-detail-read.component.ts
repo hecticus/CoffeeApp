@@ -13,6 +13,7 @@ import { InvoiceService } from '../invoice/invoice.service';
 @Component({
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
+		<h3 class="title">Detalleszdxfcgvhbjbhgcfxdssdsfghnfactura</h3>
 		<h3 class="title">Detalle de la factura</h3>
 		<div class="tool-bar both-side">
 			<!--<div class="right row">
@@ -112,8 +113,6 @@ export class InvoiceDetailReadComponent implements OnInit {
 			data => { this.invoice = data['result'];
 			console.log(this.idInvoice); }
 		);
-
-
 
 		// this.idInvoice = this.invoice.id;
 		console.log(this.invoice);

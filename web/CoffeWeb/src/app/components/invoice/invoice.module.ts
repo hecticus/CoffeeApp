@@ -33,7 +33,6 @@ import { HarvestCreateComponent } from './harvest-create.component';
 	imports: [
 		FormsModule,
 		ReactiveFormsModule,
-		// BrowserAnimationsModule,
 		CommonModule,
 		MatTableModule,
 		MatCheckboxModule,
@@ -61,7 +60,6 @@ import { HarvestCreateComponent } from './harvest-create.component';
 		InvoiceUpdateComponent,
 		InvoiceReadComponent,
 		HarvestCreateComponent,
-		// HarvestItemsComponent,
 		PurchaseCreateComponent
 	],
 	exports: [
@@ -71,7 +69,6 @@ import { HarvestCreateComponent } from './harvest-create.component';
 		InvoiceUpdateComponent,
 		InvoiceReadComponent,
 		HarvestCreateComponent,
-		// HarvestItemsComponent,
 		PurchaseCreateComponent
 	],
 	providers: [

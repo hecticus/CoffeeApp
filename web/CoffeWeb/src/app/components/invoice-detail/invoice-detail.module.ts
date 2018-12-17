@@ -13,6 +13,7 @@ import { UtilsModule } from '../../core/utils/utils.module';
 import { InvoiceDetailService } from './invoice-detail.service';
 import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 		MatSelectModule,
 		MatFormFieldModule,
 		MatInputModule,
+		ModalModule.forRoot(),
 
 		UtilsModule,
 
