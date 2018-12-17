@@ -10,8 +10,8 @@ import com.zebra.sdk.printer.discovery.DiscoveredPrinterBluetooth;
 
 public class Constants {
     //public static final String BASE_URL = "http://10.0.3.105:9000/";
-    public static final String BASE_URL = "https://dev.api.coffee.hecticus.com/";
-    public static final int VERSION_DB_PROD = 4; //debe ir 3
+    public static final String BASE_URL = "https://api.coffee.hecticus.com/";
+    public static final int VERSION_DB_PROD = 3;
 
     /*public static final String BASE_URL = "https://dev.api.coffee.hecticus.com/";
     public static final int VERSION_DB_DEV = 2;*/
