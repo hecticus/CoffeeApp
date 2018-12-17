@@ -113,7 +113,7 @@ public class HarvestDetailsContract {
 
         void getLotsByFarmRequest(int idFarm);
 
-        void onLotsSuccess(LotsListResponse response);
+        void onLotsSuccess(List<Lot> response);
 
         Lot getLotById(int id);
 

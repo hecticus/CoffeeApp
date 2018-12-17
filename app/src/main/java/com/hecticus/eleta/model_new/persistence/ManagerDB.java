@@ -22,6 +22,7 @@ import com.hecticus.eleta.util.Util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by roselyn545 on 20/10/17.
@@ -420,6 +422,12 @@ public class ManagerDB {
                 if (lot.getFarm() != null) {
                     lot.setFarmId(lot.getFarm().getId());
                 }
+                Lot lot1 = realm.where(Lot.class).equalTo("id", lot.getId()).findFirst();
+                if(lot1 == null) {
+                    lot.setLastUse(Calendar.getInstance().getTime());
+                } else {
+                    lot.setLastUse(lot1.getLastUse());
+                }
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -437,7 +445,7 @@ public class ManagerDB {
 
     @DebugLog
     public static List<Lot> getAllLotsByFarm(int farm) {
-        return Realm.getDefaultInstance().where(Lot.class).equalTo("farmId", farm).findAllSorted("name");
+        return Realm.getDefaultInstance().where(Lot.class).equalTo("farmId", farm).findAllSorted("lastUse",Sort.DESCENDING);
     }
 
     @DebugLog

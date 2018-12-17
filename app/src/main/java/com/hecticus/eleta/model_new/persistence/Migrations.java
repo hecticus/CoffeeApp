@@ -2,6 +2,8 @@ package com.hecticus.eleta.model_new.persistence;
 
 import com.hecticus.eleta.util.Constants;
 
+import java.util.Date;
+
 import io.realm.DynamicRealm;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
@@ -15,11 +17,9 @@ public class Migrations implements RealmMigration {
 
         //if (oldVersion == (Constants.VERSION_DB_DEV-1)) {
         //if (oldVersion == (Constants.VERSION_DB_PROD-1)) {
-            /*final RealmObjectSchema userSchema = schema.get("Farm");
-            userSchema.removeField("a", String.class);
-            userSchema.addField("b", String.class);*/
-
-
+            //final RealmObjectSchema userSchema = schema.get("Lot");
+            //userSchema.removeField("a", String.class);
+            //userSchema.addField("lastUse", Date.class);
         //}
     }
 

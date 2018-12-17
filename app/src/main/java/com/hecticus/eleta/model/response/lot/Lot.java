@@ -6,6 +6,7 @@ import com.hecticus.eleta.model_new.ItemSpinnerInterface;
 import com.hecticus.eleta.model.response.farm.Farm;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -36,6 +37,8 @@ public class Lot extends RealmObject implements ItemSpinnerInterface, Serializab
     private Farm farm = null;
 
     private int farmId = -1;
+
+    private Date lastUse;
 
     public Lot() {
     }
@@ -97,5 +100,13 @@ public class Lot extends RealmObject implements ItemSpinnerInterface, Serializab
     @Override
     public String toString() {
         return name;
+    }
+
+    public Date getLastUse() {
+        return lastUse;
+    }
+
+    public void setLastUse(Date lastUse) {
+        this.lastUse = lastUse;
     }
 }

@@ -31,9 +31,11 @@ import com.hecticus.eleta.util.ErrorHandling;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -121,7 +123,20 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
     @DebugLog
     @Override
-    public void saveHarvestRequest(InvoicePost invoicePost, boolean isAdd, final Boolean addAnother) {
+    public void saveHarvestRequest(final InvoicePost invoicePost, boolean isAdd, final Boolean addAnother) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Lot lot = realm.where(Lot.class).equalTo("id", invoicePost.getLot()).findFirst();
+                try{
+                    lot.setLastUse(Calendar.getInstance().getTime());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                realm.insertOrUpdate(lot);
+            }
+        });
         if (!InternetManager.isConnected(mPresenter.context) || ManagerDB.invoiceHasOfflineOperation(invoicePost,isAdd)) {
             if (isAdd) {
                 if(ManagerDB.saveNewInvoice1(Constants.TYPE_HARVESTER, invoicePost)){
@@ -388,7 +403,7 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
     @DebugLog
     @Override
-    public void getLotsByFarmRequest(int idFarm) {
+    public void getLotsByFarmRequest(final int idFarm) {
         if (!InternetManager.isConnected(mPresenter.context)) {
             List<Lot> lotList = ManagerDB.getAllLotsByFarm(idFarm);
             if (lotList != null) {
@@ -409,7 +424,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
                         if (response.isSuccessful() && response.body() != null) {
                             //todo delete all
                             ManagerDB.saveNewLots(response.body().getResult());
-                            onLotsSuccess(response.body());
+                            onLotsSuccess(ManagerDB.getAllLotsByFarm(idFarm));
+                            //onLotsSuccess(response.body());
                         } else
                             manageError(mPresenter.context.getString(R.string.error_getting_lots), response);
                     } catch (Exception e) {
@@ -430,8 +446,8 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
     @DebugLog
     @Override
-    public void onLotsSuccess(LotsListResponse response) {
-        mPresenter.loadLots(response.getResult());
+    public void onLotsSuccess(List<Lot> listLot) {
+        mPresenter.loadLots(listLot);
     }
 
     @DebugLog
