@@ -1,3 +1,4 @@
+import { InvoiceDetailRoutingModule } from './invoice-detail..routing';
 import { InvoiceDetailComponent } from './invoice-detail.component';
 import { CommonModule } from '@angular/common';
 import {
@@ -28,6 +29,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 		ModalModule.forRoot(),
 
 		UtilsModule,
+		InvoiceDetailRoutingModule,
 
 	],
 	declarations: [

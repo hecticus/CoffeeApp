@@ -385,7 +385,7 @@ export class InvoiceListComponent implements OnInit {
 	}
 
 	read(id: number) {
-		this.router.navigate(['./' + id], {relativeTo: this.activatedRoute});
+		this.router.navigate(['./49/invoicesDetails/117'], {relativeTo: this.activatedRoute});
 		console.log(id);
 	}
 	openModal(template: TemplateRef<any>) {

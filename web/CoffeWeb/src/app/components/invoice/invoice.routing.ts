@@ -39,15 +39,6 @@ export const invoiceRoutes: Routes = [
 				},
 				children: [
 					{
-						path: 'update',
-						component: InvoiceUpdateComponent,
-						data: {
-							breadcrumb: 'Actualizar'
-						},
-
-					},
-					...invoiceDetailRoutes,
-					{
 						path: '',
 						pathMatch: 'full',
 						component: InvoiceReadComponent,
@@ -55,6 +46,7 @@ export const invoiceRoutes: Routes = [
 							breadcrumb: undefined
 						},
 					},
+					...invoiceDetailRoutes,
 				]
 			}
 		]

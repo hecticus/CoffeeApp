@@ -14,7 +14,7 @@ import { InvoiceService } from '../invoice/invoice.service';
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 		<h3 class="title">Detalleszdxfcgvhbjbhgcfxdssdsfghnfactura</h3>
-		<h3 class="title">Detalle de la factura</h3>
+		<h3 class="title">Detalle de la facturaxxxxxxxxxxxxxxxxxxxxxxxxxx</h3>
 		<div class="tool-bar both-side">
 			<!--<div class="right row">
 					<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
@@ -106,12 +106,14 @@ export class InvoiceDetailReadComponent implements OnInit {
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
-			this.idInvoice = params['invoiceId'];
+			this.idInvoice = params['invoiceDetailId'];
 		});
 
 		this.invoiceService.getById(this.idInvoice).subscribe(
 			data => { this.invoice = data['result'];
-			console.log(this.idInvoice); }
+			console.log(this.idInvoice);
+			console.log('hvhkv');
+		}
 		);
 
 		// this.idInvoice = this.invoice.id;

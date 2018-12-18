@@ -5,7 +5,7 @@ import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 
 export const invoiceDetailRoutes: Routes = [
 	{
-		path: 'invoicesDetail',
+		path: 'invoicesDetails/:invoiceDetailId',
 		component: InvoiceDetailReadComponent,
 		data: {
 			breadcrumb: 'Invoice Detail'
@@ -17,13 +17,6 @@ export const invoiceDetailRoutes: Routes = [
 				component: InvoiceDetailReadComponent,
 				data: {
 					breadcrumb: undefined
-				},
-
-			}, {
-				path: ':invoiceId',
-				component: InvoiceDetailReadComponent,
-				data: {
-					breadcrumb: 'Read'
 				}
 			}
 		]
@@ -38,4 +31,4 @@ export const invoiceDetailRoutes: Routes = [
 		RouterModule
 	]
 })
-export class InvoiceRoutingModule { }
+export class InvoiceDetailRoutingModule { }
