@@ -33,6 +33,7 @@ import com.hecticus.eleta.model_new.GlobalRequests;
 import com.hecticus.eleta.model_new.Provider;
 import com.hecticus.eleta.model_new.SessionManager;
 import com.hecticus.eleta.model_new.SyncManager;
+import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.model_new.persistence.Migrations;
 import com.hecticus.eleta.provider.list.ProvidersListFragment;
 import com.hecticus.eleta.purchases.list.PurchasesListFragment;
@@ -55,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar, progressBarExportData;
     public static HomeActivity INSTANCE;
 
     public static boolean reloadProviders;
@@ -90,6 +91,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             e.printStackTrace();
         }
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -103,6 +105,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBarExportData = (ProgressBar) findViewById(R.id.progress_bar_exportdata);
 
         TabLayout tabs = (TabLayout) findViewById(R.id.result_tabs);
         tabs.setupWithViewPager(mViewPager);
@@ -140,11 +143,9 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                 }
             }
         });
-
         INSTANCE = this;
         new GlobalRequests(this);
         mPresenter = new HomePresenter(this, this);
-
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -152,6 +153,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -188,9 +190,19 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         mViewPager.setEnabled(false);
     }
 
+    public void showProgressExportData() {
+        progressBarExportData.setVisibility(View.VISIBLE);
+        mViewPager.setEnabled(false);
+    }
+
     @DebugLog
     public void hideProgress() {
         progressBar.setVisibility(View.GONE);
+        mViewPager.setEnabled(true);
+    }
+
+    public void hideProgressExportData() {
+        progressBarExportData.setVisibility(View.GONE);
         mViewPager.setEnabled(true);
     }
 
@@ -259,7 +271,17 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         }
         if (id == R.id.action_export_data) {
             if (InternetManager.isConnected(this)) {
-                new RealmBackup(HomeActivity.this).backup();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.action_export_data)
+                        .setMessage(R.string.msj_export_data)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                showProgressExportData();
+                                new RealmBackup(HomeActivity.this).backup();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+
             } else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
             }
@@ -333,7 +355,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        hideProgressExportData();
         // If this is true, tabPageNumber will increase so it checks all tabs, otherwise
         // we'll only try to reload the currently selected one if it matches the desired type
         if (intent.getBooleanExtra("reloadThreeTabs", false)) {

@@ -5,6 +5,8 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hecticus.eleta.home.HomeActivity;
+import com.hecticus.eleta.internet.InternetManager;
 import com.hecticus.eleta.model.response.farm.FarmsListResponse;
 import com.hecticus.eleta.model.response.lot.LotsListResponse;
 import com.hecticus.eleta.model.response.store.StoresListResponse;
@@ -39,10 +41,11 @@ public class GlobalRequests {
     private final PurchaseRetrofitInterface purchasesApi;
     private final ProviderRetrofitInterface providersApi;
     private final HarvestRetrofitInterface harvestsApi;
+    private Context context;
 
     @DebugLog
     public GlobalRequests(final Context context) {
-
+        this.context = context;
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(
                         new Interceptor() {
@@ -69,11 +72,11 @@ public class GlobalRequests {
         providersApi = retrofit.create(ProviderRetrofitInterface.class);
         harvestsApi = retrofit.create(HarvestRetrofitInterface.class);
 
+        getLot();
         getHarvesterItems();
         getFarms();
         getSellerItems();
         getPurities();
-        getLot();
         getStore();
         getSellers(); //Harvesters already cached when opening app (Providers tab)
     }
@@ -134,29 +137,35 @@ public class GlobalRequests {
 
     @DebugLog
     private void getLot() {
-        Call<LotsListResponse> harvesterItemsCall = harvestsApi.getLot();
-        new ManagerServices<>(harvesterItemsCall, new ManagerServices.ServiceListener<LotsListResponse>() {
-            @DebugLog
-            @Override
-            public void onSuccess(Response<LotsListResponse> response) {
-                try {
-                    ManagerDB.saveNewLots( response.body().getResult());
-                } catch (Exception e) {
-                    ErrorHandling.errorCodeInServerResponseProcessing(e);
-                    e.printStackTrace();
+        if(!InternetManager.isConnected(context)){
+            ManagerDB.updateLotsNotOrderLastUse(context);
+        }else {
+            Call<LotsListResponse> harvesterItemsCall = harvestsApi.getLot();
+            new ManagerServices<>(harvesterItemsCall, new ManagerServices.ServiceListener<LotsListResponse>() {
+                @DebugLog
+                @Override
+                public void onSuccess(Response<LotsListResponse> response) {
+                    try {
+                        ManagerDB.saveNewLots1(response.body().getResult());
+                        ManagerDB.updateLotsNotOrderLastUse(context);
+
+                    } catch (Exception e) {
+                        ErrorHandling.errorCodeInServerResponseProcessing(e);
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @DebugLog
-            @Override
-            public void onError(boolean fail, int code, Response<LotsListResponse> response, String errorMessage) {
-            }
+                @DebugLog
+                @Override
+                public void onError(boolean fail, int code, Response<LotsListResponse> response, String errorMessage) {
+                }
 
-            @DebugLog
-            @Override
-            public void onInvalidToken() {
-            }
-        });
+                @DebugLog
+                @Override
+                public void onInvalidToken() {
+                }
+            });
+        }
     }
 
     @DebugLog

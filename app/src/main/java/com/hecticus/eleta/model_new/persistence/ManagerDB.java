@@ -1,5 +1,6 @@
 package com.hecticus.eleta.model_new.persistence;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ import com.hecticus.eleta.model.response.lot.Lot;
 import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model.response.purity.Purity;
 import com.hecticus.eleta.model.response.store.Store;
+import com.hecticus.eleta.model_new.GlobalRequests;
 import com.hecticus.eleta.model_new.InvoiceDetail;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.Util;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 
 import hugo.weaving.DebugLog;
 import io.realm.Case;
@@ -412,13 +415,89 @@ public class ManagerDB {
         return Realm.getDefaultInstance().where(Farm.class).findAllSorted("name");
     }
 
+    public static boolean saveNewLots1(List<Lot> lotList) {
+        if (lotList.isEmpty()) return true;
+
+        Realm realm = Realm.getDefaultInstance();
+
+        try {
+            for (final Lot lot : lotList) {
+                if (lot.getFarm() != null) {
+                    lot.setFarmId(lot.getFarm().getId());
+                }
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.insertOrUpdate(lot);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+        try {
+            List<Lot> lotOrderList = realm.where(Lot.class).findAllSorted("name", Sort.ASCENDING);
+            for (final Lot lot : lotOrderList) {
+                if (lot.getFarm() != null) {
+                    lot.setFarmId(lot.getFarm().getId());
+                }
+                Lot lot1 = realm.where(Lot.class).equalTo("id", lot.getId()).findFirst();
+                if(lot1 == null) {
+                    lot.setLastUse(Calendar.getInstance().getTime());
+                }
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.insertOrUpdate(lot);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+        realm.close();
+        return true;
+    }
+
+
+
     @DebugLog
     public static boolean saveNewLots(List<Lot> lotList) {
         if (lotList.isEmpty()) return true;
 
         Realm realm = Realm.getDefaultInstance();
+
         try {
             for (final Lot lot : lotList) {
+                if (lot.getFarm() != null) {
+                    lot.setFarmId(lot.getFarm().getId());
+                }
+                Lot lot1 = realm.where(Lot.class).equalTo("id", lot.getId()).findFirst();
+                try {
+                    if (lot1.getLastUse() != null) {
+                        lot.setLastUse(lot1.getLastUse());
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.insertOrUpdate(lot);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            realm.close();
+            return false;
+        }
+
+
+        try {
+            List<Lot> lotOrderList = realm.where(Lot.class).findAllSorted("name", Sort.ASCENDING);
+            for (final Lot lot : lotOrderList) {
                 if (lot.getFarm() != null) {
                     lot.setFarmId(lot.getFarm().getId());
                 }
@@ -441,6 +520,30 @@ public class ManagerDB {
         }
         realm.close();
         return true;
+    }
+
+    public static void updateLotsNotOrderLastUse(Context context) {
+
+        Realm realm = Realm.getDefaultInstance();
+
+        List<Lot> lotList = realm.where(Lot.class).findAllSorted("name", Sort.DESCENDING);
+
+        try {
+            for (final Lot lot : lotList) {
+                realm.beginTransaction();
+                if (lot.getFarm() != null) {
+                    lot.setFarmId(lot.getFarm().getId());
+                }
+                lot.setLastUse(Calendar.getInstance().getTime());
+
+                realm.insertOrUpdate(lot);
+                realm.commitTransaction();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            realm.close();
+        }
+        realm.close();
     }
 
     @DebugLog

@@ -422,7 +422,6 @@ public class HarvestDetailsRepository implements HarvestDetailsContract.Reposito
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
-                            //todo delete all
                             ManagerDB.saveNewLots(response.body().getResult());
                             onLotsSuccess(ManagerDB.getAllLotsByFarm(idFarm));
                             //onLotsSuccess(response.body());

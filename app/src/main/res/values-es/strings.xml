@@ -161,6 +161,7 @@
     <string name="date">Fecha</string>
     <string name="delete">Eliminar</string>
     <string name="want_to_delete_harvest">¿Desea eliminar esta cosecha?</string>
+    <string name="msj_export_data">Una vez los datos sean exportados seran eliminados localmente de la aplicacion ¿Desea exportar la data?</string>
     <string name="want_to_delete_purchase">¿Desea eliminar esta compra?</string>
     <string name="want_to_delete_provider">¿Desea eliminar este proveedor?</string>
     <string name="provider_saved">Proveedor guardado</string>

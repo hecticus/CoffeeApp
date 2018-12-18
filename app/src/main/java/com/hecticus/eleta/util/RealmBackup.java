@@ -15,6 +15,7 @@ import com.hecticus.eleta.model.request.invoice.InvoicePost;
 import com.hecticus.eleta.model.response.invoice.Invoice;
 import com.hecticus.eleta.model.response.invoice.InvoiceDetails;
 import com.hecticus.eleta.model.response.providers.Provider;
+import com.hecticus.eleta.model_new.GlobalRequests;
 import com.hecticus.eleta.model_new.persistence.ManagerDB;
 import com.hecticus.eleta.purchases.detail.PurchaseDetailsActivity;
 
@@ -83,10 +84,13 @@ public class RealmBackup {
                 realm.commitTransaction();
 
                 realm.close();
+                new GlobalRequests(activity);
+
 
                 Intent mIntent = new Intent(activity, HomeActivity.class);
                 mIntent.putExtra("reloadThreeTabs", true);
                 activity.startActivity(mIntent);
+
             }
         });
         timeHandler.start();
