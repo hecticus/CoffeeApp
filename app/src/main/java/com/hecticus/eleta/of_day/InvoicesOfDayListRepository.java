@@ -17,8 +17,10 @@ import com.hecticus.eleta.model.response.providers.Provider;
 import com.hecticus.eleta.model_new.retrofit_interface.InvoiceRetrofitInterface;
 import com.hecticus.eleta.util.Constants;
 import com.hecticus.eleta.util.ErrorHandling;
+import com.hecticus.eleta.util.Util;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -261,7 +263,7 @@ public class InvoicesOfDayListRepository implements InvoicesOfDayListContract.Re
                     post.getProvider(),
                     new StatusInvoice(12, false, "Cerrada", null));
             Call<Message> call = invoiceApi.closeInvoice(invoice1.getId().intValue(), invoice1);
-
+            invoice1.setClosedDate(Util.parseDateString(Calendar.getInstance().getTime()));
             call.enqueue(new Callback<Message>() {
                 @DebugLog
                 @Override

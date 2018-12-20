@@ -124,6 +124,7 @@ public class ManagerDB {
                         Log.d("TEST", "--->deleteFromRealm in updateExistingProvider");
                     } else
                         Log.d("TEST", "--->NOT deleteFromRealm in updateExistingProvider");
+                    invoice.setInvoiceClosedDate(Util.parseDateString(Calendar.getInstance().getTime()));
                     invoice.setStatusInvo("Cerrada");
                     invoice.setClosed(true);
                     realm.insertOrUpdate(invoice);

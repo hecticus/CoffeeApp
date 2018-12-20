@@ -267,6 +267,11 @@ public class Util {
         return formatter.format(fecha);
     }
 
+    public static String parseDateString(Date fecha){
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        return formatter.format(fecha);
+    }
+
 
     @DebugLog
     public static String getCurrentDate() {

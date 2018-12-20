@@ -1362,7 +1362,7 @@ public class SyncManager {
         progressBar.setProgress(countSuccess*100/countTotal);
 
         final com.hecticus.eleta.model_new.Invoice invoice1
-                = new com.hecticus.eleta.model_new.Invoice(firstInvoiceClosed,
+                = new com.hecticus.eleta.model_new.Invoice(firstInvoiceClosed, firstInvoiceClosed.getInvoiceClosedDate(),
                 ManagerDB.getProviderById(firstInvoiceClosed.getProviderId()),
                 new StatusInvoice(12, false, "Cerrada", null));
 

@@ -22,7 +22,7 @@ public class Invoice implements Serializable {
     private String createdAt;
     private String updatedAt;
     private Double totalInvoice;
-    private String closedDateInvoice;
+    private String closedDate;
     private Boolean buyOption;
     private StatusInvoice statusInvoice;
     private List<InvoiceDetail> itemtypes;
@@ -52,6 +52,13 @@ public class Invoice implements Serializable {
         this.id = (long) invoicePost.getInvoiceId();
         this.statusInvoice = statusInvoice;
         this.provider = new Provider(invoicePost.getProviderId().longValue());
+    }
+
+    public Invoice(com.hecticus.eleta.model.response.invoice.Invoice invoicePost, String closedDate, com.hecticus.eleta.model.response.providers.Provider provider, StatusInvoice statusInvoice) {
+        this.id = (long) invoicePost.getInvoiceId();
+        this.statusInvoice = statusInvoice;
+        this.provider = new Provider(invoicePost.getProviderId().longValue());
+        this.closedDate = closedDate;
     }
 
 
@@ -95,12 +102,12 @@ public class Invoice implements Serializable {
         this.totalInvoice = totalInvoice;
     }
 
-    public String getClosedDateInvoice() {
-        return closedDateInvoice;
+    public String getClosedDate() {
+        return closedDate;
     }
 
-    public void setClosedDateInvoice(String closedDateInvoice) {
-        this.closedDateInvoice = closedDateInvoice;
+    public void setClosedDate(String closedDateInvoice) {
+        this.closedDate = closedDateInvoice;
     }
 
     public Boolean getBuyOption() {
