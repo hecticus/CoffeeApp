@@ -188,7 +188,8 @@ public class BluetoothDevicesListActivity extends AppCompatActivity implements D
         PrinterLanguage printerLanguage = Util.getmZebraPrinter().getPrinterControlLanguage();
 
 
-        String start = "^XA^FO10,10^AD^FH^FD";
+        String start = "^XA^FO10,10^AD^FH^FD";//"^XA^MNN^LL"+ textParam.length()+"^FO10,10^AD^FH^FD";//"^XA^MNN^LL400^XZ^XA^JUS^XZ";//
+
 
         String end = "^FS^XZ";
 

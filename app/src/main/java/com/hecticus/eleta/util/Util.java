@@ -553,7 +553,7 @@ public class Util {
 
         StringBuilder whole = new StringBuilder();
 
-        String start = "^XA^POI^LL600" + "\r\n";
+        String start = "^XA^POI" + "\r\n"; //"^XA^POI^LL600" + "\r\n";
         String end = "^XZ";
 
         whole.append(start);

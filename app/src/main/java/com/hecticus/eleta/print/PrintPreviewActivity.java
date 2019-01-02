@@ -7,6 +7,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hecticus.eleta.R;
 import com.hecticus.eleta.util.Constants;
@@ -43,6 +44,7 @@ public class PrintPreviewActivity extends AppCompatActivity {
     @DebugLog
     @OnClick(R.id.printButton)
     protected void connect() {
+
         //if(Util.getPrinterConnection() == null || Util.getSelectedPrinter() == null || Util.getmZebraPrinter() == null) {
             Intent BTIntent = new Intent(getApplicationContext(), BluetoothDevicesListActivity.class);
             BTIntent.putExtra(Constants.PRINT_TEXT_FOR_ZPL, textToPrint);
