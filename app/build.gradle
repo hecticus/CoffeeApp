@@ -28,8 +28,8 @@ android {
         applicationId "com.hecticus.eleta"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 9
-        versionName "1.0.90"
+        versionCode 12
+        versionName "1.0.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
