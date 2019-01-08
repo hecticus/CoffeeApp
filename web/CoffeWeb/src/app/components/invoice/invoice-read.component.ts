@@ -65,8 +65,13 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 			</div>
 
 			<div class="legend">Detalles de la Factura</div>
-			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
 
+			<!--<router-outlet></router-outlet>
+			<app-invoice-detail></app-invoice-detail> -->
+			
+			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice">
+			</app-invoice-detail-read>
+			
 		</div>
 
 		<ng-template #template>

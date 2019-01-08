@@ -14,7 +14,7 @@ import { InvoiceService } from '../invoice/invoice.service';
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 		<h3 class="title">Detalleszdxfcgvhbjbhgcfxdssdsfghnfactura</h3>
-		<h3 class="title">Detalle de la facturaxxxxxxxxxxxxxxxxxxxxxxxxxx</h3>
+		<h3 class="title">Detalle de la facturaxxxxxxxxxxxxxxxxxxxxxxxhgfghhjjhgxxx</h3>
 		<div class="tool-bar both-side">
 			<!--<div class="right row">
 					<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
