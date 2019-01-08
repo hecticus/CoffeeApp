@@ -1,3 +1,4 @@
+import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 import { Invoice } from '../../core/models/invoice';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';
@@ -97,6 +98,7 @@ export class InvoiceReadComponent implements OnInit {
 	confirmDelete = true;
 	status: Status;
 	invoice = new Invoice();
+	invoiceDetail: InvoiceDetail;
 	idInvoice: number;
 
 	constructor(
@@ -127,6 +129,10 @@ export class InvoiceReadComponent implements OnInit {
 	}
 	decline(): void {
 		this.modalRef.hide();
+	}
+
+	read(){
+		
 	}
 
 	update() {

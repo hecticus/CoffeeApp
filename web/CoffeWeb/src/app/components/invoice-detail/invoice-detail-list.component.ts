@@ -2,7 +2,7 @@ import { InvoiceDetail } from '../../core/models/invoice-detail';
 import { InvoiceDetailService } from './invoice-detail.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort, MatFooterRowDef } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Invoice } from '../../core/models/invoice';
@@ -121,8 +121,11 @@ import { BaseService } from '../../core/base.service';
 
 export class InvoiceDetailListComponent implements OnInit {
 
-	@Input() idInvoice: number;
-	@Input() total: number;
+	// @Input() idInvoice: number;
+	// @Input() total: number;
+	// @Output() invoiceDetail: InvoiceDetail;
+	invoice: InvoiceDetail;
+
 	form: FormGroup;
 	totall: number;
 	// Order Columns Display
@@ -158,10 +161,14 @@ export class InvoiceDetailListComponent implements OnInit {
 		this.invoices.sort = this.sort;
 		this.invoices.paginator = this.paginator;
 
-		let hhtpParams = BaseService.jsonToHttpParams({
-			invoice: this.idInvoice,
+		this.activatedRoute.params.subscribe(params => {
+			this.invoice = params['invoiceId'];
 		});
-		console.log(this.total);
+		
+		let hhtpParams = BaseService.jsonToHttpParams({
+			invoice: this.invoice
+		});
+		
 
 
 		this.invoiceDetailService.getAll(hhtpParams).subscribe(
@@ -171,7 +178,7 @@ export class InvoiceDetailListComponent implements OnInit {
 				console.log(this.invoices);
 		});
 
-		this.totall = this.total;
+		// this.totall = this.total;
 	}
 
 	getTotalCantidad() {
