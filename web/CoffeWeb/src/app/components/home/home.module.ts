@@ -22,7 +22,6 @@ import { LotModule } from '../lot/lot.module';
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		BrowserAnimationsModule,
 		UtilsModule,
 		InvoiceModule,
 		ProviderModule,

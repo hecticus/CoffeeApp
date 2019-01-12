@@ -67,6 +67,18 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 			<div class="legend">Detalles de la Factura</div>
 
 			<!-- -->
+			<div class="tool-bar both-side">
+			<div class="right row">
+				<button class="btn-icon"  title="Crear Factura" type="button" (click)="create()">
+					<i class="material-icons">add</i>
+				</button>
+				<!-- <button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button"
+				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
+					<i class="material-icons">delete</i>
+				</button> -->
+			</div>
+		</div>
 			<app-invoice-detail-list></app-invoice-detail-list>
 		</div>
 
@@ -84,7 +96,6 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 				</div>
 			</div>
 		</ng-template>
-
 	`
 })
 
@@ -120,6 +131,10 @@ export class InvoiceReadComponent implements OnInit {
 	}
 	decline(): void {
 		this.modalRef.hide();
+	}
+
+	create() {
+		this.router.navigate(['./invoicesDetails/create'], {relativeTo: this.activatedRoute});
 	}
 
 	update() {

@@ -11,7 +11,6 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 		ValidatorComponent,
 	],
 	imports: [
-		BrowserModule,
 		BrowserAnimationsModule,
 		SimpleNotificationsModule.forRoot(),
 		ToastrModule.forRoot(),

@@ -2,7 +2,7 @@ import { Invoice } from './../../core/models/invoice';
 import { InvoiceService } from './../invoice/invoice.service';
 import { InvoiceDetail } from '../../core/models/invoice-detail';
 import { InvoiceDetailService } from './invoice-detail.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort, MatFooterRowDef } from '@angular/material';
@@ -207,8 +207,9 @@ export class InvoiceDetailListComponent implements OnInit {
 	}
 
 	read(id: number) {
-		this.router.navigate(['./invoicesDetails'], {relativeTo: this.activatedRoute});
-		// console.log(this.activatedRoute);
+		// this.router.navigate(['./invoicesDetails' + id], {relativeTo: this.activatedRoute});
 
+		this.router.navigate(['./invoicesDetails/create'], {relativeTo: this.activatedRoute});
+		console.log(this.activatedRoute);
 	}
 }

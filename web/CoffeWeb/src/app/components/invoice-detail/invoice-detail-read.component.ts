@@ -15,15 +15,15 @@ import { InvoiceService } from '../invoice/invoice.service';
 	template: `
 		<h3 class="title">Detalleszdxfcgvhbjbhgcfxdssdsfghnfactura</h3>
 		<h3 class="title">Detalle de la facturaxxxxxxxxxxxxxxxxxxxxxxxhgfghhjjhgxxx</h3>
-		<div class="tool-bar both-side">
-			<!--<div class="right row">
+		<!--<div class="tool-bar both-side">
+			<div class="right row">
 					<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
 						<i class="material-icons">edit</i>
 					</button>
 					<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false">
 						<i class="material-icons">delete</i>
 					</button>
-			</div>-->
+			</div>
 			<div class="right row">
 				<button class="btn-icon" title="Eliminar Detalle de la Factura" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
@@ -63,10 +63,6 @@ import { InvoiceService } from '../invoice/invoice.service';
 					</div>
 				</div>
 			</div>
-			<!--
-			<div class="legend">Detalles de la Factura</div>
-			<app-invoice-detail-list></app-invoice-detail-list>-->
-
 		</div>
 
 		<ng-template #template>
@@ -82,7 +78,7 @@ import { InvoiceService } from '../invoice/invoice.service';
 					</button>
 				</div>
 			</div>
-		</ng-template>
+		</ng-template>-->
 
 	`
 })
