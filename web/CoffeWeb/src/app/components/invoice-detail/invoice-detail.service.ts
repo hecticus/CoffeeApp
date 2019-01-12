@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Lot } from '../../core/models/lot';
 import { Observable } from 'rxjs/internal/Observable';
+import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class InvoiceDetailService {
 		private http: HttpClient,
 	) { }
 
-	getById(id: number): Observable<Lot> {
+	getById(id: number): Observable<InvoiceDetail> {
 		return this.http.get<any>(InvoiceDetailService.BASE_URL + '/' + id);
 	}
 

@@ -66,12 +66,8 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 
 			<div class="legend">Detalles de la Factura</div>
 
-			<!--<router-outlet></router-outlet>
-			<app-invoice-detail></app-invoice-detail> -->
-			
-			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice">
-			</app-invoice-detail-read>
-			
+			<!-- -->
+			<app-invoice-detail-list></app-invoice-detail-list>
 		</div>
 
 		<ng-template #template>
@@ -114,12 +110,9 @@ export class InvoiceReadComponent implements OnInit {
 			this.idInvoice = params['invoiceId'];
 		});
 
-		this.invoiceService.getById(this.idInvoice).subscribe(
-			data => { this.invoice = data['result'];
-			console.log(this.idInvoice); }
-		);
-		// this.idInvoice = this.invoice.id;
-		console.log(this.invoice);
+		this.invoiceService.getById(this.idInvoice).subscribe( data => {
+			this.invoice = data['result'];
+		});
 	}
 
 	openModal(template: TemplateRef<any>) {

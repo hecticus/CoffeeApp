@@ -36,14 +36,14 @@ export const invoiceRoutes: Routes = [
 					breadcrumb: 'Detalle'
 				},
 				children: [
-					// {
-					// 	path: '',
-					// 	pathMatch: 'full',
-					// 	component: InvoiceDetail,
-					// 	data: {
-					// 		breadcrumb: undefined
-					// 	},
-					// },
+					{
+						path: '',
+						pathMatch: 'full',
+						component: InvoiceReadComponent,
+						data: {
+							breadcrumb: undefined
+						},
+					},
 					...invoiceDetailRoutes,
 				]
 			}

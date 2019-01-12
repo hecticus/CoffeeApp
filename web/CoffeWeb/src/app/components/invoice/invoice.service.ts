@@ -45,7 +45,7 @@ export class InvoiceService {
 	return this.http.post(InvoiceService.BASE_URL + '/deletes', ids );
 	}
 
-	getById(id: number): Observable<Lot> {
+	getById(id: number): Observable<Invoice> {
 		return this.http.get<any>(InvoiceService.BASE_URL + '/' + id);
 	}
 

@@ -16,7 +16,6 @@ import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-
 @NgModule({
 	imports: [
 		CommonModule,
@@ -27,10 +26,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 		MatFormFieldModule,
 		MatInputModule,
 		ModalModule.forRoot(),
-
 		UtilsModule,
 		InvoiceDetailRoutingModule,
-
 	],
 	declarations: [
 		InvoiceDetailComponent,

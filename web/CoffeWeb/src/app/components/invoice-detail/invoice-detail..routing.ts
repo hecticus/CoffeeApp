@@ -1,3 +1,4 @@
+import { InvoiceDetailComponent } from './invoice-detail.component';
 import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 import { InvoiceDetail } from './../../core/models/invoice-detail';
 import { Routes, RouterModule } from '@angular/router';
@@ -6,66 +7,37 @@ import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 
 export const invoiceDetailRoutes: Routes = [
 	{
-		path: 'invoicesDetails',
-		component: InvoiceDetail,
+		path: 'invoicesDetails/create',
+		component: InvoiceDetailListComponent,
+		data: {
+			breadcrumb: 'Invoice Create'
+		}
+	},
+	{
+		path: 'invoicesDetails/:invoiceId',
+		component: InvoiceDetailComponent,
 		data: {
 			breadcrumb: 'Invoice Detail'
 		},
 		children: [
 			{
-				path: '',
-				pathMatch: 'full',
-				component: InvoiceDetailListComponent,
-				data: {
-					breadcrumb: undefined
-				}
-			}, {
-				path: 'create',
-				component: InvoiceDetailReadComponent,
-				data: {
-					breadcrumb: 'Crear'
-				},
-			}, {
-				path: ':invoiceId',
+				path: 'full',
 				component: InvoiceDetailReadComponent,
 				data: {
 					breadcrumb: 'Detalle'
+				}
+			},
+			{
+				path: 'update',
+				pathMatch: 'full',
+				component: InvoiceDetailReadComponent,
+				data: {
+					breadcrumb: 'Actualización'
 				},
-				children: [
-					{
-						path: '',
-						pathMatch: 'full',
-						component: InvoiceDetailReadComponent,
-						data: {
-							breadcrumb: undefined
-						},
-					}
-				]
-			}	
+			}
 		]
 	}
 ];
-
-
-// export const invoiceDetailRoutes: Routes = [
-// 	{
-// 		path: 'invoicesDetails/:invoiceDetailId',
-// 		component: InvoiceDetailReadComponent,
-// 		data: {
-// 			breadcrumb: 'Invoice Detail'
-// 		},
-// 		children: [
-// 			{
-// 				path: '',
-// 				pathMatch: 'full',
-// 				component: InvoiceDetailReadComponent,
-// 				data: {
-// 					breadcrumb: undefined
-// 				}
-// 			}
-// 		]
-// 	}
-// ];
 
 @NgModule({
 	imports: [

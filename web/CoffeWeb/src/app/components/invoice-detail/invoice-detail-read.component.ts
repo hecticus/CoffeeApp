@@ -63,9 +63,9 @@ import { InvoiceService } from '../invoice/invoice.service';
 					</div>
 				</div>
 			</div>
-
+			<!--
 			<div class="legend">Detalles de la Factura</div>
-			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice"></app-invoice-detail-read>
+			<app-invoice-detail-list></app-invoice-detail-list>-->
 
 		</div>
 
