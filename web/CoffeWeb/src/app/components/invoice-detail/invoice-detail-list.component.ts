@@ -163,17 +163,15 @@ export class InvoiceDetailListComponent implements OnInit {
 			this.invoiceService.getById(data1['invoiceId']).subscribe( data => {
 				this.invoice = data['result'];
 				console.log(this.invoice.id);
+
+				let httpParams = BaseService.jsonToHttpParams({
+					invoice: this.invoice.id
+				});
+
+				this.invoiceDetailService.getAll(httpParams).subscribe( data3 => {
+					this.invoices.data = data3['result'];
+				});
 			});
-		});
-
-		// let httpParams = BaseService.jsonToHttpParams({
-		// 	invoice: this.invoice.id
-		// });
-		// httpParams
-
-		this.invoiceDetailService.getAll().subscribe(
-			data => {
-				this.invoices.data = data['result'];
 		});
 	}
 
@@ -195,7 +193,7 @@ export class InvoiceDetailListComponent implements OnInit {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.invoices.data.length;
 		return numSelected === numRows;
-		}
+	}
 
 	/** Selects all rows if they are not all selected; otherwise clear selection. */
 	masterToggle() {
