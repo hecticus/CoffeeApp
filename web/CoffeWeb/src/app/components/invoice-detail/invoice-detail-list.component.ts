@@ -207,7 +207,7 @@ export class InvoiceDetailListComponent implements OnInit {
 	}
 
 	read(id: number) {
-		this.router.navigate(['./invoicesDetails' + id], {relativeTo: this.activatedRoute});
+		this.router.navigate(['./invoicesDetails/' + id], {relativeTo: this.activatedRoute});
 		console.log('ass' + id);
 	}
 }

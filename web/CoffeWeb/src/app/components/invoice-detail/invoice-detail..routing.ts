@@ -38,6 +38,49 @@ export const invoiceDetailRoutes: Routes = [
 	}
 ];
 
+// export const invoiceDetailRoutes: Routes = [
+// 	{
+// 		path: 'invoicesDetails',
+// 		component: InvoiceDetailComponent,
+// 		data: {
+// 			breadcrumb: 'Detalle de la Factura'
+// 		},
+// 		children: [
+// 			{
+// 				path: 'invoicesDetails/create',
+// 				component: InvoiceDetailReadComponent,
+// 				data: {
+// 					breadcrumb: 'Crear Nuevo Item'
+// 				}
+// 			},
+// 			{
+// 				path: 'invoicesDetails/:invoiceDetailId',
+// 				component: InvoiceDetailReadComponent,
+// 				data: {
+// 					breadcrumb: 'Detalle del Item'
+// 				},
+// 				children: [
+// 					{
+// 						path: 'full',
+// 						component: InvoiceDetailReadComponent,
+// 						data: {
+// 							breadcrumb: 'Detalle del Item'
+// 						}
+// 					},
+// 					{
+// 						path: 'update',
+// 						pathMatch: 'full',
+// 						component: InvoiceDetailUpdateComponent,
+// 						data: {
+// 							breadcrumb: 'Actualizar item'
+// 						},
+// 					}
+// 				]
+// 			}
+// 		]
+// 	}
+// ];
+
 @NgModule({
 	imports: [
 		RouterModule.forChild(invoiceDetailRoutes)

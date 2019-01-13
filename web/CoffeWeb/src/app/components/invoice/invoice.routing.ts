@@ -12,7 +12,7 @@ export const invoiceRoutes: Routes = [
 		path: 'invoices',
 		component: InvoiceComponent,
 		data: {
-			breadcrumb: 'Invoices'
+			breadcrumb: 'Facturas'
 		},
 		children: [
 			{
@@ -28,15 +28,15 @@ export const invoiceRoutes: Routes = [
 				path: 'create',
 				component: InvoiceCreateComponent,
 				data: {
-					breadcrumb: 'Crear'
+					breadcrumb: 'Crear Factura'
 				},
 
 			},
 			{
 				path: ':invoiceId',
-				component: InvoiceReadComponent,
+				component: InvoiceComponent,
 				data: {
-					breadcrumb: 'Detalle'
+					breadcrumb: 'Detalle de la Factura'
 				},
 				children: [
 					{
@@ -49,13 +49,6 @@ export const invoiceRoutes: Routes = [
 					},
 					...invoiceDetailRoutes,
 				]
-			},
-			{
-				path: ':invoiceId/invoicesDetails/create',
-				component: InvoiceDetailReadComponent,
-				data: {
-					breadcrumb: 'Invoice Create'
-				}
 			}
 		]
 	}
