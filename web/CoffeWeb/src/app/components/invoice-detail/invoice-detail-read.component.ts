@@ -1,31 +1,20 @@
+import { InvoiceDetail } from './../../core/models/invoice-detail';
 import { InvoiceDetailService } from './invoice-detail.service';
-import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
-import { Invoice } from '../../core/models/invoice';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { Location } from '@angular/common';
-import { Status } from '../../core/models/status';
-import { StatusInvoiceService } from '../status/status-invoice.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NotificationService } from 'src/app/core/utils/notification/notification.service';
-import { InvoiceService } from '../invoice/invoice.service';
 
 @Component({
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
-		<h3 class="title">Detalleszdxfcgvhbjbhgcfxdssdsfghnfactura</h3>
-		<h3 class="title">Detalle de la facturaxxxxxxxxxxxxxxxxxxxxxxxhgfghhjjhgxxx</h3>
-		<!--<div class="tool-bar both-side">
+		<h3 class="title">Detalle del Item</h3>
+		<div class="tool-bar both-side">
 			<div class="right row">
-					<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
-						<i class="material-icons">edit</i>
-					</button>
-					<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false">
-						<i class="material-icons">delete</i>
-					</button>
-			</div>
-			<div class="right row">
-				<button class="btn-icon" title="Eliminar Detalle de la Factura" type="button" (click)="openModal(template)">
+				<button class="btn-icon" title="Actualizar item" type="button" (click)="update()">
+					<i class="material-icons">edit</i>
+				</button>
+				<button class="btn-icon" title="Eliminar Item de la Factura" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
@@ -33,33 +22,62 @@ import { InvoiceService } from '../invoice/invoice.service';
 
 		<div class="answer">
 			<div class="fieldset">
-				<div class="legend">Datos de la Factura</div>
 				<div class="wrap-fields">
-						<span class="label">Nombre del Proveedor</span>
-						<span class="output">{{ invoice.provider?.nameProvider || '-'}}</span>
+						<span class="label">Tipo de Item</span>
+						<span class="output">{{ invoiceDetail.itemType?.nameItemType || '-'}}</span>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Tipo de Proveedor</span>
-						<span class="output">{{ invoice.provider?.providerType?.nameProviderType || '-'}}</span>
+						<span class="label">Recibido</span>
+						<span class="output">{{ invoiceDetail.nameReceived || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Status de la Factura</span>
-						<span class="output">{{ invoice.statusInvoice?.name || '-'}}</span>
+						<span class="label">Entregado</span>
+						<span class="output">{{invoiceDetail.nameDelivered || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields" *ngIf="purchase">
+					<div>
+						<span class="label">Nombre del Lote</span>
+						<span class="output">{{ invoiceDetail.lot?.nameLot || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields" *ngIf= "purchase">
+					<div>
+						<span class="label" >Nombre de la Tienda</span>
+						<span class="output">{{ invoiceDetail.store?.nameStore || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Fecha de Creación</span>
-						<span class="output">{{ invoice.startDate || '-'}}</span>
+						<span class="label">Fecha de Apertura</span>
+						<span class="output">{{ invoiceDetail.startDate || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields" *ngIf="purchase">
+					<div>
+						<span class="label">Precio</span>
+						<span class="output">{{ invoiceDetail.priceItemTypeByLot || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields" *ngIf="purchase">
+					<div>
+						<span class="label">Costo</span>
+						<span class="output">{{ invoiceDetail.costItemType || '-'}}</span>
 					</div>
 				</div>
 				<div class="wrap-fields">
 					<div>
-						<span class="label">Total de la Factura</span>
-						<span class="output">{{ invoice.totalInvoice || '-'}}</span>
+						<span class="label">Cantidad</span>
+						<span class="output">{{ invoiceDetail.amountInvoiceDetail || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
+					<div>
+						<span class="label">Total del Item</span>
+						<span class="output">{{ invoiceDetail.total || '-'}}</span>
 					</div>
 				</div>
 			</div>
@@ -78,42 +96,38 @@ import { InvoiceService } from '../invoice/invoice.service';
 					</button>
 				</div>
 			</div>
-		</ng-template>-->
-
+		</ng-template>
+		<!---->
 	`
 })
 
 export class InvoiceDetailReadComponent implements OnInit {
 	modalRef: BsModalRef;
 	confirmDelete = true;
-	invoice = new Invoice();
-	idInvoice: number;
+	purchase: Boolean;
+
+	invoiceDetail: InvoiceDetail = new InvoiceDetail();
 
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private invoiceService: InvoiceService,
 		private invoiceDetailService: InvoiceDetailService,
-		private statusInvoiceService: StatusInvoiceService,
-		private location: Location,
 		private modalService: BsModalService,
 		private notificationService: NotificationService,
 	) { }
 
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
-			this.idInvoice = params['invoiceDetailId'];
+			this.invoiceDetailService.getById(params['invoiceDetailId']).subscribe( data => {
+				this.invoiceDetail = data['result'];
+				if (this.invoiceDetail.lot === undefined) {
+					this.purchase = true;
+				} else {
+					this.purchase = false;
+				}
+				console.log(this.invoiceDetail);
+			});
 		});
-
-		this.invoiceService.getById(this.idInvoice).subscribe(
-			data => { this.invoice = data['result'];
-			console.log(this.idInvoice);
-			console.log('hvhkv');
-		}
-		);
-
-		// this.idInvoice = this.invoice.id;
-		console.log(this.invoice);
 	}
 
 	openModal(template: TemplateRef<any>) {

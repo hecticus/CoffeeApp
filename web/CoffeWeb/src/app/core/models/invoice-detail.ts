@@ -6,6 +6,7 @@ import { BaseModel } from './base-model';
 import { Invoice } from './invoice';
 
 export class InvoiceDetail extends BaseModel {
+	id: number;
 	invoice: Invoice;
 	itemType: ItemType;
 	lot: Lot;
@@ -13,14 +14,12 @@ export class InvoiceDetail extends BaseModel {
 	priceItemTypeByLot: number;
 	costItemType: number;
 	amountInvoiceDetail: number;
-	nameReceived: number;
-	nameDelivered: number;
+	nameReceived: string;
+	nameDelivered: string;
 	note: string;
 	statusInvoiceDetail: string;
 	invoiceDetailPurity: InvoiceDetailPurity[];
 	startDate: String;
 	closedDate: string;
-
-
-
+	total: number;
 }

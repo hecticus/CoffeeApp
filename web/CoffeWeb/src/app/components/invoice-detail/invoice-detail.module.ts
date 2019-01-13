@@ -15,6 +15,7 @@ import { InvoiceDetailService } from './invoice-detail.service';
 import { InvoiceDetailListComponent } from './invoice-detail-list.component';
 import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { InvoiceDetailUpdateComponent } from './invoice-detail-update.component';
 
 @NgModule({
 	imports: [
@@ -33,11 +34,13 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 		InvoiceDetailComponent,
 		InvoiceDetailListComponent,
 		InvoiceDetailReadComponent,
+		InvoiceDetailUpdateComponent,
 	],
 	exports: [
 		InvoiceDetailComponent,
 		InvoiceDetailListComponent,
 		InvoiceDetailReadComponent,
+		InvoiceDetailUpdateComponent,
 	],
 	providers: [
 		InvoiceDetailService,

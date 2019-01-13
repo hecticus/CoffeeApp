@@ -1,6 +1,8 @@
+import { InvoiceDetailComponent } from './invoice-detail.component';
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
+import { InvoiceDetailUpdateComponent } from './invoice-detail-update.component';
 
 export const invoiceDetailRoutes: Routes = [
 	{
@@ -11,7 +13,7 @@ export const invoiceDetailRoutes: Routes = [
 		}
 	},
 	{
-		path: 'invoicesDetails/:invoiceId',
+		path: 'invoicesDetails/:invoiceDetailId',
 		component: InvoiceDetailReadComponent,
 		data: {
 			breadcrumb: 'Invoice Detail'
@@ -27,7 +29,7 @@ export const invoiceDetailRoutes: Routes = [
 			{
 				path: 'update',
 				pathMatch: 'full',
-				component: InvoiceDetailReadComponent,
+				component: InvoiceDetailUpdateComponent,
 				data: {
 					breadcrumb: 'Actualización'
 				},
