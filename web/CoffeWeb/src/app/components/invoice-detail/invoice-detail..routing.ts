@@ -1,71 +1,43 @@
-import { InvoiceDetailListComponent } from './invoice-detail-list.component';
-import { InvoiceDetail } from './../../core/models/invoice-detail';
+import { InvoiceDetailComponent } from './invoice-detail.component';
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
+import { InvoiceDetailUpdateComponent } from './invoice-detail-update.component';
 
 export const invoiceDetailRoutes: Routes = [
 	{
-		path: 'invoicesDetails/:invoiceId',
-		component: InvoiceDetail,
+		path: 'invoicesDetails/create',
+		component: InvoiceDetailReadComponent,
 		data: {
-			breadcrumb: 'Invoice Detail'
+			breadcrumb: 'Crear Nuevo Item'
+		}
+	},
+	{
+		path: 'invoicesDetails/:invoiceDetailId',
+		component: InvoiceDetailComponent,
+		data: {
+			breadcrumb: 'Detalle del Item'
 		},
 		children: [
 			{
 				path: '',
 				pathMatch: 'full',
-				component: InvoiceDetailListComponent,
+				component: InvoiceDetailReadComponent,
 				data: {
 					breadcrumb: undefined
 				}
-			}, {
-				path: 'create',
-				component: InvoiceDetailReadComponent,
+			},
+			{
+				path: 'update',
+				pathMatch: 'full',
+				component: InvoiceDetailUpdateComponent,
 				data: {
-					breadcrumb: 'Crear'
+					breadcrumb: 'Actualizar'
 				},
-			}, {
-				path: ':invoiceId',
-				component: InvoiceDetailReadComponent,
-				data: {
-					breadcrumb: 'Detalle'
-				},
-				children: [
-					{
-						path: '',
-						pathMatch: 'full',
-						component: InvoiceDetailReadComponent,
-						data: {
-							breadcrumb: undefined
-						},
-					}
-				]
-			}	
+			}
 		]
 	}
 ];
-
-
-// export const invoiceDetailRoutes: Routes = [
-// 	{
-// 		path: 'invoicesDetails/:invoiceDetailId',
-// 		component: InvoiceDetailReadComponent,
-// 		data: {
-// 			breadcrumb: 'Invoice Detail'
-// 		},
-// 		children: [
-// 			{
-// 				path: '',
-// 				pathMatch: 'full',
-// 				component: InvoiceDetailReadComponent,
-// 				data: {
-// 					breadcrumb: undefined
-// 				}
-// 			}
-// 		]
-// 	}
-// ];
 
 @NgModule({
 	imports: [

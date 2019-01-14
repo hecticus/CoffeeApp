@@ -67,12 +67,20 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 
 			<div class="legend">Detalles de la Factura</div>
 
-			<!--<router-outlet></router-outlet>
-			<app-invoice-detail></app-invoice-detail> -->
-			
-			<app-invoice-detail-read   [idInvoice]="idInvoice" [total]= "invoice.totalInvoice">
-			</app-invoice-detail-read>
-			
+			<!-- -->
+			<div class="tool-bar both-side">
+			<div class="right row">
+				<button class="btn-icon"  title="Crear Factura" type="button" (click)="create()">
+					<i class="material-icons">add</i>
+				</button>
+				<!-- <button class="btn-icon" type="button">
+				<button class="btn-icon" title="Delete" type="button"
+				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
+					<i class="material-icons">delete</i>
+				</button> -->
+			</div>
+		</div>
+			<app-invoice-detail-list></app-invoice-detail-list>
 		</div>
 
 		<ng-template #template>
@@ -89,7 +97,6 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 				</div>
 			</div>
 		</ng-template>
-
 	`
 })
 
@@ -116,12 +123,9 @@ export class InvoiceReadComponent implements OnInit {
 			this.idInvoice = params['invoiceId'];
 		});
 
-		this.invoiceService.getById(this.idInvoice).subscribe(
-			data => { this.invoice = data['result'];
-			console.log(this.idInvoice); }
-		);
-		// this.idInvoice = this.invoice.id;
-		console.log(this.invoice);
+		this.invoiceService.getById(this.idInvoice).subscribe( data => {
+			this.invoice = data['result'];
+		});
 	}
 
 	openModal(template: TemplateRef<any>) {
@@ -131,8 +135,8 @@ export class InvoiceReadComponent implements OnInit {
 		this.modalRef.hide();
 	}
 
-	read(){
-		
+	create() {
+		this.router.navigate(['./invoicesDetails/create'], {relativeTo: this.activatedRoute});
 	}
 
 	update() {

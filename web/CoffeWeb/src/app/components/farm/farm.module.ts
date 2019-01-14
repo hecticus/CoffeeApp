@@ -7,7 +7,7 @@ import { FarmService } from './farm.service';
 @NgModule({
 	imports: [
 		CommonModule,
-		BrowserModule,
+		// BrowserModule,
 	],
 	declarations: [
 		FarmComponent,

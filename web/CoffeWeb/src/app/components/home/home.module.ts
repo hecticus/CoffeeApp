@@ -1,3 +1,4 @@
+import { InvoiceDetailModule } from './../invoice-detail/invoice-detail.module';
 import { PurityModule } from './../purity/purity.module';
 import { StoreModule } from './../store/store.module';
 import { ItemTypeModule } from './../item-type/item-type.module';
@@ -21,8 +22,6 @@ import { LotModule } from '../lot/lot.module';
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		BrowserAnimationsModule,
-
 		UtilsModule,
 		InvoiceModule,
 		ProviderModule,
@@ -31,7 +30,7 @@ import { LotModule } from '../lot/lot.module';
 		StoreModule,
 		PurityModule,
 		HomeRoutingModule,
-
+		InvoiceDetailModule
 	],
 	declarations: [
 		HomeComponent,

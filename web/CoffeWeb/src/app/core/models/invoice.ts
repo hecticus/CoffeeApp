@@ -5,6 +5,7 @@ import { Status } from './status';
 import { InvoiceDetail } from './invoice-detail';
 
 export class Invoice extends BaseModel {
+	id: number;
 	provider: Provider;
 	statusInvoice: Status;
 	closedDateInvoice: string;

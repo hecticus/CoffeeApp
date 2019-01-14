@@ -6,6 +6,7 @@ import { HomeComponent } from './home.component';
 import { NgModule } from '@angular/core';
 import { invoiceRoutes } from '../invoice/invoice.routing';
 import { lotRoutes } from '../lot/lot.routing';
+import { invoiceDetailRoutes } from '../invoice-detail/invoice-detail..routing';
 
 const homeRoutes: Routes = [
 	{
@@ -25,6 +26,7 @@ const homeRoutes: Routes = [
 			...providerRoutes,
 			...lotRoutes,
 			...invoiceRoutes,
+			...invoiceDetailRoutes,
 		],
 		data: {
 			breadcrumb: 'home'
@@ -32,7 +34,6 @@ const homeRoutes: Routes = [
 	},
 ];
 
-// export const homeRouting = RouterModule.forChild(homeRoutes);
 @NgModule({
 	imports: [
 		RouterModule.forChild(homeRoutes)

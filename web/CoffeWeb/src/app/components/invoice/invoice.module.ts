@@ -46,12 +46,9 @@ import { HarvestCreateComponent } from './harvest-create.component';
 		MyDatePickerModule,
 		MatRadioModule,
 		ModalModule.forRoot(),
-
-
 		UtilsModule,
 		InvoiceRoutingModule,
 		InvoiceDetailModule,
-
 	],
 	declarations: [
 		InvoiceComponent,

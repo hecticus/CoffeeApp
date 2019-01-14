@@ -1,3 +1,5 @@
+import { Invoice } from './../../core/models/invoice';
+import { InvoiceService } from './../invoice/invoice.service';
 import { InvoiceDetail } from '../../core/models/invoice-detail';
 import { InvoiceDetailService } from './invoice-detail.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -5,11 +7,10 @@ import { FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort, MatFooterRowDef } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Invoice } from '../../core/models/invoice';
-import { BaseService } from '../../core/base.service';
+import { BaseService } from 'src/app/core/base.service';
 
 @Component({
-	selector: 'app-invoice-detail-read',
+	selector: 'app-invoice-detail-list',
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 		<div class="mat-elevation-z8" >
@@ -121,13 +122,8 @@ import { BaseService } from '../../core/base.service';
 
 export class InvoiceDetailListComponent implements OnInit {
 
-	// @Input() idInvoice: number;
-	// @Input() total: number;
-	// @Output() invoiceDetail: InvoiceDetail;
-	invoice: InvoiceDetail;
-
+	invoice: Invoice;
 	form: FormGroup;
-	totall: number;
 	// Order Columns Display
 	columnsToDisplay = ['itemType.nameItemType',
 	'lot.nameLot', 'store.nameStore', 'startDate', 'priceItemTypeByLot',
@@ -151,34 +147,32 @@ export class InvoiceDetailListComponent implements OnInit {
 	seler = 4;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
+
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private invoiceDetailService: InvoiceDetailService,
+		private invoiceService: InvoiceService,
 	) { }
 
 	ngOnInit() {
 		this.invoices.sort = this.sort;
 		this.invoices.paginator = this.paginator;
 
-		this.activatedRoute.params.subscribe(params => {
-			this.invoice = params['invoiceId'];
-		});
-		
-		let hhtpParams = BaseService.jsonToHttpParams({
-			invoice: this.invoice
-		});
-		
+		this.activatedRoute.params.subscribe( data1 => {
+			this.invoiceService.getById(data1['invoiceId']).subscribe( data => {
+				this.invoice = data['result'];
+				console.log(this.invoice.id);
 
+				let httpParams = BaseService.jsonToHttpParams({
+					invoice: this.invoice.id
+				});
 
-		this.invoiceDetailService.getAll(hhtpParams).subscribe(
-			data => {
-				this.invoices.data = data['result'];
-				console.log(' --------------------hkgjgkjgjgjjjjjjjjjg---------------------- ');
-				console.log(this.invoices);
+				this.invoiceDetailService.getAll(httpParams).subscribe( data3 => {
+					this.invoices.data = data3['result'];
+				});
+			});
 		});
-
-		// this.totall = this.total;
 	}
 
 	getTotalCantidad() {
@@ -199,7 +193,7 @@ export class InvoiceDetailListComponent implements OnInit {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.invoices.data.length;
 		return numSelected === numRows;
-		}
+	}
 
 	/** Selects all rows if they are not all selected; otherwise clear selection. */
 	masterToggle() {
@@ -214,7 +208,6 @@ export class InvoiceDetailListComponent implements OnInit {
 
 	read(id: number) {
 		this.router.navigate(['./invoicesDetails/' + id], {relativeTo: this.activatedRoute});
-		console.log(this.activatedRoute);
-
+		console.log('ass' + id);
 	}
 }

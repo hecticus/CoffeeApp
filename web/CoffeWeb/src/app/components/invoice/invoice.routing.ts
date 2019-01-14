@@ -1,3 +1,4 @@
+import { InvoiceDetailReadComponent } from './../invoice-detail/invoice-detail-read.component';
 import { Routes, RouterModule } from '@angular/router';
 import { InvoiceReadComponent } from './invoice-read.component';
 import { InvoiceListComponent } from './invoice-list.component';
@@ -11,7 +12,7 @@ export const invoiceRoutes: Routes = [
 		path: 'invoices',
 		component: InvoiceComponent,
 		data: {
-			breadcrumb: 'Invoices'
+			breadcrumb: 'Facturas'
 		},
 		children: [
 			{
@@ -22,28 +23,29 @@ export const invoiceRoutes: Routes = [
 					breadcrumb: undefined
 				},
 
-			}, {
+			},
+			{
 				path: 'create',
 				component: InvoiceCreateComponent,
 				data: {
-					breadcrumb: 'Crear'
+					breadcrumb: 'Crear Factura'
 				},
-
-			}, {
+			},
+			{
 				path: ':invoiceId',
-				component: InvoiceReadComponent,
+				component: InvoiceComponent,
 				data: {
-					breadcrumb: 'Detalle'
+					breadcrumb: 'Detalle de la Factura'
 				},
 				children: [
-					// {
-					// 	path: '',
-					// 	pathMatch: 'full',
-					// 	component: InvoiceDetail,
-					// 	data: {
-					// 		breadcrumb: undefined
-					// 	},
-					// },
+					{
+						path: '',
+						pathMatch: 'full',
+						component: InvoiceReadComponent,
+						data: {
+							breadcrumb: undefined
+						},
+					},
 					...invoiceDetailRoutes,
 				]
 			}
