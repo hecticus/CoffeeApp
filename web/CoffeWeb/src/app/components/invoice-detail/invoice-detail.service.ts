@@ -29,18 +29,20 @@ export class InvoiceDetailService {
 		return this.http.get<any>(InvoiceDetailService.BASE_URL, {params: params});
 	}
 
-
-	initItem(invoiceDetail: InvoiceDetail): FormGroup {
+	// Price se setting in the backend
+	initInvoiceDetail(invoiceDetail: InvoiceDetail): FormGroup {
 		return this.fb.group({
+			invoice: new FormControl(invoiceDetail.invoice ? invoiceDetail.invoice.id: undefined),
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
-			price:  new FormControl(invoiceDetail.priceItemTypeByLot, [Validators.required, CustomValidators.numberRegex, CustomValidators.min(0)]),
+			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
+			costItemType:  new FormControl(invoiceDetail.priceItemTypeByLot, [Validators.required, CustomValidators.numberRegex, CustomValidators.min(0)]),
 			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
 			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
-			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
+			note: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
-			purities: this.fb.array([
+			invoiceDetailPurity: this.fb.array([
 				this.initPurities(new Purities())
 			])
 		});
