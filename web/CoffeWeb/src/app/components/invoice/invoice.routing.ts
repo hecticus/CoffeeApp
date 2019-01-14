@@ -30,7 +30,6 @@ export const invoiceRoutes: Routes = [
 				data: {
 					breadcrumb: 'Crear Factura'
 				},
-
 			},
 			{
 				path: ':invoiceId',

@@ -9,21 +9,22 @@ export const invoiceDetailRoutes: Routes = [
 		path: 'invoicesDetails/create',
 		component: InvoiceDetailReadComponent,
 		data: {
-			breadcrumb: 'Invoice Create'
+			breadcrumb: 'Crear Nuevo Item'
 		}
 	},
 	{
 		path: 'invoicesDetails/:invoiceDetailId',
-		component: InvoiceDetailReadComponent,
+		component: InvoiceDetailComponent,
 		data: {
-			breadcrumb: 'Invoice Detail'
+			breadcrumb: 'Detalle del Item'
 		},
 		children: [
 			{
-				path: 'full',
+				path: '',
+				pathMatch: 'full',
 				component: InvoiceDetailReadComponent,
 				data: {
-					breadcrumb: 'Detalle'
+					breadcrumb: undefined
 				}
 			},
 			{
@@ -31,55 +32,12 @@ export const invoiceDetailRoutes: Routes = [
 				pathMatch: 'full',
 				component: InvoiceDetailUpdateComponent,
 				data: {
-					breadcrumb: 'Actualización'
+					breadcrumb: 'Actualizar'
 				},
 			}
 		]
 	}
 ];
-
-// export const invoiceDetailRoutes: Routes = [
-// 	{
-// 		path: 'invoicesDetails',
-// 		component: InvoiceDetailComponent,
-// 		data: {
-// 			breadcrumb: 'Detalle de la Factura'
-// 		},
-// 		children: [
-// 			{
-// 				path: 'invoicesDetails/create',
-// 				component: InvoiceDetailReadComponent,
-// 				data: {
-// 					breadcrumb: 'Crear Nuevo Item'
-// 				}
-// 			},
-// 			{
-// 				path: 'invoicesDetails/:invoiceDetailId',
-// 				component: InvoiceDetailReadComponent,
-// 				data: {
-// 					breadcrumb: 'Detalle del Item'
-// 				},
-// 				children: [
-// 					{
-// 						path: 'full',
-// 						component: InvoiceDetailReadComponent,
-// 						data: {
-// 							breadcrumb: 'Detalle del Item'
-// 						}
-// 					},
-// 					{
-// 						path: 'update',
-// 						pathMatch: 'full',
-// 						component: InvoiceDetailUpdateComponent,
-// 						data: {
-// 							breadcrumb: 'Actualizar item'
-// 						},
-// 					}
-// 				]
-// 			}
-// 		]
-// 	}
-// ];
 
 @NgModule({
 	imports: [

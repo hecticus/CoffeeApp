@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'app-invoice-detail-update',
-	template: '<h2>asa</h2>',
+	template: `
+	<div class= "container">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+		
+		</form>
+	</div>
+	`,
 	// styleUrls: ['./invoice-detail-update.component.css']
 })
 
