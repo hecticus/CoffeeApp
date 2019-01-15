@@ -1,3 +1,4 @@
+import { Lot } from './../../core/models/lot';
 import { FormGroup } from '@angular/forms';
 import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 import { Farm } from './../../core/models/farm';
@@ -19,11 +20,11 @@ import { Invoice } from 'src/app/core/models/invoice';
 
 @Component({
 	selector: 'app-invoice-detail-update',
-	// styleUrls: ['./invoice-detail-update.component.css']
+	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 	<div class= "container">
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update()">
-			<div class="field" *ngIf="operation">
+			<div class="field">
 				<mat-form-field>
 					<mat-select required>
 						<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
@@ -32,7 +33,7 @@ import { Invoice } from 'src/app/core/models/invoice';
 				</mat-form-field>
 			</div>
 
-			<div class="field" *ngIf="operation">
+			<div class="field">
 				<mat-form-field>
 					<mat-select required [formControl]="form.controls['lot']">
 						<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
@@ -52,6 +53,27 @@ import { Invoice } from 'src/app/core/models/invoice';
 				<app-validator [control]="form.controls['itemType']"></app-validator>
 			</div>
 
+			<div class="wrap-fields">
+				<div class="field">
+					<mat-form-field>
+						<mat-select required [formControl]="form.controls['store']">
+							<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
+						</mat-select>
+						<mat-label><b>Acopio</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['store']"></app-validator>
+				</div>
+				<div class="field">
+					<mat-form-field>
+						<mat-select required [formControl]="form.controls['itemType']">
+							<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+						</mat-select>
+						<mat-label><b>Tipo</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['itemType']"></app-validator>
+				</div>
+			</div>
+
 		</form>
 	</div>
 	`,
@@ -68,6 +90,7 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 	itemType: ItemType[];
 	purities: Purities[];
 	farms: Farm[];
+	lots: Lot[];
 	form: FormGroup;
 
 	constructor(
@@ -85,17 +108,15 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 
 		this.invoiceDetailService.getById(this.idDetail).subscribe( data => {
 			this.invoiceDetail = data['result'];
-			this.form = this.invoiceDetailService.initInvoiceDetail( data['result']);
+			this.begins(this.invoiceDetail.invoice.provider.providerType.id);
+			this.form = this.invoiceDetailService.initInvoiceDetail(data['result']);
 		});
-		// console.log(this.form);
-		// this.form = this.invoiceDetailService.initInvoiceDetail(this.invoiceDetail);
-		this.begins();
+
 	}
 
-	begins() {
+	begins(provType: number) {
 		// 	"id": 1, "Vendedor",	"id": 2, "Cosechador"
-
-		let provType =  this.invoiceDetail.invoice.provider.providerType.id;
+		// let provType =  this.invoiceDetail.invoice.provider.providerType.id;
 		if ( provType === 1) {
 			this.operation = false;
 
@@ -103,22 +124,18 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 				collection: 'id, nameStore',
 			});
 
-			this.storeService.getAll(httpParamsStore).subscribe(
-					data => {
-						this.stores = data['result'];
-					}
-			);
+			this.storeService.getAll(httpParamsStore).subscribe( data => {
+				this.stores = data['result'];
+			});
 
 			let httpParamsPurities = BaseService.jsonToHttpParams({
 				collection: 'id, namePurity'
 			});
 
-			this.purityService.getAll(httpParamsPurities).subscribe(
-					data => {
-						this.purities = data['result'];
-						console.log(this.purities);
-					}
-			);
+			this.purityService.getAll(httpParamsPurities).subscribe( data => {
+				this.purities = data['result'];
+				console.log(this.purities);
+			});
 		} else {
 			this.operation = true;
 
@@ -126,9 +143,17 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 				collection: 'id, nameFarm',
 			});
 
-			this.farmService.getAll(httpParamsFarm).subscribe(
-					data => {
+			this.farmService.getAll(httpParamsFarm).subscribe( data => {
 						this.farms = data['result'];
+			});
+
+			let httpParamsLots = BaseService.jsonToHttpParams({
+				collection: 'id, farm(id), nameLot'
+			});
+	
+			this.lotService.getAll(httpParamsLots).subscribe(
+					data => {
+						this.lots = data['result'];
 					}
 			);
 		}

@@ -18,13 +18,12 @@ th.mat-sort-header-sorted {
     width: 100%;
 }
 
-html,
-body {
-    min-height: 100% !important;
-    height: 100%;
-    color: #3f3f3f;
+fieldset {
+    width: 100%;
+    border: 0;
+    margin-bottom: 30px;
 }
 
-.mat-table-sticky {
-    border-top: 2px solid #bebebe;
+.mat-radio-button~.mat-radio-button {
+    padding-right: 16px;
 }

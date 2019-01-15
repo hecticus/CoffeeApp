@@ -32,7 +32,7 @@ export class InvoiceDetailService {
 	// Price se setting in the backend
 	initInvoiceDetail(invoiceDetail: InvoiceDetail): FormGroup {
 		return this.fb.group({
-			invoice: new FormControl(invoiceDetail.invoice ? invoiceDetail.invoice.id : undefined),
+			// invoice: new FormControl(invoiceDetail.invoice ? invoiceDetail.invoice.id : undefined),
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
