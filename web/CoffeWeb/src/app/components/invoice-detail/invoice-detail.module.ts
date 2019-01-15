@@ -6,6 +6,9 @@ import {
 	MatInputModule,
 	MatPaginatorModule,
 	MatSelectModule,
+	MatNativeDateModule,
+	MatIconModule,
+	MatRadioModule,
 	} from '@angular/material';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
@@ -19,18 +22,23 @@ import { InvoiceDetailUpdateComponent } from './invoice-detail-update.component'
 import { StoreModule } from '../store/store.module';
 import { ItemTypeModule } from '../item-type/item-type.module';
 import { LotModule } from '../lot/lot.module';
-import { InvoiceModule } from '../invoice/invoice.module';
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
 		MatTableModule,
 		MatCheckboxModule,
 		MatPaginatorModule,
 		MatSelectModule,
 		MatFormFieldModule,
 		MatInputModule,
+		MatNativeDateModule,
+		MatIconModule,
+		MatRadioModule,
 		ModalModule.forRoot(),
 		UtilsModule,
 		InvoiceDetailRoutingModule,
