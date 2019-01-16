@@ -74,6 +74,35 @@ import { Invoice } from 'src/app/core/models/invoice';
 				</div>
 			</div>
 
+			<div class="wrap-fields">
+				<div class="field">
+					<mat-form-field class="example-full-width">
+						<input matInput formControlName="nameReceived" placeholder="Recibido por">
+					</mat-form-field>
+					<app-validator [control]="form.controls['nameReceived']"></app-validator>
+				</div>
+
+				<div class="field">
+					<mat-form-field>
+						<input matInput formControlName="nameDelivered" placeholder="Entregado por">
+					</mat-form-field>
+					<app-validator [control]="form.controls['nameDelivered']"></app-validator>
+				</div>
+			</div>
+
+			<div class="wrap-fields">
+				<div class="field">
+					<mat-form-field class="full-width">
+						<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
+					</mat-form-field>
+					<app-validator [control]="form.controls['noteInvoiceDetail']"></app-validator>
+				</div>
+			</div>
+
+			<div class="options row">
+				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
+			</div>
+
 		</form>
 	</div>
 	`,
@@ -150,7 +179,7 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 			let httpParamsLots = BaseService.jsonToHttpParams({
 				collection: 'id, farm(id), nameLot'
 			});
-	
+
 			this.lotService.getAll(httpParamsLots).subscribe(
 					data => {
 						this.lots = data['result'];

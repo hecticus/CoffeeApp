@@ -24,6 +24,7 @@ import { ItemTypeModule } from '../item-type/item-type.module';
 import { LotModule } from '../lot/lot.module';
 import { FilterService } from 'src/app/core/utils/filter/filter.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InvoiceDetailCreateComponent } from './invoice-detail-create.component';
 
 @NgModule({
 	imports: [
@@ -52,6 +53,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 		InvoiceDetailListComponent,
 		InvoiceDetailReadComponent,
 		InvoiceDetailUpdateComponent,
+		InvoiceDetailCreateComponent,
 	],
 	exports: [
 		InvoiceDetailComponent,

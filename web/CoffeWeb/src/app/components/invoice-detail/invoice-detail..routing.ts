@@ -3,11 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { InvoiceDetailReadComponent } from './invoice-detail-read.component';
 import { InvoiceDetailUpdateComponent } from './invoice-detail-update.component';
+import { InvoiceDetailCreateComponent } from './invoice-detail-create.component';
 
 export const invoiceDetailRoutes: Routes = [
 	{
 		path: 'invoicesDetails/create',
-		component: InvoiceDetailReadComponent,
+		component: InvoiceDetailCreateComponent,
 		data: {
 			breadcrumb: 'Crear Nuevo Item'
 		}
