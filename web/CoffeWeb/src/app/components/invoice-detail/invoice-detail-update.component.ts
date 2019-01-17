@@ -9,88 +9,59 @@ import { BaseService } from 'src/app/core/base.service';
 import { ItemType } from './../../core/models/item-type';
 import { LotService } from './../lot/lot.service';
 import { InvoiceDetailService } from './invoice-detail.service';
-import { InvoiceService } from './../invoice/invoice.service';
 import { ActivatedRoute, Params } from '@angular/router';
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Store } from 'src/app/core/models/store';
 import { StoreService } from '../store/store.service';
 import { Purities } from 'src/app/core/models/purities';
-import { Invoice } from 'src/app/core/models/invoice';
 
 @Component({
 	selector: 'app-invoice-detail-update',
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 	<div class= "container">
-		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update()">
-			<div class="field">
-				<mat-form-field>
-					<mat-select required>
-						<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
-					</mat-select>
-					<mat-label><b>Granja</b></mat-label>
-				</mat-form-field>
-			</div>
-
-			<div class="field">
-				<mat-form-field>
-					<mat-select required [formControl]="form.controls['lot']">
-						<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
-					</mat-select>
-					<mat-label><b>Lote</b></mat-label>
-				</mat-form-field>
-				<app-validator [control]="form.controls['lot']"></app-validator>
-			</div>
-
-			<div class="field">
-				<mat-form-field>
-					<mat-select required [formControl]="form.controls['itemType']">
-						<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-					</mat-select>
-					<mat-label><b>Grano</b></mat-label>
-				</mat-form-field>
-				<app-validator [control]="form.controls['itemType']"></app-validator>
-			</div>
-
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+		<legend><span>Actualizar item de la Cosecha</span></legend>
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field>
-						<mat-select required [formControl]="form.controls['store']">
-							<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
+						<mat-select required>
+							<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
 						</mat-select>
-						<mat-label><b>Acopio</b></mat-label>
+						<mat-label><b>Granja</b></mat-label>
 					</mat-form-field>
-					<app-validator [control]="form.controls['store']"></app-validator>
+				</div>
+				<div class="field">
+					<mat-form-field>
+						<mat-select required [formControl]="form.controls['lot']">
+							<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+						</mat-select>
+						<mat-label><b>Lote</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['lot']"></app-validator>
 				</div>
 				<div class="field">
 					<mat-form-field>
 						<mat-select required [formControl]="form.controls['itemType']">
 							<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
 						</mat-select>
-						<mat-label><b>Tipo</b></mat-label>
+						<mat-label><b>Grano</b></mat-label>
 					</mat-form-field>
 					<app-validator [control]="form.controls['itemType']"></app-validator>
 				</div>
+				<button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
+					<i class="material-icons">delete_sweep</i>
+				</button>
 			</div>
 
 			<div class="wrap-fields">
 				<div class="field">
-					<mat-form-field class="example-full-width">
-						<input matInput formControlName="nameReceived" placeholder="Recibido por">
+					<mat-form-field class="full-width2">
+						<input matInput required formControlName="amountInvoiceDetail" placeholder="Cantidad"
+						class="example-right-align">
 					</mat-form-field>
-					<app-validator [control]="form.controls['nameReceived']"></app-validator>
+					<app-validator [control]="form.controls['amountInvoiceDetail']"></app-validator>
 				</div>
-
-				<div class="field">
-					<mat-form-field>
-						<input matInput formControlName="nameDelivered" placeholder="Entregado por">
-					</mat-form-field>
-					<app-validator [control]="form.controls['nameDelivered']"></app-validator>
-				</div>
-			</div>
-
-			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field class="full-width">
 						<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
@@ -102,13 +73,96 @@ import { Invoice } from 'src/app/core/models/invoice';
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
 			</div>
-
 		</form>
 	</div>
 	`,
 
 })
 
+
+// <div class= "container">
+// 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update()">
+// 			<div class="field">
+// 				<mat-form-field>
+// 					<mat-select required>
+// 						<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
+// 					</mat-select>
+// 					<mat-label><b>Granja</b></mat-label>
+// 				</mat-form-field>
+// 			</div>
+
+// 			<div class="field">
+// 				<mat-form-field>
+// 					<mat-select required [formControl]="form.controls['lot']">
+// 						<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+// 					</mat-select>
+// 					<mat-label><b>Lote</b></mat-label>
+// 				</mat-form-field>
+// 				<app-validator [control]="form.controls['lot']"></app-validator>
+// 			</div>
+
+// 			<div class="field">
+// 				<mat-form-field>
+// 					<mat-select required [formControl]="form.controls['itemType']">
+// 						<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+// 					</mat-select>
+// 					<mat-label><b>Grano</b></mat-label>
+// 				</mat-form-field>
+// 				<app-validator [control]="form.controls['itemType']"></app-validator>
+// 			</div>
+
+// 			<div class="wrap-fields">
+// 				<div class="field">
+// 					<mat-form-field>
+// 						<mat-select required [formControl]="form.controls['store']">
+// 							<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
+// 						</mat-select>
+// 						<mat-label><b>Acopio</b></mat-label>
+// 					</mat-form-field>
+// 					<app-validator [control]="form.controls['store']"></app-validator>
+// 				</div>
+// 				<div class="field">
+// 					<mat-form-field>
+// 						<mat-select required [formControl]="form.controls['itemType']">
+// 							<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+// 						</mat-select>
+// 						<mat-label><b>Tipo</b></mat-label>
+// 					</mat-form-field>
+// 					<app-validator [control]="form.controls['itemType']"></app-validator>
+// 				</div>
+// 			</div>
+
+// 			<div class="wrap-fields">
+// 				<div class="field">
+// 					<mat-form-field class="example-full-width">
+// 						<input matInput formControlName="nameReceived" placeholder="Recibido por">
+// 					</mat-form-field>
+// 					<app-validator [control]="form.controls['nameReceived']"></app-validator>
+// 				</div>
+
+// 				<div class="field">
+// 					<mat-form-field>
+// 						<input matInput formControlName="nameDelivered" placeholder="Entregado por">
+// 					</mat-form-field>
+// 					<app-validator [control]="form.controls['nameDelivered']"></app-validator>
+// 				</div>
+// 			</div>
+
+// 			<div class="wrap-fields">
+// 				<div class="field">
+// 					<mat-form-field class="full-width">
+// 						<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
+// 					</mat-form-field>
+// 					<app-validator [control]="form.controls['noteInvoiceDetail']"></app-validator>
+// 				</div>
+// 			</div>
+
+// 			<div class="options row">
+// 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
+// 			</div>
+
+// 		</form>
+// 	</div>
 export class InvoiceDetailUpdateComponent implements OnInit {
 	// 1 true  harvest    //////// 0 false buyCoffe
 	operation: boolean;
@@ -187,13 +241,12 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 			);
 		}
 
-		let httpParamsItem = BaseService.jsonToHttpParams({
-			collection: 'id, providerType(id), nameItemType',
-			'providerType': provType
-		});
+		// let httpParamsItem = BaseService.jsonToHttpParams({
+		// 	collection: 'id, providerType(id), nameItemType',
+		// 	'providerType': provType
+		// });
 
-		this.itemTypeService.getAll(httpParamsItem).subscribe(
-				data => {
+		this.itemTypeService.getAll().subscribe( data => {
 					this.itemType = data['result'];
 				}
 		);

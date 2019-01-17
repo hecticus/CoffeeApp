@@ -42,6 +42,7 @@ export class InvoiceDetailService {
 			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
 			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
 			note: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
+			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
 			invoiceDetailPurity: this.fb.array([
 				this.initPurities(new Purities())
