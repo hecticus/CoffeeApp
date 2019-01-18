@@ -72,7 +72,7 @@ import { Purities } from 'src/app/core/models/purities';
 
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
-			</div>
+			</div>ggi
 		</form>
 	</div>
 
