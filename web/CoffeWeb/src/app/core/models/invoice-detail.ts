@@ -4,6 +4,7 @@ import { Lot } from './lot';
 import { ItemType } from './item-type';
 import { BaseModel } from './base-model';
 import { Invoice } from './invoice';
+import { Purities } from './purities';
 
 export class InvoiceDetail extends BaseModel {
 	id: number;

@@ -17,17 +17,7 @@ import { NotificationService } from '../../core/utils/notification/notification.
 		<form  *ngIf="form" [formGroup]="form" (ngSubmit)="update()">
 			<fieldset>
 			<legend><span>Datos del Lote</span></legend>
-			<!-- <div class="wrap-fields">
-				<div class="field form-field">
-					<mat-form-field class="example-full-width">
-						<mat-select required [formControl]="form.controls['deleted']">
-							<mat-option [value]="true">Inactivo</mat-option>
-							<mat-option [value]="false">Activo</mat-option>
-						</mat-select>
-						<mat-label><b>Status</b></mat-label>
-					</mat-form-field>
-				</div>
-			</div>-->
+			<!-- -->
 			<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
@@ -48,17 +38,6 @@ import { NotificationService } from '../../core/utils/notification/notification.
 					<app-validator [control]="form.controls['nameLot']"></app-validator>
 				</div>
 			</div>
-			<!--<div class="wrap-fields">
-				<div class="field">
-					<mat-form-field  class="example-full-width">
-						<mat-radio-group required [formControl]="form.controls['deleted']">
-								<mat-radio-button value="true">Inactivo</mat-radio-button>
-								<mat-radio-button value="false">Activo</mat-radio-button>
-						</mat-radio-group>
-					</mat-form-field>
-				</div>
-			</div>
-			-->
 			<div class="wrap-fields">
 				<div class="field form-field">
 					<mat-form-field class="example-full-width">
@@ -117,19 +96,17 @@ export class LotUpdateComponent implements OnInit {
 	) {	}
 
 	ngOnInit() {
-		this.activatedRoute.parent.params
-			.subscribe(params => {
+		this.activatedRoute.parent.params.subscribe(params => {
 				this.lotService.getById(params['lotId']).subscribe(data => {
 					this.form = this.lotService.getLot(data['result']);
+					console.log(data['result']);
+					console.log(this.form);
 				});
-			}
-		);
+		});
 
-		this.statusLotService.getAll().subscribe(
-			data => {
+		this.statusLotService.getAll().subscribe( data => {
 				this.status = data['result'];
-			}
-		);
+		});
 
 		this.farmService.getAll().subscribe( data => {
 			this.farms = data['result']; }
@@ -142,14 +119,13 @@ export class LotUpdateComponent implements OnInit {
 		this.form.controls['farm'].patchValue({id: this.form.value['farm']});
 		this.form.controls['statusLot'].patchValue({id: this.form.value['statusLot']});
 
-		this.lotService.update(<Lot> this.form.value)
-			.subscribe(lot => {
-				this.notificationService.sucessUpdate('Lote');
-				this.location.back();
-				console.log(this.form.value);
-			}, err =>  {
-				this.notificationService.error(err);
-			});
+		this.lotService.update(<Lot> this.form.value).subscribe(lot => {
+			this.notificationService.sucessUpdate('Lote');
+			this.location.back();
+			console.log(this.form.value);
+		}, err =>  {
+			this.notificationService.error(err);
+		});
 	}
 
 }

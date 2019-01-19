@@ -194,11 +194,9 @@ export class HarvestCreateComponent implements OnInit {
 			collection: 'id, farm(id), nameLot'
 		});
 
-		this.lotService.getAll(httpParamsLots).subscribe(
-				data => {
+		this.lotService.getAll(httpParamsLots).subscribe( data => {
 					this.lots = data['result'];
-				}
-		);
+		});
 	}
 
 }

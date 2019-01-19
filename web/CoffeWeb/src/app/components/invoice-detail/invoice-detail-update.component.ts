@@ -1,3 +1,4 @@
+import { NotificationService } from './../../core/utils/notification/notification.service';
 import { Lot } from './../../core/models/lot';
 import { FormGroup } from '@angular/forms';
 import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
@@ -14,6 +15,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from 'src/app/core/models/store';
 import { StoreService } from '../store/store.service';
 import { Purities } from 'src/app/core/models/purities';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'app-invoice-detail-update',
@@ -22,13 +24,13 @@ import { Purities } from 'src/app/core/models/purities';
 	<div class= "container">
 
 		<div *ngIf="option == 2">
-		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update(2)">
 		<legend><span>Actualizar item de la Cosecha</span></legend>
 			<div class="wrap-fields">
 				<div class="field">
 					<mat-form-field>
-						<mat-select required>
-							<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
+						<mat-select required [formControl]="form.controls['farm']">
+							<mat-option *ngFor="let f of farms" [value]="f.id">{{f.nameFarm}}</mat-option>
 						</mat-select>
 						<mat-label><b>Granja</b></mat-label>
 					</mat-form-field>
@@ -36,7 +38,7 @@ import { Purities } from 'src/app/core/models/purities';
 				<div class="field">
 					<mat-form-field>
 						<mat-select required [formControl]="form.controls['lot']">
-							<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
+							<mat-option *ngFor="let l of lots" [value]="l.id">{{l.nameLot}}</mat-option>
 						</mat-select>
 						<mat-label><b>Lote</b></mat-label>
 					</mat-form-field>
@@ -45,7 +47,7 @@ import { Purities } from 'src/app/core/models/purities';
 				<div class="field">
 					<mat-form-field>
 						<mat-select required [formControl]="form.controls['itemType']">
-							<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+							<mat-option *ngFor="let it of itemType" [value]="it.id">{{it.nameItemType}}</mat-option>
 						</mat-select>
 						<mat-label><b>Grano</b></mat-label>
 					</mat-form-field>
@@ -78,14 +80,25 @@ import { Purities } from 'src/app/core/models/purities';
 		</form>
 	</div>
 
+
+
+
+
+
+
+
+
+
+
+
 	<div class= "container" *ngIf="option == 1">
 	<legend><span>Actualizar item de la Compra</span></legend>
-		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update(1)">
             <div class="wrap-fields">
                 <div class="field">
                     <mat-form-field>
                         <mat-select required [formControl]="form.controls['store']">
-                            <mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
+                            <mat-option *ngFor="let s of stores" [value]="s.id">{{s.nameStore}}</mat-option>
                         </mat-select>
                         <mat-label><b>Acopio</b></mat-label>
                     </mat-form-field>
@@ -94,7 +107,7 @@ import { Purities } from 'src/app/core/models/purities';
                 <div class="field">
                     <mat-form-field>
                         <mat-select required [formControl]="form.controls['itemType']">
-                            <mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
+                            <mat-option *ngFor="let it of itemType" [value]="it.id">{{it.nameItemType}}</mat-option>
                         </mat-select>
                         <mat-label><b>Tipo</b></mat-label>
                     </mat-form-field>
@@ -109,9 +122,9 @@ import { Purities } from 'src/app/core/models/purities';
             <div class="wrap-fields">
                 <div class="field">
                     <mat-form-field class="example-full-width">
-                        <input matInput required formControlName="price" placeholder="Precio" class="example-right-align">
+                        <input matInput required formControlName="costItemType" placeholder="Precio" class="example-right-align">
                     </mat-form-field>
-                    <app-validator [control]="form.controls['price']"></app-validator>
+                    <app-validator [control]="form.controls['costItemType']"></app-validator>
                 </div>
                 <div class="field form-field">
                     <mat-form-field class="example-full-width">
@@ -125,8 +138,8 @@ import { Purities } from 'src/app/core/models/purities';
             </div>
 
 			<!--
-            <div formArrayName="purities">
-                <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let p of item.get('purities').controls;
+            <div formArrayName="invoiceDetailPurity">
+                <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let p of item.get('invoiceDetailPurity').controls;
                 let j=index" >
                     <fieldset>
                         <legend><h4> Pureza{{j+1}}: </h4></legend>
@@ -146,12 +159,12 @@ import { Purities } from 'src/app/core/models/purities';
                                 <div class="wrap-fields">
                                     <div class="field">
                                         <mat-form-field class="full-width">
-											<input matInput required formControlName="valueRateInvoiceDetailPurity" 
+											<input matInput required formControlName="valueRateInvoiceDetailPurity"
 											placeholder="Porcentaje" class="example-right-align">
                                         </mat-form-field>
                                         <app-validator [control]="p.controls['valueRateInvoiceDetailPurity']"></app-validator>
                                     </div>
-									<button class="buttonStyle2" (click)="deletePurities(item.controls.purities, j)" 
+									<button class="buttonStyle2" (click)="deletePurities(item.controls.purities, j)"
 									title="Eliminar Detalle a la Cosecha">
                                         <i class="material-icons">delete_sweep</i>
                                     </button>
@@ -159,7 +172,7 @@ import { Purities } from 'src/app/core/models/purities';
                             </div>
                     </fieldset>
                 </div>
-            </div> -->
+            </div>-->
 
             <div class="wrap-fields">
                 <div class="field">
@@ -215,6 +228,8 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 		private farmService: FarmService,
 		private purityService: PurityService,
 		private invoiceDetailService: InvoiceDetailService,
+		private notificationService: NotificationService,
+		private location: Location,
 	) { }
 
 	ngOnInit() {
@@ -222,8 +237,8 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 
 		this.invoiceDetailService.getById(this.idDetail).subscribe( data => {
 			this.invoiceDetail = data['result'];
+			console.log(this.invoiceDetail);
 			this.begins(this.invoiceDetail.invoice.provider.providerType.id);
-			this.form = this.invoiceDetailService.initInvoiceDetail(data['result']);
 		});
 
 	}
@@ -234,6 +249,7 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 		this.option = provType;
 
 		if ( provType === 1) {
+			this.form = this.invoiceDetailService.initPurchaseDetail(this.invoiceDetail);
 			let httpParamsStore = BaseService.jsonToHttpParams({
 				collection: 'id, nameStore',
 			});
@@ -248,52 +264,57 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 
 			this.purityService.getAll(httpParamsPurities).subscribe( data => {
 				this.purities = data['result'];
-				console.log(this.purities);
 			});
 		} else {
-			// let httpParamsFarm = BaseService.jsonToHttpParams({
-			// 	collection: 'id, nameFarm',
-			// });httpParamsFarm
+			console.log(this.invoiceDetail);
+			this.form = this.invoiceDetailService.initHarvestDetail(this.invoiceDetail);
+			console.log(this.form);
 
-			this.farmService.getAll().subscribe( data => {
-						this.farms = data['result'];
+			let httpParamsFarm = BaseService.jsonToHttpParams({
+				collection: 'id, nameFarm',
+			});
+
+			this.farmService.getAll(httpParamsFarm).subscribe( data => {
+					this.farms = data['result'];
 			});
 
 			let httpParamsLots = BaseService.jsonToHttpParams({
 				collection: 'id, farm(id), nameLot'
 			});
 
-			this.lotService.getAll(httpParamsLots).subscribe(
-					data => {
-						this.lots = data['result'];
-					}
-			);
+			this.lotService.getAll(httpParamsLots).subscribe( data => {
+				this.lots = data['result'];
+			});
 		}
 
-		// let httpParamsItem = BaseService.jsonToHttpParams({
-		// 	collection: 'id, providerType(id), nameItemType',
-		// 	'providerType': provType
-		// });
+		let httpParamsItem = BaseService.jsonToHttpParams({
+			collection: 'id, providerType(id), nameItemType',
+			'providerType': provType
+		});
 
-		this.itemTypeService.getAll().subscribe( data => {
+		this.itemTypeService.getAll(httpParamsItem).subscribe( data => {
 					this.itemType = data['result'];
-				}
-		);
+		});
 	}
 
-	update() {
+	update(id: number) {
 		console.log(this.form.value);
-		// this.form.controls['farm'].patchValue({id: this.form.value['farm']});
-		// this.form.controls['statusLot'].patchValue({id: this.form.value['statusLot']});
+		if (id === 1) {
+			this.form.controls['lot'].patchValue({id: this.form.value['farm']});
+			this.form.controls['statusLot'].patchValue({id: this.form.value['statusLot']});
+		} else {
+			this.form.controls['lot'].patchValue({id: this.form.value['lot']});
+			this.form.controls['itemType'].patchValue({id: this.form.value['itemType']});
+		}
 
-		// this.lotService.update(<Lot> this.form.value)
-		// 	.subscribe(lot => {
-		// 		this.notificationService.sucessUpdate('Lote');
-		// 		this.location.back();
-		// 		console.log(this.form.value);
-		// 	}, err =>  {
-		// 		this.notificationService.error(err);
-		// 	});
+		this.invoiceDetailService.update(<InvoiceDetail> this.form.value)
+			.subscribe(invDetail => {
+				this.notificationService.sucessUpdate('Item');
+				this.location.back();
+				console.log(this.form.value);
+			}, err =>  {
+				this.notificationService.error(err);
+			});
 	}
 
 }
