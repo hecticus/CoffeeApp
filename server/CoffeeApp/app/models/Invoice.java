@@ -271,7 +271,8 @@ public class Invoice extends AbstractEntity{
             sql += "        AND pt.id = "+ providerType + "\n";
 
         if(nitName != null)
-            sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
+            sql += "        AND ( p.nit_provider like '" + nitName + "%' escape'' " +
+                    "       OR p.name_provider  like '" + nitName + "%' escape'' )\n";
 
         if(status != 0L)
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
@@ -318,7 +319,8 @@ public class Invoice extends AbstractEntity{
                 "        AND s.id = i.status_invoice_id\n";
 
         if(nitName != null)
-            sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
+            sql += "        AND ( p.nit_provider like '" + nitName + "%' escape'' " +
+                    "       OR p.name_provider  like '" + nitName + "%' escape'' )\n";
 
         if(status != 0L)
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
@@ -371,7 +373,8 @@ public class Invoice extends AbstractEntity{
             sql += "        AND p.provider_type_id = "+ providerType + "\n";
 
         if(nitName != null)
-            sql += "        AND (p.nit_provider = " + nitName + " OR p.name_provider = "+ nitName +")\n";
+            sql += "        AND ( p.nit_provider like '" + nitName + "%' escape'' " +
+                    "       OR p.name_provider  like '" + nitName + "%' escape'' )\n";
 
         if(status != 0L)
             sql += "        AND i.status_invoice_id = " + status + " AND s.dtype = 'invoice'\n";
