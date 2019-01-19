@@ -283,10 +283,10 @@ public class Invoice extends AbstractEntity{
             sql += "        AND id.closed_date <= '"+ closeDate +"' OR id.closed_date is null) \n";
         }
 
-        sql +=  "GROUP BY id.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider,\n" +
-                "id.amount_invoice_detail, id.price_item_type_by_lot, id.amount_invoice_detail, id.cost_item_type,\n" +
-                "it.name_item_type, i.id\n" +
-                "ORDER BY p.name_provider, i.id, id.start_date ASC;";
+        // sql +=  "GROUP BY id.start_date , i.closed_date , pt.name_provider_type , p.name_provider , p.nit_provider,\n" +
+        //         "id.amount_invoice_detail, id.price_item_type_by_lot, id.amount_invoice_detail, id.cost_item_type,\n" +
+        //         "it.name_item_type, i.id\n" +
+            sql +=  "ORDER BY p.name_provider, i.id, id.start_date ASC;";
 
         List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
 
