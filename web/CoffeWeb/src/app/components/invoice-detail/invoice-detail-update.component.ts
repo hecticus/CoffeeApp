@@ -20,6 +20,8 @@ import { Purities } from 'src/app/core/models/purities';
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 	<div class= "container">
+
+		<div *ngIf="option == 2">
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
 		<legend><span>Actualizar item de la Cosecha</span></legend>
 			<div class="wrap-fields">
@@ -72,13 +74,13 @@ import { Purities } from 'src/app/core/models/purities';
 
 			<div class="options row">
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
-			</div>ggi
+			</div>
 		</form>
 	</div>
 
-	<div class= "container">
+	<div class= "container" *ngIf="option == 1">
+	<legend><span>Actualizar item de la Compra</span></legend>
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="create()">
-
             <div class="wrap-fields">
                 <div class="field">
                     <mat-form-field>
@@ -189,98 +191,12 @@ import { Purities } from 'src/app/core/models/purities';
 			</div>
 		</form>
 	</div>
-
 	`,
-
 })
 
-
-// <div class= "container">
-// 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update()">
-// 			<div class="field">
-// 				<mat-form-field>
-// 					<mat-select required>
-// 						<mat-option *ngFor="let f of farms" [value]="{id: f.id}">{{f.nameFarm}}</mat-option>
-// 					</mat-select>
-// 					<mat-label><b>Granja</b></mat-label>
-// 				</mat-form-field>
-// 			</div>
-
-// 			<div class="field">
-// 				<mat-form-field>
-// 					<mat-select required [formControl]="form.controls['lot']">
-// 						<mat-option *ngFor="let l of lots" [value]="{id: l.id}">{{l.nameLot}}</mat-option>
-// 					</mat-select>
-// 					<mat-label><b>Lote</b></mat-label>
-// 				</mat-form-field>
-// 				<app-validator [control]="form.controls['lot']"></app-validator>
-// 			</div>
-
-// 			<div class="field">
-// 				<mat-form-field>
-// 					<mat-select required [formControl]="form.controls['itemType']">
-// 						<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-// 					</mat-select>
-// 					<mat-label><b>Grano</b></mat-label>
-// 				</mat-form-field>
-// 				<app-validator [control]="form.controls['itemType']"></app-validator>
-// 			</div>
-
-// 			<div class="wrap-fields">
-// 				<div class="field">
-// 					<mat-form-field>
-// 						<mat-select required [formControl]="form.controls['store']">
-// 							<mat-option *ngFor="let s of stores" [value]="{id: s.id}">{{s.nameStore}}</mat-option>
-// 						</mat-select>
-// 						<mat-label><b>Acopio</b></mat-label>
-// 					</mat-form-field>
-// 					<app-validator [control]="form.controls['store']"></app-validator>
-// 				</div>
-// 				<div class="field">
-// 					<mat-form-field>
-// 						<mat-select required [formControl]="form.controls['itemType']">
-// 							<mat-option *ngFor="let it of itemType" [value]="{id: it.id}">{{it.nameItemType}}</mat-option>
-// 						</mat-select>
-// 						<mat-label><b>Tipo</b></mat-label>
-// 					</mat-form-field>
-// 					<app-validator [control]="form.controls['itemType']"></app-validator>
-// 				</div>
-// 			</div>
-
-// 			<div class="wrap-fields">
-// 				<div class="field">
-// 					<mat-form-field class="example-full-width">
-// 						<input matInput formControlName="nameReceived" placeholder="Recibido por">
-// 					</mat-form-field>
-// 					<app-validator [control]="form.controls['nameReceived']"></app-validator>
-// 				</div>
-
-// 				<div class="field">
-// 					<mat-form-field>
-// 						<input matInput formControlName="nameDelivered" placeholder="Entregado por">
-// 					</mat-form-field>
-// 					<app-validator [control]="form.controls['nameDelivered']"></app-validator>
-// 				</div>
-// 			</div>
-
-// 			<div class="wrap-fields">
-// 				<div class="field">
-// 					<mat-form-field class="full-width">
-// 						<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
-// 					</mat-form-field>
-// 					<app-validator [control]="form.controls['noteInvoiceDetail']"></app-validator>
-// 				</div>
-// 			</div>
-
-// 			<div class="options row">
-// 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
-// 			</div>
-
-// 		</form>
-// 	</div>
 export class InvoiceDetailUpdateComponent implements OnInit {
 	// 1 true  harvest    //////// 0 false buyCoffe
-	operation: boolean;
+	option: number;
 	idInvoice: number;
 	idDetail: number;
 	invoiceDetail: InvoiceDetail;
@@ -315,9 +231,9 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 	begins(provType: number) {
 		// 	"id": 1, "Vendedor",	"id": 2, "Cosechador"
 		// let provType =  this.invoiceDetail.invoice.provider.providerType.id;
-		if ( provType === 1) {
-			this.operation = false;
+		this.option = provType;
 
+		if ( provType === 1) {
 			let httpParamsStore = BaseService.jsonToHttpParams({
 				collection: 'id, nameStore',
 			});
@@ -335,13 +251,11 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 				console.log(this.purities);
 			});
 		} else {
-			this.operation = true;
+			// let httpParamsFarm = BaseService.jsonToHttpParams({
+			// 	collection: 'id, nameFarm',
+			// });httpParamsFarm
 
-			let httpParamsFarm = BaseService.jsonToHttpParams({
-				collection: 'id, nameFarm',
-			});
-
-			this.farmService.getAll(httpParamsFarm).subscribe( data => {
+			this.farmService.getAll().subscribe( data => {
 						this.farms = data['result'];
 			});
 

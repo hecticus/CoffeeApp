@@ -23,9 +23,16 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 		<div class="answer">
 			<div class="fieldset">
 				<div class="wrap-fields">
+					<div>
+						<span class="label">Fecha de Apertura</span>
+						<span class="output">{{ invoiceDetail.startDate || '-'}}</span>
+					</div>
+				</div>
+				<div class="wrap-fields">
 						<span class="label">Tipo de Item</span>
 						<span class="output">{{ invoiceDetail.itemType?.nameItemType || '-'}}</span>
 				</div>
+				<div *ngIf="option == 1">
 				<div class="wrap-fields">
 					<div>
 						<span class="label">Recibido</span>
@@ -38,73 +45,64 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 						<span class="output">{{invoiceDetail.nameDelivered || '-'}}</span>
 					</div>
 				</div>
-				<div class="wrap-fields" *ngIf="purchase">
-					<div>
-						<span class="label">Nombre del Lote</span>
-						<span class="output">{{ invoiceDetail.lot?.nameLot || '-'}}</span>
-					</div>
-				</div>
-				<div class="wrap-fields" *ngIf= "purchase">
+				<div class="wrap-fields">
 					<div>
 						<span class="label" >Nombre de la Tienda</span>
 						<span class="output">{{ invoiceDetail.store?.nameStore || '-'}}</span>
 					</div>
 				</div>
+
 				<div class="wrap-fields">
-					<div>
-						<span class="label">Fecha de Apertura</span>
-						<span class="output">{{ invoiceDetail.startDate || '-'}}</span>
-					</div>
-				</div>
-				<div class="wrap-fields" *ngIf="purchase">
-					<div>
-						<span class="label">Precio</span>
-						<span class="output">{{ invoiceDetail.priceItemTypeByLot || '-'}}</span>
-					</div>
-				</div>
-				<div class="wrap-fields" *ngIf="purchase">
 					<div>
 						<span class="label">Costo</span>
 						<span class="output">{{ invoiceDetail.costItemType || '-'}}</span>
 					</div>
 				</div>
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Cantidad</span>
-						<span class="output">{{ invoiceDetail.amountInvoiceDetail || '-'}}</span>
-					</div>
+			</div>
+
+			<div class="wrap-fields" *ngIf="option == 2">
+				<div>
+					<span class="label">Nombre del Lote</span>
+					<span class="output">{{ invoiceDetail.lot?.nameLot || '-'}}</span>
 				</div>
-				<div class="wrap-fields">
-					<div>
-						<span class="label">Total del Item</span>
-						<span class="output">{{ invoiceDetail.total || '-'}}</span>
-					</div>
+			</div>
+			<div class="wrap-fields">
+				<div>
+					<span class="label">Cantidad</span>
+					<span class="output">{{ invoiceDetail.amountInvoiceDetail || '-'}}</span>
 				</div>
+			</div>
+			<div class="wrap-fields">
+				<div>
+					<span class="label">Total del Item</span>
+					<span class="output">{{ invoiceDetail.totalInvoiceDetail || '-'}}</span>
+				</div>
+			</div>
+        </div>
+    </div>
+
+	<ng-template #template>
+		<div class="modal-body text-center">
+			<div class="dialog-title">Confirmación </div>
+			<div class="dialog-message">¿Estas seguro que quieres eliminar esta factura?</div>
+			<div class="dialog-options">
+				<button class="btn-text green" type="button" (click)="delete()">
+					<div class="text">Si</div>
+				</button>
+				<button class="btn-text red" type="button" (click)="decline()" >
+					<div class="text">No</div>
+				</button>
 			</div>
 		</div>
-
-		<ng-template #template>
-			<div class="modal-body text-center">
-				<div class="dialog-title">Confirmación </div>
-				<div class="dialog-message">¿Estas seguro que quieres eliminar esta factura?</div>
-				<div class="dialog-options">
-					<button class="btn-text green" type="button" (click)="delete()">
-						<div class="text">Si</div>
-					</button>
-					<button class="btn-text red" type="button" (click)="decline()" >
-						<div class="text">No</div>
-					</button>
-				</div>
-			</div>
-		</ng-template>
-		<!---->
+	</ng-template>
+	<!---->
 	`
 })
 
 export class InvoiceDetailReadComponent implements OnInit {
 	modalRef: BsModalRef;
 	confirmDelete = true;
-	purchase: Boolean;
+	option: number;
 
 	invoiceDetail: InvoiceDetail = new InvoiceDetail();
 
@@ -120,12 +118,7 @@ export class InvoiceDetailReadComponent implements OnInit {
 		this.activatedRoute.params.subscribe(params => {
 			this.invoiceDetailService.getById(params['invoiceDetailId']).subscribe( data => {
 				this.invoiceDetail = data['result'];
-				if (this.invoiceDetail.lot === undefined) {
-					this.purchase = true;
-				} else {
-					this.purchase = false;
-				}
-				console.log(this.invoiceDetail);
+				this.option = this.invoiceDetail.invoice.provider.providerType.id;
 			});
 		});
 	}
