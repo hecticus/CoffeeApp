@@ -9,6 +9,7 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 	styleUrls: ['./invoice-detail.component.css'],
 	template: `
 		<h3 class="title">Detalle del Item</h3>
+		<!--
 		<div class="tool-bar both-side">
 			<div class="right row">
 				<button class="btn-icon" title="Actualizar item" type="button" (click)="update()">
@@ -18,7 +19,7 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 					<i class="material-icons">delete</i>
 				</button>
 			</div>
-		</div>
+		</div>-->
 
 		<div class="answer">
 			<div class="fieldset">
