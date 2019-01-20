@@ -10,9 +10,9 @@ export class Invoice extends BaseModel {
 	statusInvoice: Status;
 	closedDateInvoice: string;
 	totalInvoice: number;
-	invoiceDetails: InvoiceDetail [];
+	invoiceDetails: InvoiceDetail[];
 	startDate: string;
 	closedDate: string;
 	buyOption: boolean;
-	itemtypes: InvoiceDetail [];
+	itemtypes: InvoiceDetail[];
 }

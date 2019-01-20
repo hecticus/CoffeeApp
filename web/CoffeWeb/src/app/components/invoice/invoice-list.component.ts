@@ -222,7 +222,7 @@ export class InvoiceListComponent implements OnInit {
 	// MatPaginator Inputs
 	length = 100;
 	pageSize = 10;
-	pageSizeOptions: number[] = [15, 30, 60];
+	pageSizeOptions: number[] = [40, 80, 100];
 
 	dataSource = new MatTableDataSource<Invoice>();
 

@@ -5,9 +5,10 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { InvoiceService } from './invoice.service';
 import { Location } from '@angular/common';
 import { Status } from '../../core/models/status';
-import { StatusInvoiceService } from '../status/status-invoice.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NotificationService } from 'src/app/core/utils/notification/notification.service';
+import { InvoiceDetailService } from '../invoice-detail/invoice-detail.service';
+import { BaseService } from 'src/app/core/base.service';
 
 @Component({
 	styleUrls: ['./invoice.component.css'],
@@ -107,12 +108,13 @@ export class InvoiceReadComponent implements OnInit {
 	invoice = new Invoice();
 	invoiceDetail: InvoiceDetail;
 	idInvoice: number;
+	details: InvoiceDetail[];
 
 	constructor(
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private invoiceService: InvoiceService,
-		private statusInvoiceService: StatusInvoiceService,
+		private invoiceDetailService: InvoiceDetailService,
 		private location: Location,
 		private modalService: BsModalService,
 		private notificationService: NotificationService,
@@ -125,6 +127,7 @@ export class InvoiceReadComponent implements OnInit {
 
 		this.invoiceService.getById(this.idInvoice).subscribe( data => {
 			this.invoice = data['result'];
+			this.checkDetail(this.invoice);
 		});
 	}
 
@@ -140,7 +143,6 @@ export class InvoiceReadComponent implements OnInit {
 	}
 
 	update() {
-		console.log(this.activatedRoute);
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
 	}
 
@@ -148,12 +150,37 @@ export class InvoiceReadComponent implements OnInit {
 		this.invoiceService.delete(this.idInvoice).subscribe( any => {
 			this.notificationService.sucessDelete('Factura');
 			let url = this.location.path();
-			this.modalRef.hide();
 			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
 		}, err =>  {
 			this.notificationService.error(err);
 			this.modalRef.hide();
 		});
 	}
+
+	checkDetail(invoice: Invoice) {
+		if (invoice.totalInvoice == null) {
+			let httpParams = BaseService.jsonToHttpParams({
+				invoice: this.invoice.id
+			});
+
+			this.invoiceDetailService.getAll(httpParams).subscribe( data3 => {
+				this.details = data3['result'];
+				if ( this.details.length === 0) {
+					this.deleteCustomer();
+				}
+			});
+		}
+	}
+
+	deleteCustomer() {
+		this.invoiceService.delete(this.idInvoice).subscribe( any => {
+			this.notificationService.sucessDelete('Factura');
+			let url = this.location.back();
+		}, err =>  {
+			this.notificationService.error(err);
+			this.modalRef.hide();
+		});
+	}
+
 }
 
