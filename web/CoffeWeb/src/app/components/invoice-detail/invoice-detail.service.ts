@@ -1,4 +1,3 @@
-import { Params } from '@angular/router';
 import { BaseService } from '../../core/base.service';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -6,8 +5,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { InvoiceDetail } from 'src/app/core/models/invoice-detail';
 import { CustomValidators } from 'src/app/core/utils/validator/custom-validator';
-import { Purities } from 'src/app/core/models/purities';
-import { InvoiceDetailPurity } from 'src/app/core/models/invoice-detail-purity';
 
 @Injectable({
 	providedIn: 'root'
@@ -39,15 +36,16 @@ export class InvoiceDetailService {
 	initHarvestDetail(invoiceDetail: InvoiceDetail): FormGroup {
 		return this.fb.group({
 			id: new FormControl(invoiceDetail.id),
-			invoice: new FormControl(invoiceDetail.invoice),
+			invoice: new FormControl(invoiceDetail.invoice ? invoiceDetail.invoice.id : undefined),
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			farm:  new FormControl(invoiceDetail.lot.farm ? invoiceDetail.lot.farm.id : undefined),
 			lot: new FormControl(invoiceDetail.lot ? invoiceDetail.lot.id : undefined , Validators.required),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [ Validators.maxLength(100)]),
-			nameDelivered: new FormControl(''),
-			nameReceived: new FormControl(''),
+			nameDelivered: new FormControl(invoiceDetail.nameDelivered, [Validators.required, Validators.maxLength(50)]),
+			nameReceived: new FormControl(invoiceDetail.nameReceived, [Validators.required, Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
+			invoiceDetailPurity: new FormControl( invoiceDetail.invoiceDetailPurity),
 		});
 	}
 
@@ -55,7 +53,7 @@ export class InvoiceDetailService {
 	initPurchaseDetail(invoiceDetail: InvoiceDetail): FormGroup {
 		return this.fb.group({
 			id: new FormControl(invoiceDetail.id),
-			invoice: new FormControl(invoiceDetail.invoice),
+			invoice: new FormControl(invoiceDetail.invoice ? invoiceDetail.invoice.id : undefined),
 			amountInvoiceDetail: new FormControl(invoiceDetail.amountInvoiceDetail, [CustomValidators.numberRegex, CustomValidators.min(0)]),
 			itemType: new FormControl(invoiceDetail.itemType ? invoiceDetail.itemType.id : undefined , Validators.required),
 			store: new FormControl(invoiceDetail.store ? invoiceDetail.store.id : undefined , Validators.required),
@@ -66,9 +64,11 @@ export class InvoiceDetailService {
 			note: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			noteInvoiceDetail: new FormControl(invoiceDetail.note, [Validators.maxLength(50)]),
 			startDate: new FormControl(this.dateTimeIso()),
-			invoiceDetailPurity: this.fb.array([
-				// this.initPurities(invoiceDetail.invoiceDetailPurity))
-			])
+			invoiceDetailPurity: new FormControl( []),
+			//  this.fb.array([
+			// 	invoiceDetail.invoiceDetailPurity
+			// 	// this.initPurities(invoiceDetail.invoiceDetailPurity))
+			// ])
 		});
 	}
 

@@ -270,7 +270,7 @@ export class InvoiceDetailCreateComponent implements OnInit {
 
 	ngOnInit() {
 		this.idInvoice = this.activatedRoute.snapshot.parent.params.invoiceId;
-		this.form = this.invoiceDetailService.initInvoiceDetail(this.invoiceDetail);
+		this.form = this.invoiceDetailService.initHarvestDetail(this.invoiceDetail);
 
 		this.begins(1);
 	}

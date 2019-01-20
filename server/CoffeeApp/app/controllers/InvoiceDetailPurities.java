@@ -82,7 +82,7 @@ public class InvoiceDetailPurities  extends Controller {
         }
     }
 
-        @CoffeAppsecurity
+    @CoffeAppsecurity
     public Result deletes() {
         try {
             JsonNode json = request().body().asJson();

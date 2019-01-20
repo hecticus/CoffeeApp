@@ -18,10 +18,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 
 /**
  * Created by sm21 on 10/05/18.
@@ -65,6 +61,12 @@ public class InvoiceDetails extends Controller {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
+            System.out.println("***  job...");
+            System.out.println("*** job...");
+            System.out.println("***  job...");
+           /* Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
+            if(form.hasErrors())
+                return badRequest(form.errorsAsJson());*/
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
             if (invoiceDetail.getLot() != null ){
@@ -72,7 +74,39 @@ public class InvoiceDetails extends Controller {
                 invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
             }
 
+            invoiceDetail.setId(id);
+            invoiceDetail.update();
+
+            return  Response.createdEntity(Json.toJson(invoiceDetail));
+        }catch(Exception e) {
+            return Response.responseExceptionUpdated(e);
+        }
+
+    }
+
+/*    @CoffeAppsecurity
+    public Result update(Long id) {
+        try {
+            JsonNode json = request().body().asJson();
+            if(json== null)
+                return Response.requiredJson();
+
+            InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
+            if (invoiceDetail.getLot() != null ){
+                Lot lot = Lot.findById(invoiceDetail.getLot().getId());
+                invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
+            }
+
+            JsonNode invoiceDetailPurits = json.get("invoiceDetailPurity");
             JsonNode purities = json.get("purities");
+            System.out.println(purities);
+
+            *//*if ((invoiceDetailPurits == null) and (purities == null)){
+                invoiceDetail.setId(id);
+                invoiceDetail.update();
+                return  Response.createdEntity(Json.toJson(invoiceDetail));
+            }*//*
+
             if (purities == null)
                 return Response.requiredParameter("purities");
 
@@ -80,6 +114,20 @@ public class InvoiceDetails extends Controller {
             if(!detailPurities.isEmpty() ){
                 Ebean.deleteAllPermanent(InvoiceDetailPurity.class, detailPurities );
             }
+
+*//*            {
+                "amountInvoiceDetail": 313.5,
+                    "costItemType": 0.2567,
+                    invoice: {id: 247},
+                invoiceDetailPurity: [],
+                itemType: {id: 1},
+                nameDelivered: "Adolfo Villarreal ",
+                        nameReceived: "Marwin",
+                    note: "Compras",
+                    noteInvoiceDetail: "Compras",
+                    startDate: "2019-01-19T21:49:53Z",
+                    store: {id: 1},
+            }*//*
 
             for(JsonNode purity : purities) {
 
@@ -102,7 +150,6 @@ public class InvoiceDetails extends Controller {
                 invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity().multiply(valueRateInvoiceDetailPurity.decimalValue()));
 
                 invoiceDetailPurity.save();
-
             }
 
             invoiceDetail.setId(id);
@@ -113,7 +160,7 @@ public class InvoiceDetails extends Controller {
             return Response.responseExceptionUpdated(e);
         }
 
-    }
+    }*/
 
     @CoffeAppsecurity
     public Result delete(Long id) {

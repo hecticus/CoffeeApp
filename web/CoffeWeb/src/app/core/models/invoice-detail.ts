@@ -22,5 +22,5 @@ export class InvoiceDetail extends BaseModel {
 	invoiceDetailPurity: InvoiceDetailPurity[];
 	startDate: String;
 	closedDate: string;
-	total: number;
+	totalInvoiceDetail: number;
 }

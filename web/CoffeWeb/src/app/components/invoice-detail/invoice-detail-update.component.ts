@@ -132,9 +132,11 @@ import { Location } from '@angular/common';
                     </mat-form-field>
                     <app-validator [control]="form.controls['amountInvoiceDetail']"></app-validator>
                 </div>
-                <button class="buttonStyle" (click)="addPurities(form.controls.purities)" title="Añadir Pureza a la Cosecha">
+				<!--
+				<button class="buttonStyle" (click)="addPurities(form.controls.purities)" title="Añadir Pureza a la Cosecha">
                     <i class="material-icons">add_shopping_cart</i>
-                </button>
+				</button>
+				-->
             </div>
 
 			<!--
@@ -198,9 +200,8 @@ import { Location } from '@angular/common';
                     <app-validator [control]="form.controls['noteInvoiceDetail']"></app-validator>
                 </div>
             </div>
-
 			<div class="options row">
-				<button mat-raised-button class="btn-text" type="submit" >Guardar</button>
+				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
 			</div>
 		</form>
 	</div>
@@ -299,9 +300,10 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 
 	update(id: number) {
 		console.log(this.form.value);
+		this.form.controls['invoice'].patchValue({id: this.form.value['invoice']});
 		if (id === 1) {
-			this.form.controls['lot'].patchValue({id: this.form.value['farm']});
-			this.form.controls['statusLot'].patchValue({id: this.form.value['statusLot']});
+			this.form.controls['store'].patchValue({id: this.form.value['store']});
+			this.form.controls['itemType'].patchValue({id: this.form.value['itemType']});
 		} else {
 			this.form.controls['lot'].patchValue({id: this.form.value['lot']});
 			this.form.controls['itemType'].patchValue({id: this.form.value['itemType']});
