@@ -108,7 +108,6 @@ export class InvoiceReadComponent implements OnInit {
 	invoice = new Invoice();
 	invoiceDetail: InvoiceDetail;
 	idInvoice: number;
-	details: InvoiceDetail[];
 
 	constructor(
 		private router: Router,
@@ -164,8 +163,8 @@ export class InvoiceReadComponent implements OnInit {
 			});
 
 			this.invoiceDetailService.getAll(httpParams).subscribe( data3 => {
-				this.details = data3['result'];
-				if ( this.details.length === 0) {
+				let details: InvoiceDetail[] = data3['result'];
+				if ( details.length === 0) {
 					this.deleteCustomer();
 				}
 			});

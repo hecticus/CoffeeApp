@@ -23,6 +23,10 @@ export class InvoiceDetailService {
 		return this.http.put<any>(InvoiceDetailService.BASE_URL + '/' + invoiceDetail.id, invoiceDetail);
 	}
 
+	delete(id: number) {
+		return this.http.delete<any>( InvoiceDetailService.BASE_URL + '/' + id);
+	}
+
 	getById(id: number): Observable<InvoiceDetail> {
 		return this.http.get<any>(InvoiceDetailService.BASE_URL + '/' + id);
 	}

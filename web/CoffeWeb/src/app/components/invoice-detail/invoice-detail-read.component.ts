@@ -1,3 +1,4 @@
+import { invoiceDetailRoutes } from './invoice-detail..routing';
 import { InvoiceDetail } from './../../core/models/invoice-detail';
 import { InvoiceDetailService } from './invoice-detail.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -79,6 +80,12 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 					<span class="output">{{ invoiceDetail.totalInvoiceDetail || '-'}}</span>
 				</div>
 			</div>
+			<div class="wrap-fields">
+				<div>
+					<span class="label">Observaciónes</span>
+					<span class="output">{{ invoiceDetail.note || '-'}}</span>
+				</div>
+			</div>
         </div>
     </div>
 
@@ -101,11 +108,10 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 })
 
 export class InvoiceDetailReadComponent implements OnInit {
+	invoiceDetail: InvoiceDetail = new InvoiceDetail();
 	modalRef: BsModalRef;
 	confirmDelete = true;
 	option: number;
-
-	invoiceDetail: InvoiceDetail = new InvoiceDetail();
 
 	constructor(
 		private router: Router,
@@ -133,20 +139,20 @@ export class InvoiceDetailReadComponent implements OnInit {
 	}
 
 	update() {
-		console.log(this.activatedRoute);
 		this.router.navigate(['./update'], {relativeTo: this.activatedRoute});
 	}
 
 	delete(this) {
-		this.invoiceService.delete(this.idInvoice).subscribe( any => {
-			this.notificationService.sucessDelete('Factura');
-			let url = this.location.path();
-			this.modalRef.hide();
-			this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
-		}, err =>  {
-			this.notificationService.error(err);
-			this.modalRef.hide();
-		});
+		console.log(13);
+		// this.invoiceDetailService.delete(this.invoiceDetail.id).subscribe( any => {
+		// 	this.notificationService.sucessDelete('Detalle');
+		// 	let url = this.location.back();
+		// 	this.modalRef.hide();
+		// 	this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
+		// }, err =>  {
+		// 	this.notificationService.error(err);
+		// 	this.modalRef.hide();
+		// });
 	}
 }
 
