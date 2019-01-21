@@ -15,15 +15,11 @@ import { BaseService } from 'src/app/core/base.service';
 	template: `
 		<h3 class="title">Detalles del Reporte</h3>
 		<div class="tool-bar both-side">
-			<!--<div class="right row">
-					<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
-						<i class="material-icons">edit</i>
-					</button>
-					<button class="btn-icon" title="Delete" type="button" (click)="confirmDelete = false">
-						<i class="material-icons">delete</i>
-					</button>
-			</div>-->
+			<!---->
 			<div class="right row">
+				<button class="btn-icon" title="Actualizar" type="button" (click)="update()">
+					<i class="material-icons">edit</i>
+				</button>
 				<button class="btn-icon" title="Eliminar Factura" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
 				</button>
@@ -68,19 +64,14 @@ import { BaseService } from 'src/app/core/base.service';
 
 			<div class="legend">Detalles de la Factura</div>
 
-			<!-- -->
+			<!--
 			<div class="tool-bar both-side">
-			<div class="right row">
-				<button class="btn-icon"  title="Crear Factura" type="button" (click)="create()">
-					<i class="material-icons">add</i>
-				</button>
-				<!-- <button class="btn-icon" type="button">
-				<button class="btn-icon" title="Delete" type="button"
-				(click)="confirmDelete = false" *ngIf="tableService.getSelectedsLength() > 0">
-					<i class="material-icons">delete</i>
-				</button> -->
-			</div>
-		</div>
+				<div class="right row">
+					<button class="btn-icon"  title="Crear Factura" type="button" (click)="create()">
+						<i class="material-icons">add</i>
+					</button>
+				</div>
+			</div> -->
 			<app-invoice-detail-list></app-invoice-detail-list>
 		</div>
 

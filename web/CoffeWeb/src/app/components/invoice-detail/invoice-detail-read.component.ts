@@ -16,9 +16,10 @@ import { NotificationService } from 'src/app/core/utils/notification/notificatio
 				<button class="btn-icon" title="Actualizar item" type="button" (click)="update()">
 					<i class="material-icons">edit</i>
 				</button>
+				<!--
 				<button class="btn-icon" title="Eliminar Item de la Factura" type="button" (click)="openModal(template)">
 					<i class="material-icons">delete</i>
-				</button>
+				</button>-->
 			</div>
 		</div>
 
@@ -144,15 +145,17 @@ export class InvoiceDetailReadComponent implements OnInit {
 
 	delete(this) {
 		console.log(13);
-		// this.invoiceDetailService.delete(this.invoiceDetail.id).subscribe( any => {
-		// 	this.notificationService.sucessDelete('Detalle');
-		// 	let url = this.location.back();
-		// 	this.modalRef.hide();
-		// 	this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
-		// }, err =>  {
-		// 	this.notificationService.error(err);
-		// 	this.modalRef.hide();
-		// });
+		this.invoiceDetailService.delete(this.invoiceDetail.id).subscribe( any => {
+			this.notificationService.sucessDelete('Detalle');
+			this.modalRef.hide();
+			// this._location.back();
+			console.log(this.activatedRoute);
+			// let url = this.location.back();
+			// this.router.navigate([url.substr(0, url.lastIndexOf('/'))]);
+		}, err =>  {
+			this.notificationService.error(err);
+			this.modalRef.hide();
+		});
 	}
 }
 

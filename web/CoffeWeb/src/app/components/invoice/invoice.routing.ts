@@ -1,3 +1,4 @@
+import { InvoiceUpdateComponent } from './invoice-update.component';
 import { InvoiceDetailReadComponent } from './../invoice-detail/invoice-detail-read.component';
 import { Routes, RouterModule } from '@angular/router';
 import { InvoiceReadComponent } from './invoice-read.component';
@@ -6,6 +7,7 @@ import { InvoiceComponent } from './invoice.component';
 import { InvoiceCreateComponent } from './invoice-create.component';
 import { NgModule } from '@angular/core';
 import { invoiceDetailRoutes } from '../invoice-detail/invoice-detail..routing';
+import { InvoiceDetailUpdateComponent } from '../invoice-detail/invoice-detail-update.component';
 
 export const invoiceRoutes: Routes = [
 	{
@@ -44,6 +46,13 @@ export const invoiceRoutes: Routes = [
 						component: InvoiceReadComponent,
 						data: {
 							breadcrumb: undefined
+						},
+					}, {
+						path: 'update',
+						pathMatch: 'full',
+						component: InvoiceUpdateComponent,
+						data: {
+							breadcrumb: 'Actualizar'
 						},
 					},
 					...invoiceDetailRoutes,

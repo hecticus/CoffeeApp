@@ -23,76 +23,8 @@ import { Location } from '@angular/common';
 	template: `
 	<div class= "container">
 
-		<div *ngIf="option == 2">
-		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update(2)">
-		<legend><span>Actualizar item de la Cosecha</span></legend>
-			<div class="wrap-fields">
-				<div class="field">
-					<mat-form-field>
-						<mat-select required [formControl]="form.controls['farm']">
-							<mat-option *ngFor="let f of farms" [value]="f.id">{{f.nameFarm}}</mat-option>
-						</mat-select>
-						<mat-label><b>Granja</b></mat-label>
-					</mat-form-field>
-				</div>
-				<div class="field">
-					<mat-form-field>
-						<mat-select required [formControl]="form.controls['lot']">
-							<mat-option *ngFor="let l of lots" [value]="l.id">{{l.nameLot}}</mat-option>
-						</mat-select>
-						<mat-label><b>Lote</b></mat-label>
-					</mat-form-field>
-					<app-validator [control]="form.controls['lot']"></app-validator>
-				</div>
-				<div class="field">
-					<mat-form-field>
-						<mat-select required [formControl]="form.controls['itemType']">
-							<mat-option *ngFor="let it of itemType" [value]="it.id">{{it.nameItemType}}</mat-option>
-						</mat-select>
-						<mat-label><b>Grano</b></mat-label>
-					</mat-form-field>
-					<app-validator [control]="form.controls['itemType']"></app-validator>
-				</div>
-				<button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
-					<i class="material-icons">delete_sweep</i>
-				</button>
-			</div>
-
-			<div class="wrap-fields">
-				<div class="field">
-					<mat-form-field class="full-width2">
-						<input matInput required formControlName="amountInvoiceDetail" placeholder="Cantidad"
-						class="example-right-align">
-					</mat-form-field>
-					<app-validator [control]="form.controls['amountInvoiceDetail']"></app-validator>
-				</div>
-				<div class="field">
-					<mat-form-field class="full-width">
-						<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
-					</mat-form-field>
-					<app-validator [control]="form.controls['noteInvoiceDetail']"></app-validator>
-				</div>
-			</div>
-
-			<div class="options row">
-				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
-			</div>
-		</form>
-	</div>
-
-
-
-
-
-
-
-
-
-
-
-
 	<div class= "container" *ngIf="option == 1">
-	<legend><span>Actualizar item de la Compra</span></legend>
+		<legend><span>Actualizar item de la Compra</span></legend>
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update(1)">
             <div class="wrap-fields">
                 <div class="field">
@@ -114,9 +46,9 @@ import { Location } from '@angular/common';
                     <app-validator [control]="form.controls['itemType']"></app-validator>
                 </div>
 
-                <button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
+                <!--<button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
                     <i class="material-icons">delete_sweep</i>
-                </button>
+                </button>-->
             </div>
 
             <div class="wrap-fields">
@@ -204,6 +136,65 @@ import { Location } from '@angular/common';
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
 			</div>
 		</form>
+
+		<div *ngIf="option == 2">
+		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update(2)">
+		<legend><span>Actualizar item de la Cosecha</span></legend>
+			<div class="wrap-fields">
+				<div class="field">
+					<mat-form-field>
+						<mat-select required [formControl]="form.controls['farm']">
+							<mat-option *ngFor="let f of farms" [value]="f.id">{{f.nameFarm}}</mat-option>
+						</mat-select>
+						<mat-label><b>Granja</b></mat-label>
+					</mat-form-field>
+				</div>
+				<div class="field">
+					<mat-form-field>
+						<mat-select required [formControl]="form.controls['lot']">
+							<mat-option *ngFor="let l of lots" [value]="l.id">{{l.nameLot}}</mat-option>
+						</mat-select>
+						<mat-label><b>Lote</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['lot']"></app-validator>
+				</div>
+				<div class="field">
+					<mat-form-field>
+						<mat-select required [formControl]="form.controls['itemType']">
+							<mat-option *ngFor="let it of itemType" [value]="it.id">{{it.nameItemType}}</mat-option>
+						</mat-select>
+						<mat-label><b>Grano</b></mat-label>
+					</mat-form-field>
+					<app-validator [control]="form.controls['itemType']"></app-validator>
+				</div>
+				<!--
+				<button class="buttonStyle2" (click)="deleteItemType(i)" title="Eliminar Detalle a la Cosecha">
+					<i class="material-icons">delete_sweep</i>
+				</button>-->
+			</div>
+
+			<div class="wrap-fields">
+				<div class="field">
+					<mat-form-field class="full-width2">
+						<input matInput required formControlName="amountInvoiceDetail" placeholder="Cantidad"
+						class="example-right-align">
+					</mat-form-field>
+					<app-validator [control]="form.controls['amountInvoiceDetail']"></app-validator>
+				</div>
+				<div class="field">
+					<mat-form-field class="full-width">
+						<input matInput formControlName="noteInvoiceDetail" placeholder="Observaciones">
+					</mat-form-field>
+					<app-validator [control]="form.controls['noteInvoiceDetail']"></app-validator>
+				</div>
+			</div>
+
+			<div class="options row">
+				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
+			</div>
+		</form>
+	</div>
+
 	</div>
 	`,
 })
@@ -304,6 +295,7 @@ export class InvoiceDetailUpdateComponent implements OnInit {
 		if (id === 1) {
 			this.form.controls['store'].patchValue({id: this.form.value['store']});
 			this.form.controls['itemType'].patchValue({id: this.form.value['itemType']});
+			this.form.controls['invoiceDetailPurity'].patchValue(this.invoiceDetail.invoiceDetailPurity);
 		} else {
 			this.form.controls['lot'].patchValue({id: this.form.value['lot']});
 			this.form.controls['itemType'].patchValue({id: this.form.value['itemType']});
