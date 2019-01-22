@@ -136,8 +136,9 @@ import { Location } from '@angular/common';
 				<button mat-raised-button class="btn-text" type="submit" [disabled]="form?.invalid" >Guardar</button>
 			</div>
 		</form>
+	</div>
 
-		<div *ngIf="option == 2">
+	<div *ngIf="option == 2">
 		<form *ngIf="form" [formGroup]="form"  (ngSubmit)="update(2)">
 		<legend><span>Actualizar item de la Cosecha</span></legend>
 			<div class="wrap-fields">
