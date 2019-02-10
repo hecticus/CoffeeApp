@@ -3,9 +3,9 @@ package security.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
+
+
+
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
@@ -90,8 +90,8 @@ public class Roles extends Controller {
                           String sort, String name, boolean delete){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Role.findAll(index, size, pathProperties, sort, name, delete);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            PagedList pagedList = Role.findAll(index, size, pathProperties, sort, name, delete);
+            return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

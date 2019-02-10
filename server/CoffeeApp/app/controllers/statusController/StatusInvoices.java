@@ -1,8 +1,8 @@
 package controllers.statusController;
 
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
+
+
+
 import controllers.utils.PropertiesCollection;
 import io.ebean.text.PathProperties;
 import models.status.StatusInvoice;
@@ -22,9 +22,9 @@ public class StatusInvoices extends Controller {
     public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = StatusInvoice.findAll(index, size, sort, pathProperties);
+            PagedList pagedList = StatusInvoice.findAll(index, size, sort, pathProperties);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

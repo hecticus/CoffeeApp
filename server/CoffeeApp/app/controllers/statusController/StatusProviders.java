@@ -1,8 +1,8 @@
 package controllers.statusController;
 
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
+
+
+
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
@@ -25,9 +25,9 @@ public class StatusProviders extends Controller {
     public Result findAll( Integer index, Integer size, String sort, String collection){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = StatusProvider.findAll(index, size, sort, pathProperties);
+            PagedList pagedList = StatusProvider.findAll(index, size, sort, pathProperties);
 
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

@@ -2,9 +2,10 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import models.status.StatusProvider;
 import play.data.validation.Constraints;
@@ -212,11 +213,11 @@ public class Provider extends AbstractEntity{
     }
 
 
-    public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
-                                               String sort, String name,  Long idProviderType,
-                                               String identificationDocProvider, String addressProvider,
-                                               String phoneNumberProvider, String emailProvider,
-                                               String contactNameProvider, Long status, boolean delete){
+    public static PagedList findAll(Integer index, Integer size, PathProperties pathProperties,
+                                    String sort, String name, Long idProviderType,
+                                    String identificationDocProvider, String addressProvider,
+                                    String phoneNumberProvider, String emailProvider,
+                                    String contactNameProvider, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -253,13 +254,13 @@ public class Provider extends AbstractEntity{
         if( delete)
             expressionList.setIncludeSoftDeletes();
 
-        if(index == null || size == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(
-                expressionList.setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
-                index,
-                size);
+        if(index == null || size == null){
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(expressionList.findCount()).findPagedList();
+        }
+
+        return expressionList.setFirstRow(index).setMaxRows(size).findPagedList();
     }
 
 }

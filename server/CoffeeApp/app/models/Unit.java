@@ -2,9 +2,10 @@ package models;
 
 import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
@@ -55,8 +56,8 @@ public class Unit extends AbstractEntity {
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
-                                              String sort, String name, boolean delete){
+    public static PagedList findAll(Integer index, Integer size, PathProperties pathProperties,
+                                    String sort, String name, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
 
@@ -72,14 +73,15 @@ public class Unit extends AbstractEntity {
         if(sort != null)
             expressionList.orderBy(sort( sort));
 
-        if(index == null || size == null)
-            return new ListPagerCollection(expressionList.findList());
+        if(index == null || size == null){
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(expressionList.findCount()).findPagedList();
+        }
 
-        return new ListPagerCollection(
-                expressionList.setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
-                index,
-                size);
+        return expressionList.setFirstRow(index).setMaxRows(size).findPagedList();
     }
 
 }
+
+

@@ -2,18 +2,14 @@ package controllers;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.responseUtils.PropertiesCollection;
 import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.PropertiesCollection;
+import controllers.utils.Response;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
+import io.ebean.PagedList;
 import models.Unit;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.Response;
-import controllers.responseUtils.ResponseCollection;
+
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -48,7 +44,7 @@ public class Units extends Controller {
             return Response.createdEntity(Json.toJson(unit));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -77,7 +73,7 @@ public class Units extends Controller {
             Ebean.delete(Unit.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -109,10 +105,10 @@ public class Units extends Controller {
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name,  boolean deleted){
         try {
-            ListPagerCollection listPager = Unit.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name,  deleted);
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            PagedList pagedList = Unit.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name,  deleted);
+            return controllers.utils.Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

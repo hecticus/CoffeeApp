@@ -2,7 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.*;
 import io.ebean.annotation.Formula;
 import io.ebean.text.PathProperties;
@@ -111,14 +111,6 @@ public class Invoice extends AbstractEntity{
 
     public static Invoice findById(Long id){
         return finder.byId(id);
-//        return finder.query().where().eq("id", id).findUnique();
-    }
-
-    public static List<Invoice> getOpenseByProviderId(Long id_provider, String dateStart){
-       return finder.query().where()
-               .eq("provider.id", id_provider)
-               .startsWith("startDate", dateStart)
-               .findList();
     }
 
     public static List<Invoice> invoicesByProviderId(Long id_provider){
@@ -126,14 +118,6 @@ public class Invoice extends AbstractEntity{
                 .eq("provider.id", id_provider)
                 .eq("deleted",false )
                 .findList();
-    }
-
-    public static Invoice invoicesByProvider(Provider provider, ZonedDateTime dateStart){
-        return finder.query().where()
-                .eq("provider.id", provider.getId())
-                .le("startDate", dateStart)
-                .eq("statusInvoice.id", 11 )
-                .findUnique();
     }
 
     public static List<Invoice> invoicesListByProvider(Long provider, ZonedDateTime dateStart){
@@ -150,8 +134,7 @@ public class Invoice extends AbstractEntity{
                 .findList();
     }
 
-
-    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
+    public static PagedList findAll( Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
                                          String sort, Long id_provider, Long providerType,  String startDate,
                                          String closeDate, Long status ,boolean delete, String nitName){
 
@@ -190,14 +173,14 @@ public class Invoice extends AbstractEntity{
         if( delete )
             expressionList.setIncludeSoftDeletes();
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
+        if(pageIndex == null || pageSize == null){
+            int aux = expressionList.findCount();
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(aux).findPagedList();
+        }
 
-        return new ListPagerCollection(
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
+        return expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findPagedList();
     }
 
     public static ListPagerCollection createTotalReport(){
@@ -394,7 +377,7 @@ public class Invoice extends AbstractEntity{
                 "      p.nit_provider ASC,\n" +
                 "      p.nit_provider ASC;";
 
-        List<SqlRow>  sqlRows = Ebean.createSqlQuery(sql).findList();
+        List<SqlRow> sqlRows = Ebean.createSqlQuery(sql).findList();
 
         return new ListPagerCollection(sqlRows);
     }

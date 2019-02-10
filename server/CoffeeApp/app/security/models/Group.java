@@ -1,7 +1,7 @@
 package security.models;
 
 //import com.avaje.ebean.Ebean;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.ebean.text.PathProperties;
@@ -82,7 +82,7 @@ public class Group extends AbstractEntity {
         this.authUsers = authUsers;
     }
 
-    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+    public static PagedList findAll(Integer index, Integer size, PathProperties pathProperties,
                                               String sort, String name, boolean deleted) {
 
         ExpressionList expressionList = finder.query().where();

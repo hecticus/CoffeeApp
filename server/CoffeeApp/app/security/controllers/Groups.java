@@ -1,9 +1,9 @@
 package security.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
+
+
+
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
@@ -87,8 +87,8 @@ public class Groups  extends Controller {
                           String sort, String name, boolean deleted){
         try {
             PathProperties pathProperties = propertiesCollection.getPathProperties(collection);
-            ListPagerCollection listPager = Group.findAll(index, size, pathProperties, sort, name, deleted);
-            return ResponseCollection.foundEntity(listPager, pathProperties);
+            PagedList pagedList = Group.findAll(index, size, pathProperties, sort, name, deleted);
+            return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
             return ExceptionsUtils.find(e);
         }

@@ -2,7 +2,7 @@ package security.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
@@ -111,7 +111,7 @@ public class Role extends AbstractEntity{
         return roles;
     }
 
-    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
+    public static PagedList findAll(Integer index, Integer size, PathProperties pathProperties,
                                               String sort, String name, boolean deleted) {
 
         ExpressionList expressionList = finder.query().where();

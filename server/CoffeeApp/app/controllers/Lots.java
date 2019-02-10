@@ -1,12 +1,13 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.ListPagerCollection;
+
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.PropertiesCollection;
+import controllers.utils.Response;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
+import io.ebean.PagedList;
 import models.Lot;
-import controllers.responseUtils.*;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -41,7 +42,7 @@ public class Lots extends Controller {
             return  Response.createdEntity(Json.toJson(lot));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -61,7 +62,7 @@ public class Lots extends Controller {
             lot.update();
             return  Response.updatedEntity(Json.toJson(lot));
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -72,7 +73,7 @@ public class Lots extends Controller {
             Ebean.delete(Lot.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -104,12 +105,12 @@ public class Lots extends Controller {
     public Result findAll( Integer pageIndex, Integer pageSize, String collection, String sort,
                            String name, Long idFarm, Long status, boolean deleted){
         try {
-            ListPagerCollection listPager = Lot.findAll( pageIndex, pageSize,  propertiesCollection.getPathProperties(collection), sort, name, idFarm,
+            PagedList pagedList = Lot.findAll( pageIndex, pageSize,  propertiesCollection.getPathProperties(collection), sort, name, idFarm,
                                                         status, deleted);
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

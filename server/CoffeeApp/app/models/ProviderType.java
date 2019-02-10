@@ -2,7 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.*;
 import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
@@ -78,7 +78,7 @@ public class ProviderType  extends AbstractEntity {
                 .findUnique();
     }
 
-    public static ListPagerCollection findAll( Integer index, Integer size, PathProperties pathProperties,
+    public static PagedList findAll( Integer index, Integer size, PathProperties pathProperties,
                                                String sort, String name, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
@@ -95,14 +95,15 @@ public class ProviderType  extends AbstractEntity {
         if( delete )
             expressionList.setIncludeSoftDeletes();
 
-        if(index == null || size == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(
-                expressionList.setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
-                index,
-                size);
+        if(index == null || size == null){
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(expressionList.findCount()).findPagedList();
+        }
+
+        return expressionList.setFirstRow(index).setMaxRows(size).findPagedList();
     }
+
 
     public static PagedList findAll2( Integer index, Integer size, PathProperties pathProperties,
                                                String sort, String name, boolean delete){

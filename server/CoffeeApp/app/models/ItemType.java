@@ -3,7 +3,7 @@ package models;
 import com.avaje.ebean.validation.Range;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.*;
 import io.ebean.text.PathProperties;
 import org.jetbrains.annotations.NotNull;
@@ -93,13 +93,13 @@ public class ItemType extends AbstractEntity{
         this.invoiceDetails = invoiceDetails;
     }
 
-    //METODOS DEFINE
+    //Methods DEFINE
 
     public static ItemType findById(Long id){
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+    public static PagedList findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
                                               String sort, String name, Long providerType, Long unit, boolean delete ){
         ExpressionList expressionList = finder.query().where();
 
@@ -121,14 +121,14 @@ public class ItemType extends AbstractEntity{
         if( delete )
             expressionList.setIncludeSoftDeletes();
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
+        if(pageIndex == null || pageSize == null){
+            int aux = expressionList.findCount();
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(aux).findPagedList();
+        }
 
-        return new ListPagerCollection(
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
+        return expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findPagedList();
     }
 
 

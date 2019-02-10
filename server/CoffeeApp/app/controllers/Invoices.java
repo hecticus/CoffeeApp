@@ -3,18 +3,17 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
+
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.Response;
 import daemonTask.TimeClosed;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import models.*;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.Response;
-import controllers.responseUtils.ResponseCollection;
+import controllers.utils.PropertiesCollection;
+
 import models.status.StatusInvoice;
 
-import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -50,7 +49,7 @@ public class Invoices extends Controller {
             return  Response.createdEntity(Json.toJson(invoice));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -72,7 +71,7 @@ public class Invoices extends Controller {
             invoice.update();
             return Response.updatedEntity(Json.toJson(invoice));
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -84,7 +83,7 @@ public class Invoices extends Controller {
             Ebean.deleteAll(InvoiceDetail.class, ids);
             return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -128,15 +127,15 @@ public class Invoices extends Controller {
                              String endDate, Long status ,boolean deleted,  String nitName){
         try {
 
-            ListPagerCollection listPager = Invoice.findAll( pageIndex, pageSize,
+            PagedList pagedList = Invoice.findAll( pageIndex, pageSize,
                     propertiesCollection.getPathProperties(collection),
                     sort, id_provider,
                     providerType, startDate, endDate,
                     status, deleted, nitName);
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 
@@ -145,7 +144,7 @@ public class Invoices extends Controller {
         try {
             ListPagerCollection listPager = Invoice.createTotalReport();
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -161,7 +160,7 @@ public class Invoices extends Controller {
                     sort, id_provider, id_providertype, startDate,
                     endDate, status, deleted, nitName);
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -177,7 +176,7 @@ public class Invoices extends Controller {
                     sort, id_provider, id_providertype, startDate,
                     endDate, status, deleted, nitName);
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -188,12 +187,13 @@ public class Invoices extends Controller {
                                   String sort, Long id_provider, Long id_providertype,  String startDate,
                                   String endDate, Long status ,boolean deleted,  String nitName) {
         try {
+            /*PagedList pagedList*/
             ListPagerCollection listPager = Invoice.createPagos(pageIndex, pageSize,
                     propertiesCollection.getPathProperties(collection),
                     sort, id_provider, id_providertype, startDate,
                     endDate, status, deleted, nitName);
 
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -321,7 +321,7 @@ public class Invoices extends Controller {
             return Response.createdEntity(Json.toJson(newInvoice));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 

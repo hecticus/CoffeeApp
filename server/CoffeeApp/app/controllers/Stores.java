@@ -1,16 +1,16 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.responseUtils.Response;
 import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
+
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.Response;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
+import io.ebean.PagedList;
 import models.Store;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.ResponseCollection;
+
+import controllers.utils.PropertiesCollection;
+
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -18,7 +18,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-import java.util.List;
 
 import static play.mvc.Controller.request;
 
@@ -46,7 +45,7 @@ public class Stores {
             store.save();
             return Response.createdEntity(Json.toJson(store));
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -67,7 +66,7 @@ public class Stores {
             return Response.updatedEntity(Json.toJson(store));
 
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -77,7 +76,7 @@ public class Stores {
             Ebean.delete(Store.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -109,11 +108,11 @@ public class Stores {
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, Long status, boolean deleted){
         try {
-            ListPagerCollection listPager = Store.findAll(index, size,  propertiesCollection.getPathProperties(collection),
+            PagedList pagedList = Store.findAll(index, size,  propertiesCollection.getPathProperties(collection),
                                                             sort, name, status, deleted);
-            return ResponseCollection.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

@@ -3,23 +3,19 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import io.ebean.annotation.Transactional;
-import io.ebean.text.PathProperties;
 import models.User;
 
-import controllers.responseUtils.ExceptionsUtils;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.authentication.updatePassword.UpdatePasswordManager;
 import security.authorization.CoffeAppsecurity;
 import security.models.AuthUser;
 
@@ -160,10 +156,10 @@ public class Users extends Controller {
     public Result findAll(Integer index, Integer size, String collection,
                           String sort, String name, String firstName, String lastName, boolean deleted){
         try {
-            ListPagerCollection listPager = User.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, firstName, lastName, deleted);
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            PagedList pagedList = User.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, firstName, lastName, deleted);
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 
@@ -178,19 +174,19 @@ public class Users extends Controller {
 
             JsonNode email = request.get("email");
             if (email ==  null)
-                return controllers.responseUtils.Response.requiredParameter("email");
+                return controllers.utils.Response.requiredParameter("email");
 
             JsonNode password = request.get("password");
             if (email ==  null)
-                return controllers.responseUtils.Response.requiredParameter("email");
+                return controllers.utils.Response.requiredParameter("email");
 
             AuthUser authUser = AuthUser.findByEmail(email.asText());
             authUser.setPassword(password.asText());
             authUser.update();
 
-            return controllers.responseUtils.Response.foundEntity(Json.toJson(change));
+            return controllers.utils.Response.foundEntity(Json.toJson(change));
         } catch (Exception e) {
-            return ExceptionsUtils.update(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 

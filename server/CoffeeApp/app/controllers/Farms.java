@@ -2,14 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import models.Farm;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.ResponseCollection;
+import controllers.utils.PropertiesCollection;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -110,12 +108,12 @@ public class Farms extends Controller {
     public Result findAll( Integer index, Integer size, String collection,
                            String name, String sort, Long status, boolean deleted){
         try {
-            ListPagerCollection listPager = Farm.findAll(index, size, propertiesCollection.getPathProperties(collection),
+            PagedList pagedList = Farm.findAll(index, size, propertiesCollection.getPathProperties(collection),
                                                             name,  sort, status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

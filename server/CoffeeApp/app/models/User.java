@@ -1,10 +1,9 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.PagedList;
 import io.ebean.annotation.Formula;
 import io.ebean.annotation.JsonIgnore;
 import io.ebean.annotation.UpdatedTimestamp;
@@ -119,8 +118,8 @@ public class User extends AbstractEntity {
         return finder.query().where()
                 .eq("authUser.id", authUserId)
                 .findUnique();
-    }    public static ListPagerCollection findAll(Integer index, Integer size, PathProperties pathProperties,
-                                              String sort, String name, String firstName, String lastName, boolean deleted) {
+    }    public static PagedList findAll(Integer index, Integer size, PathProperties pathProperties,
+                                         String sort, String name, String firstName, String lastName, boolean deleted) {
 
         ExpressionList expressionList = finder.query().where();
 
@@ -142,12 +141,13 @@ public class User extends AbstractEntity {
         if (sort != null)
             expressionList.orderBy(sort(sort));
 
-        if (index == null || size == null)
-            return new ListPagerCollection(expressionList.findList());
+        if(index == null || size == null){
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(expressionList.findCount()).findPagedList();
+        }
 
-        return new ListPagerCollection(expressionList.setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
-                index, size);
+        return expressionList.setFirstRow(index).setMaxRows(size).findPagedList();
     }
 
     public static User findByMediaProfileId(Long mediaProfileId) {

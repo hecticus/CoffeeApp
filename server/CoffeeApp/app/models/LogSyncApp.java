@@ -1,9 +1,9 @@
 package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.ListPagerCollection;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.PagedList;
 import io.ebean.annotation.DbJson;
 import play.data.validation.Constraints;
 
@@ -53,11 +53,13 @@ public class LogSyncApp extends  AbstractEntity {
         return finder.byId(id);
     }
 
-    public static ListPagerCollection findAll(){
+    public static PagedList findAll(){
 
         ExpressionList expressionList = finder.query().where();
 
-        return new ListPagerCollection(expressionList.findList());
+        return expressionList
+                .setFirstRow(0)
+                .setMaxRows(expressionList.findCount()).findPagedList();
     }
 
 }

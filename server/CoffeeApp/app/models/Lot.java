@@ -2,7 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.*;
 import io.ebean.text.PathProperties;
 import models.status.StatusLot;
@@ -134,7 +134,7 @@ public class Lot extends AbstractEntity{
 //                .setIncludeSoftDeletes()
 //                .findUnique();
 //    }
-    public static ListPagerCollection findAll( Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+    public static PagedList findAll( Integer pageIndex, Integer pageSize, PathProperties pathProperties,
                                                String sort, String name, Long idFarm, Long status, boolean delete){
 
         ExpressionList expressionList = finder.query().where();
@@ -157,13 +157,14 @@ public class Lot extends AbstractEntity{
         if(sort != null)
             expressionList.orderBy(sort( sort));
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
-        return new ListPagerCollection(
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
+        if(pageIndex == null || pageSize == null){
+            int aux = expressionList.findCount();
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(aux).findPagedList();
+        }
+
+        return expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findPagedList();
     }
 
 }

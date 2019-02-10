@@ -1,15 +1,11 @@
 package controllers;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.*;
 import io.ebean.Ebean;
 import io.ebean.PagedList;
-import io.ebean.text.PathProperties;
-import controllers.utils.Response;
 import models.ProviderType;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.ResponseCollection;
+
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -27,8 +23,7 @@ public class ProviderTypes {
 
     @Inject
     private FormFactory formFactory;
-    private static controllers.responseUtils.PropertiesCollection propertiesCollection = new controllers.responseUtils.PropertiesCollection();
-
+    private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     @CoffeAppsecurity
     public Result create() {
@@ -118,11 +113,11 @@ public class ProviderTypes {
                            String sort, String name, boolean deleted){
         try {
 
-            ListPagerCollection listPager = ProviderType.findAll(index, size, propertiesCollection.getPathProperties(collection),
+            PagedList pagedList = ProviderType.findAll(index, size, propertiesCollection.getPathProperties(collection),
                                                                 sort, name, deleted);
-            return ResponseCollection.foundEntity(listPager,propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList,propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

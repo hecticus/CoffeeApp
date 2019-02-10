@@ -1,12 +1,13 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
+import controllers.utils.PropertiesCollection;
+
+
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Multimedia;
@@ -152,12 +153,12 @@ public class Providers extends Controller {
                            String contactNameProvider, Long status, boolean deleted){
         try {
 
-            ListPagerCollection listPager = Provider.findAll( index, size, propertiesCollection.getPathProperties(collection), sort, name,
+            PagedList pagedList = Provider.findAll( index, size, propertiesCollection.getPathProperties(collection), sort, name,
                                                             idProviderType, identificationDocProvider, addressProvider,
                                                             phoneNumberProvider, emailProvider,  contactNameProvider,
                                                             status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return  NsExceptionsUtils.find(e);
         }

@@ -1,17 +1,11 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
-import controllers.utils.NsExceptionsUtils;
+
+import controllers.utils.*;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import models.*;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.Response;
-import controllers.responseUtils.ResponseCollection;
-import play.data.Form;
-import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -25,7 +19,6 @@ import javax.inject.Inject;
 public class InvoiceDetails extends Controller {
 
     @Inject
-    private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     @CoffeAppsecurity
@@ -51,7 +44,7 @@ public class InvoiceDetails extends Controller {
             invoiceDetail.save();
             return  Response.createdEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -61,12 +54,6 @@ public class InvoiceDetails extends Controller {
             JsonNode json = request().body().asJson();
             if(json== null)
                 return Response.requiredJson();
-            System.out.println("***  job...");
-            System.out.println("*** job...");
-            System.out.println("***  job...");
-           /* Form<InvoiceDetail> form = formFactory.form(InvoiceDetail.class).bind(json);
-            if(form.hasErrors())
-                return badRequest(form.errorsAsJson());*/
 
             InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
             if (invoiceDetail.getLot() != null ){
@@ -79,88 +66,10 @@ public class InvoiceDetails extends Controller {
 
             return  Response.createdEntity(Json.toJson(invoiceDetail));
         }catch(Exception e) {
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
 
     }
-
-/*    @CoffeAppsecurity
-    public Result update(Long id) {
-        try {
-            JsonNode json = request().body().asJson();
-            if(json== null)
-                return Response.requiredJson();
-
-            InvoiceDetail invoiceDetail = Json.fromJson(json, InvoiceDetail.class);
-            if (invoiceDetail.getLot() != null ){
-                Lot lot = Lot.findById(invoiceDetail.getLot().getId());
-                invoiceDetail.setPriceItemTypeByLot(lot.getPriceLot());
-            }
-
-            JsonNode invoiceDetailPurits = json.get("invoiceDetailPurity");
-            JsonNode purities = json.get("purities");
-            System.out.println(purities);
-
-            *//*if ((invoiceDetailPurits == null) and (purities == null)){
-                invoiceDetail.setId(id);
-                invoiceDetail.update();
-                return  Response.createdEntity(Json.toJson(invoiceDetail));
-            }*//*
-
-            if (purities == null)
-                return Response.requiredParameter("purities");
-
-            List<Integer> detailPurities = InvoiceDetailPurity.getByIdInvopiceDetails(id);
-            if(!detailPurities.isEmpty() ){
-                Ebean.deleteAllPermanent(InvoiceDetailPurity.class, detailPurities );
-            }
-
-*//*            {
-                "amountInvoiceDetail": 313.5,
-                    "costItemType": 0.2567,
-                    invoice: {id: 247},
-                invoiceDetailPurity: [],
-                itemType: {id: 1},
-                nameDelivered: "Adolfo Villarreal ",
-                        nameReceived: "Marwin",
-                    note: "Compras",
-                    noteInvoiceDetail: "Compras",
-                    startDate: "2019-01-19T21:49:53Z",
-                    store: {id: 1},
-            }*//*
-
-            for(JsonNode purity : purities) {
-
-                JsonNode idPurity = purity.get("idPurity");
-                if (idPurity == null)
-                    return Response.requiredParameter("idPurity");
-
-                JsonNode valueRateInvoiceDetailPurity = purity.get("valueRateInvoiceDetailPurity");
-                if (valueRateInvoiceDetailPurity == null)
-                    return Response.requiredParameter("valueRateInvoiceDetailPurity");
-
-                Purity puritys = Purity.findById(idPurity.asLong());
-
-                InvoiceDetailPurity invoiceDetailPurity = new InvoiceDetailPurity();
-
-                invoiceDetailPurity.setPurity(puritys);
-                invoiceDetailPurity.setValueRateInvoiceDetailPurity(valueRateInvoiceDetailPurity.decimalValue());
-                invoiceDetailPurity.setDiscountRatePurity(puritys.getDiscountRatePurity());
-                invoiceDetailPurity.setInvoiceDetail(InvoiceDetail.findById(id));
-                invoiceDetailPurity.setTotalDiscountPurity(puritys.getDiscountRatePurity().multiply(valueRateInvoiceDetailPurity.decimalValue()));
-
-                invoiceDetailPurity.save();
-            }
-
-            invoiceDetail.setId(id);
-            invoiceDetail.update();
-
-            return  Response.createdEntity(Json.toJson(invoiceDetail));
-        }catch(Exception e) {
-            return Response.responseExceptionUpdated(e);
-        }
-
-    }*/
 
     @CoffeAppsecurity
     public Result delete(Long id) {
@@ -168,7 +77,7 @@ public class InvoiceDetails extends Controller {
             Ebean.delete(InvoiceDetail.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -193,7 +102,7 @@ public class InvoiceDetails extends Controller {
             InvoiceDetail invoiceDetail = InvoiceDetail.findById(id);
             return Response.foundEntity(Json.toJson(invoiceDetail));
         }catch(Exception e){
-            return Response.internalServerErrorLF();
+            return NsExceptionsUtils.find(e);
         }
     }
 
@@ -205,13 +114,13 @@ public class InvoiceDetails extends Controller {
                           String nameDelivered, String startDate, Long status, boolean deleted){
         try {
 
-            ListPagerCollection listPager = InvoiceDetail.findAll(pageIndex, pageSize, propertiesCollection.getPathProperties(collection), sort,
+            PagedList pagedList = InvoiceDetail.findAll(pageIndex, pageSize, propertiesCollection.getPathProperties(collection), sort,
                     invoice, itemType, lot,store, nameReceived, nameDelivered,
                     startDate, status, deleted);
 
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

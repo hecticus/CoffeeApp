@@ -1,16 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.utils.JsonUtils;
-import controllers.utils.ListPagerCollection;
-import controllers.utils.NsExceptionsUtils;
+import controllers.utils.*;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
+import io.ebean.PagedList;
 import models.ItemType;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.Response;
-import controllers.responseUtils.ResponseCollection;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -45,7 +39,7 @@ public class ItemTypes extends Controller {
             return  Response.createdEntity(Json.toJson(itemType));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -65,7 +59,7 @@ public class ItemTypes extends Controller {
             itemType.update();
             return  Response.createdEntity(Json.toJson(itemType));
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -76,7 +70,7 @@ public class ItemTypes extends Controller {
             Ebean.delete(ItemType.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -108,12 +102,12 @@ public class ItemTypes extends Controller {
     public Result findAll(Integer pageIndex, Integer pageSize, String collection,
                           String sort, String name, Long idProviderType, Long unit, boolean deleted ) {
         try {
-            ListPagerCollection listPager = ItemType.findAll( pageIndex, pageSize, propertiesCollection.getPathProperties(collection),
+            PagedList pagedList = ItemType.findAll( pageIndex, pageSize, propertiesCollection.getPathProperties(collection),
                     sort, name, idProviderType, unit, deleted);
 
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 }

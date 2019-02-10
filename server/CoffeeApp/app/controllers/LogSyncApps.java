@@ -1,16 +1,12 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.Response;
-import controllers.responseUtils.ResponseCollection;
-import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.PropertiesCollection;
+import controllers.utils.Response;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import models.LogSyncApp;
-import play.data.Form;
-import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -22,7 +18,6 @@ import javax.inject.Inject;
 public class LogSyncApps extends Controller {
 
     @Inject
-    private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
 
     @CoffeAppsecurity
@@ -38,7 +33,7 @@ public class LogSyncApps extends Controller {
             return  Response.createdEntity(Json.toJson(logSyncApp));
 
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -54,7 +49,7 @@ public class LogSyncApps extends Controller {
             logSyncApp.update();
             return Response.updatedEntity(Json.toJson(logSyncApp));
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -64,7 +59,7 @@ public class LogSyncApps extends Controller {
             Ebean.delete(LogSyncApp.findById(id));
             return controllers.utils.Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -82,11 +77,11 @@ public class LogSyncApps extends Controller {
     @CoffeAppsecurity
     public Result findAll(){
         try {
-            ListPagerCollection listPager = LogSyncApp.findAll();
+            PagedList pagedList = LogSyncApp.findAll();
 
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(null));
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(null));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

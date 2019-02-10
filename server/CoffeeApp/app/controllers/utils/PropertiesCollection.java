@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Created by nisa on 14/08/17.
- */
+ **/
 public class PropertiesCollection {
 
     Map<String, PathProperties> pathProperties = new HashMap<>();

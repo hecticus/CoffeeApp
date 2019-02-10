@@ -1,9 +1,10 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.data.validation.Constraints;
 
@@ -107,8 +108,8 @@ public class InvoiceDetailPurity extends AbstractEntity{
                 .eq("purity.id",IdPurity)
                 .findUnique();
     }
-    public static ListPagerCollection findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
-                                              String sort, Long purity, Long invoiceDetail, boolean delete){
+    public static PagedList findAll(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+                                    String sort, Long purity, Long invoiceDetail, boolean delete){
         ExpressionList expressionList = finder.query().where();
 
         if(pathProperties != null && !pathProperties.getPathProps().isEmpty())
@@ -126,14 +127,14 @@ public class InvoiceDetailPurity extends AbstractEntity{
         if(delete)
             expressionList.setIncludeSoftDeletes();
 
-        if(pageIndex == null || pageSize == null)
-            return new ListPagerCollection(expressionList.findList());
+        if(pageIndex == null || pageSize == null){
+            int aux = expressionList.findCount();
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(aux).findPagedList();
+        }
 
-        return new ListPagerCollection(
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findList(),
-                expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findCount(),
-                pageIndex,
-                pageSize);
+        return expressionList.setFirstRow(pageIndex).setMaxRows(pageSize).findPagedList();
     }
 
 

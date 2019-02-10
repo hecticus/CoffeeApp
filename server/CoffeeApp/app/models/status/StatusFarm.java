@@ -1,7 +1,7 @@
 package models.status;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import controllers.utils.ListPagerCollection;
+
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.text.PathProperties;
@@ -38,7 +38,7 @@ public class StatusFarm extends Status {
     }
 
 
-    public static ListPagerCollection findAll(Integer index, Integer size, String sort,PathProperties pathProperties){
+    public static PagedList findAll(Integer index, Integer size, String sort,PathProperties pathProperties){
 
         ExpressionList expressionList = finder.query().where();
 

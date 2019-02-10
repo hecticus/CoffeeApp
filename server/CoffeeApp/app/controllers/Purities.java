@@ -1,18 +1,13 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.utils.ListPagerCollection;
 import controllers.utils.NsExceptionsUtils;
+import controllers.utils.PropertiesCollection;
+import controllers.utils.Response;
 import io.ebean.Ebean;
-import io.ebean.text.PathProperties;
-import models.InvoiceDetail;
+import io.ebean.PagedList;
 import models.Purity;
-import controllers.responseUtils.ExceptionsUtils;
-import controllers.responseUtils.PropertiesCollection;
-import controllers.responseUtils.Response;
-import controllers.responseUtils.ResponseCollection;
+
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -21,7 +16,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-import java.util.List;
 
 
 /**
@@ -38,7 +32,7 @@ public class Purities extends Controller{
         try {
             return Response.foundEntity(Json.toJson(new Purity()));
         } catch (Exception e) {
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 
@@ -58,7 +52,7 @@ public class Purities extends Controller{
             purity.save();
             return Response.createdEntity(Json.toJson(purity));
         }catch(Exception e){
-            return Response.responseExceptionCreated(e);
+            return NsExceptionsUtils.create(e);
         }
     }
 
@@ -79,7 +73,7 @@ public class Purities extends Controller{
             return Response.updatedEntity(Json.toJson(purity));
 
         }catch(Exception e){
-            return Response.responseExceptionUpdated(e);
+            return NsExceptionsUtils.update(e);
         }
     }
 
@@ -89,7 +83,7 @@ public class Purities extends Controller{
             Ebean.delete(Purity.findById(id));
             return Response.deletedEntity();
         } catch (Exception e) {
-            return Response.responseExceptionDeleted(e);
+            return NsExceptionsUtils.delete(e);
         }
     }
 
@@ -120,10 +114,10 @@ public class Purities extends Controller{
     @CoffeAppsecurity
     public Result findAll(Integer index, Integer size, String collection, String sort, String name, boolean deleted){
         try {
-            ListPagerCollection listPager = Purity.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, deleted);
-            return ResponseCollection.foundEntity(listPager, propertiesCollection.getPathProperties(collection));
+            PagedList pagedList = Purity.findAll(index, size, propertiesCollection.getPathProperties(collection), sort, name, deleted);
+            return Response.foundEntity(pagedList, propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 
