@@ -2,15 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import controllers.utils.JsonUtils;
+import controllers.utils.*;
 
-import controllers.utils.NsExceptionsUtils;
-import controllers.utils.Response;
 import daemonTask.TimeClosed;
 import io.ebean.Ebean;
 import io.ebean.PagedList;
 import models.*;
-import controllers.utils.PropertiesCollection;
 
 import models.status.StatusInvoice;
 
@@ -144,7 +141,7 @@ public class Invoices extends Controller {
         try {
             ListPagerCollection listPager = Invoice.createTotalReport();
 
-            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(null));
+            return Response.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -160,7 +157,7 @@ public class Invoices extends Controller {
                     sort, id_provider, id_providertype, startDate,
                     endDate, status, deleted, nitName);
 
-            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(null));
+            return Response.foundEntity(listPager,  propertiesCollection.getPathProperties(null));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -176,7 +173,7 @@ public class Invoices extends Controller {
                     sort, id_provider, id_providertype, startDate,
                     endDate, status, deleted, nitName);
 
-            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }
@@ -193,7 +190,7 @@ public class Invoices extends Controller {
                     sort, id_provider, id_providertype, startDate,
                     endDate, status, deleted, nitName);
 
-            return Response.foundEntity(pagedList,  propertiesCollection.getPathProperties(collection));
+            return Response.foundEntity(listPager,  propertiesCollection.getPathProperties(collection));
         }catch(Exception e){
             return Response.internalServerErrorLF();
         }

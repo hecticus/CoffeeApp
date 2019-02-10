@@ -2,20 +2,15 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.utils.PropertiesCollection;
-
-
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.Response;
 import io.ebean.Ebean;
 import io.ebean.PagedList;
-import io.ebean.text.PathProperties;
 import models.Invoice;
 import models.Multimedia;
 import models.Provider;
-import models.ProviderType;
 
 import models.status.StatusProvider;
-import multimedia.MultimediaUtils;
 import multimedia.models.MultimediaCDN;
 import play.data.Form;
 import play.data.FormFactory;
@@ -25,8 +20,6 @@ import play.mvc.Result;
 import security.authorization.CoffeAppsecurity;
 
 import javax.inject.Inject;
-
-import static sun.security.krb5.Confounder.longValue;
 
 /**
  * Created by sm21 on 10/05/18.

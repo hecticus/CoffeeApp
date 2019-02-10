@@ -29,7 +29,7 @@ public class StatusProviders extends Controller {
 
             return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 }

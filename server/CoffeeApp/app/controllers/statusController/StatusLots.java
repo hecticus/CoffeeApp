@@ -1,8 +1,5 @@
 package controllers.statusController;
 
-
-
-
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
@@ -28,7 +25,7 @@ public class StatusLots {
 
             return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 }

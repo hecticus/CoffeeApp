@@ -1,7 +1,6 @@
 package models.status;
 
 import io.ebean.Finder;
-import io.ebean.annotation.Formula;
 import models.AbstractEntity;
 import play.data.validation.Constraints;
 

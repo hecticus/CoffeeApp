@@ -10,6 +10,7 @@ import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import models.User;
 import play.data.Form;
@@ -93,7 +94,7 @@ public class Roles extends Controller {
             PagedList pagedList = Role.findAll(index, size, pathProperties, sort, name, delete);
             return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.utils.ListPagerCollection;
 import io.ebean.*;
 import io.ebean.annotation.Formula;
 import io.ebean.text.PathProperties;
@@ -327,9 +328,9 @@ public class Invoice extends AbstractEntity{
         return new ListPagerCollection(sqlRows);
     }
 
-    public static ListPagerCollection createPagos(Integer pageIndex, Integer pageSize,  PathProperties pathProperties,
-                                                   String sort, Long id_provider, Long providerType,  String startDate,
-                                                   String closeDate, Long status ,boolean delete, String nitName){
+    public static ListPagerCollection createPagos(Integer pageIndex, Integer pageSize, PathProperties pathProperties,
+                                                  String sort, Long id_provider, Long providerType, String startDate,
+                                                  String closeDate, Long status , boolean delete, String nitName){
 
         String sql = "SELECT \n" +
                 "    Min(DATE_FORMAT(c.start_date, '%d/%m/%Y')) as 'Fecha de Primera Cosecha',\n" +

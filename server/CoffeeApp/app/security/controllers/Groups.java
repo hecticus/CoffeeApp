@@ -2,12 +2,11 @@ package security.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
-
 import controllers.utils.NsExceptionsUtils;
 import controllers.utils.PropertiesCollection;
 import controllers.utils.Response;
 import io.ebean.Ebean;
+import io.ebean.PagedList;
 import io.ebean.text.PathProperties;
 import play.data.Form;
 import play.data.FormFactory;
@@ -23,12 +22,6 @@ public class Groups  extends Controller {
     @Inject
     private FormFactory formFactory;
     private static PropertiesCollection propertiesCollection = new PropertiesCollection();
-
-    public Groups(){
-        propertiesCollection.putPropertiesCollection("s", "(id, name)");
-        propertiesCollection.putPropertiesCollection("m", "(*)");
-    }
-
 
     public Result create() {
         try {
@@ -90,7 +83,7 @@ public class Groups  extends Controller {
             PagedList pagedList = Group.findAll(index, size, pathProperties, sort, name, deleted);
             return Response.foundEntity(pagedList, pathProperties);
         }catch(Exception e){
-            return ExceptionsUtils.find(e);
+            return NsExceptionsUtils.find(e);
         }
     }
 

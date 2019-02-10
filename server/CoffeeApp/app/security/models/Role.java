@@ -134,13 +134,12 @@ public class Role extends AbstractEntity{
             }
         }
 
-        if (index == null || size == null)
-            return new ListPagerCollection(expressionList.findList());
+        if(index == null || size == null){
+            return expressionList
+                    .setFirstRow(0)
+                    .setMaxRows(expressionList.findCount()).findPagedList();
+        }
 
-
-        return new ListPagerCollection(expressionList.setFirstRow(index).setMaxRows(size).findList(),
-                expressionList.setFirstRow(index).setMaxRows(size).findCount(),
-                index, size);
-
+        return expressionList.setFirstRow(index).setMaxRows(size).findPagedList();
     }
 }
